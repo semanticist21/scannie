@@ -6,6 +6,7 @@ import 'package:permission_handler/permission_handler.dart';
 import '../widgets/a4_guide_overlay.dart';
 import '../services/image_service.dart';
 import '../models/scanned_document.dart';
+import 'edge_detection_screen.dart';
 
 class CameraScreen extends StatefulWidget {
   const CameraScreen({super.key});
@@ -116,27 +117,39 @@ class _CameraScreenState extends State<CameraScreen> {
     if (_controller == null || !_controller!.value.isInitialized) return;
 
     try {
+      // 타이머 정지 (중복 촬영 방지)
+      _autoCaptureTimes?.cancel();
+
       // 자동 촬영 사운드/피드백
       _showCaptureAnimation();
 
       final image = await _controller!.takePicture();
 
-      // 이미지 향상 처리
-      final enhancedPath = await _imageService.enhanceImage(image.path);
-
-      // 스캔된 문서 저장
-      final document = ScannedDocument(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        imagePath: enhancedPath,
-        createdAt: DateTime.now(),
-      );
-
       if (mounted) {
-        // 갤러리로 돌아가면서 결과 전달
-        Navigator.pop(context, document);
+        // Edge detection 화면으로 이동
+        final document = await Navigator.push<ScannedDocument>(
+          context,
+          MaterialPageRoute(
+            builder: (context) => EdgeDetectionScreen(
+              imagePath: image.path,
+            ),
+          ),
+        );
+
+        if (document != null && mounted) {
+          // 문서가 저장되면 갤러리로 돌아감
+          Navigator.pop(context, document);
+        } else {
+          // 취소하면 다시 타이머 시작
+          _startEdgeDetection();
+        }
       }
     } catch (e) {
       debugPrint('촬영 실패: $e');
+      // 실패 시 다시 타이머 시작
+      if (mounted) {
+        _startEdgeDetection();
+      }
     }
   }
 
