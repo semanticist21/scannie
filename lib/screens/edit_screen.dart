@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import '../models/scanned_document.dart';
 import '../services/image_service.dart';
+import 'premium_screen.dart';
 
 class EditScreen extends StatefulWidget {
   final ScannedDocument document;
@@ -336,8 +337,14 @@ class _EditScreenState extends State<EditScreen> {
           ),
           ElevatedButton(
             onPressed: () {
-              // TODO: 프리미엄 구독 페이지로 이동
-              Navigator.pop(context);
+              Navigator.pop(context); // 다이얼로그 닫기
+              // 프리미엄 페이지로 이동
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const PremiumScreen(),
+                ),
+              );
             },
             child: const Text('프리미엄 보기'),
           ),

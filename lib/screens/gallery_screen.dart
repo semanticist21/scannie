@@ -6,6 +6,7 @@ import '../models/scanned_document.dart';
 import '../services/pdf_service.dart';
 import '../providers/document_provider.dart';
 import 'edit_screen.dart';
+import 'premium_screen.dart';
 
 class GalleryScreen extends StatelessWidget {
   const GalleryScreen({super.key});
@@ -72,8 +73,14 @@ class GalleryScreen extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              // TODO: 프리미엄 구독 페이지로 이동
-              Navigator.pop(context);
+              Navigator.pop(context); // 다이얼로그 닫기
+              // 프리미엄 페이지로 이동
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const PremiumScreen(),
+                ),
+              );
             },
             child: const Text('프리미엄 보기'),
           ),
