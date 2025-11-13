@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
 
@@ -19,7 +18,7 @@ class ImageService {
     );
 
     // 선명도 증가
-    final sharpened = img.convolution(enhanced, [
+    final sharpened = img.convolution(enhanced, filter: [
       0, -1, 0,
       -1, 5, -1,
       0, -1, 0,
@@ -199,7 +198,7 @@ class ImageService {
     );
 
     // 선명도 향상
-    final sharpened = img.convolution(upscaled, [
+    final sharpened = img.convolution(upscaled, filter: [
       -1, -1, -1,
       -1, 9, -1,
       -1, -1, -1,

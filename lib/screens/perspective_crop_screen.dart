@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
-import '../models/scanned_document.dart';
 import '../services/image_service.dart';
 
 class PerspectiveCropScreen extends StatefulWidget {

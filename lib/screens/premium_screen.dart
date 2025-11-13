@@ -23,7 +23,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
       'description': '저화질 이미지를 고화질로 변환',
     },
     {
-      'icon': Icons.ad_units_off,
+      'icon': Icons.block,
       'title': '광고 제거',
       'description': '모든 광고 없이 깔끔한 경험',
     },
@@ -78,9 +78,6 @@ class _PremiumScreenState extends State<PremiumScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('프리미엄 업그레이드'),

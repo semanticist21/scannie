@@ -1,10 +1,8 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../widgets/a4_guide_overlay.dart';
-import '../services/image_service.dart';
 import '../models/scanned_document.dart';
 import 'edge_detection_screen.dart';
 
@@ -22,7 +20,6 @@ class _CameraScreenState extends State<CameraScreen> {
   bool _isDocumentAligned = false;
   Timer? _autoCaptureTimes;
   int _alignedFrames = 0;
-  final ImageService _imageService = ImageService();
 
   @override
   void initState() {
