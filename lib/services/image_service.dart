@@ -113,4 +113,39 @@ class ImageService {
 
     return rotatedPath;
   }
+
+  /// 이미지 업스케일링 (2배 확대 + 선명도 향상)
+  /// Pro 기능
+  Future<String> upscaleImage(String imagePath) async {
+    final imageFile = File(imagePath);
+    final bytes = await imageFile.readAsBytes();
+    final image = img.decodeImage(bytes);
+
+    if (image == null) throw Exception('Failed to decode image');
+
+    // 2배 크기로 확대
+    final upscaled = img.copyResize(
+      image,
+      width: image.width * 2,
+      height: image.height * 2,
+      interpolation: img.Interpolation.cubic, // 고품질 보간
+    );
+
+    // 선명도 향상
+    final sharpened = img.convolution(upscaled, [
+      -1, -1, -1,
+      -1, 9, -1,
+      -1, -1, -1,
+    ]);
+
+    // 저장
+    final directory = await getApplicationDocumentsDirectory();
+    final fileName = 'upscaled_${DateTime.now().millisecondsSinceEpoch}.png';
+    final upscaledPath = '${directory.path}/$fileName';
+
+    final upscaledFile = File(upscaledPath);
+    await upscaledFile.writeAsBytes(img.encodePng(sharpened));
+
+    return upscaledPath;
+  }
 }
