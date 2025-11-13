@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
 import '../models/scanned_document.dart';
 import '../services/image_service.dart';
 
@@ -64,6 +65,71 @@ class _EditScreenState extends State<EditScreen> {
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('필터 적용 실패: $e')),
+        );
+      }
+    }
+  }
+
+  Future<void> _cropImage() async {
+    if (_isProcessing) return;
+
+    try {
+      final croppedFile = await ImageCropper().cropImage(
+        sourcePath: _currentImagePath,
+        uiSettings: [
+          AndroidUiSettings(
+            toolbarTitle: '이미지 자르기',
+            toolbarColor: Colors.blue,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false,
+          ),
+          IOSUiSettings(
+            title: '이미지 자르기',
+          ),
+        ],
+      );
+
+      if (croppedFile != null && mounted) {
+        setState(() {
+          _currentImagePath = croppedFile.path;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('자르기 실패: $e')),
+        );
+      }
+    }
+  }
+
+  Future<void> _rotateImage() async {
+    if (_isProcessing) return;
+
+    setState(() {
+      _isProcessing = true;
+    });
+
+    try {
+      final rotatedPath = await _imageService.rotateImage(_currentImagePath);
+
+      if (mounted) {
+        setState(() {
+          _currentImagePath = rotatedPath;
+          _isProcessing = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('이미지가 90도 회전되었습니다')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isProcessing = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('회전 실패: $e')),
         );
       }
     }
@@ -175,17 +241,13 @@ class _EditScreenState extends State<EditScreen> {
                       _buildToolButton(
                         icon: Icons.crop,
                         label: '자르기',
-                        onTap: () {
-                          // TODO: 자르기 기능
-                        },
+                        onTap: _cropImage,
                       ),
                       const SizedBox(height: 8),
                       _buildToolButton(
                         icon: Icons.rotate_right,
                         label: '회전',
-                        onTap: () {
-                          // TODO: 회전 기능
-                        },
+                        onTap: _rotateImage,
                       ),
                       const SizedBox(height: 8),
                       _buildToolButton(

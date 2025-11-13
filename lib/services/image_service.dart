@@ -91,4 +91,26 @@ class ImageService {
 
     return grayscalePath;
   }
+
+  /// 이미지 회전 (90도 시계방향)
+  Future<String> rotateImage(String imagePath) async {
+    final imageFile = File(imagePath);
+    final bytes = await imageFile.readAsBytes();
+    final image = img.decodeImage(bytes);
+
+    if (image == null) throw Exception('Failed to decode image');
+
+    // 90도 시계방향 회전
+    final rotated = img.copyRotate(image, angle: 90);
+
+    // 저장
+    final directory = await getApplicationDocumentsDirectory();
+    final fileName = 'rotated_${DateTime.now().millisecondsSinceEpoch}.png';
+    final rotatedPath = '${directory.path}/$fileName';
+
+    final rotatedFile = File(rotatedPath);
+    await rotatedFile.writeAsBytes(img.encodePng(rotated));
+
+    return rotatedPath;
+  }
 }
