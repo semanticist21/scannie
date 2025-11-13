@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:image_cropper/image_cropper.dart';
 import '../models/scanned_document.dart';
 import '../services/image_service.dart';
 import 'premium_screen.dart';
+import 'perspective_crop_screen.dart';
 
 class EditScreen extends StatefulWidget {
   final ScannedDocument document;
@@ -75,25 +75,19 @@ class _EditScreenState extends State<EditScreen> {
     if (_isProcessing) return;
 
     try {
-      final croppedFile = await ImageCropper().cropImage(
-        sourcePath: _currentImagePath,
-        uiSettings: [
-          AndroidUiSettings(
-            toolbarTitle: '이미지 자르기',
-            toolbarColor: Colors.blue,
-            toolbarWidgetColor: Colors.white,
-            initAspectRatio: CropAspectRatioPreset.original,
-            lockAspectRatio: false,
+      // 4점 perspective crop 화면으로 이동
+      final croppedPath = await Navigator.push<String>(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PerspectiveCropScreen(
+            imagePath: _currentImagePath,
           ),
-          IOSUiSettings(
-            title: '이미지 자르기',
-          ),
-        ],
+        ),
       );
 
-      if (croppedFile != null && mounted) {
+      if (croppedPath != null && mounted) {
         setState(() {
-          _currentImagePath = croppedFile.path;
+          _currentImagePath = croppedPath;
         });
       }
     } catch (e) {

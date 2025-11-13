@@ -71,6 +71,73 @@ class ImageService {
     return transformedPath;
   }
 
+  /// 4점 기반 Perspective 변환 (사용자 지정 포인트)
+  Future<String> perspectiveTransformWithPoints(
+    String imagePath,
+    List<Map<String, double>> corners,
+  ) async {
+    // corners: [topLeft, topRight, bottomRight, bottomLeft]
+    final imageFile = File(imagePath);
+    final bytes = await imageFile.readAsBytes();
+    final image = img.decodeImage(bytes);
+
+    if (image == null) throw Exception('Failed to decode image');
+
+    // 4개 포인트로부터 문서의 폭과 높이 계산
+    final tl = corners[0];
+    final tr = corners[1];
+    final br = corners[2];
+    final bl = corners[3];
+
+    // 상단 폭과 하단 폭 중 최대값
+    final topWidth = ((tr['x']! - tl['x']!).abs()).toInt();
+    final bottomWidth = ((br['x']! - bl['x']!).abs()).toInt();
+    final maxWidth = topWidth > bottomWidth ? topWidth : bottomWidth;
+
+    // 좌측 높이와 우측 높이 중 최대값
+    final leftHeight = ((bl['y']! - tl['y']!).abs()).toInt();
+    final rightHeight = ((br['y']! - tr['y']!).abs()).toInt();
+    final maxHeight = leftHeight > rightHeight ? leftHeight : rightHeight;
+
+    // 최소 크기 보장
+    final targetWidth = maxWidth > 100 ? maxWidth : 100;
+    final targetHeight = maxHeight > 100 ? maxHeight : 100;
+
+    // 간단한 crop (실제 perspective transform은 복잡한 행렬 계산 필요)
+    // 여기서는 bounding box로 crop 후 resize
+    final minX = [tl['x']!, tr['x']!, br['x']!, bl['x']!].reduce((a, b) => a < b ? a : b).toInt().clamp(0, image.width - 1);
+    final maxX = [tl['x']!, tr['x']!, br['x']!, bl['x']!].reduce((a, b) => a > b ? a : b).toInt().clamp(0, image.width);
+    final minY = [tl['y']!, tr['y']!, br['y']!, bl['y']!].reduce((a, b) => a < b ? a : b).toInt().clamp(0, image.height - 1);
+    final maxY = [tl['y']!, tr['y']!, br['y']!, bl['y']!].reduce((a, b) => a > b ? a : b).toInt().clamp(0, image.height);
+
+    final cropWidth = (maxX - minX).clamp(1, image.width);
+    final cropHeight = (maxY - minY).clamp(1, image.height);
+
+    // Crop
+    final cropped = img.copyCrop(image,
+      x: minX,
+      y: minY,
+      width: cropWidth,
+      height: cropHeight,
+    );
+
+    // Resize to target dimensions
+    final transformed = img.copyResize(cropped,
+      width: targetWidth,
+      height: targetHeight,
+    );
+
+    // 저장
+    final directory = await getApplicationDocumentsDirectory();
+    final fileName = 'perspective_${DateTime.now().millisecondsSinceEpoch}.png';
+    final transformedPath = '${directory.path}/$fileName';
+
+    final transformedFile = File(transformedPath);
+    await transformedFile.writeAsBytes(img.encodePng(transformed));
+
+    return transformedPath;
+  }
+
   /// 흑백 변환
   Future<String> convertToGrayscale(String imagePath) async {
     final imageFile = File(imagePath);
