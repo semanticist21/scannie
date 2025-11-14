@@ -22,11 +22,33 @@ class EditScreen extends StatefulWidget {
   State<EditScreen> createState() => _EditScreenState();
 }
 
-class _EditScreenState extends State<EditScreen> {
+class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateMixin {
   FilterType _selectedFilter = FilterType.original;
   double _brightness = 0;
   double _contrast = 0;
   bool _showAdjustments = false;
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    );
+    _animationController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +70,12 @@ class _EditScreenState extends State<EditScreen> {
             child: _buildImagePreview(),
           ),
 
-          // Adjustments slider (conditional)
-          if (_showAdjustments) _buildAdjustments(),
+          // Adjustments slider (conditional with animation)
+          AnimatedSize(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            child: _showAdjustments ? _buildAdjustments() : const SizedBox.shrink(),
+          ),
 
           // Filter options
           _buildFilterOptions(),
@@ -65,46 +91,51 @@ class _EditScreenState extends State<EditScreen> {
     return Container(
       color: AppColors.background,
       child: Center(
-        child: Stack(
-          children: [
-            // Image placeholder with filter effect
-            Container(
-              margin: const EdgeInsets.all(AppSpacing.lg),
-              decoration: BoxDecoration(
-                color: _getFilterColor(),
-                borderRadius: BorderRadius.circular(AppRadius.md),
-                border: Border.all(
-                  color: AppColors.border,
-                  width: 2,
+        child: FadeTransition(
+          opacity: _fadeAnimation,
+          child: Stack(
+            children: [
+              // Image placeholder with filter effect
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+                margin: const EdgeInsets.all(AppSpacing.lg),
+                decoration: BoxDecoration(
+                  color: _getFilterColor(),
+                  borderRadius: BorderRadius.circular(AppRadius.md),
+                  border: Border.all(
+                    color: AppColors.border,
+                    width: 2,
+                  ),
                 ),
-              ),
-              child: AspectRatio(
-                aspectRatio: 210 / 297, // A4 ratio
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.description_outlined,
-                        size: 80,
-                        color: AppColors.textSecondary.withOpacity(0.3),
-                      ),
-                      const SizedBox(height: AppSpacing.md),
-                      Text(
-                        _getFilterName(_selectedFilter),
-                        style: AppTextStyles.bodyMedium.copyWith(
-                          color: AppColors.textSecondary,
+                child: AspectRatio(
+                  aspectRatio: 210 / 297, // A4 ratio
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.description_outlined,
+                          size: 80,
+                          color: AppColors.textSecondary.withValues(alpha: 0.3),
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: AppSpacing.md),
+                        Text(
+                          _getFilterName(_selectedFilter),
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
 
-            // Corner handles for manual crop
-            ..._buildCropHandles(),
-          ],
+              // Corner handles for manual crop
+              ..._buildCropHandles(),
+            ],
+          ),
         ),
       ),
     );
@@ -149,7 +180,7 @@ class _EditScreenState extends State<EditScreen> {
         border: Border.all(color: Colors.white, width: 2),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: Colors.black.withValues(alpha: 0.2),
             blurRadius: 4,
           ),
         ],
@@ -241,7 +272,9 @@ class _EditScreenState extends State<EditScreen> {
         margin: const EdgeInsets.only(right: AppSpacing.sm),
         child: Column(
           children: [
-            Container(
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeInOut,
               width: 64,
               height: 64,
               decoration: BoxDecoration(
@@ -251,6 +284,15 @@ class _EditScreenState extends State<EditScreen> {
                   color: isSelected ? AppColors.primary : AppColors.border,
                   width: isSelected ? 3 : 1,
                 ),
+                boxShadow: isSelected
+                    ? [
+                        BoxShadow(
+                          color: AppColors.primary.withValues(alpha: 0.3),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ]
+                    : null,
               ),
               child: Icon(
                 Icons.image,
@@ -258,13 +300,14 @@ class _EditScreenState extends State<EditScreen> {
               ),
             ),
             const SizedBox(height: AppSpacing.xs),
-            Text(
-              _getFilterName(filter),
+            AnimatedDefaultTextStyle(
+              duration: const Duration(milliseconds: 200),
               style: AppTextStyles.caption.copyWith(
                 color: isSelected ? AppColors.primary : AppColors.textSecondary,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
               ),
               textAlign: TextAlign.center,
+              child: Text(_getFilterName(filter)),
             ),
           ],
         ),
@@ -279,57 +322,96 @@ class _EditScreenState extends State<EditScreen> {
         color: AppColors.surface,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 8,
             offset: const Offset(0, -2),
           ),
         ],
       ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           // Auto crop
-          Expanded(
-            child: OutlinedButton.icon(
-              onPressed: () {
-                _showMessage('Auto crop applied');
-              },
-              icon: const Icon(Icons.crop_free),
-              label: const Text('Auto Crop'),
-            ),
+          _buildActionButton(
+            icon: Icons.crop_free,
+            label: 'Auto Crop',
+            tooltip: 'Automatically crop document edges',
+            onPressed: () => _showMessage('Auto crop applied'),
           ),
-          const SizedBox(width: AppSpacing.sm),
 
           // Rotate
-          IconButton(
-            onPressed: () {
-              _showMessage('Rotated 90°');
-            },
-            icon: const Icon(Icons.rotate_right),
-            tooltip: 'Rotate',
+          _buildActionButton(
+            icon: Icons.rotate_right,
+            label: 'Rotate',
+            tooltip: 'Rotate 90 degrees clockwise',
+            onPressed: () => _showMessage('Rotated 90°'),
           ),
 
           // Adjustments toggle
-          IconButton(
-            onPressed: () {
-              setState(() => _showAdjustments = !_showAdjustments);
-            },
-            icon: Icon(
-              _showAdjustments ? Icons.tune : Icons.tune_outlined,
-            ),
-            tooltip: 'Adjustments',
-          ),
-
-          const SizedBox(width: AppSpacing.sm),
-
-          // Save button
-          Expanded(
-            child: ElevatedButton.icon(
-              onPressed: _saveScan,
-              icon: const Icon(Icons.check),
-              label: const Text('Done'),
-            ),
+          _buildActionButton(
+            icon: _showAdjustments ? Icons.tune : Icons.tune_outlined,
+            label: 'Adjust',
+            tooltip: _showAdjustments ? 'Hide adjustments' : 'Show brightness and contrast adjustments',
+            onPressed: () => setState(() => _showAdjustments = !_showAdjustments),
+            isActive: _showAdjustments,
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildActionButton({
+    required IconData icon,
+    required String label,
+    required String tooltip,
+    required VoidCallback onPressed,
+    bool isActive = false,
+  }) {
+    return Expanded(
+      child: Tooltip(
+        message: tooltip,
+        child: InkWell(
+          onTap: onPressed,
+          borderRadius: BorderRadius.circular(AppRadius.md),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeInOut,
+            padding: const EdgeInsets.symmetric(
+              vertical: AppSpacing.sm,
+              horizontal: AppSpacing.xs,
+            ),
+            decoration: BoxDecoration(
+              color: isActive ? AppColors.primary.withValues(alpha: 0.1) : Colors.transparent,
+              borderRadius: BorderRadius.circular(AppRadius.md),
+              border: isActive
+                  ? Border.all(color: AppColors.primary, width: 1.5)
+                  : null,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 200),
+                  child: Icon(
+                    icon,
+                    key: ValueKey(icon),
+                    size: 28,
+                    color: isActive ? AppColors.primary : AppColors.textPrimary,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                AnimatedDefaultTextStyle(
+                  duration: const Duration(milliseconds: 200),
+                  style: AppTextStyles.caption.copyWith(
+                    color: isActive ? AppColors.primary : AppColors.textSecondary,
+                    fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
+                  ),
+                  child: Text(label),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
