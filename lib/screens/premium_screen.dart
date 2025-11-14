@@ -100,9 +100,9 @@ class _PremiumScreenState extends State<PremiumScreen> {
                   end: Alignment.bottomRight,
                 ),
               ),
-              child: Column(
+              child: const Column(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.workspace_premium,
                     size: 80,
                     color: Colors.white,

@@ -62,7 +62,7 @@ class A4GuidePainter extends CustomPainter {
     );
 
     // 모서리 강조
-    final cornerLength = 30.0;
+    const cornerLength = 30.0;
     final cornerPaint = Paint()
       ..color = isAligned ? Colors.green : Colors.white
       ..style = PaintingStyle.stroke

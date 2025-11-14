@@ -50,7 +50,7 @@ class ImageService {
     if (image == null) throw Exception('Failed to decode image');
 
     // A4 비율 (1:1.414)
-    final targetWidth = 1240;
+    const targetWidth = 1240;
     final targetHeight = (targetWidth * 1.414).round();
 
     // 크롭 및 리사이즈
