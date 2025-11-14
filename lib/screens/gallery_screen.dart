@@ -60,10 +60,16 @@ class _GalleryScreenState extends State<GalleryScreen> {
         ],
       ),
       body: _documents.isEmpty ? _buildEmptyState() : _buildDocumentList(),
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: FilledButton.icon(
         onPressed: _openCamera,
         icon: const Icon(Icons.camera_alt),
         label: const Text('Scan'),
+        style: FilledButton.styleFrom(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.lg,
+            vertical: AppSpacing.md,
+          ),
+        ),
       ),
     );
   }
@@ -73,17 +79,15 @@ class _GalleryScreenState extends State<GalleryScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
+          const Icon(
             Icons.description_outlined,
             size: 120,
             color: AppColors.textHint,
           ),
           const SizedBox(height: AppSpacing.lg),
-          Text(
+          const Text(
             'No scans yet',
-            style: AppTextStyles.h2.copyWith(
-              color: AppColors.textSecondary,
-            ),
+            style: AppTextStyles.h2,
           ),
           const SizedBox(height: AppSpacing.sm),
           Text(
@@ -148,9 +152,9 @@ class _GalleryScreenState extends State<GalleryScreen> {
             // Thumbnail
             Expanded(
               child: Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: AppColors.primaryLight,
-                  borderRadius: const BorderRadius.vertical(
+                  borderRadius: BorderRadius.vertical(
                     top: Radius.circular(AppRadius.md),
                   ),
                 ),
@@ -181,7 +185,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                   const SizedBox(height: AppSpacing.xs),
                   Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.image,
                         size: 14,
                         color: AppColors.textSecondary,

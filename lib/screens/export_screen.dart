@@ -103,7 +103,7 @@ class _ExportScreenState extends State<ExportScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Document Preview',
               style: AppTextStyles.h3,
             ),
@@ -162,16 +162,16 @@ class _ExportScreenState extends State<ExportScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'File Name',
           style: AppTextStyles.label,
         ),
         const SizedBox(height: AppSpacing.sm),
         TextField(
           controller: _fileNameController,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             hintText: 'Enter file name',
-            suffixIcon: const Icon(Icons.edit),
+            suffixIcon: Icon(Icons.edit),
             suffixText: '.pdf',
           ),
         ),
@@ -183,7 +183,7 @@ class _ExportScreenState extends State<ExportScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Page Size',
           style: AppTextStyles.label,
         ),
@@ -211,7 +211,7 @@ class _ExportScreenState extends State<ExportScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Quality',
           style: AppTextStyles.label,
         ),
@@ -309,7 +309,7 @@ class _ExportScreenState extends State<ExportScreen> {
                     'Estimated size: $fileSize',
                     style: AppTextStyles.bodySmall,
                   ),
-                  Text(
+                  const Text(
                     'Format: PDF',
                     style: AppTextStyles.bodySmall,
                   ),
@@ -336,7 +336,7 @@ class _ExportScreenState extends State<ExportScreen> {
         ],
       ),
       child: SafeArea(
-        child: ElevatedButton.icon(
+        child: FilledButton.icon(
           onPressed: _isExporting ? null : _exportToPdf,
           icon: _isExporting
               ? const SizedBox(
@@ -349,7 +349,7 @@ class _ExportScreenState extends State<ExportScreen> {
                 )
               : const Icon(Icons.file_download),
           label: Text(_isExporting ? 'Exporting...' : 'Export PDF'),
-          style: ElevatedButton.styleFrom(
+          style: FilledButton.styleFrom(
             minimumSize: const Size(double.infinity, 56),
           ),
         ),

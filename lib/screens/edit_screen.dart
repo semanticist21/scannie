@@ -247,70 +247,44 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
 
   Widget _buildFilterOptions() {
     return Container(
-      height: 120,
+      padding: const EdgeInsets.all(AppSpacing.md),
       color: AppColors.surface,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.md,
-          vertical: AppSpacing.sm,
-        ),
-        children: FilterType.values.map((filter) {
-          return _buildFilterOption(filter);
-        }).toList(),
-      ),
-    );
-  }
-
-  Widget _buildFilterOption(FilterType filter) {
-    final isSelected = _selectedFilter == filter;
-
-    return GestureDetector(
-      onTap: () => setState(() => _selectedFilter = filter),
-      child: Container(
-        width: 80,
-        margin: const EdgeInsets.only(right: AppSpacing.sm),
-        child: Column(
-          children: [
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              curve: Curves.easeInOut,
-              width: 64,
-              height: 64,
-              decoration: BoxDecoration(
-                color: _getFilterColor(filter),
-                borderRadius: BorderRadius.circular(AppRadius.md),
-                border: Border.all(
-                  color: isSelected ? AppColors.primary : AppColors.border,
-                  width: isSelected ? 3 : 1,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Filter',
+            style: AppTextStyles.label,
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: SegmentedButton<FilterType>(
+              segments: FilterType.values.map((filter) {
+                return ButtonSegment<FilterType>(
+                  value: filter,
+                  label: Text(_getFilterName(filter)),
+                  icon: const Icon(Icons.image),
+                );
+              }).toList(),
+              selected: {_selectedFilter},
+              onSelectionChanged: (Set<FilterType> newSelection) {
+                setState(() {
+                  _selectedFilter = newSelection.first;
+                });
+              },
+              style: ButtonStyle(
+                padding: WidgetStateProperty.all(
+                  const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.md,
+                    vertical: AppSpacing.sm,
+                  ),
                 ),
-                boxShadow: isSelected
-                    ? [
-                        BoxShadow(
-                          color: AppColors.primary.withValues(alpha: 0.3),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
-                        ),
-                      ]
-                    : null,
-              ),
-              child: Icon(
-                Icons.image,
-                color: isSelected ? AppColors.primary : AppColors.textSecondary,
               ),
             ),
-            const SizedBox(height: AppSpacing.xs),
-            AnimatedDefaultTextStyle(
-              duration: const Duration(milliseconds: 200),
-              style: AppTextStyles.caption.copyWith(
-                color: isSelected ? AppColors.primary : AppColors.textSecondary,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-              ),
-              textAlign: TextAlign.center,
-              child: Text(_getFilterName(filter)),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

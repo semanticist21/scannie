@@ -56,6 +56,8 @@ class ScanCard extends StatelessWidget {
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       document.name,
@@ -65,12 +67,12 @@ class ScanCard extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: AppSpacing.xs),
+                    const SizedBox(height: 2),
                     Text(
                       '$pageCount ${pageCount == 1 ? 'page' : 'pages'}',
                       style: AppTextStyles.bodySmall,
                     ),
-                    const SizedBox(height: AppSpacing.xs),
+                    const SizedBox(height: 2),
                     Text(
                       formattedDate,
                       style: AppTextStyles.caption,
