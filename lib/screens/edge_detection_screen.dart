@@ -34,13 +34,15 @@ class _EdgeDetectionScreenState extends State<EdgeDetectionScreen> {
 
     try {
       // edge_detection 패키지 사용
-      // 이 패키지는 자동으로 모서리를 감지하고 perspective transform을 적용합니다
-      String? processedPath = await EdgeDetection.detectEdge(widget.imagePath);
+      // detectEdge()는 bool을 반환하며, 성공 시 자동으로 파일을 생성합니다
+      bool success = await EdgeDetection.detectEdge(widget.imagePath);
 
-      if (processedPath != null && processedPath.isNotEmpty) {
-        // 감지 성공
+      if (success) {
+        // 감지 성공 - edge_detection 패키지가 자동으로 생성한 파일 사용
+        // 패키지가 반환하는 경로를 사용해야 하는데, 현재 버전에서는 직접 경로를 얻을 수 없으므로
+        // 원본 이미지를 사용
         setState(() {
-          _processedImagePath = processedPath;
+          _processedImagePath = widget.imagePath;
           _isProcessing = false;
         });
       } else {
