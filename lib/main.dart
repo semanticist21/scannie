@@ -1,24 +1,39 @@
 import 'package:flutter/material.dart';
-import 'theme/app_theme.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'config/theme/app_theme.dart';
+import 'screens/home_screen.dart';
+import 'providers/document_provider.da
 
 void main() {
-  runApp(const MainApp());
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // 세로 모드 고정
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
+  runApp(const ScannieApp());
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class ScannieApp extends StatelessWidget {
+  const ScannieApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Scannie',
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.system,
-      home: const Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
+    return ChangeNotifierProvider(
+      create: (context) => DocumentProvider(),
+      child: MaterialApp(
+        title: 'Scannie',
+        debugShowCheckedModeBanner: false,
+
+        // Material 3 테마 적용
+        theme: AppTheme.light,
+        darkTheme: AppTheme.dark,
+        themeMode: ThemeMode.system,
+
+        home: const HomeScreen(),
       ),
     );
   }
