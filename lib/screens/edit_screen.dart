@@ -1,8 +1,11 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:image/image.dart' as img;
 import '../models/scan_document.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
 import '../theme/app_text_styles.dart';
+import '../utils/image_filters.dart';
 import '../widgets/common/custom_app_bar.dart';
 
 /// Filter type enum
@@ -30,6 +33,13 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
+  // Image processing state
+  img.Image? _originalImage;
+  img.Image? _processedImage;
+  Uint8List? _displayImageBytes;
+  bool _isProcessing = false;
+  int _rotationAngle = 0; // 0, 90, 180, 270
+
   @override
   void initState() {
     super.initState();
@@ -42,6 +52,100 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
       curve: Curves.easeInOut,
     );
     _animationController.forward();
+
+    // TODO: Load image from camera/gallery when available
+    // For now, we'll use a placeholder
+    _loadSampleImage();
+  }
+
+  /// Load sample image (placeholder for actual camera image)
+  Future<void> _loadSampleImage() async {
+    // TODO: Replace with actual image path from camera
+    // For now, create a simple test image
+    setState(() {
+      _isProcessing = true;
+    });
+
+    try {
+      // Create a simple 600x800 white image as placeholder
+      _originalImage = img.Image(width: 600, height: 800);
+      for (final pixel in _originalImage!) {
+        pixel
+          ..r = 255
+          ..g = 255
+          ..b = 255;
+      }
+
+      _processedImage = _originalImage;
+      await _applyCurrentFilter();
+    } finally {
+      setState(() {
+        _isProcessing = false;
+      });
+    }
+  }
+
+  /// Apply the currently selected filter and adjustments
+  Future<void> _applyCurrentFilter() async {
+    if (_originalImage == null) return;
+
+    // Don't show loading indicator for filter changes
+    // Process in background and update when ready
+
+    try {
+      // Start with original image
+      img.Image processed = _originalImage!.clone();
+
+      // Apply rotation if any
+      if (_rotationAngle != 0) {
+        if (_rotationAngle == 90) {
+          processed = ImageFilters.rotate90(processed);
+        } else if (_rotationAngle == 180) {
+          processed = ImageFilters.rotate180(processed);
+        } else if (_rotationAngle == 270) {
+          processed = ImageFilters.rotate270(processed);
+        }
+      }
+
+      // Apply selected filter
+      switch (_selectedFilter) {
+        case FilterType.original:
+          processed = ImageFilters.applyOriginal(processed);
+          break;
+        case FilterType.blackAndWhite:
+          processed = ImageFilters.applyBlackAndWhite(processed);
+          break;
+        case FilterType.color:
+          processed = ImageFilters.applyMagicColor(processed);
+          break;
+        case FilterType.grayscale:
+          processed = ImageFilters.applyGrayscale(processed);
+          break;
+        case FilterType.enhanced:
+          processed = ImageFilters.applyLighten(processed);
+          break;
+      }
+
+      // Apply brightness and contrast adjustments
+      if (_brightness != 0 || _contrast != 0) {
+        processed = ImageFilters.applyBrightnessAndContrast(
+          processed,
+          _brightness,
+          _contrast,
+        );
+      }
+
+      // Encode for display
+      _processedImage = processed;
+      final newImageBytes = ImageFilters.encodeImage(processed);
+
+      // Update UI with new image
+      setState(() {
+        _displayImageBytes = newImageBytes;
+      });
+    } catch (e) {
+      // Error processing image
+    }
   }
 
   @override
@@ -95,7 +199,7 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
           opacity: _fadeAnimation,
           child: Stack(
             children: [
-              // Image placeholder with filter effect
+              // Image preview
               AnimatedContainer(
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.easeInOut,
@@ -110,30 +214,46 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
                 ),
                 child: AspectRatio(
                   aspectRatio: 210 / 297, // A4 ratio
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.description_outlined,
-                          size: 80,
-                          color: AppColors.textSecondary.withValues(alpha: 0.3),
-                        ),
-                        const SizedBox(height: AppSpacing.md),
-                        Text(
-                          _getFilterName(_selectedFilter),
-                          style: AppTextStyles.bodyMedium.copyWith(
-                            color: AppColors.textSecondary,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(AppRadius.md - 2),
+                    child: _displayImageBytes != null
+                        ? AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 200),
+                            switchInCurve: Curves.easeInOut,
+                            switchOutCurve: Curves.easeInOut,
+                            child: Image.memory(
+                              _displayImageBytes!,
+                              key: ValueKey(_displayImageBytes.hashCode),
+                              fit: BoxFit.contain,
+                            ),
+                          )
+                        : Center(
+                            child: _isProcessing
+                                ? const CircularProgressIndicator()
+                                : Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.description_outlined,
+                                        size: 80,
+                                        color: AppColors.textSecondary.withValues(alpha: 0.3),
+                                      ),
+                                      const SizedBox(height: AppSpacing.md),
+                                      Text(
+                                        _getFilterName(_selectedFilter),
+                                        style: AppTextStyles.bodyMedium.copyWith(
+                                          color: AppColors.textSecondary,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                           ),
-                        ),
-                      ],
-                    ),
                   ),
                 ),
               ),
 
               // Corner handles for manual crop
-              ..._buildCropHandles(),
+              if (_displayImageBytes != null) ..._buildCropHandles(),
             ],
           ),
         ),
@@ -199,7 +319,10 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
             label: 'Brightness',
             value: _brightness,
             icon: Icons.brightness_6,
-            onChanged: (value) => setState(() => _brightness = value),
+            onChanged: (value) {
+              setState(() => _brightness = value);
+              _applyCurrentFilter();
+            },
           ),
           const SizedBox(height: AppSpacing.sm),
           // Contrast slider
@@ -207,7 +330,10 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
             label: 'Contrast',
             value: _contrast,
             icon: Icons.contrast,
-            onChanged: (value) => setState(() => _contrast = value),
+            onChanged: (value) {
+              setState(() => _contrast = value);
+              _applyCurrentFilter();
+            },
           ),
         ],
       ),
@@ -273,6 +399,7 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
                 setState(() {
                   _selectedFilter = newSelection.first;
                 });
+                _applyCurrentFilter();
               },
               style: ButtonStyle(
                 padding: WidgetStateProperty.all(
@@ -318,7 +445,13 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
             icon: Icons.rotate_right,
             label: 'Rotate',
             tooltip: 'Rotate 90 degrees clockwise',
-            onPressed: () => _showMessage('Rotated 90°'),
+            onPressed: () {
+              setState(() {
+                _rotationAngle = (_rotationAngle + 90) % 360;
+              });
+              _applyCurrentFilter();
+              _showMessage('Rotated 90°');
+            },
           ),
 
           // Adjustments toggle

@@ -9,6 +9,9 @@ import 'screens/document_viewer_screen.dart';
 import 'models/scan_document.dart';
 
 void main() {
+  // Ensure Flutter bindings are initialized
+  WidgetsFlutterBinding.ensureInitialized();
+
   // Set system UI overlay style
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(

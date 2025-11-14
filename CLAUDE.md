@@ -6,7 +6,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Scannie는 문서 스캔 Flutter 애플리케이션입니다. 카메라로 문서를 스캔하고, 필터를 적용하며, PDF로 내보낼 수 있는 UI를 제공합니다.
 
-**중요**: 이것은 **모바일 앱**입니다. 테스트 시 Android 에뮬레이터(`flutter run -d emulator-5554`)를 사용하세요.
+**중요**: 이것은 **모바일 앱**입니다. 테스트 시 Android 에뮬레이터를 사용하세요.
+
+**현재 상태**: UI 프로토타입 단계 - 모든 화면이 시각적으로 완성되었으나 실제 카메라, 이미지 처리, PDF 기능은 시뮬레이션입니다.
 
 ## 개발 환경
 
@@ -21,14 +23,19 @@ Scannie는 문서 스캔 Flutter 애플리케이션입니다. 카메라로 문�
 ### 앱 실행 (모바일)
 
 ```bash
-# Android 에뮬레이터에서 실행 (권장)
-flutter run -d emulator-5554
-
 # 사용 가능한 기기 확인
 flutter devices
 
-# Hot Reload: r 키
-# Hot Restart: R 키
+# Android 에뮬레이터에서 실행 (기기 ID는 flutter devices로 확인)
+flutter run -d <device-id>
+# 예: flutter run -d emulator-5554
+
+# Hot Reload: r 키 (상태 유지하며 UI 변경사항 반영)
+# Hot Restart: R 키 (앱 재시작, 상태 초기화)
+# 종료: q 키
+
+# 빌드 경고 무시하고 실행 (beta 채널 사용 시)
+flutter run -d <device-id> --android-skip-build-dependency-validation
 ```
 
 ### 빌드 및 분석
@@ -57,7 +64,14 @@ flutter clean && flutter pub get && flutter run -d emulator-5554
 - **Card**: M3 elevation과 shape 자동 적용
 - **ColorScheme.fromSeed**: Primary 색상에서 자동 생성된 조화로운 색상 팔레트
 
-외부 UI 라이브러리를 추가하지 마세요. Material 3 네이티브 컴포넌트를 우선 사용하세요.
+**중요 원칙**: 외부 UI 라이브러리를 추가하지 마세요. Material 3 네이티브 컴포넌트를 우선 사용하세요.
+
+**M3 컴포넌트 선호도**:
+1. FilledButton > ElevatedButton (주요 액션)
+2. OutlinedButton (보조 액션)
+3. TextButton (낮은 우선순위 액션)
+4. SegmentedButton > ToggleButtons (다중 선택)
+5. Card with M3 elevation (콘텐츠 그룹화)
 
 ### 디렉토리 구조
 
@@ -69,7 +83,13 @@ flutter clean && flutter pub get && flutter run -d emulator-5554
   - `export_screen.dart`: PDF 설정 (페이지 크기, 품질)
 - **lib/widgets/common/**: 재사용 위젯 (`ScanCard`, `CustomAppBar`, `CustomButton`)
 - **lib/theme/**: 중앙화된 디자인 시스템
-- **lib/models/**: `ScanDocument` 모델
+  - `app_theme.dart`: ThemeData 구성, M3 설정
+  - `app_colors.dart`: 색상 팔레트 상수
+  - `app_text_styles.dart`: 타이포그래피 스타일
+- **lib/models/**: 데이터 모델
+  - `scan_document.dart`: ScanDocument 모델 (id, name, createdAt, imagePaths, isProcessed)
+- **lib/utils/**: 유틸리티 함수
+  - `image_filters.dart`: 이미지 필터 및 처리 함수 (`image` 패키지 사용)
 
 ### 테마 시스템
 
@@ -136,15 +156,25 @@ GalleryScreen (홈)
 
 ### 구현 상태
 
-- **UI 프로토타입**: 모든 화면이 시각적으로 완성됨
-- **Mock 데이터**: 카메라, 이미지 처리, PDF는 시뮬레이션
-- **플레이스홀더**: 실제 이미지 대신 아이콘 표시
-- **네비게이션**: 완전히 작동
+**완료된 기능**:
+- ✅ 모든 화면 UI (5개 화면)
+- ✅ 네비게이션 플로우 (명명된 라우트)
+- ✅ 테마 시스템 (M3, 색상, 타이포그래피, 간격)
+- ✅ 재사용 가능한 공통 위젯
+- ✅ 이미지 필터 유틸리티 (`image` 패키지 통합)
 
-새 기능 추가 시:
-- 테마 시스템 준수 (간격, 색상, 타이포그래피)
+**미구현 기능** (향후 개발 필요):
+- ❌ 실제 카메라 기능 (`camera` 패키지 필요)
+- ❌ 파일 시스템 저장 (`path_provider` 필요)
+- ❌ PDF 생성 (`pdf` 패키지 필요)
+- ❌ 권한 처리 (`permission_handler` 필요)
+- ❌ EditScreen의 Auto Crop (edge detection 알고리즘)
+
+**새 기능 추가 시 지켜야 할 원칙**:
+- 테마 시스템 준수 (`AppSpacing`, `AppColors`, `AppTextStyles` 사용)
 - Material 3 네이티브 위젯 우선 사용
-- 공통 위젯 재사용 (`CustomAppBar`, `ScanCard`)
+- 공통 위젯 재사용 (`CustomAppBar`, `ScanCard`, `CustomButton`)
+- `const` 키워드 적극 사용 (성능 최적화)
 
 ## 일반적인 문제 해결
 
@@ -193,12 +223,40 @@ Text('Title', style: AppTextStyles.h2)
 Icon(Icons.search, size: 24)
 ```
 
+## 이미지 처리 (ImageFilters)
+
+`lib/utils/image_filters.dart`는 `image` 패키지를 사용하여 문서 스캔 필터를 제공합니다.
+
+**주요 필터**:
+- `applyOriginal()`: 원본 (변경 없음)
+- `applyGrayscale()`: 흑백
+- `applyBlackAndWhite()`: 고대비 이진화 (문서 스캔에 최적)
+- `applyMagicColor()`: 자동 색상 향상
+- `applyLighten()`: 밝게
+
+**조정 기능**:
+- `applyBrightness(image, value)`: 밝기 (-100 ~ 100)
+- `applyContrast(image, value)`: 대비 (-100 ~ 100)
+- `rotate90/180/270(image)`: 회전
+- `autoCrop(image)`: 자동 자르기 (TODO: edge detection 구현 필요)
+
+**이미지 로딩/저장**:
+- `loadImage(path)`: 파일에서 이미지 로드
+- `saveImage(image, path)`: JPEG로 저장 (품질 95%)
+- `encodeImage(image)`: UI 표시용 Uint8List 인코딩
+
 ## 향후 개발 계획
 
 실제 기능 구현 시 필요한 패키지:
 
-- `camera`: 실시간 카메라
-- `image`: 필터 및 크롭
-- `pdf`: PDF 생성
-- `path_provider`: 파일 시스템
-- `permission_handler`: 카메라/저장소 권한
+- `camera`: 실시간 카메라 프리뷰 및 촬영
+- `path_provider`: 파일 시스템 경로 접근
+- `pdf`: PDF 문서 생성
+- `permission_handler`: 카메라/저장소 권한 요청
+
+**개발 우선순위 제안**:
+1. 카메라 기능 (`camera` 패키지 통합)
+2. 파일 저장 (`path_provider` 통합)
+3. PDF 내보내기 (`pdf` 패키지 통합)
+4. Edge detection 기반 Auto Crop
+5. 다국어 지원 (현재 한국어만)
