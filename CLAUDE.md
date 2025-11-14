@@ -18,6 +18,130 @@ Scannie는 문서 스캔 Flutter 애플리케이션입니다. 카메라로 문�
 - 린트: flutter_lints ^4.0.0
 - **Material Design 3**: `useMaterial3: true` 활성화됨
 
+## ⚠️ Flutter API 주의사항 (자주 하는 실수)
+
+**이 프로젝트는 Flutter 3.39 (beta)를 사용합니다. 최신 API를 사용하세요!**
+
+### 🚫 절대 사용 금지 (Deprecated)
+
+#### 1. `Color.withOpacity()` ❌
+```dart
+// ❌ WRONG - Deprecated!
+Colors.white.withOpacity(0.5)
+Colors.black.withOpacity(0.3)
+
+// ✅ CORRECT - Use withValues()
+Colors.white.withValues(alpha: 0.5)
+Colors.black.withValues(alpha: 0.3)
+```
+
+**이유**: `withOpacity()`는 precision loss 문제로 deprecated됨. Flutter 3.27+ 에서는 `withValues()` 사용 필수.
+
+#### 2. Async Gap에서 BuildContext 직접 사용 ❌
+```dart
+// ❌ WRONG - Context across async gap
+Future<void> someFunction() async {
+  await someAsyncOperation();
+  if (!mounted) return;
+  Navigator.pop(context); // 위험! async gap 후 context 사용
+}
+
+// ✅ CORRECT - Store Navigator before async
+Future<void> someFunction() async {
+  final navigator = Navigator.of(context);
+  await someAsyncOperation();
+  if (!mounted) return;
+  navigator.pop(); // 안전! navigator 인스턴스 사용
+}
+```
+
+**이유**: `async` 작업 후 위젯이 dispose될 수 있으므로 `BuildContext` 사용이 위험함. 미리 `Navigator` 인스턴스를 저장하거나 `mounted` 체크 후 사용.
+
+#### 3. showDialog에서 context 변수명 충돌 ❌
+```dart
+// ❌ WRONG - context shadowing
+showDialog(
+  context: context,
+  builder: (context) => AlertDialog( // 같은 이름 사용
+    actions: [
+      TextButton(
+        onPressed: () {
+          Navigator.pop(context); // 어느 context?
+        },
+      ),
+    ],
+  ),
+);
+
+// ✅ CORRECT - Use different name
+showDialog(
+  context: context,
+  builder: (dialogContext) => AlertDialog( // 다른 이름
+    actions: [
+      TextButton(
+        onPressed: () {
+          Navigator.pop(dialogContext); // 명확!
+        },
+      ),
+    ],
+  ),
+);
+```
+
+#### 4. path 패키지 import 충돌 ❌
+```dart
+// ❌ WRONG - Conflicts with dart:io
+import 'package:path/path.dart';
+
+void test() {
+  join('a', 'b'); // 어느 join? dart:io vs package:path
+}
+
+// ✅ CORRECT - Use alias
+import 'package:path/path.dart' as path;
+
+void test() {
+  path.join('a', 'b'); // 명확!
+}
+```
+
+### ✅ 권장 패턴
+
+#### BuildContext 안전하게 사용하기
+```dart
+class MyWidget extends StatefulWidget {
+  @override
+  State<MyWidget> createState() => _MyWidgetState();
+}
+
+class _MyWidgetState extends State<MyWidget> {
+  Future<void> safeAsyncOperation() async {
+    // 1. Navigator를 먼저 저장
+    final navigator = Navigator.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+
+    // 2. async 작업 실행
+    await someAsyncWork();
+
+    // 3. mounted 체크
+    if (!mounted) return;
+
+    // 4. 저장한 인스턴스 사용
+    navigator.pop();
+    messenger.showSnackBar(SnackBar(content: Text('Done')));
+  }
+}
+```
+
+#### const 최적화
+```dart
+// ✅ 가능한 모든 곳에 const 사용
+const Text('Title', style: AppTextStyles.h2)
+const Icon(Icons.search, size: 24)
+const SizedBox(height: AppSpacing.md)
+const EdgeInsets.all(AppSpacing.lg)
+```
+
 ## 필수 명령어
 
 ### 앱 실행 (모바일)
@@ -162,13 +286,16 @@ GalleryScreen (홈)
 - ✅ 테마 시스템 (M3, 색상, 타이포그래피, 간격)
 - ✅ 재사용 가능한 공통 위젯
 - ✅ 이미지 필터 유틸리티 (`image` 패키지 통합)
+- ✅ **실제 문서 스캔 기능** (`flutter_doc_scanner` - ML Kit 기반)
+  - 자동 문서 edge 감지
+  - A4 용지 정렬 시 자동 캡처
+  - 원근 보정 (perspective correction)
+  - iOS (VisionKit) 및 Android (ML Kit) 네이티브 지원
 
 **미구현 기능** (향후 개발 필요):
-- ❌ 실제 카메라 기능 (`camera` 패키지 필요)
 - ❌ 파일 시스템 저장 (`path_provider` 필요)
 - ❌ PDF 생성 (`pdf` 패키지 필요)
-- ❌ 권한 처리 (`permission_handler` 필요)
-- ❌ EditScreen의 Auto Crop (edge detection 알고리즘)
+- ❌ EditScreen의 실제 이미지 편집 통합
 
 **새 기능 추가 시 지켜야 할 원칙**:
 - 테마 시스템 준수 (`AppSpacing`, `AppColors`, `AppTextStyles` 사용)
@@ -245,18 +372,48 @@ Icon(Icons.search, size: 24)
 - `saveImage(image, path)`: JPEG로 저장 (품질 95%)
 - `encodeImage(image)`: UI 표시용 Uint8List 인코딩
 
+## 문서 스캔 기능 (edge_detection)
+
+앱은 `edge_detection` 패키지를 사용하여 실시간 Edge Detection 기반 문서 스캔을 제공합니다.
+
+**주요 기능**:
+- **실시간 카메라 UI**: 커스텀 카메라 인터페이스 제공
+- **네모 가이드 프레임**: 화면에 사각형 가이드가 표시되어 문서 위치를 안내
+- **자동 Edge 감지**: 문서의 테두리를 실시간으로 자동 인식
+- **자동 캡처**: 문서가 가이드 프레임에 맞춰지면 자동으로 촬영
+- **수동 편집**: 캡처 후 모서리 조정, 자르기, 흑백 필터 적용 가능
+- **갤러리 선택**: 카메라뿐만 아니라 갤러리에서도 이미지 선택 가능
+
+**사용 방법**:
+```dart
+// 실시간 카메라로 Edge Detection 시작
+bool success = await EdgeDetection.detectEdge(
+  imagePath,
+  canUseGallery: true,
+  androidScanTitle: '문서 스캔',
+  androidCropTitle: '자르기',
+);
+```
+
+**플랫폼별 구현**:
+- **Android**: OpenCV 기반 Edge Detection
+- **iOS**: WeScan 라이브러리 (Vision 프레임워크)
+
+**요구사항**:
+- Android: minSdkVersion 21 이상
+- iOS: iOS 13.0 이상
+- 카메라 및 사진 라이브러리 권한 필수
+
 ## 향후 개발 계획
 
 실제 기능 구현 시 필요한 패키지:
 
-- `camera`: 실시간 카메라 프리뷰 및 촬영
 - `path_provider`: 파일 시스템 경로 접근
 - `pdf`: PDF 문서 생성
-- `permission_handler`: 카메라/저장소 권한 요청
 
 **개발 우선순위 제안**:
-1. 카메라 기능 (`camera` 패키지 통합)
-2. 파일 저장 (`path_provider` 통합)
-3. PDF 내보내기 (`pdf` 패키지 통합)
-4. Edge detection 기반 Auto Crop
+1. ~~카메라 기능~~ ✅ 완료 (`flutter_doc_scanner` 통합)
+2. EditScreen에 실제 스캔 이미지 표시
+3. 파일 저장 (`path_provider` 통합)
+4. PDF 내보내기 (`pdf` 패키지 통합)
 5. 다국어 지원 (현재 한국어만)
