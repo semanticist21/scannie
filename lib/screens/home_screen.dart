@@ -48,7 +48,6 @@ class _HomeScreenState extends State<HomeScreen> {
         onPressed: _openCamera,
         icon: const Icon(Icons.camera_alt),
         label: const Text('스캔하기'),
-        backgroundColor: Colors.blue,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       bottomNavigationBar: BottomNavigationBar(

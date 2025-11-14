@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../config/theme/app_theme.dart';
 
 class PremiumScreen extends StatefulWidget {
   const PremiumScreen({super.key});
@@ -92,8 +93,8 @@ class _PremiumScreenState extends State<PremiumScreen> {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Colors.blue[700]!,
-                    Colors.blue[500]!,
+                    Theme.of(context).colorScheme.primary,
+                    Theme.of(context).colorScheme.primaryContainer,
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -202,13 +203,6 @@ class _PremiumScreenState extends State<PremiumScreen> {
                   onPressed: _isProcessing
                       ? null
                       : () => _purchasePlan(_selectedPlan),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
                   child: _isProcessing
                       ? const SizedBox(
                           width: 24,
@@ -266,12 +260,12 @@ class _PremiumScreenState extends State<PremiumScreen> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.blue.withOpacity(0.1),
+              color: context.colors.primaryContainer,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
               icon,
-              color: Colors.blue,
+              color: context.colors.primary,
               size: 28,
             ),
           ),
@@ -292,7 +286,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
                   description,
                   style: TextStyle(
                     fontSize: 14,
-                    color: Colors.grey[600],
+                    color: context.colors.onSurfaceVariant,
                   ),
                 ),
               ],
@@ -318,9 +312,9 @@ class _PremiumScreenState extends State<PremiumScreen> {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.blue.withOpacity(0.1) : null,
+          color: isSelected ? context.colors.primaryContainer : null,
           border: Border.all(
-            color: isSelected ? Colors.blue : Colors.grey[300]!,
+            color: isSelected ? context.colors.primary : context.colors.outline,
             width: isSelected ? 2 : 1,
           ),
           borderRadius: BorderRadius.circular(16),
@@ -336,7 +330,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
                       isSelected
                           ? Icons.radio_button_checked
                           : Icons.radio_button_unchecked,
-                      color: isSelected ? Colors.blue : Colors.grey,
+                      color: isSelected ? context.colors.primary : context.colors.onSurfaceVariant,
                     ),
                     const SizedBox(width: 12),
                     Text(
@@ -354,10 +348,10 @@ class _PremiumScreenState extends State<PremiumScreen> {
                   children: [
                     Text(
                       price,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 32,
                         fontWeight: FontWeight.bold,
-                        color: Colors.blue,
+                        color: context.colors.primary,
                       ),
                     ),
                     const SizedBox(width: 4),
@@ -367,7 +361,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
                         period,
                         style: TextStyle(
                           fontSize: 14,
-                          color: Colors.grey[600],
+                          color: context.colors.onSurfaceVariant,
                         ),
                       ),
                     ),
@@ -378,7 +372,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
                   description,
                   style: TextStyle(
                     fontSize: 14,
-                    color: Colors.grey[600],
+                    color: context.colors.onSurfaceVariant,
                   ),
                 ),
               ],
@@ -393,12 +387,12 @@ class _PremiumScreenState extends State<PremiumScreen> {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.orange,
+                    color: context.promotionColor,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Text(
-                    badge,
-                    style: const TextStyle(
+                  child: const Text(
+                    '70% 할인',
+                    style: TextStyle(
                       color: Colors.white,
                       fontSize: 12,
                       fontWeight: FontWeight.bold,

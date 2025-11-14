@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import '../config/theme/app_theme.dart';
 import '../models/scanned_document.dart';
 import '../services/image_service.dart';
 import 'premium_screen.dart';
@@ -275,20 +276,20 @@ class _EditScreenState extends State<EditScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.colors.surface,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.grey[300]!),
+          border: Border.all(color: context.colors.outline),
         ),
         child: Row(
           children: [
-            Icon(icon, color: isPro ? Colors.amber : Colors.blue),
+            Icon(icon, color: isPro ? context.colors.tertiary : context.colors.primary),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
                 label,
                 style: TextStyle(
                   fontSize: 16,
-                  color: isPro ? Colors.amber[700] : Colors.black,
+                  color: isPro ? context.colors.tertiary : context.colors.onSurface,
                 ),
               ),
             ),
@@ -296,19 +297,19 @@ class _EditScreenState extends State<EditScreen> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: Colors.amber,
+                  color: context.colors.tertiary,
                   borderRadius: BorderRadius.circular(4),
                 ),
-                child: const Text(
+                child: Text(
                   'PRO',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: context.colors.onTertiary,
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-            const Icon(Icons.chevron_right, color: Colors.grey),
+            Icon(Icons.chevron_right, color: context.colors.onSurfaceVariant),
           ],
         ),
       ),
@@ -368,10 +369,10 @@ class _FilterOption extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.blue : Colors.white,
+          color: isSelected ? context.colors.primary : context.colors.surface,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: isSelected ? Colors.blue : Colors.grey[300]!,
+            color: isSelected ? context.colors.primary : context.colors.outline,
             width: 2,
           ),
         ),
@@ -379,14 +380,14 @@ class _FilterOption extends StatelessWidget {
           children: [
             Icon(
               icon,
-              color: isSelected ? Colors.white : Colors.black,
+              color: isSelected ? context.colors.onPrimary : context.colors.onSurface,
               size: 32,
             ),
             const SizedBox(height: 4),
             Text(
               label,
               style: TextStyle(
-                color: isSelected ? Colors.white : Colors.black,
+                color: isSelected ? context.colors.onPrimary : context.colors.onSurface,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
             ),

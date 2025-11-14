@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:printing/printing.dart';
+import '../config/theme/app_theme.dart';
 import '../models/scanned_document.dart';
 import '../services/pdf_service.dart';
 import '../providers/document_provider.dart';
@@ -151,7 +152,10 @@ class GalleryScreen extends StatelessWidget {
                 const SnackBar(content: Text('문서가 삭제되었습니다')),
               );
             },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: context.colors.error,
+              foregroundColor: context.colors.onError,
+            ),
             child: const Text('삭제'),
           ),
         ],
