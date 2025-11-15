@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:image/image.dart' as img;
+// import 'package:opencv_dart/opencv_dart.dart' as cv;  // iOS arm64 문제로 임시 비활성화
 
 /// Image filter utility functions for document scanning
 class ImageFilters {
@@ -15,20 +16,22 @@ class ImageFilters {
   }
 
   /// Apply black and white (binarization) filter
-  /// Uses grayscale + high contrast for document scanning
+  /// CamScanner-style: Adaptive thresholding + shadow removal for clean document scan
   static img.Image applyBlackAndWhite(img.Image image) {
-    // First convert to grayscale
+    // 1. Convert to grayscale
     var processed = img.grayscale(image);
 
-    // Apply high contrast to create black and white effect
-    processed = img.adjustColor(
-      processed,
-      contrast: 1.8,
-      brightness: 1.1,
-    );
+    // 2. Remove shadows using illumination correction
+    processed = _removeIllumination(processed);
 
-    // Apply threshold binarization
-    processed = _applyThreshold(processed, threshold: 128);
+    // 3. Normalize histogram (stretch to full 0-255 range)
+    processed = img.normalize(processed, min: 0, max: 255);
+
+    // 4. Apply adaptive threshold for better shadow handling
+    processed = _applyAdaptiveThreshold(processed, blockSize: 25, c: 10);
+
+    // 5. Final contrast boost for crisp text
+    processed = img.contrast(processed, contrast: 1.2);
 
     return processed;
   }
@@ -178,26 +181,205 @@ class ImageFilters {
     }
   }
 
-  /// Apply threshold binarization
-  /// Converts pixels to pure black or white based on threshold
-  /// [threshold] value from 0-255, default 128
-  static img.Image _applyThreshold(img.Image image, {int threshold = 128}) {
+  /// Remove illumination (shadows) using Gaussian blur estimation
+  /// CamScanner-style shadow removal: estimate background illumination and subtract
+  static img.Image _removeIllumination(img.Image image) {
+    // 1. Create illumination map using large Gaussian blur
+    // This estimates the uneven lighting/shadows
+    final illumination = img.gaussianBlur(image, radius: 20);
+
+    // 2. Subtract illumination from original to get reflectance
+    final result = image.clone();
+
+    for (final pixel in result) {
+      final illumPixel = illumination.getPixel(pixel.x, pixel.y);
+
+      // For each channel, calculate: original + (128 - illumination)
+      // This normalizes lighting while preserving detail
+      final r = pixel.r.toInt();
+      final g = pixel.g.toInt();
+      final b = pixel.b.toInt();
+
+      final illumR = illumPixel.r.toInt();
+      final illumG = illumPixel.g.toInt();
+      final illumB = illumPixel.b.toInt();
+
+      // Add offset to prevent negative values
+      final newR = (r + 128 - illumR).clamp(0, 255).toInt();
+      final newG = (g + 128 - illumG).clamp(0, 255).toInt();
+      final newB = (b + 128 - illumB).clamp(0, 255).toInt();
+
+      pixel
+        ..r = newR
+        ..g = newG
+        ..b = newB;
+    }
+
+    return result;
+  }
+
+  /// Adaptive threshold binarization
+  /// CamScanner-style: uses local neighborhood to determine threshold
+  /// [blockSize] size of local neighborhood (must be odd), larger = smoother
+  /// [c] constant subtracted from mean (higher = more aggressive)
+  static img.Image _applyAdaptiveThreshold(
+    img.Image image, {
+    int blockSize = 25,
+    int c = 10,
+  }) {
+    // Ensure blockSize is odd
+    if (blockSize % 2 == 0) blockSize++;
+
+    final result = image.clone();
+    final halfBlock = blockSize ~/ 2;
+
+    // For each pixel, calculate local mean and apply threshold
+    for (int y = 0; y < image.height; y++) {
+      for (int x = 0; x < image.width; x++) {
+        // Calculate local mean in neighborhood
+        int sum = 0;
+        int count = 0;
+
+        for (int dy = -halfBlock; dy <= halfBlock; dy++) {
+          for (int dx = -halfBlock; dx <= halfBlock; dx++) {
+            final nx = (x + dx).clamp(0, image.width - 1);
+            final ny = (y + dy).clamp(0, image.height - 1);
+
+            final neighbor = image.getPixel(nx, ny);
+            sum += neighbor.r.toInt(); // Grayscale, so r=g=b
+            count++;
+          }
+        }
+
+        final localMean = sum / count;
+        final pixel = result.getPixel(x, y);
+        final pixelValue = pixel.r.toInt();
+
+        // Threshold: pixel > (localMean - c) ? white : black
+        final threshold = (localMean - c).clamp(0, 255).toInt();
+        final newValue = pixelValue > threshold ? 255 : 0;
+
+        pixel
+          ..r = newValue
+          ..g = newValue
+          ..b = newValue;
+      }
+    }
+
+    return result;
+  }
+
+
+  /// Remove shadows from document images using OpenCV
+  /// This is a computationally intensive operation
+  /// NOTE: iOS에서는 opencv_dart arm64 문제로 Fast 버전 사용
+  static Future<img.Image> removeShadows(img.Image image) async {
+    // iOS arm64 문제로 인해 임시로 Fast 버전 사용
+    return removeShadowsFast(image);
+
+    /* OpenCV 버전 (Android에서만 사용 가능)
+    try {
+      // 1. Convert img.Image to OpenCV Mat
+      final bytes = img.encodeJpg(image);
+      final mat = cv.imdecode(bytes, cv.IMREAD_COLOR);
+
+      // 2. Convert to LAB color space for better shadow processing
+      final lab = cv.cvtColor(mat, cv.COLOR_BGR2Lab);
+
+      // 3. Split LAB channels (L = Lightness, A, B = color)
+      final channels = cv.split(lab);
+      final l = channels[0]; // Lightness channel
+
+      // 4. Apply morphological closing to estimate background
+      // This creates a map of the illumination
+      final kernel = cv.getStructuringElement(
+        cv.MORPH_ELLIPSE,
+        (15, 15),
+      );
+      final bg = cv.morphologyEx(l, cv.MORPH_CLOSE, kernel);
+
+      // 5. Subtract background from original to remove shadows
+      final diff = cv.subtract(bg, l);
+
+      // 6. Normalize the result (stretch histogram to 0-255)
+      final normalized = cv.Mat.empty();
+      cv.normalize(
+        diff,
+        normalized,
+        alpha: 0,
+        beta: 255,
+        normType: cv.NORM_MINMAX,
+      );
+
+      // 7. Merge back with original color channels
+      channels[0] = normalized;
+      final mergedLab = cv.merge(channels);
+
+      // 8. Convert back to BGR
+      final result = cv.cvtColor(mergedLab, cv.COLOR_Lab2BGR);
+
+      // 9. Convert Mat back to img.Image
+      final resultBytes = cv.imencode('.jpg', result).$2;
+      final decodedImage = img.decodeImage(resultBytes);
+
+      // Clean up OpenCV matrices
+      mat.dispose();
+      lab.dispose();
+      for (int i = 0; i < channels.length; i++) {
+        channels[i].dispose();
+      }
+      kernel.dispose();
+      bg.dispose();
+      diff.dispose();
+      normalized.dispose();
+      mergedLab.dispose();
+      result.dispose();
+
+      return decodedImage ?? image;
+    } catch (e) {
+      // If OpenCV processing fails, return original image
+      return image;
+    }
+    */
+  }
+
+  /// Fast shadow removal using simple illumination correction
+  /// Less effective than OpenCV but much faster
+  static img.Image removeShadowsFast(img.Image image) {
     final processed = image.clone();
 
+    // Calculate average brightness
+    int totalBrightness = 0;
+    int pixelCount = 0;
+
     for (final pixel in processed) {
-      // Get luminance (grayscale value)
       final r = pixel.r.toInt();
       final g = pixel.g.toInt();
       final b = pixel.b.toInt();
       final luminance = (0.299 * r + 0.587 * g + 0.114 * b).round();
+      totalBrightness += luminance;
+      pixelCount++;
+    }
 
-      // Apply threshold
-      final newValue = luminance > threshold ? 255 : 0;
+    final avgBrightness = totalBrightness / pixelCount;
+    const targetBrightness = 180; // Target average brightness
+
+    // Brighten dark areas more than bright areas
+    for (final pixel in processed) {
+      final r = pixel.r.toInt();
+      final g = pixel.g.toInt();
+      final b = pixel.b.toInt();
+      final luminance = (0.299 * r + 0.587 * g + 0.114 * b);
+
+      // Calculate boost factor (more boost for darker pixels)
+      final boost = luminance < avgBrightness
+          ? 1.0 + ((avgBrightness - luminance) / avgBrightness) * 0.6
+          : 1.0 + ((targetBrightness - luminance) / 255.0) * 0.3;
 
       pixel
-        ..r = newValue
-        ..g = newValue
-        ..b = newValue;
+        ..r = (r * boost).clamp(0, 255).toInt()
+        ..g = (g * boost).clamp(0, 255).toInt()
+        ..b = (b * boost).clamp(0, 255).toInt();
     }
 
     return processed;

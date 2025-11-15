@@ -41,6 +41,7 @@ class ScannierApp extends StatelessWidget {
           case '/edit':
             return MaterialPageRoute(
               builder: (context) => const EditScreen(),
+              settings: settings, // Pass arguments to EditScreen
             );
 
           case '/viewer':

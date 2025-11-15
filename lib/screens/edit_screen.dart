@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
@@ -15,6 +16,7 @@ enum FilterType {
   color,
   grayscale,
   enhanced,
+  shadowRemoval, // OpenCV shadow removal
 }
 
 /// Edit screen for applying filters and adjustments
@@ -66,24 +68,40 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
 
     // Load image paths from route arguments
     final arguments = ModalRoute.of(context)?.settings.arguments;
+    print('🔍 EditScreen - Received arguments: $arguments (type: ${arguments.runtimeType})');
+
     if (arguments != null && _imagePaths.isEmpty) {
       if (arguments is String) {
         // Single image path
+        print('  ✓ Single image path: $arguments');
         _imagePaths = [arguments];
       } else if (arguments is List<String>) {
         // Multiple image paths
+        print('  ✓ Multiple image paths: ${arguments.length} images');
         _imagePaths = arguments;
+      } else {
+        print('  ✗ Unknown argument type: ${arguments.runtimeType}');
       }
 
       if (_imagePaths.isNotEmpty) {
+        print('  → Loading ${_imagePaths.length} images...');
         _loadCurrentImage();
+      } else {
+        print('  ✗ No image paths to load');
       }
+    } else if (_imagePaths.isNotEmpty) {
+      print('  ⚠️ Arguments already loaded (${_imagePaths.length} images)');
     }
   }
 
   /// Load the currently selected image
   Future<void> _loadCurrentImage() async {
-    if (_imagePaths.isEmpty) return;
+    if (_imagePaths.isEmpty) {
+      print('  ✗ _loadCurrentImage: No image paths available');
+      return;
+    }
+
+    print('  🖼️  _loadCurrentImage: Loading image ${_currentImageIndex + 1}/${_imagePaths.length}');
 
     setState(() {
       _isProcessing = true;
@@ -91,7 +109,16 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
 
     try {
       final imagePath = _imagePaths[_currentImageIndex];
+      print('  📂 Image path: $imagePath');
+      print('  🔄 Loading image from file...');
+
       _originalImage = await ImageFilters.loadImage(imagePath);
+
+      if (_originalImage == null) {
+        print('  ✗ Failed to load image - loadImage returned null');
+      } else {
+        print('  ✓ Image loaded: ${_originalImage!.width}x${_originalImage!.height}');
+      }
 
       // Reset adjustments for new image
       _rotationAngle = 0;
@@ -99,8 +126,11 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
       _contrast = _batchContrast ?? 0;
       _selectedFilter = _batchFilter ?? FilterType.original;
 
+      print('  🎨 Applying filter...');
       await _applyCurrentFilter();
+      print('  ✓ Filter applied');
     } catch (e) {
+      print('  ✗ Error loading image: $e');
       debugPrint('Error loading image: $e');
       // Show error to user
       if (mounted) {
@@ -122,7 +152,12 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
 
   /// Apply the currently selected filter and adjustments
   Future<void> _applyCurrentFilter() async {
-    if (_originalImage == null) return;
+    if (_originalImage == null) {
+      print('  ✗ _applyCurrentFilter: No original image');
+      return;
+    }
+
+    print('  🎨 _applyCurrentFilter: Starting filter application...');
 
     // Don't show loading indicator for filter changes
     // Process in background and update when ready
@@ -130,9 +165,11 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
     try {
       // Start with original image
       img.Image processed = _originalImage!.clone();
+      print('  ✓ Cloned original image: ${processed.width}x${processed.height}');
 
       // Apply rotation if any
       if (_rotationAngle != 0) {
+        print('  🔄 Applying rotation: $_rotationAngle°');
         if (_rotationAngle == 90) {
           processed = ImageFilters.rotate90(processed);
         } else if (_rotationAngle == 180) {
@@ -143,6 +180,7 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
       }
 
       // Apply selected filter
+      print('  🎭 Applying filter: $_selectedFilter');
       switch (_selectedFilter) {
         case FilterType.original:
           processed = ImageFilters.applyOriginal(processed);
@@ -159,10 +197,14 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
         case FilterType.enhanced:
           processed = ImageFilters.applyLighten(processed);
           break;
+        case FilterType.shadowRemoval:
+          processed = await ImageFilters.removeShadows(processed);
+          break;
       }
 
       // Apply brightness and contrast adjustments
       if (_brightness != 0 || _contrast != 0) {
+        print('  ☀️  Applying brightness: $_brightness, contrast: $_contrast');
         processed = ImageFilters.applyBrightnessAndContrast(
           processed,
           _brightness,
@@ -171,14 +213,18 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
       }
 
       // Encode for display
+      print('  🖼️  Encoding image for display...');
       final newImageBytes = ImageFilters.encodeImage(processed);
+      print('  ✓ Encoded ${newImageBytes.length} bytes');
 
       // Update UI with new image
       setState(() {
         _displayImageBytes = newImageBytes;
       });
-    } catch (e) {
-      // Error processing image
+      print('  ✅ Display updated successfully');
+    } catch (e, stackTrace) {
+      print('  ✗ Error in _applyCurrentFilter: $e');
+      print('  Stack trace: $stackTrace');
     }
   }
 
@@ -242,46 +288,74 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
 
   Widget _buildImageNavigation() {
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.md,
-        vertical: AppSpacing.sm,
-      ),
+      height: 100,
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
       color: AppColors.surface,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // Previous button
-          IconButton(
-            icon: const Icon(Icons.chevron_left),
-            onPressed: _currentImageIndex > 0
-                ? () {
-                    setState(() {
-                      _currentImageIndex--;
-                    });
-                    _loadCurrentImage();
-                  }
-                : null,
-          ),
-          // Page indicator
-          Text(
-            '${_currentImageIndex + 1} / ${_imagePaths.length}',
-            style: AppTextStyles.bodyMedium.copyWith(
-              fontWeight: FontWeight.w600,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+        itemCount: _imagePaths.length,
+        itemBuilder: (context, index) {
+          final isSelected = index == _currentImageIndex;
+          return GestureDetector(
+            onTap: () {
+              if (index != _currentImageIndex) {
+                setState(() {
+                  _currentImageIndex = index;
+                });
+                _loadCurrentImage();
+              }
+            },
+            child: Container(
+              width: 80,
+              margin: const EdgeInsets.only(right: AppSpacing.sm),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: isSelected ? AppColors.primary : Colors.grey.shade300,
+                  width: isSelected ? 3 : 1,
+                ),
+                borderRadius: BorderRadius.circular(AppRadius.sm),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(AppRadius.sm - 1),
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Image.file(
+                      File(_imagePaths[index]),
+                      fit: BoxFit.cover,
+                    ),
+                    if (isSelected)
+                      Container(
+                        color: AppColors.primary.withValues(alpha: 0.2),
+                      ),
+                    Positioned(
+                      bottom: 4,
+                      right: 4,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withValues(alpha: 0.6),
+                          borderRadius: BorderRadius.circular(AppRadius.sm),
+                        ),
+                        child: Text(
+                          '${index + 1}',
+                          style: AppTextStyles.caption.copyWith(
+                            color: Colors.white,
+                            fontSize: 10,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ),
-          // Next button
-          IconButton(
-            icon: const Icon(Icons.chevron_right),
-            onPressed: _currentImageIndex < _imagePaths.length - 1
-                ? () {
-                    setState(() {
-                      _currentImageIndex++;
-                    });
-                    _loadCurrentImage();
-                  }
-                : null,
-          ),
-        ],
+          );
+        },
       ),
     );
   }
@@ -631,6 +705,8 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
         return Colors.grey.shade200;
       case FilterType.enhanced:
         return Colors.blue.shade50;
+      case FilterType.shadowRemoval:
+        return Colors.orange.shade50;
     }
   }
 
@@ -646,6 +722,8 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
         return 'Grayscale';
       case FilterType.enhanced:
         return 'Enhanced';
+      case FilterType.shadowRemoval:
+        return 'Shadow';
     }
   }
 
