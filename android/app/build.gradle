@@ -24,7 +24,7 @@ android {
         applicationId = "com.example.scannie"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdk = 21  // Required for flutter_doc_scanner
+        minSdkVersion = flutter.minSdkVersion  // Required for flutter_doc_scanner
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName

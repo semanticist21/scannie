@@ -8,7 +8,7 @@ Scannie는 문서 스캔 Flutter 애플리케이션입니다. 카메라로 문�
 
 **중요**: 이것은 **모바일 앱**입니다. 테스트 시 Android 에뮬레이터를 사용하세요.
 
-**현재 상태**: **실제 문서 스캔 기능 통합** - `doc_scan_flutter` (ML Kit/VisionKit 기반)로 실제 문서 edge 감지 및 원근 보정 구현. Auto/Manual 모드 지원.
+**현재 상태**: **실제 문서 스캔 기능 통합** - `cunning_document_scanner` v1.2.3 (iOS VNDocumentCameraViewController + Android Intents 기반)로 네이티브 문서 스캔 구현. 자동 edge 감지, 원근 보정 지원.
 
 ## 개발 환경
 
@@ -199,9 +199,8 @@ flutter clean && flutter pub get && flutter run -d emulator-5554
 
 ### 디렉토리 구조
 
-- **lib/screens/**: 5개의 전체 화면
-  - `gallery_screen.dart`: 홈, 문서 리스트/그리드
-  - `camera_screen.dart`: 스캔 UI (Auto/Manual 모드)
+- **lib/screens/**: 4개의 전체 화면 (camera_screen 삭제됨 - 네이티브 스캐너 직접 사용)
+  - `gallery_screen.dart`: 홈, 문서 리스트/그리드, 스캔 버튼에서 네이티브 스캐너 직접 실행
   - `edit_screen.dart`: 5가지 필터, 밝기/대비, 회전, Auto Crop
   - `document_viewer_screen.dart`: 페이지 갤러리, 전체 화면 뷰어
   - `export_screen.dart`: PDF 설정 (페이지 크기, 품질)
@@ -264,8 +263,8 @@ AppTextStyles.button
 
 ```
 GalleryScreen (홈)
-  → '/camera' → CameraScreen
-      → 촬영 → '/edit' → EditScreen
+  → Scan 버튼 → FlutterDocScanner().getScanDocuments() (네이티브 스캐너)
+      → 스캔 완료 → '/edit' → EditScreen (arguments: imagePaths)
           → Save → Navigator.pop(context, newDocument)
   → 문서 탭 → '/viewer' → DocumentViewerScreen (arguments: ScanDocument)
       → PDF 버튼 → '/export' → ExportScreen (arguments: ScanDocument)
@@ -281,19 +280,18 @@ GalleryScreen (홈)
 ### 구현 상태
 
 **완료된 기능**:
-- ✅ 모든 화면 UI (5개 화면)
+- ✅ 모든 화면 UI (4개 화면 - camera_screen 삭제됨)
 - ✅ 네비게이션 플로우 (명명된 라우트)
 - ✅ 테마 시스템 (M3, 색상, 타이포그래피, 간격)
 - ✅ 재사용 가능한 공통 위젯
 - ✅ 이미지 필터 유틸리티 (`image` 패키지 통합)
-- ✅ **실제 문서 스캔 기능** (`doc_scan_flutter` v1.0.6 - ML Kit/VisionKit 기반)
-  - **Auto/Manual 모드**: Auto는 3초 countdown 후 자동 스캔, Manual은 버튼 클릭 시 스캔
-  - **네이티브 스캐너 UI**: iOS (VisionKit), Android (ML Kit) 네이티브 카메라 사용
-  - **AI Edge 감지**: 문서 테두리 자동 인식 및 감지
-  - **원근 보정 (Perspective Correction)**: 비스듬한 각도도 자동 평탄화
-  - **색상 향상**: 스캔 품질 자동 개선
-  - **다중 페이지 스캔**: 여러 문서를 연속으로 스캔 가능
-  - **Pub Points 150점**: 최고 품질의 검증된 패키지
+- ✅ **실제 문서 스캔 기능** (`cunning_document_scanner` v1.2.3 - iOS VNDocumentCamera + Android Intents)
+  - **네이티브 스캐너**: GalleryScreen에서 직접 iOS/Android 네이티브 스캐너 실행
+  - **자동 Edge 감지**: 네이티브 스캐너가 문서 테두리를 자동으로 인식
+  - **원근 보정**: 비스듬한 각도로 촬영해도 자동 평탄화
+  - **갤러리 import**: 기존 사진에서도 문서 스캔 가능
+  - **다중 페이지**: 한 번에 여러 페이지 스캔 가능
+  - **네이티브 UI**: iOS VNDocumentCameraViewController + Android standard UI (커스터마이징 불가)
 
 **미구현 기능** (향후 개발 필요):
 - ❌ 파일 시스템 저장 (`path_provider` 필요)
@@ -375,62 +373,92 @@ Icon(Icons.search, size: 24)
 - `saveImage(image, path)`: JPEG로 저장 (품질 95%)
 - `encodeImage(image)`: UI 표시용 Uint8List 인코딩
 
-## 문서 스캔 기능 (doc_scan_flutter)
+## 문서 스캔 기능 (cunning_document_scanner)
 
-앱은 `doc_scan_flutter` v1.0.6 패키지를 사용하여 네이티브 ML Kit/VisionKit 기반 문서 스캔을 제공합니다.
+앱은 `cunning_document_scanner` v1.2.3 패키지를 사용하여 iOS VNDocumentCameraViewController와 Android Intents 기반 문서 스캔을 제공합니다.
 
 **주요 기능**:
-- **Auto/Manual 모드**:
-  - **Auto 모드**: 화면 진입 시 3초 countdown 후 자동으로 네이티브 스캐너 실행
-  - **Manual 모드**: "스캔 시작" 버튼 클릭 시 네이티브 스캐너 실행
-- **네이티브 스캐너 UI**: iOS (VisionKit), Android (ML Kit) 네이티브 카메라 인터페이스 사용
-- **AI Edge 감지**: ML Kit이 문서 테두리를 자동으로 인식 및 감지
-- **원근 보정 (Perspective Correction)**: 비스듬한 각도로 촬영해도 자동으로 평탄화
-- **색상 향상**: 스캔 품질 자동 개선
-- **다중 페이지 스캔**: 여러 문서를 연속으로 스캔 가능
-- **Pub Points 150점**: 최고 품질의 검증된 패키지
+- **네이티브 스캐너**: GalleryScreen의 Scan 버튼에서 직접 네이티브 스캐너 실행
+- **자동 Edge 감지**: 네이티브 스캐너가 문서 테두리를 실시간으로 자동 인식
+- **원근 보정**: 비스듬한 각도로 촬영해도 자동으로 평탄화
+- **갤러리 import**: 기존 사진에서도 문서 추출 가능
+- **다중 페이지**: 한 번에 여러 페이지 스캔 가능 (사용자가 원하는 만큼)
+- **간단한 API**: 설정 없이 바로 사용 가능
 
 **사용 방법**:
 ```dart
-import 'package:doc_scan_flutter/doc_scan.dart';
+import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 
-// 네이티브 스캐너 실행 (JPEG 포맷, 기본값)
-List<String>? scannedPaths = await DocumentScanner.scan();
+// 네이티브 스캐너 실행
+final scannedImages = await CunningDocumentScanner.getPictures() ?? [];
 
-// PDF 포맷으로 스캔
-List<String>? pdfPaths = await DocumentScanner.scan(
-  format: DocumentScannerFormat.pdf
-);
+// 결과 처리
+if (scannedImages.isEmpty) {
+  // 사용자가 취소하거나 스캔 실패
+  return;
+}
 
-// 에러 처리
-try {
-  final paths = await DocumentScanner.scan();
-  if (paths == null) {
-    // 사용자가 취소
-  } else {
-    // paths는 temporary directory의 파일 경로 리스트
-    // path_provider로 영구 저장 필요
+// List<String>으로 변환
+final List<String> imagePaths = scannedImages is List
+    ? scannedImages.map((e) => e.toString()).toList()
+    : [scannedImages.toString()];
+
+// EditScreen으로 이동
+Navigator.pushNamed(context, '/edit', arguments: imagePaths);
+```
+
+**GalleryScreen 구현 상세**:
+```dart
+Future<void> _openCamera() async {
+  try {
+    // 네이티브 스캐너 직접 실행
+    final scannedImages = await CunningDocumentScanner.getPictures() ?? [];
+    if (!mounted) return;
+    if (scannedImages.isEmpty) return; // 사용자 취소
+
+    // 이미지 경로 변환
+    final List<String> imagePaths = scannedImages is List
+        ? scannedImages.map((e) => e.toString()).toList()
+        : [scannedImages.toString()];
+
+    // EditScreen으로 이동
+    final navigator = Navigator.of(context);
+    final result = await navigator.pushNamed('/edit', arguments: imagePaths);
+
+    // 새 문서 추가
+    if (result != null && result is ScanDocument && mounted) {
+      setState(() => _documents.insert(0, result));
+      _showSnackBar('Document added successfully');
+    }
+  } on PlatformException catch (e) {
+    if (!mounted) return;
+    _showSnackBar('Scan failed: ${e.message}');
   }
-} on DocumentScannerException catch (e) {
-  print('스캔 실패: ${e.message}');
 }
 ```
 
-**구현 상세** (CameraScreen):
-- **준비 화면**: 스캔 전 Auto/Manual 모드 선택 및 안내 메시지 표시
-- **Countdown**: Auto 모드에서 3-2-1 countdown 애니메이션
-- **Feature Hints**: AI Edge 감지, 원근 보정, 색상 향상 기능 안내
-- **다중 스캔**: 스캔 완료 후 다시 countdown 시작하여 연속 스캔 가능
-- **완료**: "완료" 버튼으로 EditScreen으로 이동
+**중요 특징**:
+- ✅ **인증된 퍼블리셔**: cunning.biz 공식 관리로 장기 안정성 보장
+- ✅ **활발한 유지보수**: 최근까지 지속적으로 업데이트
+- ✅ **높은 품질 점수**: Pub Points 160 (flutter_doc_scanner는 140)
+- ❌ **UI 커스터마이징 불가**: 네이티브 UI는 변경 불가능 (색상, 버튼, 레이아웃 등)
 
 **플랫폼별 구현**:
-- **Android**: Google ML Kit Document Scanner API
-- **iOS**: Apple VisionKit framework
+- **Android**: Android Intents 기반 문서 스캐너
+  - 표준 Android 문서 스캔 UI
+  - Gallery import 허용
+  - 자동 cropping 및 보정
+- **iOS**: VNDocumentCameraViewController (VisionKit)
+  - 네이티브 iOS 문서 스캐너 UI
+  - 자동 edge 감지 및 보정
+  - 결과 포맷: PNG
 
 **요구사항**:
 - Android: minSdkVersion 21 이상
 - iOS: iOS 13.0 이상
-- 카메라 권한 필수 (NSCameraUsageDescription in Info.plist)
+- 카메라 권한 필수:
+  - Android: `AndroidManifest.xml`에서 자동 처리
+  - iOS: `Info.plist`에 `NSCameraUsageDescription` 추가 필요
 
 ## 향후 개발 계획
 
@@ -440,8 +468,12 @@ try {
 - `pdf`: PDF 문서 생성
 
 **개발 우선순위 제안**:
-1. ~~카메라 기능~~ ✅ 완료 (`doc_scan_flutter` v1.0.6 통합 - ML Kit/VisionKit 기반)
-2. EditScreen에 실제 스캔 이미지 표시
-3. 파일 저장 (`path_provider` 통합 - 현재 임시 파일만 사용)
+1. ~~카메라 기능~~ ✅ 완료 (`cunning_document_scanner` v1.2.3 통합 - iOS VNDocumentCamera + Android Intents)
+2. EditScreen에 실제 스캔 이미지 표시 및 필터 적용
+3. 파일 저장 (`path_provider` 통합 - 현재 네이티브 스캐너가 임시 파일 생성)
 4. PDF 내보내기 (`pdf` 패키지 통합)
 5. 다국어 지원 (현재 한국어만)
+
+**알려진 제약사항**:
+- cunning_document_scanner의 네이티브 UI는 커스터마이징 불가능
+- 기본적으로 필터 기능 없음 (`cunning_document_scanner_plus`로 필터 추가 가능)

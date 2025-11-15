@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_doc_scanner/flutter_doc_scanner.dart';
+import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import '../models/scan_document.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
@@ -210,8 +210,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
   Future<void> _openCamera() async {
     try {
-      // Launch flutter_doc_scanner directly
-      final scannedImages = await FlutterDocScanner().getScanDocuments() ?? [];
+      // Launch cunning_document_scanner directly
+      final scannedImages = await CunningDocumentScanner.getPictures() ?? [];
 
       if (!mounted) return;
 
@@ -221,9 +221,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
       }
 
       // Convert to list of strings
-      final List<String> imagePaths = scannedImages is List
-          ? scannedImages.map((e) => e.toString()).toList()
-          : [scannedImages.toString()];
+      final List<String> imagePaths = scannedImages;
 
       // Navigate to edit screen with scanned images
       final navigator = Navigator.of(context);
