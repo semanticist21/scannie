@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math' as math;
 import 'dart:typed_data';
 import 'package:image/image.dart' as img;
 // import 'package:opencv_dart/opencv_dart.dart' as cv;  // iOS arm64 문제로 임시 비활성화
@@ -16,22 +17,68 @@ class ImageFilters {
   }
 
   /// Apply black and white (binarization) filter
-  /// CamScanner-style: Adaptive thresholding + shadow removal for clean document scan
+  /// Uses image package's built-in luminanceThreshold for reliable results
   static img.Image applyBlackAndWhite(img.Image image) {
     // 1. Convert to grayscale
     var processed = img.grayscale(image);
 
-    // 2. Remove shadows using illumination correction
-    processed = _removeIllumination(processed);
-
-    // 3. Normalize histogram (stretch to full 0-255 range)
+    // 2. Normalize histogram for better contrast
     processed = img.normalize(processed, min: 0, max: 255);
 
-    // 4. Apply adaptive threshold for better shadow handling
-    processed = _applyAdaptiveThreshold(processed, blockSize: 25, c: 10);
+    // 3. Apply luminance threshold (built-in function)
+    // threshold: 0.5 = 50% brightness cutoff
+    // outputColor: false = binary (0 or 255), not inverted
+    processed = img.luminanceThreshold(
+      processed,
+      threshold: 0.5,
+      outputColor: false,
+      amount: 1.0,
+    );
 
-    // 5. Final contrast boost for crisp text
-    processed = img.contrast(processed, contrast: 1.2);
+    return processed;
+  }
+
+  /// Apply Sepia filter for warm vintage tone
+  /// Fast implementation using pre-calculated ColorMatrix
+  static img.Image applySepia(img.Image image) {
+    final result = image.clone();
+
+    // Sepia tone matrix (standard sepia transformation)
+    // Output R = 0.393*R + 0.769*G + 0.189*B
+    // Output G = 0.349*R + 0.686*G + 0.168*B
+    // Output B = 0.272*R + 0.534*G + 0.131*B
+    for (final pixel in result) {
+      final r = pixel.r.toInt();
+      final g = pixel.g.toInt();
+      final b = pixel.b.toInt();
+
+      final newR = ((0.393 * r) + (0.769 * g) + (0.189 * b)).clamp(0, 255).toInt();
+      final newG = ((0.349 * r) + (0.686 * g) + (0.168 * b)).clamp(0, 255).toInt();
+      final newB = ((0.272 * r) + (0.534 * g) + (0.131 * b)).clamp(0, 255).toInt();
+
+      pixel
+        ..r = newR
+        ..g = newG
+        ..b = newB;
+    }
+
+    return result;
+  }
+
+  /// Apply Vintage filter (Sepia + Vignette + Slight blur)
+  /// CamScanner-style aged document effect
+  static img.Image applyVintage(img.Image image) {
+    // 1. Apply sepia tone
+    var processed = applySepia(image);
+
+    // 2. Reduce saturation slightly for faded look
+    processed = img.adjustColor(processed, saturation: 0.85);
+
+    // 3. Add vignette effect (darken edges)
+    processed = _applyVignette(processed, intensity: 0.4);
+
+    // 4. Slight warmth boost
+    processed = img.adjustColor(processed, brightness: 1.05);
 
     return processed;
   }
@@ -181,93 +228,34 @@ class ImageFilters {
     }
   }
 
-  /// Remove illumination (shadows) using Gaussian blur estimation
-  /// CamScanner-style shadow removal: estimate background illumination and subtract
-  static img.Image _removeIllumination(img.Image image) {
-    // 1. Create illumination map using large Gaussian blur
-    // This estimates the uneven lighting/shadows
-    final illumination = img.gaussianBlur(image, radius: 20);
 
-    // 2. Subtract illumination from original to get reflectance
+  /// Apply vignette effect (darken edges for vintage look)
+  /// [intensity] 0.0 (no effect) to 1.0 (maximum darkening)
+  static img.Image _applyVignette(img.Image image, {double intensity = 0.3}) {
     final result = image.clone();
+    final centerX = image.width / 2.0;
+    final centerY = image.height / 2.0;
+    final maxDistance = math.sqrt(centerX * centerX + centerY * centerY);
 
     for (final pixel in result) {
-      final illumPixel = illumination.getPixel(pixel.x, pixel.y);
+      // Calculate distance from center (normalized 0-1)
+      final dx = pixel.x - centerX;
+      final dy = pixel.y - centerY;
+      final distance = math.sqrt(dx * dx + dy * dy) / maxDistance;
 
-      // For each channel, calculate: original + (128 - illumination)
-      // This normalizes lighting while preserving detail
-      final r = pixel.r.toInt();
-      final g = pixel.g.toInt();
-      final b = pixel.b.toInt();
-
-      final illumR = illumPixel.r.toInt();
-      final illumG = illumPixel.g.toInt();
-      final illumB = illumPixel.b.toInt();
-
-      // Add offset to prevent negative values
-      final newR = (r + 128 - illumR).clamp(0, 255).toInt();
-      final newG = (g + 128 - illumG).clamp(0, 255).toInt();
-      final newB = (b + 128 - illumB).clamp(0, 255).toInt();
+      // Apply vignette: closer to edge = darker
+      final vignette = 1.0 - (distance * intensity);
+      final factor = vignette.clamp(0.0, 1.0);
 
       pixel
-        ..r = newR
-        ..g = newG
-        ..b = newB;
+        ..r = (pixel.r.toInt() * factor).clamp(0, 255).toInt()
+        ..g = (pixel.g.toInt() * factor).clamp(0, 255).toInt()
+        ..b = (pixel.b.toInt() * factor).clamp(0, 255).toInt();
     }
 
     return result;
   }
 
-  /// Adaptive threshold binarization
-  /// CamScanner-style: uses local neighborhood to determine threshold
-  /// [blockSize] size of local neighborhood (must be odd), larger = smoother
-  /// [c] constant subtracted from mean (higher = more aggressive)
-  static img.Image _applyAdaptiveThreshold(
-    img.Image image, {
-    int blockSize = 25,
-    int c = 10,
-  }) {
-    // Ensure blockSize is odd
-    if (blockSize % 2 == 0) blockSize++;
-
-    final result = image.clone();
-    final halfBlock = blockSize ~/ 2;
-
-    // For each pixel, calculate local mean and apply threshold
-    for (int y = 0; y < image.height; y++) {
-      for (int x = 0; x < image.width; x++) {
-        // Calculate local mean in neighborhood
-        int sum = 0;
-        int count = 0;
-
-        for (int dy = -halfBlock; dy <= halfBlock; dy++) {
-          for (int dx = -halfBlock; dx <= halfBlock; dx++) {
-            final nx = (x + dx).clamp(0, image.width - 1);
-            final ny = (y + dy).clamp(0, image.height - 1);
-
-            final neighbor = image.getPixel(nx, ny);
-            sum += neighbor.r.toInt(); // Grayscale, so r=g=b
-            count++;
-          }
-        }
-
-        final localMean = sum / count;
-        final pixel = result.getPixel(x, y);
-        final pixelValue = pixel.r.toInt();
-
-        // Threshold: pixel > (localMean - c) ? white : black
-        final threshold = (localMean - c).clamp(0, 255).toInt();
-        final newValue = pixelValue > threshold ? 255 : 0;
-
-        pixel
-          ..r = newValue
-          ..g = newValue
-          ..b = newValue;
-      }
-    }
-
-    return result;
-  }
 
 
   /// Remove shadows from document images using OpenCV

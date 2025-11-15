@@ -1,4 +1,4 @@
-import 'dart:typed_data';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 import '../models/scan_document.dart';
@@ -12,8 +12,10 @@ import '../widgets/common/custom_app_bar.dart';
 enum FilterType {
   original,
   blackAndWhite,
-  color,
   grayscale,
+  sepia,
+  vintage,
+  color,
   enhanced,
 }
 
@@ -133,62 +135,111 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
   Future<void> _applyCurrentFilter() async {
     if (_originalImage == null) return;
 
-    // Don't show loading indicator for filter changes
-    // Process in background and update when ready
+    // Show loading indicator for filter changes
+    setState(() {
+      _isProcessing = true;
+    });
 
     try {
-      // Start with original image
-      img.Image processed = _originalImage!.clone();
-
-      // Apply rotation if any
-      if (_rotationAngle != 0) {
-        if (_rotationAngle == 90) {
-          processed = ImageFilters.rotate90(processed);
-        } else if (_rotationAngle == 180) {
-          processed = ImageFilters.rotate180(processed);
-        } else if (_rotationAngle == 270) {
-          processed = ImageFilters.rotate270(processed);
-        }
-      }
-
-      // Apply selected filter
-      switch (_selectedFilter) {
-        case FilterType.original:
-          processed = ImageFilters.applyOriginal(processed);
-          break;
-        case FilterType.blackAndWhite:
-          processed = ImageFilters.applyBlackAndWhite(processed);
-          break;
-        case FilterType.color:
-          processed = ImageFilters.applyMagicColor(processed);
-          break;
-        case FilterType.grayscale:
-          processed = ImageFilters.applyGrayscale(processed);
-          break;
-        case FilterType.enhanced:
-          processed = ImageFilters.applyLighten(processed);
-          break;
-      }
-
-      // Apply brightness and contrast adjustments
-      if (_brightness != 0 || _contrast != 0) {
-        processed = ImageFilters.applyBrightnessAndContrast(
-          processed,
-          _brightness,
-          _contrast,
-        );
-      }
-
-      // Encode for display
-      final newImageBytes = ImageFilters.encodeImage(processed);
+      // Process image in background isolate to avoid UI freeze
+      final newImageBytes = await _processImageInBackground(
+        _originalImage!,
+        _selectedFilter,
+        _rotationAngle,
+        _brightness,
+        _contrast,
+      );
 
       // Update UI with new image
-      setState(() {
-        _displayImageBytes = newImageBytes;
-      });
+      if (mounted) {
+        setState(() {
+          _displayImageBytes = newImageBytes;
+          _isProcessing = false;
+        });
+      }
     } catch (e) {
-      // Error processing image
+      debugPrint('Error processing image: $e');
+      if (mounted) {
+        setState(() {
+          _isProcessing = false;
+        });
+      }
     }
+  }
+
+  /// Process image in background isolate to prevent UI freeze
+  static Future<Uint8List> _processImageInBackground(
+    img.Image originalImage,
+    FilterType filterType,
+    int rotationAngle,
+    double brightness,
+    double contrast,
+  ) async {
+    return await compute(_processImage, {
+      'image': originalImage,
+      'filterType': filterType.index,
+      'rotationAngle': rotationAngle,
+      'brightness': brightness,
+      'contrast': contrast,
+    });
+  }
+
+  /// Background processing function (runs in isolate)
+  static Uint8List _processImage(Map<String, dynamic> params) {
+    img.Image processed = (params['image'] as img.Image).clone();
+    final filterTypeIndex = params['filterType'] as int;
+    final filterType = FilterType.values[filterTypeIndex];
+    final rotationAngle = params['rotationAngle'] as int;
+    final brightness = params['brightness'] as double;
+    final contrast = params['contrast'] as double;
+
+    // Apply rotation if any
+    if (rotationAngle != 0) {
+      if (rotationAngle == 90) {
+        processed = ImageFilters.rotate90(processed);
+      } else if (rotationAngle == 180) {
+        processed = ImageFilters.rotate180(processed);
+      } else if (rotationAngle == 270) {
+        processed = ImageFilters.rotate270(processed);
+      }
+    }
+
+    // Apply selected filter
+    switch (filterType) {
+      case FilterType.original:
+        processed = ImageFilters.applyOriginal(processed);
+        break;
+      case FilterType.blackAndWhite:
+        processed = ImageFilters.applyBlackAndWhite(processed);
+        break;
+      case FilterType.grayscale:
+        processed = ImageFilters.applyGrayscale(processed);
+        break;
+      case FilterType.sepia:
+        processed = ImageFilters.applySepia(processed);
+        break;
+      case FilterType.vintage:
+        processed = ImageFilters.applyVintage(processed);
+        break;
+      case FilterType.color:
+        processed = ImageFilters.applyMagicColor(processed);
+        break;
+      case FilterType.enhanced:
+        processed = ImageFilters.applyLighten(processed);
+        break;
+    }
+
+    // Apply brightness and contrast adjustments
+    if (brightness != 0 || contrast != 0) {
+      processed = ImageFilters.applyBrightnessAndContrast(
+        processed,
+        brightness,
+        contrast,
+      );
+    }
+
+    // Encode for display
+    return ImageFilters.encodeImage(processed);
   }
 
   /// Initialize corner points to image bounds (10% margin)
@@ -389,8 +440,12 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
                   // Image preview
                   ClipRRect(
                     borderRadius: BorderRadius.circular(AppRadius.md - 2),
-                    child: _displayImageBytes != null
-                        ? AnimatedSwitcher(
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        // Main image
+                        if (_displayImageBytes != null)
+                          AnimatedSwitcher(
                             duration: const Duration(milliseconds: 200),
                             switchInCurve: Curves.easeInOut,
                             switchOutCurve: Curves.easeInOut,
@@ -400,27 +455,61 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
                               fit: BoxFit.contain,
                             ),
                           )
-                        : Center(
-                            child: _isProcessing
-                                ? const CircularProgressIndicator()
-                                : Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.description_outlined,
-                                        size: 80,
-                                        color: AppColors.textSecondary.withValues(alpha: 0.3),
-                                      ),
-                                      const SizedBox(height: AppSpacing.md),
-                                      Text(
-                                        _getFilterName(_selectedFilter),
-                                        style: AppTextStyles.bodyMedium.copyWith(
-                                          color: AppColors.textSecondary,
-                                        ),
-                                      ),
-                                    ],
+                        else
+                          Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.description_outlined,
+                                  size: 80,
+                                  color: AppColors.textSecondary.withValues(alpha: 0.3),
+                                ),
+                                const SizedBox(height: AppSpacing.md),
+                                Text(
+                                  _getFilterName(_selectedFilter),
+                                  style: AppTextStyles.bodyMedium.copyWith(
+                                    color: AppColors.textSecondary,
                                   ),
+                                ),
+                              ],
+                            ),
                           ),
+
+                        // Loading overlay with shimmer effect
+                        if (_isProcessing)
+                          AnimatedOpacity(
+                            opacity: _isProcessing ? 1.0 : 0.0,
+                            duration: const Duration(milliseconds: 200),
+                            child: Container(
+                              color: Colors.black.withValues(alpha: 0.5),
+                              child: Center(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const SizedBox(
+                                      width: 48,
+                                      height: 48,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 4,
+                                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                      ),
+                                    ),
+                                    const SizedBox(height: AppSpacing.md),
+                                    Text(
+                                      'Applying ${_getFilterName(_selectedFilter)}...',
+                                      style: AppTextStyles.bodyMedium.copyWith(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
 
                   // Corner handles for manual crop
@@ -724,8 +813,8 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
             duration: const Duration(milliseconds: 200),
             curve: Curves.easeInOut,
             padding: const EdgeInsets.symmetric(
-              vertical: AppSpacing.sm,
-              horizontal: AppSpacing.xs,
+              vertical: AppSpacing.md,
+              horizontal: AppSpacing.sm,
             ),
             decoration: BoxDecoration(
               color: isActive ? AppColors.primary.withValues(alpha: 0.1) : Colors.transparent,
@@ -742,7 +831,7 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
                   child: Icon(
                     icon,
                     key: ValueKey(icon),
-                    size: 28,
+                    size: 32,
                     color: isActive ? AppColors.primary : AppColors.textPrimary,
                   ),
                 ),
@@ -770,10 +859,14 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
         return Colors.white;
       case FilterType.blackAndWhite:
         return Colors.grey.shade100;
-      case FilterType.color:
-        return AppColors.primaryLight;
       case FilterType.grayscale:
         return Colors.grey.shade200;
+      case FilterType.sepia:
+        return Colors.brown.shade50;
+      case FilterType.vintage:
+        return Colors.amber.shade50;
+      case FilterType.color:
+        return AppColors.primaryLight;
       case FilterType.enhanced:
         return Colors.blue.shade50;
     }
@@ -785,10 +878,14 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
         return 'Original';
       case FilterType.blackAndWhite:
         return 'B&W';
-      case FilterType.color:
-        return 'Color';
       case FilterType.grayscale:
         return 'Grayscale';
+      case FilterType.sepia:
+        return 'Sepia';
+      case FilterType.vintage:
+        return 'Vintage';
+      case FilterType.color:
+        return 'Color';
       case FilterType.enhanced:
         return 'Enhanced';
     }
