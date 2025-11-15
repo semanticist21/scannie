@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
@@ -16,7 +15,6 @@ enum FilterType {
   color,
   grayscale,
   enhanced,
-  shadowRemoval, // OpenCV shadow removal
 }
 
 /// Edit screen for applying filters and adjustments
@@ -43,6 +41,12 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
   bool _isProcessing = false;
   int _rotationAngle = 0; // 0, 90, 180, 270
 
+  // Corner adjustment state (for re-cropping)
+  bool _showCropMode = false;
+  List<Offset> _corners = [];
+  int? _selectedCornerIndex;
+  Size _imageDisplaySize = Size.zero;
+
   // Batch processing state
   FilterType? _batchFilter;
   double? _batchBrightness;
@@ -68,40 +72,24 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
 
     // Load image paths from route arguments
     final arguments = ModalRoute.of(context)?.settings.arguments;
-    print('🔍 EditScreen - Received arguments: $arguments (type: ${arguments.runtimeType})');
-
     if (arguments != null && _imagePaths.isEmpty) {
       if (arguments is String) {
         // Single image path
-        print('  ✓ Single image path: $arguments');
         _imagePaths = [arguments];
       } else if (arguments is List<String>) {
         // Multiple image paths
-        print('  ✓ Multiple image paths: ${arguments.length} images');
         _imagePaths = arguments;
-      } else {
-        print('  ✗ Unknown argument type: ${arguments.runtimeType}');
       }
 
       if (_imagePaths.isNotEmpty) {
-        print('  → Loading ${_imagePaths.length} images...');
         _loadCurrentImage();
-      } else {
-        print('  ✗ No image paths to load');
       }
-    } else if (_imagePaths.isNotEmpty) {
-      print('  ⚠️ Arguments already loaded (${_imagePaths.length} images)');
     }
   }
 
   /// Load the currently selected image
   Future<void> _loadCurrentImage() async {
-    if (_imagePaths.isEmpty) {
-      print('  ✗ _loadCurrentImage: No image paths available');
-      return;
-    }
-
-    print('  🖼️  _loadCurrentImage: Loading image ${_currentImageIndex + 1}/${_imagePaths.length}');
+    if (_imagePaths.isEmpty) return;
 
     setState(() {
       _isProcessing = true;
@@ -109,16 +97,7 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
 
     try {
       final imagePath = _imagePaths[_currentImageIndex];
-      print('  📂 Image path: $imagePath');
-      print('  🔄 Loading image from file...');
-
       _originalImage = await ImageFilters.loadImage(imagePath);
-
-      if (_originalImage == null) {
-        print('  ✗ Failed to load image - loadImage returned null');
-      } else {
-        print('  ✓ Image loaded: ${_originalImage!.width}x${_originalImage!.height}');
-      }
 
       // Reset adjustments for new image
       _rotationAngle = 0;
@@ -126,11 +105,11 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
       _contrast = _batchContrast ?? 0;
       _selectedFilter = _batchFilter ?? FilterType.original;
 
-      print('  🎨 Applying filter...');
+      // Initialize crop corners
+      _initializeCorners();
+
       await _applyCurrentFilter();
-      print('  ✓ Filter applied');
     } catch (e) {
-      print('  ✗ Error loading image: $e');
       debugPrint('Error loading image: $e');
       // Show error to user
       if (mounted) {
@@ -152,12 +131,7 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
 
   /// Apply the currently selected filter and adjustments
   Future<void> _applyCurrentFilter() async {
-    if (_originalImage == null) {
-      print('  ✗ _applyCurrentFilter: No original image');
-      return;
-    }
-
-    print('  🎨 _applyCurrentFilter: Starting filter application...');
+    if (_originalImage == null) return;
 
     // Don't show loading indicator for filter changes
     // Process in background and update when ready
@@ -165,11 +139,9 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
     try {
       // Start with original image
       img.Image processed = _originalImage!.clone();
-      print('  ✓ Cloned original image: ${processed.width}x${processed.height}');
 
       // Apply rotation if any
       if (_rotationAngle != 0) {
-        print('  🔄 Applying rotation: $_rotationAngle°');
         if (_rotationAngle == 90) {
           processed = ImageFilters.rotate90(processed);
         } else if (_rotationAngle == 180) {
@@ -180,7 +152,6 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
       }
 
       // Apply selected filter
-      print('  🎭 Applying filter: $_selectedFilter');
       switch (_selectedFilter) {
         case FilterType.original:
           processed = ImageFilters.applyOriginal(processed);
@@ -197,14 +168,10 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
         case FilterType.enhanced:
           processed = ImageFilters.applyLighten(processed);
           break;
-        case FilterType.shadowRemoval:
-          processed = await ImageFilters.removeShadows(processed);
-          break;
       }
 
       // Apply brightness and contrast adjustments
       if (_brightness != 0 || _contrast != 0) {
-        print('  ☀️  Applying brightness: $_brightness, contrast: $_contrast');
         processed = ImageFilters.applyBrightnessAndContrast(
           processed,
           _brightness,
@@ -213,18 +180,82 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
       }
 
       // Encode for display
-      print('  🖼️  Encoding image for display...');
       final newImageBytes = ImageFilters.encodeImage(processed);
-      print('  ✓ Encoded ${newImageBytes.length} bytes');
 
       // Update UI with new image
       setState(() {
         _displayImageBytes = newImageBytes;
       });
-      print('  ✅ Display updated successfully');
-    } catch (e, stackTrace) {
-      print('  ✗ Error in _applyCurrentFilter: $e');
-      print('  Stack trace: $stackTrace');
+    } catch (e) {
+      // Error processing image
+    }
+  }
+
+  /// Initialize corner points to image bounds (10% margin)
+  void _initializeCorners() {
+    if (_originalImage == null) return;
+
+    _corners = [
+      const Offset(0.1, 0.1),     // Top-left
+      const Offset(0.9, 0.1),     // Top-right
+      const Offset(0.9, 0.9),     // Bottom-right
+      const Offset(0.1, 0.9),     // Bottom-left
+    ];
+  }
+
+  /// Apply perspective transform using image package's copyRectify
+  Future<void> _applyCrop() async {
+    if (_originalImage == null || _corners.length != 4) return;
+
+    setState(() => _isProcessing = true);
+
+    try {
+      final imageWidth = _originalImage!.width;
+      final imageHeight = _originalImage!.height;
+
+      // Convert normalized corners (0-1) to actual pixel coordinates
+      final topLeft = img.Point(
+        (_corners[0].dx * imageWidth).toInt(),
+        (_corners[0].dy * imageHeight).toInt(),
+      );
+      final topRight = img.Point(
+        (_corners[1].dx * imageWidth).toInt(),
+        (_corners[1].dy * imageHeight).toInt(),
+      );
+      final bottomRight = img.Point(
+        (_corners[2].dx * imageWidth).toInt(),
+        (_corners[2].dy * imageHeight).toInt(),
+      );
+      final bottomLeft = img.Point(
+        (_corners[3].dx * imageWidth).toInt(),
+        (_corners[3].dy * imageHeight).toInt(),
+      );
+
+      // Apply perspective correction using copyRectify
+      final rectified = img.copyRectify(
+        _originalImage!,
+        topLeft: topLeft,
+        topRight: topRight,
+        bottomLeft: bottomLeft,
+        bottomRight: bottomRight,
+      );
+
+      _originalImage = rectified;
+
+      // Re-apply current filter
+      await _applyCurrentFilter();
+
+      setState(() {
+        _showCropMode = false;
+        _selectedCornerIndex = null;
+      });
+
+      _showMessage('Crop applied');
+    } catch (e) {
+      debugPrint('Error applying crop: $e');
+      _showMessage('Failed to apply crop: $e');
+    } finally {
+      setState(() => _isProcessing = false);
     }
   }
 
@@ -288,74 +319,46 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
 
   Widget _buildImageNavigation() {
     return Container(
-      height: 100,
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.sm,
+      ),
       color: AppColors.surface,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-        itemCount: _imagePaths.length,
-        itemBuilder: (context, index) {
-          final isSelected = index == _currentImageIndex;
-          return GestureDetector(
-            onTap: () {
-              if (index != _currentImageIndex) {
-                setState(() {
-                  _currentImageIndex = index;
-                });
-                _loadCurrentImage();
-              }
-            },
-            child: Container(
-              width: 80,
-              margin: const EdgeInsets.only(right: AppSpacing.sm),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: isSelected ? AppColors.primary : Colors.grey.shade300,
-                  width: isSelected ? 3 : 1,
-                ),
-                borderRadius: BorderRadius.circular(AppRadius.sm),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(AppRadius.sm - 1),
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    Image.file(
-                      File(_imagePaths[index]),
-                      fit: BoxFit.cover,
-                    ),
-                    if (isSelected)
-                      Container(
-                        color: AppColors.primary.withValues(alpha: 0.2),
-                      ),
-                    Positioned(
-                      bottom: 4,
-                      right: 4,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withValues(alpha: 0.6),
-                          borderRadius: BorderRadius.circular(AppRadius.sm),
-                        ),
-                        child: Text(
-                          '${index + 1}',
-                          style: AppTextStyles.caption.copyWith(
-                            color: Colors.white,
-                            fontSize: 10,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Previous button
+          IconButton(
+            icon: const Icon(Icons.chevron_left),
+            onPressed: _currentImageIndex > 0
+                ? () {
+                    setState(() {
+                      _currentImageIndex--;
+                    });
+                    _loadCurrentImage();
+                  }
+                : null,
+          ),
+          // Page indicator
+          Text(
+            '${_currentImageIndex + 1} / ${_imagePaths.length}',
+            style: AppTextStyles.bodyMedium.copyWith(
+              fontWeight: FontWeight.w600,
             ),
-          );
-        },
+          ),
+          // Next button
+          IconButton(
+            icon: const Icon(Icons.chevron_right),
+            onPressed: _currentImageIndex < _imagePaths.length - 1
+                ? () {
+                    setState(() {
+                      _currentImageIndex++;
+                    });
+                    _loadCurrentImage();
+                  }
+                : null,
+          ),
+        ],
       ),
     );
   }
@@ -366,24 +369,25 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
       child: Center(
         child: FadeTransition(
           opacity: _fadeAnimation,
-          child: Stack(
-            children: [
-              // Image preview
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut,
-                margin: const EdgeInsets.all(AppSpacing.lg),
-                decoration: BoxDecoration(
-                  color: _getFilterColor(),
-                  borderRadius: BorderRadius.circular(AppRadius.md),
-                  border: Border.all(
-                    color: AppColors.border,
-                    width: 2,
-                  ),
-                ),
-                child: AspectRatio(
-                  aspectRatio: 210 / 297, // A4 ratio
-                  child: ClipRRect(
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            margin: const EdgeInsets.all(AppSpacing.lg),
+            decoration: BoxDecoration(
+              color: _getFilterColor(),
+              borderRadius: BorderRadius.circular(AppRadius.md),
+              border: Border.all(
+                color: AppColors.border,
+                width: 2,
+              ),
+            ),
+            child: AspectRatio(
+              aspectRatio: 210 / 297, // A4 ratio
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  // Image preview
+                  ClipRRect(
                     borderRadius: BorderRadius.circular(AppRadius.md - 2),
                     child: _displayImageBytes != null
                         ? AnimatedSwitcher(
@@ -418,12 +422,12 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
                                   ),
                           ),
                   ),
-                ),
-              ),
 
-              // Corner handles for manual crop
-              if (_displayImageBytes != null) ..._buildCropHandles(),
-            ],
+                  // Corner handles for manual crop
+                  if (_displayImageBytes != null) ..._buildCropHandles(),
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -431,48 +435,99 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
   }
 
   List<Widget> _buildCropHandles() {
+    if (!_showCropMode || _corners.length != 4) return [];
+
     return [
-      // Top-left
-      Positioned(
-        top: AppSpacing.lg,
-        left: AppSpacing.lg,
-        child: _buildHandle(),
+      // Quad overlay covering entire Stack area
+      Positioned.fill(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            _imageDisplaySize = Size(constraints.maxWidth, constraints.maxHeight);
+
+            return CustomPaint(
+              size: _imageDisplaySize,
+              painter: _CropQuadPainter(_corners, _imageDisplaySize),
+            );
+          },
+        ),
       ),
-      // Top-right
-      Positioned(
-        top: AppSpacing.lg,
-        right: AppSpacing.lg,
-        child: _buildHandle(),
-      ),
-      // Bottom-left
-      Positioned(
-        bottom: AppSpacing.lg,
-        left: AppSpacing.lg,
-        child: _buildHandle(),
-      ),
-      // Bottom-right
-      Positioned(
-        bottom: AppSpacing.lg,
-        right: AppSpacing.lg,
-        child: _buildHandle(),
-      ),
+
+      // Draggable corner handles
+      ..._corners.asMap().entries.map((entry) {
+        final index = entry.key;
+        final corner = entry.value;
+
+        return Positioned.fill(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              // Calculate actual position within the Stack bounds
+              final position = Offset(
+                corner.dx * constraints.maxWidth,
+                corner.dy * constraints.maxHeight,
+              );
+
+              return Stack(
+                children: [
+                  Positioned(
+                    left: position.dx - 12,
+                    top: position.dy - 12,
+                    child: GestureDetector(
+                      onPanStart: (_) {
+                        setState(() => _selectedCornerIndex = index);
+                      },
+                      onPanUpdate: (details) {
+                        setState(() {
+                          // Calculate new position relative to Stack bounds
+                          final newX = (position.dx + details.delta.dx) / constraints.maxWidth;
+                          final newY = (position.dy + details.delta.dy) / constraints.maxHeight;
+                          _corners[index] = Offset(
+                            newX.clamp(0.0, 1.0),
+                            newY.clamp(0.0, 1.0),
+                          );
+                        });
+                      },
+                      onPanEnd: (_) {
+                        setState(() => _selectedCornerIndex = null);
+                      },
+                      child: _buildHandle(index),
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+        );
+      }),
     ];
   }
 
-  Widget _buildHandle() {
+  Widget _buildHandle(int index) {
+    final labels = ['TL', 'TR', 'BR', 'BL'];
+    final isSelected = _selectedCornerIndex == index;
+
     return Container(
       width: 24,
       height: 24,
       decoration: BoxDecoration(
-        color: AppColors.primary,
+        color: isSelected ? AppColors.accent : AppColors.primary,
         shape: BoxShape.circle,
         border: Border.all(color: Colors.white, width: 2),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.2),
-            blurRadius: 4,
+            color: Colors.black.withValues(alpha: 0.3),
+            blurRadius: 6,
           ),
         ],
+      ),
+      child: Center(
+        child: Text(
+          labels[index],
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 8,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
     );
   }
@@ -601,27 +656,43 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          // Auto crop
+          // Crop mode toggle
           _buildActionButton(
-            icon: Icons.crop_free,
-            label: 'Auto Crop',
-            tooltip: 'Automatically crop document edges',
-            onPressed: () => _showMessage('Auto crop applied'),
-          ),
-
-          // Rotate
-          _buildActionButton(
-            icon: Icons.rotate_right,
-            label: 'Rotate',
-            tooltip: 'Rotate 90 degrees clockwise',
+            icon: _showCropMode ? Icons.crop : Icons.crop_free,
+            label: 'Crop',
+            tooltip: _showCropMode ? 'Adjust corners then apply' : 'Enable crop mode',
             onPressed: () {
               setState(() {
-                _rotationAngle = (_rotationAngle + 90) % 360;
+                _showCropMode = !_showCropMode;
+                if (!_showCropMode) _selectedCornerIndex = null;
               });
-              _applyCurrentFilter();
-              _showMessage('Rotated 90°');
             },
+            isActive: _showCropMode,
           ),
+
+          // Apply crop (only visible in crop mode)
+          if (_showCropMode)
+            _buildActionButton(
+              icon: Icons.check_circle,
+              label: 'Apply',
+              tooltip: 'Apply crop',
+              onPressed: _applyCrop,
+            ),
+
+          // Rotate (hidden in crop mode)
+          if (!_showCropMode)
+            _buildActionButton(
+              icon: Icons.rotate_right,
+              label: 'Rotate',
+              tooltip: 'Rotate 90 degrees clockwise',
+              onPressed: () {
+                setState(() {
+                  _rotationAngle = (_rotationAngle + 90) % 360;
+                });
+                _applyCurrentFilter();
+                _showMessage('Rotated 90°');
+              },
+            ),
 
           // Adjustments toggle
           _buildActionButton(
@@ -705,8 +776,6 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
         return Colors.grey.shade200;
       case FilterType.enhanced:
         return Colors.blue.shade50;
-      case FilterType.shadowRemoval:
-        return Colors.orange.shade50;
     }
   }
 
@@ -722,8 +791,6 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
         return 'Grayscale';
       case FilterType.enhanced:
         return 'Enhanced';
-      case FilterType.shadowRemoval:
-        return 'Shadow';
     }
   }
 
@@ -851,4 +918,45 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
     // Return the new document to the previous screen
     navigator.pop(newDocument);
   }
+}
+
+/// Custom painter for crop quad overlay
+class _CropQuadPainter extends CustomPainter {
+  final List<Offset> corners;
+  final Size imageSize;
+
+  _CropQuadPainter(this.corners, this.imageSize);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (corners.length != 4) return;
+
+    final paint = Paint()
+      ..color = AppColors.primary.withValues(alpha: 0.5)
+      ..strokeWidth = 2
+      ..style = PaintingStyle.stroke;
+
+    final fillPaint = Paint()
+      ..color = AppColors.primary.withValues(alpha: 0.1)
+      ..style = PaintingStyle.fill;
+
+    // Convert normalized coordinates to pixels
+    final points = corners.map((corner) {
+      return Offset(corner.dx * imageSize.width, corner.dy * imageSize.height);
+    }).toList();
+
+    // Draw quad
+    final path = Path()
+      ..moveTo(points[0].dx, points[0].dy)
+      ..lineTo(points[1].dx, points[1].dy)
+      ..lineTo(points[2].dx, points[2].dy)
+      ..lineTo(points[3].dx, points[3].dy)
+      ..close();
+
+    canvas.drawPath(path, fillPaint);
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(_CropQuadPainter oldDelegate) => corners != oldDelegate.corners;
 }

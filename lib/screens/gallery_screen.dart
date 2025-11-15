@@ -227,9 +227,9 @@ class _GalleryScreenState extends State<GalleryScreen> {
       final List<String> imagePaths = scannedImages;
 
       // Debug: Print scanned image paths
-      print('📸 Scanned ${imagePaths.length} images:');
+      debugPrint('📸 Scanned ${imagePaths.length} images:');
       for (var path in imagePaths) {
-        print('  - $path');
+        debugPrint('  - $path');
       }
 
       // Navigate to edit screen with scanned images

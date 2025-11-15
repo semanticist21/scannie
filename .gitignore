@@ -54,6 +54,7 @@ app.*.map.json
 # iOS Pods (CocoaPods)
 **/ios/Pods/
 **/ios/.symlinks/
+**/ios/build/
 
 # macOS Flutter Generated
 **/macos/Flutter/GeneratedPluginRegistrant.swift

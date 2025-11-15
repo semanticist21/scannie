@@ -14,7 +14,6 @@ dependencies:
   path_provider: ^2.0.11
   path: ^1.8.2
   cunning_document_scanner_plus: ^1.0.3
-  # opencv_dart: ^1.4.3  # iOS arm64 문제로 임시 비활성화
 
 dev_dependencies:
   flutter_test:
