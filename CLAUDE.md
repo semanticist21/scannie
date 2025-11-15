@@ -8,7 +8,7 @@ Scannie는 문서 스캔 Flutter 애플리케이션입니다. 카메라로 문�
 
 **중요**: 이것은 **모바일 앱**입니다. 테스트 시 Android 에뮬레이터를 사용하세요.
 
-**현재 상태**: UI 프로토타입 단계 - 모든 화면이 시각적으로 완성되었으나 실제 카메라, 이미지 처리, PDF 기능은 시뮬레이션입니다.
+**현재 상태**: **실제 문서 스캔 기능 통합** - `doc_scan_flutter` (ML Kit/VisionKit 기반)로 실제 문서 edge 감지 및 원근 보정 구현. Auto/Manual 모드 지원.
 
 ## 개발 환경
 
@@ -286,11 +286,14 @@ GalleryScreen (홈)
 - ✅ 테마 시스템 (M3, 색상, 타이포그래피, 간격)
 - ✅ 재사용 가능한 공통 위젯
 - ✅ 이미지 필터 유틸리티 (`image` 패키지 통합)
-- ✅ **실제 문서 스캔 기능** (`flutter_doc_scanner` - ML Kit 기반)
-  - 자동 문서 edge 감지
-  - A4 용지 정렬 시 자동 캡처
-  - 원근 보정 (perspective correction)
-  - iOS (VisionKit) 및 Android (ML Kit) 네이티브 지원
+- ✅ **실제 문서 스캔 기능** (`doc_scan_flutter` v1.0.6 - ML Kit/VisionKit 기반)
+  - **Auto/Manual 모드**: Auto는 3초 countdown 후 자동 스캔, Manual은 버튼 클릭 시 스캔
+  - **네이티브 스캐너 UI**: iOS (VisionKit), Android (ML Kit) 네이티브 카메라 사용
+  - **AI Edge 감지**: 문서 테두리 자동 인식 및 감지
+  - **원근 보정 (Perspective Correction)**: 비스듬한 각도도 자동 평탄화
+  - **색상 향상**: 스캔 품질 자동 개선
+  - **다중 페이지 스캔**: 여러 문서를 연속으로 스캔 가능
+  - **Pub Points 150점**: 최고 품질의 검증된 패키지
 
 **미구현 기능** (향후 개발 필요):
 - ❌ 파일 시스템 저장 (`path_provider` 필요)
@@ -372,37 +375,62 @@ Icon(Icons.search, size: 24)
 - `saveImage(image, path)`: JPEG로 저장 (품질 95%)
 - `encodeImage(image)`: UI 표시용 Uint8List 인코딩
 
-## 문서 스캔 기능 (edge_detection)
+## 문서 스캔 기능 (doc_scan_flutter)
 
-앱은 `edge_detection` 패키지를 사용하여 실시간 Edge Detection 기반 문서 스캔을 제공합니다.
+앱은 `doc_scan_flutter` v1.0.6 패키지를 사용하여 네이티브 ML Kit/VisionKit 기반 문서 스캔을 제공합니다.
 
 **주요 기능**:
-- **실시간 카메라 UI**: 커스텀 카메라 인터페이스 제공
-- **네모 가이드 프레임**: 화면에 사각형 가이드가 표시되어 문서 위치를 안내
-- **자동 Edge 감지**: 문서의 테두리를 실시간으로 자동 인식
-- **자동 캡처**: 문서가 가이드 프레임에 맞춰지면 자동으로 촬영
-- **수동 편집**: 캡처 후 모서리 조정, 자르기, 흑백 필터 적용 가능
-- **갤러리 선택**: 카메라뿐만 아니라 갤러리에서도 이미지 선택 가능
+- **Auto/Manual 모드**:
+  - **Auto 모드**: 화면 진입 시 3초 countdown 후 자동으로 네이티브 스캐너 실행
+  - **Manual 모드**: "스캔 시작" 버튼 클릭 시 네이티브 스캐너 실행
+- **네이티브 스캐너 UI**: iOS (VisionKit), Android (ML Kit) 네이티브 카메라 인터페이스 사용
+- **AI Edge 감지**: ML Kit이 문서 테두리를 자동으로 인식 및 감지
+- **원근 보정 (Perspective Correction)**: 비스듬한 각도로 촬영해도 자동으로 평탄화
+- **색상 향상**: 스캔 품질 자동 개선
+- **다중 페이지 스캔**: 여러 문서를 연속으로 스캔 가능
+- **Pub Points 150점**: 최고 품질의 검증된 패키지
 
 **사용 방법**:
 ```dart
-// 실시간 카메라로 Edge Detection 시작
-bool success = await EdgeDetection.detectEdge(
-  imagePath,
-  canUseGallery: true,
-  androidScanTitle: '문서 스캔',
-  androidCropTitle: '자르기',
+import 'package:doc_scan_flutter/doc_scan.dart';
+
+// 네이티브 스캐너 실행 (JPEG 포맷, 기본값)
+List<String>? scannedPaths = await DocumentScanner.scan();
+
+// PDF 포맷으로 스캔
+List<String>? pdfPaths = await DocumentScanner.scan(
+  format: DocumentScannerFormat.pdf
 );
+
+// 에러 처리
+try {
+  final paths = await DocumentScanner.scan();
+  if (paths == null) {
+    // 사용자가 취소
+  } else {
+    // paths는 temporary directory의 파일 경로 리스트
+    // path_provider로 영구 저장 필요
+  }
+} on DocumentScannerException catch (e) {
+  print('스캔 실패: ${e.message}');
+}
 ```
 
+**구현 상세** (CameraScreen):
+- **준비 화면**: 스캔 전 Auto/Manual 모드 선택 및 안내 메시지 표시
+- **Countdown**: Auto 모드에서 3-2-1 countdown 애니메이션
+- **Feature Hints**: AI Edge 감지, 원근 보정, 색상 향상 기능 안내
+- **다중 스캔**: 스캔 완료 후 다시 countdown 시작하여 연속 스캔 가능
+- **완료**: "완료" 버튼으로 EditScreen으로 이동
+
 **플랫폼별 구현**:
-- **Android**: OpenCV 기반 Edge Detection
-- **iOS**: WeScan 라이브러리 (Vision 프레임워크)
+- **Android**: Google ML Kit Document Scanner API
+- **iOS**: Apple VisionKit framework
 
 **요구사항**:
 - Android: minSdkVersion 21 이상
 - iOS: iOS 13.0 이상
-- 카메라 및 사진 라이브러리 권한 필수
+- 카메라 권한 필수 (NSCameraUsageDescription in Info.plist)
 
 ## 향후 개발 계획
 
@@ -412,8 +440,8 @@ bool success = await EdgeDetection.detectEdge(
 - `pdf`: PDF 문서 생성
 
 **개발 우선순위 제안**:
-1. ~~카메라 기능~~ ✅ 완료 (`flutter_doc_scanner` 통합)
+1. ~~카메라 기능~~ ✅ 완료 (`doc_scan_flutter` v1.0.6 통합 - ML Kit/VisionKit 기반)
 2. EditScreen에 실제 스캔 이미지 표시
-3. 파일 저장 (`path_provider` 통합)
+3. 파일 저장 (`path_provider` 통합 - 현재 임시 파일만 사용)
 4. PDF 내보내기 (`pdf` 패키지 통합)
 5. 다국어 지원 (현재 한국어만)

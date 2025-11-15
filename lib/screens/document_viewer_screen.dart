@@ -78,7 +78,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
       color: AppColors.surface,
       child: Row(
         children: [
-          Icon(
+          const Icon(
             Icons.description,
             color: AppColors.primary,
             size: 32,
@@ -165,7 +165,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 4,
                   offset: const Offset(0, 2),
                 ),
@@ -220,7 +220,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
             Positioned.fill(
               child: Container(
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.2),
+                  color: AppColors.primary.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(AppRadius.md),
                 ),
                 child: const Center(
@@ -244,7 +244,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
+                      color: Colors.black.withValues(alpha: 0.2),
                       blurRadius: 4,
                     ),
                   ],
@@ -270,7 +270,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
         color: AppColors.surface,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 8,
             offset: const Offset(0, -2),
           ),
@@ -609,7 +609,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(
+                                const Icon(
                                   Icons.image_outlined,
                                   size: 120,
                                   color: AppColors.textHint,
@@ -646,7 +646,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        Colors.black.withOpacity(0.7),
+                        Colors.black.withValues(alpha: 0.7),
                         Colors.transparent,
                       ],
                     ),
@@ -688,7 +688,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                       vertical: AppSpacing.sm,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.6),
+                      color: Colors.black.withValues(alpha: 0.6),
                       borderRadius: BorderRadius.circular(AppRadius.round),
                     ),
                     child: Row(

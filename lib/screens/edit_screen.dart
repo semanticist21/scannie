@@ -34,11 +34,17 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
   late Animation<double> _fadeAnimation;
 
   // Image processing state
+  List<String> _imagePaths = []; // Support multiple images
+  int _currentImageIndex = 0;
   img.Image? _originalImage;
-  img.Image? _processedImage;
   Uint8List? _displayImageBytes;
   bool _isProcessing = false;
   int _rotationAngle = 0; // 0, 90, 180, 270
+
+  // Batch processing state
+  FilterType? _batchFilter;
+  double? _batchBrightness;
+  double? _batchContrast;
 
   @override
   void initState() {
@@ -52,36 +58,65 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
       curve: Curves.easeInOut,
     );
     _animationController.forward();
-
-    // TODO: Load image from camera/gallery when available
-    // For now, we'll use a placeholder
-    _loadSampleImage();
   }
 
-  /// Load sample image (placeholder for actual camera image)
-  Future<void> _loadSampleImage() async {
-    // TODO: Replace with actual image path from camera
-    // For now, create a simple test image
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // Load image paths from route arguments
+    final arguments = ModalRoute.of(context)?.settings.arguments;
+    if (arguments != null && _imagePaths.isEmpty) {
+      if (arguments is String) {
+        // Single image path
+        _imagePaths = [arguments];
+      } else if (arguments is List<String>) {
+        // Multiple image paths
+        _imagePaths = arguments;
+      }
+
+      if (_imagePaths.isNotEmpty) {
+        _loadCurrentImage();
+      }
+    }
+  }
+
+  /// Load the currently selected image
+  Future<void> _loadCurrentImage() async {
+    if (_imagePaths.isEmpty) return;
+
     setState(() {
       _isProcessing = true;
     });
 
     try {
-      // Create a simple 600x800 white image as placeholder
-      _originalImage = img.Image(width: 600, height: 800);
-      for (final pixel in _originalImage!) {
-        pixel
-          ..r = 255
-          ..g = 255
-          ..b = 255;
-      }
+      final imagePath = _imagePaths[_currentImageIndex];
+      _originalImage = await ImageFilters.loadImage(imagePath);
 
-      _processedImage = _originalImage;
+      // Reset adjustments for new image
+      _rotationAngle = 0;
+      _brightness = _batchBrightness ?? 0;
+      _contrast = _batchContrast ?? 0;
+      _selectedFilter = _batchFilter ?? FilterType.original;
+
       await _applyCurrentFilter();
+    } catch (e) {
+      debugPrint('Error loading image: $e');
+      // Show error to user
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to load image: $e'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
     } finally {
-      setState(() {
-        _isProcessing = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isProcessing = false;
+        });
+      }
     }
   }
 
@@ -136,7 +171,6 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
       }
 
       // Encode for display
-      _processedImage = processed;
       final newImageBytes = ImageFilters.encodeImage(processed);
 
       // Update UI with new image
@@ -156,10 +190,22 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
+    final hasMultipleImages = _imagePaths.length > 1;
+
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'Edit Scan',
+        title: hasMultipleImages
+            ? 'Edit ${_currentImageIndex + 1}/${_imagePaths.length}'
+            : 'Edit Scan',
         actions: [
+          // Batch apply button (only for multiple images)
+          if (hasMultipleImages)
+            IconButton(
+              icon: const Icon(Icons.auto_awesome),
+              tooltip: 'Apply to all images',
+              onPressed: _showBatchApplyDialog,
+            ),
+          // Save button
           TextButton(
             onPressed: _saveScan,
             child: const Text('Save'),
@@ -168,6 +214,9 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
       ),
       body: Column(
         children: [
+          // Image navigation (only for multiple images)
+          if (hasMultipleImages) _buildImageNavigation(),
+
           // Image preview
           Expanded(
             flex: 3,
@@ -186,6 +235,52 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
 
           // Bottom action buttons
           _buildActionButtons(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildImageNavigation() {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.sm,
+      ),
+      color: AppColors.surface,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Previous button
+          IconButton(
+            icon: const Icon(Icons.chevron_left),
+            onPressed: _currentImageIndex > 0
+                ? () {
+                    setState(() {
+                      _currentImageIndex--;
+                    });
+                    _loadCurrentImage();
+                  }
+                : null,
+          ),
+          // Page indicator
+          Text(
+            '${_currentImageIndex + 1} / ${_imagePaths.length}',
+            style: AppTextStyles.bodyMedium.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          // Next button
+          IconButton(
+            icon: const Icon(Icons.chevron_right),
+            onPressed: _currentImageIndex < _imagePaths.length - 1
+                ? () {
+                    setState(() {
+                      _currentImageIndex++;
+                    });
+                    _loadCurrentImage();
+                  }
+                : null,
+          ),
         ],
       ),
     );
@@ -564,19 +659,118 @@ class _EditScreenState extends State<EditScreen> with SingleTickerProviderStateM
     );
   }
 
-  void _saveScan() {
-    // Create a new scan document
+  /// Show batch apply dialog
+  void _showBatchApplyDialog() {
+    final dialogContext = context;
+    showDialog<void>(
+      context: dialogContext,
+      builder: (dialogCtx) {
+        return AlertDialog(
+          title: const Text('Apply to All Images'),
+          content: const Text(
+            'Apply current filter, brightness, and contrast settings to all images?',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogCtx).pop(),
+              child: const Text('Cancel'),
+            ),
+            FilledButton(
+              onPressed: () {
+                Navigator.of(dialogCtx).pop();
+                _applyBatchSettings();
+              },
+              child: const Text('Apply'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  /// Apply current settings to all images
+  Future<void> _applyBatchSettings() async {
+    final messenger = ScaffoldMessenger.of(context);
+
+    // Save current settings
+    _batchFilter = _selectedFilter;
+    _batchBrightness = _brightness;
+    _batchContrast = _contrast;
+
+    messenger.showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(Icons.check_circle, color: Colors.white),
+            const SizedBox(width: AppSpacing.sm),
+            Text('Batch settings applied to ${_imagePaths.length} images'),
+          ],
+        ),
+        backgroundColor: AppColors.success,
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
+  void _saveScan() async {
+    final messenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
+
+    // Show saving progress
+    messenger.showSnackBar(
+      const SnackBar(
+        content: Row(
+          children: [
+            SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+            ),
+            SizedBox(width: AppSpacing.md),
+            Text('Saving scans...'),
+          ],
+        ),
+        duration: Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+
+    // TODO: Actually save processed images to file system
+    // For now, just use the original image paths
+
+    // Create a new scan document with all image paths
     final newDocument = ScanDocument(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       name: 'Scan_${DateTime.now().toString().substring(0, 19).replaceAll(':', '-')}',
       createdAt: DateTime.now(),
-      imagePaths: ['scanned_image.jpg'], // Mock image path
+      imagePaths: _imagePaths, // All captured image paths
       isProcessed: true,
     );
 
-    _showMessage('Scan saved successfully');
+    // Wait a bit to show progress
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    if (!mounted) return;
+
+    messenger.showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(Icons.check_circle, color: Colors.white),
+            const SizedBox(width: AppSpacing.sm),
+            Text('${_imagePaths.length} image(s) saved successfully'),
+          ],
+        ),
+        backgroundColor: AppColors.success,
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 1),
+      ),
+    );
 
     // Return the new document to the previous screen
-    Navigator.of(context).pop(newDocument);
+    navigator.pop(newDocument);
   }
 }

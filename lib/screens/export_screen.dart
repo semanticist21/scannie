@@ -284,7 +284,7 @@ class _ExportScreenState extends State<ExportScreen> {
     final fileSize = _estimateFileSize();
 
     return Card(
-      color: AppColors.primaryLight.withOpacity(0.3),
+      color: AppColors.primaryLight.withValues(alpha: 0.3),
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.md),
         child: Row(
@@ -329,7 +329,7 @@ class _ExportScreenState extends State<ExportScreen> {
         color: AppColors.surface,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 8,
             offset: const Offset(0, -2),
           ),

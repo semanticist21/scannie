@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_doc_scanner/flutter_doc_scanner.dart';
 import '../models/scan_document.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
@@ -206,16 +208,43 @@ class _GalleryScreenState extends State<GalleryScreen> {
     );
   }
 
-  void _openCamera() async {
-    // Navigate to camera screen
-    final result = await Navigator.pushNamed(context, '/camera');
+  Future<void> _openCamera() async {
+    try {
+      // Launch flutter_doc_scanner directly
+      final scannedImages = await FlutterDocScanner().getScanDocuments() ?? [];
 
-    // If a new document was created, add it to the list
-    if (result != null && result is ScanDocument) {
-      setState(() {
-        _documents.insert(0, result);
-      });
-      _showSnackBar('Document added successfully');
+      if (!mounted) return;
+
+      if (scannedImages.isEmpty) {
+        // User cancelled or no documents scanned
+        return;
+      }
+
+      // Convert to list of strings
+      final List<String> imagePaths = scannedImages is List
+          ? scannedImages.map((e) => e.toString()).toList()
+          : [scannedImages.toString()];
+
+      // Navigate to edit screen with scanned images
+      final navigator = Navigator.of(context);
+      final result = await navigator.pushNamed(
+        '/edit',
+        arguments: imagePaths,
+      );
+
+      // If a new document was created, add it to the list
+      if (result != null && result is ScanDocument && mounted) {
+        setState(() {
+          _documents.insert(0, result);
+        });
+        _showSnackBar('Document added successfully');
+      }
+    } on PlatformException catch (e) {
+      if (!mounted) return;
+      _showSnackBar('Scan failed: ${e.message}');
+    } catch (e) {
+      if (!mounted) return;
+      _showSnackBar('Scan failed: $e');
     }
   }
 

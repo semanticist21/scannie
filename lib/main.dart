@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'theme/app_theme.dart';
 import 'screens/gallery_screen.dart';
-import 'screens/camera_screen.dart';
 import 'screens/edit_screen.dart';
 import 'screens/export_screen.dart';
 import 'screens/document_viewer_screen.dart';
@@ -39,11 +38,6 @@ class ScannierApp extends StatelessWidget {
       // Route configuration
       onGenerateRoute: (settings) {
         switch (settings.name) {
-          case '/camera':
-            return MaterialPageRoute(
-              builder: (context) => const CameraScreen(),
-            );
-
           case '/edit':
             return MaterialPageRoute(
               builder: (context) => const EditScreen(),
