@@ -24,7 +24,8 @@ Scannie는 문서 스캔 Flutter 모바일 애플리케이션입니다. 네이�
 ```bash
 # 앱 실행
 flutter devices                # 사용 가능한 기기 확인
-flutter run -d <device-id>     # 실행
+# ⚠️ IMPORTANT: Claude는 절대 flutter run을 자동 실행하지 마세요!
+# 사용자가 직접 실행합니다!
 # Hot Reload: r (빠름, 상태 유지)
 # Hot Restart: R (전체 재시작)
 # 종료: q
@@ -50,6 +51,7 @@ flutter run -d <device-id> --android-skip-build-dependency-validation
 - ✅ Material 3 네이티브 컴포넌트 우선 (FilledButton, SegmentedButton, Card)
 - ✅ 테마 시스템 필수 (`AppSpacing`, `AppColors`, `AppTextStyles`)
 - ✅ **`flutter analyze` 통과 필수** - 모든 코드 수정 후 실행하여 에러/경고 0개 확인!
+- ⚠️ **Claude는 `flutter run` 절대 실행 금지** - 사용자가 직접 실행합니다!
 - ❌ `Color.withOpacity()` 사용 금지 → `withValues(alpha:)` 사용
 - ❌ Async gap 후 BuildContext 직접 사용 금지 → Navigator 인스턴스 저장
 - ❌ path 패키지는 `import 'package:path/path.dart' as path;` 형식으로만
