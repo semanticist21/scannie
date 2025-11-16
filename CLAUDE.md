@@ -16,8 +16,9 @@ Scannie는 문서 스캔 Flutter 모바일 애플리케이션입니다. 네이�
 - ✅ 문서 스캔 (네이티브 필터/크롭/회전 포함)
 - ✅ **EditScreen 이미지 관리** (드래그앤드롭 순서 변경, 삭제, 추가)
 - ✅ 세션 유지 (스캔 후 이미지 추가 가능)
-- ✅ PDF 내보내기 (공유 기능 포함)
+- ✅ PDF 내보내기 - A4 사이즈 고정 (공유 + 다운로드)
 - ✅ **PDF 다운로드** (MediaStore API - 권한 불필요)
+- ✅ DocumentViewerScreen (페이지 갤러리, 전체 화면 뷰어)
 
 ## Quick Reference
 
@@ -180,14 +181,15 @@ import '../models/scan_document.dart';
 ```
 lib/
 ├── screens/          # 3개 화면
-│   ├── gallery_screen.dart          # 홈, 문서 리스트/그리드, 스캔 버튼
-│   ├── edit_screen.dart              # **이미지 관리** (드래그앤드롭 순서, 삭제, 추가)
-│   ├── document_viewer_screen.dart   # 페이지 갤러리, 전체 화면 뷰어 (미구현)
-│   └── export_screen.dart            # PDF 설정 (미구현)
+│   ├── gallery_screen.dart          # 홈, 문서 리스트/그리드, PDF 공유/다운로드
+│   ├── edit_screen.dart              # 이미지 관리 (드래그앤드롭 순서, 삭제, 추가)
+│   └── document_viewer_screen.dart   # 페이지 갤러리, 전체 화면 뷰어
 ├── widgets/common/   # 재사용 위젯
 │   ├── scan_card.dart
 │   ├── custom_app_bar.dart
 │   └── custom_button.dart
+├── services/         # 비즈니스 로직
+│   └── document_storage.dart         # 문서 영구 저장/로드
 ├── theme/            # 디자인 시스템
 │   ├── app_theme.dart        # M3 ThemeData 구성
 │   ├── app_colors.dart       # 색상 팔레트
@@ -216,17 +218,23 @@ import '../theme/app_text_styles.dart';
 ```
 GalleryScreen (홈)
   → Scan 버튼 → CunningDocumentScanner.getPictures(mode: ScannerMode.full)
-      (네이티브 UI에서 필터/크롭/회전 모두 처리)
-      → Android: Enhance/Clean/Filter 버튼 제공
+      → Android: Enhance/Clean/Filter 버튼 제공 (네이티브 UI)
       → iOS: 기본 자동 처리 (mode 파라미터 무시됨)
-      → 스캔 완료 → '/edit' → EditScreen (arguments: List<String> imagePaths)
-          ├─ 이미지 카드 탭 → 전체 화면 뷰어 (InteractiveViewer, 0.5x~4.0x 줌)
-          ├─ 드래그 앤 드롭으로 이미지 순서 변경 (PDF 페이지 순서)
-          ├─ 이미지 삭제 (X 버튼, 토스트 없음)
-          ├─ "Add More" 버튼 → 스캐너 재호출 → 현재 세션에 추가
-          └─ Save → Navigator.pop(ScanDocument)
-  → 문서 탭 → '/viewer' → DocumentViewerScreen (미구현)
-      → PDF 버튼 → '/export' → ExportScreen (미구현)
+      → '/edit' → EditScreen (arguments: List<String> imagePaths)
+          ├─ 이미지 카드 탭 → 전체 화면 뷰어 (0.5x~4.0x 줌)
+          ├─ 드래그앤드롭으로 순서 변경 (PDF 페이지 순서)
+          ├─ 삭제 (X 버튼, 최소 1개 유지)
+          ├─ "Add More" → 스캐너 재호출 → 세션에 추가
+          └─ Save → Navigator.pop(ScanDocument) → GalleryScreen
+
+  → 문서 카드 탭 → '/viewer' → DocumentViewerScreen
+      ├─ 그리드/리스트 뷰 전환
+      ├─ 페이지 탭 → FullScreenImageViewer (InteractiveViewer 줌)
+      └─ PDF 버튼 → "PDF export is available from the gallery" 안내
+
+  → 문서 카드 메뉴:
+      ├─ Share → _exportToPdf() → 시스템 공유 시트 (A4 PDF)
+      └─ Download → _savePdfLocally() → MediaStore API (Downloads/Scannie/)
 ```
 
 **라우트 설정 필수 패턴**:
@@ -372,13 +380,14 @@ final result = await navigator.pushNamed('/edit', arguments: scannedImages);
 - 세션 재개 불가 (한 번 호출 → 완료 → 결과 반환으로 끝)
 - `noOfPages`, `isGalleryImportAllowed` 파라미터는 Android에서만 동작
 
-## PDF 다운로드 (MediaStore API)
+## PDF 내보내기 (A4 고정)
 
 ### 개요
 
-앱은 두 가지 PDF 내보내기 방식을 제공합니다:
-1. **Share** (공유): 시스템 공유 시트 표시
-2. **Download** (다운로드): Downloads 폴더에 직접 저장 후 파일 매니저 열기
+**모든 PDF는 A4 사이즈, 고품질로 고정**됩니다. 앱은 두 가지 내보내기 방식을 제공합니다:
+
+1. **Share** (공유): `Printing.sharePdf()` - 시스템 공유 시트
+2. **Download** (다운로드): MediaStore API - Downloads/Scannie/ 폴더
 
 ### Android MediaStore API 사용
 

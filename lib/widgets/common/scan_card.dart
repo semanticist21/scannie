@@ -6,7 +6,7 @@ import '../../theme/app_theme.dart';
 import '../../theme/app_text_styles.dart';
 
 /// Card widget for displaying a scanned document
-class ScanCard extends StatelessWidget {
+class ScanCard extends StatefulWidget {
   final ScanDocument document;
   final VoidCallback onTap;
   final VoidCallback? onEdit;
@@ -27,163 +27,154 @@ class ScanCard extends StatelessWidget {
   });
 
   @override
+  State<ScanCard> createState() => _ScanCardState();
+}
+
+class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 150),
+      vsync: this,
+    );
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.97).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _onTapDown(TapDownDetails details) {
+    _controller.forward();
+  }
+
+  void _onTapUp(TapUpDetails details) {
+    _controller.reverse();
+  }
+
+  void _onTapCancel() {
+    _controller.reverse();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final pageCount = document.imagePaths.length;
-    final formattedDate = _formatDate(document.createdAt);
+    final pageCount = widget.document.imagePaths.length;
+    final formattedDate = _formatDate(widget.document.createdAt);
 
-    // Wrap card with Dismissible for swipe-to-delete
-    Widget cardContent = Card(
-      margin: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.md,
-        vertical: AppSpacing.sm,
-      ),
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppRadius.lg),
-        side: BorderSide(
-          color: AppColors.textHint.withValues(alpha: 0.1),
-          width: 1,
+    // Material 3 card design with subtle scale animation
+    return ScaleTransition(
+      scale: _scaleAnimation,
+      child: Card.filled(
+        margin: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.sm,
         ),
-      ),
-      child: InkWell(
-        onTap: onTap,
-        onLongPress: () => _showContextMenu(context),
-        borderRadius: BorderRadius.circular(AppRadius.lg),
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          child: Row(
-            children: [
-              // Modern Thumbnail with shadow
-              Container(
-                width: 70,
-                height: 90,
-                decoration: BoxDecoration(
-                  color: AppColors.surface,
-                  borderRadius: BorderRadius.circular(AppRadius.md),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.08),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: _buildThumbnail(),
-              ),
-              const SizedBox(width: AppSpacing.md),
-
-              // Document info with better typography
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      document.name,
-                      style: AppTextStyles.bodyLarge.copyWith(
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: -0.2,
+        child: InkWell(
+          onTap: widget.onTap,
+          onTapDown: _onTapDown,
+          onTapUp: _onTapUp,
+          onTapCancel: _onTapCancel,
+          onLongPress: () => _showContextMenu(context),
+          borderRadius: BorderRadius.circular(AppRadius.lg),
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            child: Row(
+              children: [
+                // Thumbnail with subtle elevation
+                Container(
+                  width: 75,
+                  height: 95,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(AppRadius.md),
+                    color: AppColors.surface,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.08),
+                        blurRadius: 6,
+                        offset: const Offset(0, 2),
                       ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: AppSpacing.xs),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.insert_drive_file_outlined,
-                          size: 14,
-                          color: AppColors.textSecondary.withValues(alpha: 0.6),
-                        ),
-                        const SizedBox(width: AppSpacing.xs),
-                        Text(
-                          '$pageCount ${pageCount == 1 ? 'page' : 'pages'}',
-                          style: AppTextStyles.bodySmall.copyWith(
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
-                        const SizedBox(width: AppSpacing.sm),
-                        Text(
-                          '•',
-                          style: AppTextStyles.bodySmall.copyWith(
-                            color: AppColors.textHint,
-                          ),
-                        ),
-                        const SizedBox(width: AppSpacing.sm),
-                        Text(
-                          formattedDate,
-                          style: AppTextStyles.caption.copyWith(
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(AppRadius.md),
+                    child: _buildThumbnail(),
+                  ),
                 ),
-              ),
+                const SizedBox(width: AppSpacing.md),
 
-              // Single action button (more menu)
-              IconButton(
-                icon: const Icon(Icons.more_vert),
-                onPressed: () => _showContextMenu(context),
-                color: AppColors.textSecondary,
-                iconSize: 20,
-              ),
-            ],
+                // Document info
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        widget.document.name,
+                        style: AppTextStyles.bodyLarge.copyWith(
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: -0.3,
+                          height: 1.2,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: AppSpacing.xs),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.insert_drive_file_outlined,
+                            size: 14,
+                            color: AppColors.textSecondary.withValues(alpha: 0.7),
+                          ),
+                          const SizedBox(width: AppSpacing.xs),
+                          Text(
+                            '$pageCount ${pageCount == 1 ? 'page' : 'pages'}',
+                            style: AppTextStyles.bodySmall.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                          const SizedBox(width: AppSpacing.sm),
+                          Text(
+                            '•',
+                            style: AppTextStyles.bodySmall.copyWith(
+                              color: AppColors.textHint,
+                            ),
+                          ),
+                          const SizedBox(width: AppSpacing.sm),
+                          Text(
+                            formattedDate,
+                            style: AppTextStyles.caption.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Action button
+                IconButton(
+                  icon: const Icon(Icons.more_vert),
+                  onPressed: () => _showContextMenu(context),
+                  color: AppColors.textSecondary,
+                  iconSize: 20,
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
-
-    // Add Dismissible for swipe-to-delete
-    if (onDelete != null) {
-      return Dismissible(
-        key: Key(document.id),
-        direction: DismissDirection.endToStart,
-        confirmDismiss: (direction) async {
-          return await showDialog<bool>(
-            context: context,
-            builder: (dialogContext) => AlertDialog(
-              title: const Text('Delete Document'),
-              content: Text('Are you sure you want to delete "${document.name}"?'),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(dialogContext, false),
-                  child: const Text('Cancel'),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.pop(dialogContext, true),
-                  style: TextButton.styleFrom(foregroundColor: AppColors.error),
-                  child: const Text('Delete'),
-                ),
-              ],
-            ),
-          );
-        },
-        onDismissed: (direction) => onDelete?.call(),
-        background: Container(
-          margin: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.md,
-            vertical: AppSpacing.sm,
-          ),
-          decoration: BoxDecoration(
-            color: AppColors.error,
-            borderRadius: BorderRadius.circular(AppRadius.lg),
-          ),
-          alignment: Alignment.centerRight,
-          padding: const EdgeInsets.only(right: AppSpacing.lg),
-          child: const Icon(
-            Icons.delete_outline,
-            color: Colors.white,
-            size: 28,
-          ),
-        ),
-        child: cardContent,
-      );
-    }
-
-    return cardContent;
   }
 
   void _showContextMenu(BuildContext context) {
@@ -200,7 +191,7 @@ class ScanCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(AppSpacing.md),
               child: Text(
-                document.name,
+                widget.document.name,
                 style: AppTextStyles.bodyLarge.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
@@ -211,49 +202,49 @@ class ScanCard extends StatelessWidget {
             const Divider(height: 1),
 
             // Actions
-            if (onEditScan != null)
+            if (widget.onEditScan != null)
               ListTile(
                 leading: const Icon(Icons.edit_document, color: AppColors.primary),
                 title: const Text('Edit Scan'),
                 onTap: () {
                   Navigator.pop(sheetContext);
-                  onEditScan?.call();
+                  widget.onEditScan?.call();
                 },
               ),
-            if (onEdit != null)
+            if (widget.onEdit != null)
               ListTile(
                 leading: const Icon(Icons.edit_outlined),
                 title: const Text('Rename'),
                 onTap: () {
                   Navigator.pop(sheetContext);
-                  onEdit?.call();
+                  widget.onEdit?.call();
                 },
               ),
-            if (onSavePdf != null)
+            if (widget.onSavePdf != null)
               ListTile(
                 leading: const Icon(Icons.download, color: AppColors.accent),
                 title: const Text('Save PDF'),
                 onTap: () {
                   Navigator.pop(sheetContext);
-                  onSavePdf?.call();
+                  widget.onSavePdf?.call();
                 },
               ),
-            if (onShare != null)
+            if (widget.onShare != null)
               ListTile(
                 leading: const Icon(Icons.share, color: AppColors.accent),
                 title: const Text('Share PDF'),
                 onTap: () {
                   Navigator.pop(sheetContext);
-                  onShare?.call();
+                  widget.onShare?.call();
                 },
               ),
-            if (onDelete != null)
+            if (widget.onDelete != null)
               ListTile(
                 leading: const Icon(Icons.delete_outline, color: AppColors.error),
                 title: const Text('Delete', style: TextStyle(color: AppColors.error)),
                 onTap: () {
                   Navigator.pop(sheetContext);
-                  onDelete?.call();
+                  widget.onDelete?.call();
                 },
               ),
             const SizedBox(height: AppSpacing.sm),
@@ -265,34 +256,37 @@ class ScanCard extends StatelessWidget {
 
   Widget _buildThumbnail() {
     // If document has images, show the first image as thumbnail
-    if (document.imagePaths.isNotEmpty) {
-      final firstImagePath = document.imagePaths.first;
+    if (widget.document.imagePaths.isNotEmpty) {
+      final firstImagePath = widget.document.imagePaths.first;
       final imageFile = File(firstImagePath);
 
       // Check if file exists
       if (imageFile.existsSync()) {
-        return ClipRRect(
-          borderRadius: BorderRadius.circular(AppRadius.sm),
-          child: Image.file(
-            imageFile,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
-              return const Icon(
+        return Image.file(
+          imageFile,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return Container(
+              color: AppColors.primaryLight.withValues(alpha: 0.15),
+              child: const Icon(
                 Icons.description_outlined,
                 color: AppColors.primary,
-                size: 32,
-              );
-            },
-          ),
+                size: 36,
+              ),
+            );
+          },
         );
       }
     }
 
     // Fallback to icon if no images or file doesn't exist
-    return const Icon(
-      Icons.description_outlined,
-      color: AppColors.primary,
-      size: 32,
+    return Container(
+      color: AppColors.primaryLight.withValues(alpha: 0.15),
+      child: const Icon(
+        Icons.description_outlined,
+        color: AppColors.primary,
+        size: 36,
+      ),
     );
   }
 

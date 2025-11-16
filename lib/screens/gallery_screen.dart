@@ -17,6 +17,7 @@ import 'package:path/path.dart' as path;
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:open_file_manager/open_file_manager.dart';
 import 'package:media_store_plus/media_store_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Gallery screen displaying scanned documents
 class GalleryScreen extends StatefulWidget {
@@ -34,7 +35,33 @@ class _GalleryScreenState extends State<GalleryScreen> {
   @override
   void initState() {
     super.initState();
+    _loadViewMode();
     _loadDocuments();
+  }
+
+  /// Load view mode preference from persistent storage
+  Future<void> _loadViewMode() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final isGridView = prefs.getBool('isGridView') ?? false;
+      if (mounted) {
+        setState(() {
+          _isGridView = isGridView;
+        });
+      }
+    } catch (e) {
+      debugPrint('Failed to load view mode: $e');
+    }
+  }
+
+  /// Save view mode preference to persistent storage
+  Future<void> _saveViewMode(bool isGridView) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isGridView', isGridView);
+    } catch (e) {
+      debugPrint('Failed to save view mode: $e');
+    }
   }
 
   /// Load documents from persistent storage
@@ -73,8 +100,17 @@ class _GalleryScreenState extends State<GalleryScreen> {
         title: const Text('My Scans'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: _createEmptyDocument,
+            tooltip: 'Create Empty Document',
+          ),
+          IconButton(
             icon: Icon(_isGridView ? Icons.list : Icons.grid_view),
-            onPressed: () => setState(() => _isGridView = !_isGridView),
+            onPressed: () {
+              final newViewMode = !_isGridView;
+              setState(() => _isGridView = newViewMode);
+              _saveViewMode(newViewMode);
+            },
             tooltip: _isGridView ? 'List View' : 'Grid View',
           ),
           IconButton(
@@ -84,11 +120,25 @@ class _GalleryScreenState extends State<GalleryScreen> {
           ),
         ],
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _documents.isEmpty
-              ? _buildEmptyState()
-              : _buildDocumentList(),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              AppColors.background,
+              AppColors.primaryLight.withValues(alpha: 0.1),
+              AppColors.background,
+            ],
+            stops: const [0.0, 0.5, 1.0],
+          ),
+        ),
+        child: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : _documents.isEmpty
+                ? _buildEmptyState()
+                : _buildDocumentList(),
+      ),
       floatingActionButton: FilledButton.icon(
         onPressed: _openCamera,
         icon: const Icon(Icons.camera_alt),
@@ -98,6 +148,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
             horizontal: AppSpacing.lg,
             vertical: AppSpacing.md,
           ),
+          elevation: 4,
         ),
       ),
     );
@@ -158,11 +209,11 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
   Widget _buildGridView() {
     return GridView.builder(
-      padding: const EdgeInsets.all(AppSpacing.md),
+      padding: const EdgeInsets.all(AppSpacing.sm),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        crossAxisSpacing: AppSpacing.md,
-        mainAxisSpacing: AppSpacing.md,
+        crossAxisSpacing: AppSpacing.sm,
+        mainAxisSpacing: AppSpacing.sm,
         childAspectRatio: 0.75,
       ),
       itemCount: _documents.length,
@@ -174,59 +225,87 @@ class _GalleryScreenState extends State<GalleryScreen> {
   }
 
   Widget _buildGridCard(ScanDocument document) {
-    return Card(
-      child: InkWell(
-        onTap: () => _openDocument(document),
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Thumbnail
-            Expanded(
-              child: Container(
-                decoration: const BoxDecoration(
-                  color: AppColors.primaryLight,
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(AppRadius.md),
-                  ),
-                ),
-                child: _buildGridThumbnail(document),
-              ),
-            ),
-
-            // Info
-            Padding(
-              padding: const EdgeInsets.all(AppSpacing.sm),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    document.name,
-                    style: AppTextStyles.bodyMedium.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: AppSpacing.xs),
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.image,
-                        size: 14,
-                        color: AppColors.textSecondary,
-                      ),
-                      const SizedBox(width: AppSpacing.xs),
-                      Text(
-                        '${document.imagePaths.length}',
-                        style: AppTextStyles.caption,
+    return TweenAnimationBuilder<double>(
+      duration: const Duration(milliseconds: 200),
+      tween: Tween(begin: 0.95, end: 1.0),
+      curve: Curves.easeOut,
+      builder: (context, scale, child) {
+        return Transform.scale(
+          scale: scale,
+          child: child,
+        );
+      },
+      child: Card.filled(
+        child: InkWell(
+          onTap: () => _openDocument(document),
+          borderRadius: BorderRadius.circular(AppRadius.lg),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Thumbnail with subtle elevation
+              Expanded(
+                child: Container(
+                  margin: const EdgeInsets.all(AppSpacing.sm),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(AppRadius.md),
+                    color: AppColors.surface,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.08),
+                        blurRadius: 6,
+                        offset: const Offset(0, 2),
                       ),
                     ],
                   ),
-                ],
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(AppRadius.md),
+                    child: _buildGridThumbnail(document),
+                  ),
+                ),
               ),
-            ),
-          ],
+
+              // Info section
+              Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.md,
+                  AppSpacing.xs,
+                  AppSpacing.md,
+                  AppSpacing.md,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      document.name,
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: -0.2,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.insert_drive_file_outlined,
+                          size: 14,
+                          color: AppColors.textSecondary.withValues(alpha: 0.7),
+                        ),
+                        const SizedBox(width: AppSpacing.xs),
+                        Text(
+                          '${document.imagePaths.length} ${document.imagePaths.length == 1 ? 'page' : 'pages'}',
+                          style: AppTextStyles.caption.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -240,35 +319,105 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
       // Check if file exists
       if (imageFile.existsSync()) {
-        return ClipRRect(
-          borderRadius: const BorderRadius.vertical(
-            top: Radius.circular(AppRadius.md),
-          ),
-          child: Image.file(
-            imageFile,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
-              return const Center(
+        return Image.file(
+          imageFile,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return Container(
+              color: AppColors.primaryLight.withValues(alpha: 0.15),
+              child: const Center(
                 child: Icon(
                   Icons.description_outlined,
-                  size: 64,
+                  size: 48,
                   color: AppColors.primary,
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         );
       }
     }
 
     // Fallback to icon if no images or file doesn't exist
-    return const Center(
-      child: Icon(
-        Icons.description_outlined,
-        size: 64,
-        color: AppColors.primary,
+    return Container(
+      color: AppColors.primaryLight.withValues(alpha: 0.15),
+      child: const Center(
+        child: Icon(
+          Icons.description_outlined,
+          size: 48,
+          color: AppColors.primary,
+        ),
       ),
     );
+  }
+
+  /// Create empty document with name input
+  Future<void> _createEmptyDocument() async {
+    final TextEditingController nameController = TextEditingController(
+      text: 'Scan ${DateTime.now().toString().substring(0, 10)}',
+    );
+
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.noHeader,
+      animType: AnimType.scale,
+      title: 'Create New Document',
+      desc: 'Enter a name for the new document',
+      body: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Column(
+          children: [
+            const Text(
+              'Create New Document',
+              style: AppTextStyles.h2,
+            ),
+            const SizedBox(height: AppSpacing.md),
+            TextField(
+              controller: nameController,
+              maxLength: 50,
+              decoration: InputDecoration(
+                labelText: 'Document name',
+                hintText: 'Enter name',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(AppRadius.md),
+                ),
+                counterText: '', // Hide character counter
+              ),
+              autofocus: true,
+              textCapitalization: TextCapitalization.words,
+            ),
+          ],
+        ),
+      ),
+      btnCancelOnPress: () {},
+      btnOkOnPress: () async {
+        final documentName = nameController.text.trim();
+        if (documentName.isEmpty) {
+          _showSnackBar('Name cannot be empty');
+          return;
+        }
+
+        // Create empty document
+        final newDocument = ScanDocument(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          name: documentName,
+          createdAt: DateTime.now(),
+          imagePaths: [], // Empty list
+          isProcessed: true,
+        );
+
+        setState(() {
+          _documents.insert(0, newDocument);
+        });
+        await _saveDocuments();
+
+        if (!mounted) return;
+        _showSnackBar('Empty document created');
+      },
+      btnOkText: 'Create',
+      btnCancelText: 'Cancel',
+      btnCancelColor: AppColors.textSecondary,
+    ).show();
   }
 
   Future<void> _openCamera() async {
@@ -308,7 +457,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
           _documents.insert(0, result);
         });
         await _saveDocuments();
-        _showSnackBar('Document saved successfully');
+        // No toast for successful save - user clicked Save button intentionally
       }
     } on PlatformException catch (e) {
       if (!mounted) return;
@@ -319,13 +468,21 @@ class _GalleryScreenState extends State<GalleryScreen> {
     }
   }
 
-  void _openDocument(ScanDocument document) {
+  void _openDocument(ScanDocument document) async {
     // Navigate to document viewer
-    Navigator.pushNamed(
+    final result = await Navigator.pushNamed(
       context,
       '/viewer',
       arguments: document,
     );
+
+    // Handle delete result
+    if (result is Map && result['deleted'] == true) {
+      final deletedId = result['documentId'] as String;
+      setState(() {
+        _documents.removeWhere((doc) => doc.id == deletedId);
+      });
+    }
   }
 
   void _editDocumentName(ScanDocument document) async {

@@ -35,4 +35,11 @@ class DocumentStorage {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_documentsKey);
   }
+
+  /// Delete a single document by ID
+  Future<void> deleteDocument(String documentId) async {
+    final documents = await loadDocuments();
+    final updatedDocuments = documents.where((doc) => doc.id != documentId).toList();
+    await saveDocuments(updatedDocuments);
+  }
 }

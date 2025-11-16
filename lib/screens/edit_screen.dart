@@ -83,8 +83,7 @@ class _EditScreenState extends State<EditScreen> {
 
   /// Delete image at index
   void _deleteImage(int index) {
-    if (_imagePaths.length <= 1) {
-      _showMessage('Cannot delete the last image');
+    if (_imagePaths.isEmpty) {
       return;
     }
 
@@ -118,6 +117,12 @@ class _EditScreenState extends State<EditScreen> {
 
   /// Save and return
   void _saveScan() async {
+    // Check if there are any images
+    if (_imagePaths.isEmpty) {
+      _showMessage('Please add at least one image to save');
+      return;
+    }
+
     // Determine default name based on context
     final bool isEditingExisting = _existingDocumentId != null;
     final String defaultName = isEditingExisting
@@ -449,6 +454,34 @@ class _EditScreenState extends State<EditScreen> {
   }
 
   Widget _buildReorderableGrid() {
+    // Show empty state if no images
+    if (_imagePaths.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.image_not_supported_outlined,
+              size: 120,
+              color: AppColors.textHint,
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            const Text(
+              'No images added yet',
+              style: AppTextStyles.h2,
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              'Tap "Add More" below to add images',
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return ReorderableGridView.count(
       crossAxisCount: 2,
       crossAxisSpacing: AppSpacing.md,
@@ -472,6 +505,7 @@ class _EditScreenState extends State<EditScreen> {
         borderRadius: BorderRadius.circular(AppRadius.md),
       ),
       child: Stack(
+        clipBehavior: Clip.none, // Allow overflow like CSS overflow: visible
         fit: StackFit.expand,
         children: [
           // Image (tappable)
@@ -532,17 +566,41 @@ class _EditScreenState extends State<EditScreen> {
             ),
           ),
 
-          // Delete button
+          // Delete button (overlapping corner like CSS absolute + z-index)
           Positioned(
-            top: AppSpacing.sm,
-            right: AppSpacing.sm,
-            child: IconButton(
-              icon: const Icon(Icons.close, color: Colors.white),
-              style: IconButton.styleFrom(
-                backgroundColor: AppColors.error,
-                padding: const EdgeInsets.all(AppSpacing.xs),
+            top: -8, // Negative offset to overlap outside card
+            right: -8, // Negative offset to overlap outside card
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () => _deleteImage(index),
+                borderRadius: BorderRadius.circular(AppRadius.round),
+                child: Container(
+                  width: 32,
+                  height: 32,
+                  decoration: BoxDecoration(
+                    color: AppColors.error,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.4),
+                        blurRadius: 6,
+                        spreadRadius: 1,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                    border: Border.all(
+                      color: Colors.white,
+                      width: 2,
+                    ),
+                  ),
+                  child: const Icon(
+                    Icons.close_rounded,
+                    color: Colors.white,
+                    size: 18,
+                  ),
+                ),
               ),
-              onPressed: () => _deleteImage(index),
             ),
           ),
         ],

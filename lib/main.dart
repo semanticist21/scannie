@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'theme/app_theme.dart';
 import 'screens/gallery_screen.dart';
 import 'screens/edit_screen.dart';
-import 'screens/export_screen.dart';
 import 'screens/document_viewer_screen.dart';
 import 'models/scan_document.dart';
 
@@ -53,17 +52,6 @@ class ScannierApp extends StatelessWidget {
             }
             return MaterialPageRoute(
               builder: (context) => DocumentViewerScreen(document: document),
-            );
-
-          case '/export':
-            final document = settings.arguments as ScanDocument?;
-            if (document == null) {
-              return MaterialPageRoute(
-                builder: (context) => const GalleryScreen(),
-              );
-            }
-            return MaterialPageRoute(
-              builder: (context) => ExportScreen(document: document),
             );
 
           default:
