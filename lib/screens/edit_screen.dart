@@ -114,14 +114,47 @@ class _EditScreenState extends State<EditScreen> {
       isProcessed: true,
     );
 
-    _showToast(
-      '${_imagePaths.length} image(s) saved',
-      AppColors.success,
-      Icons.check_circle,
-    );
+    // No toast for successful save - user clicked Save button intentionally
+    // Only show toast for errors
 
     // Return to GalleryScreen
     navigator.pop(newDocument);
+  }
+
+  /// Show confirmation dialog before discarding changes
+  Future<bool> _confirmDiscard() async {
+    debugPrint('🚨 _confirmDiscard called - showing dialog');
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false, // Prevent dismissing by tapping outside
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Discard Changes?'),
+        content: const Text(
+          'Are you sure you want to discard this scan? All images will be lost.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              debugPrint('🚨 User clicked Cancel');
+              Navigator.of(dialogContext).pop(false);
+            },
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () {
+              debugPrint('🚨 User clicked Discard');
+              Navigator.of(dialogContext).pop(true);
+            },
+            style: FilledButton.styleFrom(
+              backgroundColor: AppColors.error,
+            ),
+            child: const Text('Discard'),
+          ),
+        ],
+      ),
+    );
+    debugPrint('🚨 Dialog result: $result');
+    return result ?? false;
   }
 
   /// Export images to PDF
@@ -220,31 +253,59 @@ class _EditScreenState extends State<EditScreen> {
     );
   }
 
+  /// Handle back button press with confirmation
+  Future<void> _handleBackPress() async {
+    debugPrint('🔙 _handleBackPress called');
+    final navigator = Navigator.of(context);
+    final shouldPop = await _confirmDiscard();
+
+    if (shouldPop && mounted) {
+      debugPrint('🔙 User confirmed discard, popping');
+      navigator.pop();
+    } else {
+      debugPrint('🔙 User cancelled discard');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(
-        title: 'Edit Scan (${_imagePaths.length})',
-        actions: [
-          TextButton(
-            onPressed: _saveScan,
-            child: const Text('Save'),
-          ),
-        ],
-      ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                // Image Grid (Reorderable)
-                Expanded(
-                  child: _buildReorderableGrid(),
-                ),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (bool didPop, dynamic result) async {
+        debugPrint('🔙 onPopInvoked: didPop=$didPop, result=$result');
 
-                // Bottom Actions
-                _buildBottomActions(),
-              ],
-            ),
+        // If already popped, do nothing
+        if (didPop) {
+          debugPrint('🔙 Already popped, returning');
+          return;
+        }
+
+        // System back button pressed
+        debugPrint('🔙 System back button, asking user...');
+        await _handleBackPress();
+      },
+      child: Scaffold(
+        appBar: CustomAppBar(
+          title: 'Edit Scan (${_imagePaths.length})',
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: _handleBackPress, // Custom back handler
+          ),
+        ),
+        body: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : Column(
+                children: [
+                  // Image Grid (Reorderable)
+                  Expanded(
+                    child: _buildReorderableGrid(),
+                  ),
+
+                  // Bottom Actions
+                  _buildBottomActions(),
+                ],
+              ),
+      ),
     );
   }
 
@@ -371,29 +432,50 @@ class _EditScreenState extends State<EditScreen> {
           ),
         ],
       ),
-      child: Row(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          // Add More button
-          Expanded(
-            child: FilledButton.icon(
-              onPressed: _addMoreImages,
-              icon: const Icon(Icons.add_photo_alternate),
-              label: const Text('Add More'),
-              style: FilledButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  vertical: AppSpacing.md,
+          // Row 1: Add More + Export PDF (Secondary actions)
+          Row(
+            children: [
+              // Add More images
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: _addMoreImages,
+                  icon: const Icon(Icons.add_photo_alternate),
+                  label: const Text('Add More'),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: AppSpacing.sm,
+                    ),
+                  ),
                 ),
               ),
-            ),
+              const SizedBox(width: AppSpacing.sm),
+              // Export PDF and delete
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: _exportToPdf,
+                  icon: const Icon(Icons.picture_as_pdf),
+                  label: const Text('Export PDF'),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: AppSpacing.sm,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(width: AppSpacing.md),
-          // Export PDF button
-          Expanded(
-            child: OutlinedButton.icon(
-              onPressed: _exportToPdf,
-              icon: const Icon(Icons.picture_as_pdf),
-              label: const Text('Export PDF'),
-              style: OutlinedButton.styleFrom(
+          const SizedBox(height: AppSpacing.sm),
+          // Row 2: Save (Primary action)
+          SizedBox(
+            width: double.infinity,
+            child: FilledButton.icon(
+              onPressed: _saveScan,
+              icon: const Icon(Icons.check_circle_outline),
+              label: const Text('Save to Gallery'),
+              style: FilledButton.styleFrom(
                 padding: const EdgeInsets.symmetric(
                   vertical: AppSpacing.md,
                 ),

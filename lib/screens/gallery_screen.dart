@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cunning_document_scanner_plus/cunning_document_scanner_plus.dart';
 import '../models/scan_document.dart';
+import '../services/document_storage.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
 import '../theme/app_text_styles.dart';
@@ -18,33 +19,44 @@ class GalleryScreen extends StatefulWidget {
 }
 
 class _GalleryScreenState extends State<GalleryScreen> {
-
-  // Mock data for demonstration
-  final List<ScanDocument> _documents = [
-    ScanDocument(
-      id: '1',
-      name: 'Invoice_2024_01',
-      createdAt: DateTime.now(),
-      imagePaths: ['image1.jpg', 'image2.jpg'],
-      isProcessed: true,
-    ),
-    ScanDocument(
-      id: '2',
-      name: 'Contract Document',
-      createdAt: DateTime.now().subtract(const Duration(days: 1)),
-      imagePaths: ['contract.jpg'],
-      isProcessed: true,
-    ),
-    ScanDocument(
-      id: '3',
-      name: 'Meeting Notes',
-      createdAt: DateTime.now().subtract(const Duration(days: 3)),
-      imagePaths: ['notes1.jpg', 'notes2.jpg', 'notes3.jpg'],
-      isProcessed: true,
-    ),
-  ];
-
+  List<ScanDocument> _documents = [];
   bool _isGridView = false;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDocuments();
+  }
+
+  /// Load documents from persistent storage
+  Future<void> _loadDocuments() async {
+    setState(() => _isLoading = true);
+
+    try {
+      final documents = await DocumentStorage.loadDocuments();
+      if (mounted) {
+        setState(() {
+          _documents = documents;
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isLoading = false);
+        _showSnackBar('Failed to load documents: $e');
+      }
+    }
+  }
+
+  /// Save documents to persistent storage
+  Future<void> _saveDocuments() async {
+    try {
+      await DocumentStorage.saveDocuments(_documents);
+    } catch (e) {
+      debugPrint('Failed to save documents: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +76,11 @@ class _GalleryScreenState extends State<GalleryScreen> {
           ),
         ],
       ),
-      body: _documents.isEmpty ? _buildEmptyState() : _buildDocumentList(),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : _documents.isEmpty
+              ? _buildEmptyState()
+              : _buildDocumentList(),
       floatingActionButton: FilledButton.icon(
         onPressed: _openCamera,
         icon: const Icon(Icons.camera_alt),
@@ -275,12 +291,13 @@ class _GalleryScreenState extends State<GalleryScreen> {
         arguments: imagePaths,
       );
 
-      // If a new document was created, add it to the list
+      // If a new document was created, add it to the list and save
       if (result != null && result is ScanDocument && mounted) {
         setState(() {
           _documents.insert(0, result);
         });
-        _showSnackBar('Document added successfully');
+        await _saveDocuments();
+        _showSnackBar('Document saved successfully');
       }
     } on PlatformException catch (e) {
       if (!mounted) return;
@@ -303,20 +320,23 @@ class _GalleryScreenState extends State<GalleryScreen> {
   void _deleteDocument(ScanDocument document) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: const Text('Delete Document'),
         content: Text('Are you sure you want to delete "${document.name}"?'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(dialogContext),
             child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () {
+            onPressed: () async {
+              final navigator = Navigator.of(dialogContext);
               setState(() {
                 _documents.removeWhere((d) => d.id == document.id);
               });
-              Navigator.pop(context);
+              await _saveDocuments();
+              if (!mounted) return;
+              navigator.pop();
               _showSnackBar('Document deleted');
             },
             style: TextButton.styleFrom(foregroundColor: AppColors.error),
