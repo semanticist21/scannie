@@ -345,12 +345,14 @@ class _GalleryScreenState extends State<GalleryScreen> {
             const SizedBox(height: AppSpacing.md),
             TextField(
               controller: controller,
+              maxLength: 50,
               decoration: InputDecoration(
                 labelText: 'Document name',
                 hintText: 'Enter new name',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(AppRadius.md),
                 ),
+                counterText: '', // Hide character counter
               ),
               autofocus: true,
               textCapitalization: TextCapitalization.words,
@@ -414,10 +416,10 @@ class _GalleryScreenState extends State<GalleryScreen> {
   void _editScan(ScanDocument document) async {
     final navigator = Navigator.of(context);
 
-    // Navigate to EditScreen with existing images
+    // Navigate to EditScreen with entire document (so name can be edited too)
     final result = await navigator.pushNamed(
       '/edit',
-      arguments: document.imagePaths,
+      arguments: document, // Pass entire ScanDocument
     );
 
     // If user saved changes, update the document
@@ -425,10 +427,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
       setState(() {
         final index = _documents.indexWhere((d) => d.id == document.id);
         if (index != -1) {
-          // Keep the same ID and name, but update images
-          _documents[index] = document.copyWith(
-            imagePaths: result.imagePaths,
-          );
+          // Replace with updated document (name and images)
+          _documents[index] = result;
         }
       });
       await _saveDocuments();

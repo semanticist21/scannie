@@ -13,6 +13,7 @@ import 'package:printing/printing.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 
 /// Edit screen for managing scanned images
 /// Features: Reorder, Delete, Add more images
@@ -25,6 +26,8 @@ class EditScreen extends StatefulWidget {
 
 class _EditScreenState extends State<EditScreen> {
   List<String> _imagePaths = [];
+  String? _existingDocumentId; // null = new scan, non-null = editing existing
+  String? _existingDocumentName; // Preserve name when editing
   bool _isLoading = false;
 
   @override
@@ -35,11 +38,21 @@ class _EditScreenState extends State<EditScreen> {
     final arguments = ModalRoute.of(context)?.settings.arguments;
     if (arguments != null && _imagePaths.isEmpty) {
       if (arguments is String) {
+        // Single image path
         _imagePaths = [arguments];
       } else if (arguments is List<String>) {
+        // List of image paths (new scan)
         _imagePaths = List<String>.from(arguments);
+      } else if (arguments is ScanDocument) {
+        // Editing existing scan
+        _imagePaths = List<String>.from(arguments.imagePaths);
+        _existingDocumentId = arguments.id;
+        _existingDocumentName = arguments.name;
       }
       debugPrint('📸 EditScreen loaded ${_imagePaths.length} images');
+      if (_existingDocumentId != null) {
+        debugPrint('✏️ Editing existing scan: $_existingDocumentName');
+      }
     }
   }
 
@@ -103,58 +116,107 @@ class _EditScreenState extends State<EditScreen> {
 
   /// Save and return
   void _saveScan() async {
-    final navigator = Navigator.of(context);
+    // Determine default name based on context
+    final bool isEditingExisting = _existingDocumentId != null;
+    final String defaultName = isEditingExisting
+        ? _existingDocumentName! // Use existing name when editing
+        : 'Scan ${DateTime.now().toString().substring(0, 10)}'; // New scan: use date
 
-    // Create a new scan document
-    final newDocument = ScanDocument(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      name: 'Scan_${DateTime.now().toString().substring(0, 19).replaceAll(':', '-')}',
-      createdAt: DateTime.now(),
-      imagePaths: _imagePaths,
-      isProcessed: true,
-    );
+    // Show dialog to input document name
+    final TextEditingController nameController = TextEditingController(text: defaultName);
 
-    // No toast for successful save - user clicked Save button intentionally
-    // Only show toast for errors
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.noHeader,
+      animType: AnimType.scale,
+      title: isEditingExisting ? 'Save Changes' : 'Save Scan',
+      desc: isEditingExisting
+          ? 'Update the name for this scan'
+          : 'Enter a name for this scan',
+      body: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Column(
+          children: [
+            Text(
+              isEditingExisting ? 'Save Changes' : 'Save Scan',
+              style: AppTextStyles.h2,
+            ),
+            const SizedBox(height: AppSpacing.md),
+            TextField(
+              controller: nameController,
+              maxLength: 50,
+              decoration: InputDecoration(
+                labelText: 'Document name',
+                hintText: 'Enter name',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(AppRadius.md),
+                ),
+                counterText: '', // Hide character counter
+              ),
+              autofocus: true,
+              textCapitalization: TextCapitalization.words,
+            ),
+          ],
+        ),
+      ),
+      btnCancelOnPress: () {},
+      btnOkOnPress: () async {
+        final documentName = nameController.text.trim();
+        if (documentName.isEmpty) {
+          _showMessage('Name cannot be empty');
+          return;
+        }
 
-    // Return to GalleryScreen
-    navigator.pop(newDocument);
+        final navigator = Navigator.of(context);
+
+        // Create a new scan document with user-provided name
+        // When editing, preserve the original ID and createdAt
+        final newDocument = ScanDocument(
+          id: _existingDocumentId ?? DateTime.now().millisecondsSinceEpoch.toString(),
+          name: documentName,
+          createdAt: DateTime.now(), // Always update timestamp
+          imagePaths: _imagePaths,
+          isProcessed: true,
+        );
+
+        // No toast for successful save - user clicked Save button intentionally
+        // Only show toast for errors
+
+        // Return to GalleryScreen
+        if (!mounted) return;
+        navigator.pop(newDocument);
+      },
+      btnOkText: 'Save',
+      btnCancelText: 'Cancel',
+      btnCancelColor: AppColors.textSecondary,
+    ).show();
   }
 
   /// Show confirmation dialog before discarding changes
   Future<bool> _confirmDiscard() async {
     debugPrint('🚨 _confirmDiscard called - showing dialog');
 
-    final result = await showDialog<bool>(
+    bool? result;
+
+    await AwesomeDialog(
       context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) => AlertDialog(
-        icon: const Icon(Icons.warning_amber_rounded, size: 48, color: AppColors.warning),
-        title: const Text('Discard Changes?'),
-        content: const Text(
-          'Are you sure you want to discard this scan? All images will be lost.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              debugPrint('🚨 User clicked Keep Editing');
-              Navigator.of(dialogContext).pop(false);
-            },
-            child: const Text('Keep Editing'),
-          ),
-          FilledButton(
-            onPressed: () {
-              debugPrint('🚨 User clicked Discard');
-              Navigator.of(dialogContext).pop(true);
-            },
-            style: FilledButton.styleFrom(
-              backgroundColor: AppColors.error,
-            ),
-            child: const Text('Discard'),
-          ),
-        ],
-      ),
-    );
+      dialogType: DialogType.warning,
+      animType: AnimType.scale,
+      title: 'Discard Changes?',
+      desc: 'Are you sure you want to discard this scan? All images will be lost.',
+      btnCancelOnPress: () {
+        debugPrint('🚨 User clicked Cancel');
+        result = false;
+      },
+      btnOkOnPress: () {
+        debugPrint('🚨 User clicked Discard');
+        result = true;
+      },
+      btnOkText: 'Discard',
+      btnCancelText: 'Cancel',
+      btnOkColor: AppColors.error,
+      btnCancelColor: AppColors.textSecondary,
+    ).show();
 
     debugPrint('🚨 Dialog result: $result');
     return result ?? false;
@@ -201,12 +263,7 @@ class _EditScreenState extends State<EditScreen> {
         filename: fileName,
       );
 
-      if (!mounted) return;
-      _showToast(
-        'PDF exported: $fileName',
-        AppColors.success,
-        Icons.check_circle,
-      );
+      // No toast - share dialog is self-explanatory
     } catch (e) {
       debugPrint('Error exporting PDF: $e');
       if (!mounted) return;
