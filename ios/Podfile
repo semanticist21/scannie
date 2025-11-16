@@ -31,6 +31,10 @@ target 'Runner' do
   use_frameworks!
   use_modular_headers!
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+
+  # Image Filters FFI native library
+  pod 'image_filters_ffi', :path => '.'
+
   target 'RunnerTests' do
     inherit! :search_paths
   end
@@ -47,6 +51,14 @@ post_install do |installer|
         ## dart: PermissionGroup.photos
         'PERMISSION_PHOTOS=1',
       ]
+
+      # Optimize native image filters (ARM NEON SIMD)
+      if target.name == 'image_filters_ffi'
+        config.build_settings['OTHER_CFLAGS'] ||= ['$(inherited)']
+        config.build_settings['OTHER_CFLAGS'] << '-O3'
+        config.build_settings['OTHER_CFLAGS'] << '-ffast-math'
+        config.build_settings['OTHER_CFLAGS'] << '-march=armv8-a'
+      end
     end
   end
 end

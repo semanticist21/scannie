@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cunning_document_scanner_plus/cunning_document_scanner_plus.dart';
@@ -160,13 +161,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                     top: Radius.circular(AppRadius.md),
                   ),
                 ),
-                child: const Center(
-                  child: Icon(
-                    Icons.description_outlined,
-                    size: 64,
-                    color: AppColors.primary,
-                  ),
-                ),
+                child: _buildGridThumbnail(document),
               ),
             ),
 
@@ -208,12 +203,51 @@ class _GalleryScreenState extends State<GalleryScreen> {
     );
   }
 
+  Widget _buildGridThumbnail(ScanDocument document) {
+    // If document has images, show the first image as thumbnail
+    if (document.imagePaths.isNotEmpty) {
+      final firstImagePath = document.imagePaths.first;
+      final imageFile = File(firstImagePath);
+
+      // Check if file exists
+      if (imageFile.existsSync()) {
+        return ClipRRect(
+          borderRadius: const BorderRadius.vertical(
+            top: Radius.circular(AppRadius.md),
+          ),
+          child: Image.file(
+            imageFile,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return const Center(
+                child: Icon(
+                  Icons.description_outlined,
+                  size: 64,
+                  color: AppColors.primary,
+                ),
+              );
+            },
+          ),
+        );
+      }
+    }
+
+    // Fallback to icon if no images or file doesn't exist
+    return const Center(
+      child: Icon(
+        Icons.description_outlined,
+        size: 64,
+        color: AppColors.primary,
+      ),
+    );
+  }
+
   Future<void> _openCamera() async {
     try {
       // Launch cunning_document_scanner_plus with filters mode
       // This allows users to apply filters during scanning
       final scannedImages = await CunningDocumentScanner.getPictures(
-        mode: ScannerMode.filters,
+        mode: ScannerMode.full, // Enable AI Enhance + Clean features
       ) ?? [];
 
       if (!mounted) return;

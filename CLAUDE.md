@@ -8,15 +8,15 @@ Scannie는 문서 스캔 Flutter 모바일 애플리케이션입니다. 네이�
 
 **핵심 기술**:
 - Flutter 3.39.0-0.1.pre (beta), Dart 3.11.0, Material Design 3
-- `cunning_document_scanner_plus` v1.0.3 (네이티브 iOS/Android 스캐너)
-- `image` v4.5.4 (CamScanner 스타일 필터 + 원근 변환 copyRectify)
+- `cunning_document_scanner_plus` v1.0.3 (네이티브 iOS/Android 스캐너 + 필터/크롭)
+- `reorderable_grid_view` v2.2.8 (드래그 앤 드롭 순서 변경)
+- `pdf` + `printing` (PDF 생성/공유)
 
 **현재 상태**:
-- ✅ 문서 스캔 (cunning_document_scanner_plus)
-- ✅ 5가지 필터 (그림자 제거 B&W 포함)
-- ✅ 밝기/대비/회전 기능
-- ✅ **EditScreen 4코너 재조정 + 원근 보정** (image.copyRectify)
-- ❌ Save/PDF 기능 (미구현)
+- ✅ 문서 스캔 (네이티브 필터/크롭/회전 포함)
+- ✅ **EditScreen 이미지 관리** (드래그앤드롭 순서 변경, 삭제, 추가)
+- ✅ 세션 유지 (스캔 후 이미지 추가 가능)
+- ✅ PDF 내보내기 (공유 기능 포함)
 
 ## Quick Reference
 
@@ -143,10 +143,10 @@ flutter analyze
 
 ```
 lib/
-├── screens/          # 4개 전체 화면
+├── screens/          # 3개 화면
 │   ├── gallery_screen.dart          # 홈, 문서 리스트/그리드, 스캔 버튼
-│   ├── edit_screen.dart              # 필터, 밝기/대비, 회전, **모서리 조정 + 원근 보정**
-│   ├── document_viewer_screen.dart   # 페이지 갤러리, 전체 화면 뷰어
+│   ├── edit_screen.dart              # **이미지 관리** (드래그앤드롭 순서, 삭제, 추가)
+│   ├── document_viewer_screen.dart   # 페이지 갤러리, 전체 화면 뷰어 (미구현)
 │   └── export_screen.dart            # PDF 설정 (미구현)
 ├── widgets/common/   # 재사용 위젯
 │   ├── scan_card.dart
@@ -156,10 +156,8 @@ lib/
 │   ├── app_theme.dart        # M3 ThemeData 구성
 │   ├── app_colors.dart       # 색상 팔레트
 │   └── app_text_styles.dart  # 타이포그래피
-├── models/
-│   └── scan_document.dart    # ScanDocument(id, name, createdAt, imagePaths, isProcessed)
-└── utils/
-    └── image_filters.dart    # 이미지 필터 (B&W Adaptive Thresholding 포함)
+└── models/
+    └── scan_document.dart    # ScanDocument(id, name, createdAt, imagePaths, isProcessed)
 ```
 
 ### 테마 시스템 (필수)
@@ -181,12 +179,18 @@ import '../theme/app_text_styles.dart';
 
 ```
 GalleryScreen (홈)
-  → Scan 버튼 → CunningDocumentScanner.getPictures(mode: ScannerMode.filters)
+  → Scan 버튼 → CunningDocumentScanner.getPictures(mode: ScannerMode.full)
+      (네이티브 UI에서 필터/크롭/회전 모두 처리)
+      → Android: Enhance/Clean/Filter 버튼 제공
+      → iOS: 기본 자동 처리 (mode 파라미터 무시됨)
       → 스캔 완료 → '/edit' → EditScreen (arguments: List<String> imagePaths)
-          → 필터/밝기/대비/회전 적용
-          → Save → Navigator.pop(ScanDocument) [미구현]
-  → 문서 탭 → '/viewer' → DocumentViewerScreen (arguments: ScanDocument) [미구현]
-      → PDF 버튼 → '/export' → ExportScreen [미구현]
+          ├─ 이미지 카드 탭 → 전체 화면 뷰어 (InteractiveViewer, 0.5x~4.0x 줌)
+          ├─ 드래그 앤 드롭으로 이미지 순서 변경 (PDF 페이지 순서)
+          ├─ 이미지 삭제 (X 버튼, 토스트 없음)
+          ├─ "Add More" 버튼 → 스캐너 재호출 → 현재 세션에 추가
+          └─ Save → Navigator.pop(ScanDocument)
+  → 문서 탭 → '/viewer' → DocumentViewerScreen (미구현)
+      → PDF 버튼 → '/export' → ExportScreen (미구현)
 ```
 
 **라우트 설정 필수 패턴**:
@@ -201,64 +205,80 @@ case '/edit':
 
 `settings` 없이는 `ModalRoute.of(context)?.settings.arguments`가 null 반환!
 
-## 이미지 처리 (ImageFilters)
+## EditScreen 기능
 
-### 필터 종류
+### 개요
 
-- `applyOriginal()`: 원본
-- `applyGrayscale()`: 흑백
-- **`applyBlackAndWhite()`**: CamScanner 스타일 고대비 이진화 (그림자 제거)
-- `applyMagicColor()`: 자동 색상 향상
-- `applyLighten()`: 밝게
+EditScreen은 스캔된 이미지를 관리하는 화면입니다. **필터/크롭/회전은 네이티브 스캐너에서 처리**하므로 EditScreen에서는 이미지 순서 관리만 담당합니다.
 
-### B&W 필터 - CamScanner 스타일 Adaptive Thresholding
+### 주요 기능
 
-`applyBlackAndWhite()`는 그림자가 있어도 깔끔한 문서 스캔을 위한 **5단계 처리**:
+1. **전체 화면 이미지 뷰어** (`InteractiveViewer`)
+   - 이미지 카드 탭 → 전체 화면으로 확대
+   - 핀치 줌: 0.5x ~ 4.0x (더블 탭 지원)
+   - 팬/드래그로 확대된 이미지 이동
+   - AppBar에 페이지 번호 표시 (Page 2 / 5)
 
-```
-1. Grayscale 변환
-   ↓
-2. 조명 보정 (_removeIllumination)
-   - Gaussian blur (radius=20)로 그림자/조명 불균일 추정
-   - 원본 + (128 - 조명맵) = 균일한 조명
-   ↓
-3. Histogram 정규화
-   - 0-255 전체 범위 활용 (normalize)
-   ↓
-4. Adaptive Thresholding (_applyAdaptiveThreshold)
-   - 25×25 블록별 로컬 평균 계산
-   - 픽셀값 > (로컬평균 - 10) ? 흰색 : 검은색
-   - 그림자 있어도 텍스트 살아남음!
-   ↓
-5. 대비 강화 (1.2x)
-   - 최종 선명도 향상
-```
+2. **드래그 앤 드롭 순서 변경** (`reorderable_grid_view`)
+   - 2열 그리드 레이아웃 (A4 비율 210:297)
+   - 드래그하여 이미지 순서 변경 (PDF 페이지 순서)
+   - 각 카드에 페이지 번호 표시
 
-**전역 임계값 vs Adaptive Thresholding**:
-- 전역 임계값: 이미지 전체에 동일한 기준값 (128) 적용 → 그림자 영역 검게 변함
-- **Adaptive**: 지역별로 다른 임계값 적용 → 그림자 영향 최소화 ✨
+3. **이미지 삭제**
+   - 각 카드 우측 상단에 X 버튼
+   - 마지막 이미지는 삭제 불가 (최소 1개 유지)
+   - 성공 시 토스트 없음 (조용한 삭제)
 
-### 이미지 처리 파이프라인
+4. **이미지 추가 (세션 유지)**
+   - "Add More" 버튼으로 스캐너 재호출
+   - 새로 스캔한 이미지를 현재 리스트에 추가
+   - 스캔 세션 중단 없이 이미지 추가 가능
+
+5. **저장**
+   - Save 버튼으로 `ScanDocument` 생성
+   - `Navigator.pop(newDocument)`로 GalleryScreen에 반환
+
+### 제거된 기능 (네이티브 스캐너로 이동)
+
+다음 기능들은 `cunning_document_scanner_plus`의 네이티브 UI에서 처리하므로 EditScreen에서 제거되었습니다:
+
+- ❌ **필터** (B&W, Enhanced, Grayscale, Lighten) → `ScannerMode.full`에서 처리
+- ❌ **밝기/대비 조정** → Android: Enhance 버튼 / iOS: 자동
+- ❌ **회전** → 네이티브 회전 기능 사용
+- ❌ **Crop/모서리 조정** → 네이티브 자동 edge 감지 + 원근 보정
+- ❌ **얼룩 제거** → Android: Clean 버튼 (브러시로 수동) / iOS: 없음
+
+### 코드 예시
 
 ```dart
-// EditScreen에서의 처리 순서
-_originalImage = await ImageFilters.loadImage(imagePath);
-img.Image processed = _originalImage!.clone();
+import 'package:reorderable_grid_view/reorderable_grid_view.dart';
 
-// 1. 회전 (선택)
-if (_rotationAngle != 0) processed = ImageFilters.rotate90(processed);
-
-// 2. 필터
-processed = ImageFilters.applyBlackAndWhite(processed); // 또는 다른 필터
-
-// 3. 밝기/대비 (-100~100)
-if (_brightness != 0 || _contrast != 0) {
-  processed = ImageFilters.applyBrightnessAndContrast(processed, _brightness, _contrast);
+Widget _buildReorderableGrid() {
+  return ReorderableGridView.count(
+    crossAxisCount: 2,
+    crossAxisSpacing: AppSpacing.md,
+    mainAxisSpacing: AppSpacing.md,
+    childAspectRatio: 210 / 297, // A4 ratio
+    padding: const EdgeInsets.all(AppSpacing.md),
+    onReorder: (oldIndex, newIndex) {
+      setState(() {
+        final item = _imagePaths.removeAt(oldIndex);
+        _imagePaths.insert(newIndex, item);
+      });
+    },
+    children: _imagePaths.map((path) {
+      return Card(
+        key: ValueKey(path),
+        child: Stack(
+          children: [
+            Image.file(File(path)),
+            // 페이지 번호, 삭제 버튼 등
+          ],
+        ),
+      );
+    }).toList(),
+  );
 }
-
-// 4. UI 표시용 인코딩
-_displayImageBytes = ImageFilters.encodeImage(processed);
-setState(() { ... });
 ```
 
 ## 문서 스캔 (cunning_document_scanner_plus)
@@ -289,89 +309,32 @@ final navigator = Navigator.of(context);
 final result = await navigator.pushNamed('/edit', arguments: scannedImages);
 ```
 
-**3가지 스캐너 모드**:
-- `ScannerMode.full`: 모든 기능
-- `ScannerMode.filters`: 필터 옵션 활성화 ✨
-- `ScannerMode.base`: 기본 스캔만
+**3가지 스캐너 모드** (현재: `ScannerMode.full`):
 
-**제약사항**: 네이티브 UI는 커스터마이징 불가 (iOS/Android 기본 UI)
+| Mode | Android (Google ML Kit) | iOS (VNDocumentCamera) |
+|------|-------------------------|------------------------|
+| `ScannerMode.full` | ✅ 모든 기능 (Enhance + Clean + Filters) | ⚠️ 기본 기능만 (mode 파라미터 무시됨) |
+| `ScannerMode.filters` | ✅ 필터 + 기본 기능 | ⚠️ 기본 기능만 |
+| `ScannerMode.base` | ✅ 기본 스캔만 (필터 UI 없음) | ⚠️ 기본 기능만 |
 
-## 모서리 조정 + 원근 보정 (EditScreen)
+**Android `ScannerMode.full` 기능** (Google ML Kit):
+- ✨ **Enhance**: 원탭 자동 이미지 개선 (white balance, 그림자 제거, 대비 향상, 샤프닝)
+- 🖌️ **Clean**: 브러시로 얼룩 수동 제거 (커피 얼룩, 손가락 자국, 주름 AI 제거)
+- 🎨 **Filters**: Grayscale, Auto-enhance 등 수동 선택
+- 📋 모든 기능은 스캔 후 Preview 화면에서 **사용자가 직접 버튼 눌러서** 사용
+- ⚠️ **자동 적용되지 않음** - Edge 감지/Crop/원근 보정만 자동
 
-### 개요
+**iOS 제약사항** (Apple VNDocumentCameraViewController):
+- ❌ `mode` 파라미터 완전히 무시됨
+- ❌ 수동 필터 선택 불가 (Apple이 자동으로 최적화)
+- ❌ Enhance, Clean 기능 없음
+- ✅ 자동 Edge 감지, Crop, 원근 보정만 제공
 
-EditScreen에서 **4개 코너 포인트를 드래그**하여 문서 경계를 조정하고, **image 패키지의 copyRectify**로 원근 변환을 적용할 수 있습니다.
-
-### 사용 방법
-
-```
-1. EditScreen 진입 (스캔 후)
-2. 하단 "Crop" 버튼 클릭 → Crop 모드 활성화
-3. 4개 빨간색 핸들 드래그 (TL/TR/BR/BL)
-   - 드래그 중: 주황색으로 변경
-   - 정규화 좌표 (0-1) 사용 → UI 크기 독립적
-4. "Apply" 버튼 클릭 → 원근 보정 적용 ✨
-5. 필터/밝기/대비 조정 → Save
-```
-
-### 구현 세부사항
-
-**image 패키지의 copyRectify 사용**:
-```dart
-import 'package:image/image.dart' as img;
-
-// 1. 정규화 좌표(0-1)를 실제 픽셀 좌표로 변환
-final imageWidth = _originalImage!.width;
-final imageHeight = _originalImage!.height;
-
-final topLeft = img.Point(
-  (_corners[0].dx * imageWidth).toInt(),
-  (_corners[0].dy * imageHeight).toInt(),
-);
-final topRight = img.Point(
-  (_corners[1].dx * imageWidth).toInt(),
-  (_corners[1].dy * imageHeight).toInt(),
-);
-final bottomRight = img.Point(
-  (_corners[2].dx * imageWidth).toInt(),
-  (_corners[2].dy * imageHeight).toInt(),
-);
-final bottomLeft = img.Point(
-  (_corners[3].dx * imageWidth).toInt(),
-  (_corners[3].dy * imageHeight).toInt(),
-);
-
-// 2. copyRectify로 원근 변환 적용
-final rectified = img.copyRectify(
-  _originalImage!,
-  topLeft: topLeft,
-  topRight: topRight,
-  bottomLeft: bottomLeft,
-  bottomRight: bottomRight,
-);
-
-// 3. 원본 이미지 교체
-_originalImage = rectified;
-
-// 4. 현재 필터 재적용
-await _applyCurrentFilter();
-```
-
-**장점**:
-- ✅ 순수 Dart 구현 (네이티브 바인딩 없음)
-- ✅ ARM64 아키텍처 호환성 문제 없음
-- ✅ 경량 의존성 (이미 사용 중인 image 패키지)
-- ✅ 간단한 API (한 줄로 원근 변환)
-
-**주의사항**:
-- `img.Point`는 정수 좌표만 허용 (double → toInt() 변환 필수)
-- 정규화 좌표(0-1) 사용으로 다양한 화면 크기 지원
-- CustomPainter로 4각형 + 라벨(TL/TR/BR/BL) 그리기
-
-**UI 컴포넌트**:
-- `_buildCropHandles()`: LayoutBuilder로 크기 감지 + GestureDetector로 드래그 처리
-- `_CropQuadPainter`: CustomPainter로 4각형 오버레이 그리기
-- `_buildHandle()`: 코너 핸들 (빨간색/주황색 원 + TL/TR/BR/BL 라벨)
+**공통 제약사항**:
+- 네이티브 UI는 커스터마이징 불가 (iOS/Android 기본 UI)
+- 기본 필터 값 전달 불가 (사용자가 직접 선택)
+- 세션 재개 불가 (한 번 호출 → 완료 → 결과 반환으로 끝)
+- `noOfPages`, `isGalleryImportAllowed` 파라미터는 Android에서만 동작
 
 ## 문제 해결
 
@@ -430,3 +393,27 @@ const Text('Title', style: AppTextStyles.h2)
 // ❌ Bad
 Text('Title', style: AppTextStyles.h2)
 ```
+
+### Safe Area 패딩 처리
+
+iOS/Android의 홈 인디케이터 영역(notch, gesture bar)에 대응하려면 `MediaQuery.padding.bottom` 사용:
+
+```dart
+Widget _buildBottomActions() {
+  final bottomPadding = MediaQuery.of(context).padding.bottom;
+
+  return Container(
+    padding: EdgeInsets.only(
+      left: AppSpacing.md,
+      right: AppSpacing.md,
+      top: AppSpacing.md,
+      bottom: AppSpacing.md + bottomPadding, // Safe area 대응
+    ),
+    child: // ... 버튼들
+  );
+}
+```
+
+- iOS: 홈 인디케이터 영역만큼 자동 패딩
+- Android: 제스처 네비게이션 영역만큼 자동 패딩
+- 일반 기기: bottomPadding = 0

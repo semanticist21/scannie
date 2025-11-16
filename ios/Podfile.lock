@@ -2,34 +2,45 @@ PODS:
   - cunning_document_scanner_plus (1.0.0):
     - Flutter
   - Flutter (1.0.0)
+  - image_filters_ffi (0.1.0)
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
   - permission_handler_apple (9.3.0):
     - Flutter
+  - printing (1.0.0):
+    - Flutter
 
 DEPENDENCIES:
   - cunning_document_scanner_plus (from `.symlinks/plugins/cunning_document_scanner_plus/ios`)
   - Flutter (from `Flutter`)
+  - image_filters_ffi (from `.`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
+  - printing (from `.symlinks/plugins/printing/ios`)
 
 EXTERNAL SOURCES:
   cunning_document_scanner_plus:
     :path: ".symlinks/plugins/cunning_document_scanner_plus/ios"
   Flutter:
     :path: Flutter
+  image_filters_ffi:
+    :path: "."
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
   permission_handler_apple:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
+  printing:
+    :path: ".symlinks/plugins/printing/ios"
 
 SPEC CHECKSUMS:
   cunning_document_scanner_plus: 098cac53b739c094ab032725df3a0c94cc420a58
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
+  image_filters_ffi: f86689d7dcb7fca3e1307c4826c561613c602caa
   path_provider_foundation: 0b743cbb62d8e47eab856f09262bb8c1ddcfe6ba
   permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2
+  printing: 233e1b73bd1f4a05615548e9b5a324c98588640b
 
-PODFILE CHECKSUM: 873e7dc170616b013296e222f7c8420f3b8c9844
+PODFILE CHECKSUM: 33c102b40316a1c11644494297623324ef23ad82
 
 COCOAPODS: 1.16.2

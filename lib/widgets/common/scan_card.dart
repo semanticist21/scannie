@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../models/scan_document.dart';
 import '../../theme/app_colors.dart';
@@ -44,11 +45,7 @@ class ScanCard extends StatelessWidget {
                   color: AppColors.primaryLight,
                   borderRadius: BorderRadius.circular(AppRadius.sm),
                 ),
-                child: const Icon(
-                  Icons.description_outlined,
-                  color: AppColors.primary,
-                  size: 32,
-                ),
+                child: _buildThumbnail(),
               ),
               const SizedBox(width: AppSpacing.md),
 
@@ -103,6 +100,39 @@ class ScanCard extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildThumbnail() {
+    // If document has images, show the first image as thumbnail
+    if (document.imagePaths.isNotEmpty) {
+      final firstImagePath = document.imagePaths.first;
+      final imageFile = File(firstImagePath);
+
+      // Check if file exists
+      if (imageFile.existsSync()) {
+        return ClipRRect(
+          borderRadius: BorderRadius.circular(AppRadius.sm),
+          child: Image.file(
+            imageFile,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return const Icon(
+                Icons.description_outlined,
+                color: AppColors.primary,
+                size: 32,
+              );
+            },
+          ),
+        );
+      }
+    }
+
+    // Fallback to icon if no images or file doesn't exist
+    return const Icon(
+      Icons.description_outlined,
+      color: AppColors.primary,
+      size: 32,
     );
   }
 
