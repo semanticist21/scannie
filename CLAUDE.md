@@ -17,6 +17,7 @@ Scannie는 문서 스캔 Flutter 모바일 애플리케이션입니다. 네이�
 - ✅ **EditScreen 이미지 관리** (드래그앤드롭 순서 변경, 삭제, 추가)
 - ✅ 세션 유지 (스캔 후 이미지 추가 가능)
 - ✅ PDF 내보내기 (공유 기능 포함)
+- ✅ **PDF 다운로드** (MediaStore API - 권한 불필요)
 
 ## Quick Reference
 
@@ -368,6 +369,119 @@ final result = await navigator.pushNamed('/edit', arguments: scannedImages);
 - 기본 필터 값 전달 불가 (사용자가 직접 선택)
 - 세션 재개 불가 (한 번 호출 → 완료 → 결과 반환으로 끝)
 - `noOfPages`, `isGalleryImportAllowed` 파라미터는 Android에서만 동작
+
+## PDF 다운로드 (MediaStore API)
+
+### 개요
+
+앱은 두 가지 PDF 내보내기 방식을 제공합니다:
+1. **Share** (공유): 시스템 공유 시트 표시
+2. **Download** (다운로드): Downloads 폴더에 직접 저장 후 파일 매니저 열기
+
+### Android MediaStore API 사용
+
+**Why MediaStore?**
+- ✅ **권한 불필요**: `MANAGE_EXTERNAL_STORAGE` 같은 특수 권한 없이 Downloads 폴더 접근
+- ✅ **Android 10+ 호환**: Scoped Storage 정책 준수
+- ✅ **Google Play 승인 불필요**: 위험한 권한 요구하지 않음
+
+**사용 패키지**: `media_store_plus: ^0.1.3`
+
+### 구현 패턴
+
+```dart
+import 'package:media_store_plus/media_store_plus.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:open_file_manager/open_file_manager.dart';
+
+Future<void> _savePdfLocally() async {
+  try {
+    // 1. PDF 생성
+    final pdf = pw.Document();
+    // ... 페이지 추가 ...
+    final pdfBytes = await pdf.save();
+
+    // 2. 임시 파일로 저장
+    final tempDir = await getTemporaryDirectory();
+    final tempFile = File(path.join(tempDir.path, 'filename.pdf'));
+    await tempFile.writeAsBytes(pdfBytes);
+
+    // 3. MediaStore 초기화
+    await MediaStore.ensureInitialized();
+    MediaStore.appFolder = 'Scannie';
+
+    // 4. Downloads 폴더에 복사 (권한 불필요!)
+    final mediaStore = MediaStore();
+    final saveInfo = await mediaStore.saveFile(
+      tempFilePath: tempFile.path,
+      dirType: DirType.download,
+      dirName: DirName.download,
+      relativePath: FilePath.root, // Downloads 폴더 루트
+    );
+
+    debugPrint('PDF saved to MediaStore: ${saveInfo?.uri}');
+
+    // 5. 파일 매니저 열기
+    await openFileManager();
+  } catch (e) {
+    debugPrint('Error saving PDF: $e');
+  }
+}
+```
+
+### 주요 포인트
+
+1. **임시 파일 필수**: MediaStore는 기존 파일을 복사하는 방식으로 동작
+2. **초기화 필수**: `MediaStore.ensureInitialized()` 먼저 호출
+3. **앱 폴더 설정**: `MediaStore.appFolder` 설정으로 Downloads/Scannie 경로 생성
+4. **Hot Restart 필수**: 네이티브 플러그인 등록을 위해 hot reload가 아닌 full restart 필요
+
+### 플러그인 Gradle 호환성 이슈
+
+일부 Flutter 플러그인은 구버전 Gradle 설정을 사용하여 빌드 에러 발생:
+
+```
+Namespace not specified. Specify a namespace in the module's build file
+```
+
+**해결 방법**:
+```dart
+// 플러그인 AndroidManifest.xml에서 package 속성 제거
+// 예: /Users/semanticist/.pub-cache/hosted/pub.dev/media_store_plus-0.1.3/android/src/main/AndroidManifest.xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+  <!-- package="..." 제거 -->
+</manifest>
+
+// 플러그인 build.gradle에 namespace 추가
+android {
+    namespace 'com.snnafi.media_store_plus'  // 추가
+    compileSdk 33
+    // ...
+}
+```
+
+**영향받는 플러그인**:
+- `media_store_plus` v0.1.3
+- `open_file_manager` v0.0.4
+
+⚠️ **주의**: `.pub-cache` 수정은 `flutter clean` 후 재설정 필요!
+
+### 권한 관련
+
+**필요 없는 권한**:
+- ❌ `MANAGE_EXTERNAL_STORAGE` - MediaStore API는 불필요
+- ❌ 런타임 권한 요청 - 사용자 다이얼로그 없음
+
+**AndroidManifest.xml 설정**:
+```xml
+<!-- Android 13+ 미디어 접근 (MediaStore API와 무관) -->
+<uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+<uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+
+<!-- Android 10-12 스토리지 (maxSdkVersion 주의) -->
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    android:maxSdkVersion="32" />
+```
 
 ## 문제 해결
 

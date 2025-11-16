@@ -15,6 +15,8 @@ import 'package:printing/printing.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:open_file_manager/open_file_manager.dart';
+import 'package:media_store_plus/media_store_plus.dart';
 
 /// Gallery screen displaying scanned documents
 class GalleryScreen extends StatefulWidget {
@@ -147,7 +149,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
           onEdit: () => _editDocumentName(document),
           onEditScan: () => _editScan(document),
           onDelete: () => _deleteDocument(document),
-          onShare: () => _shareDocument(document),
+          onSavePdf: () => _savePdfDocument(document),
+          onShare: () => _sharePdfDocument(document),
         );
       },
     );
@@ -408,7 +411,11 @@ class _GalleryScreenState extends State<GalleryScreen> {
     ).show();
   }
 
-  void _shareDocument(ScanDocument document) {
+  void _savePdfDocument(ScanDocument document) {
+    _savePdfLocally(document);
+  }
+
+  void _sharePdfDocument(ScanDocument document) {
     _exportToPdf(document);
   }
 
@@ -481,10 +488,77 @@ class _GalleryScreenState extends State<GalleryScreen> {
         filename: fileName,
       );
 
-      _showSnackBar('PDF exported: $fileName');
+      // No snackbar for share - dialog is self-explanatory
     } catch (e) {
       debugPrint('Error exporting PDF: $e');
       _showSnackBar('Failed to export PDF');
+    }
+  }
+
+  /// Save PDF to Downloads folder using MediaStore (no permission required)
+  Future<void> _savePdfLocally(ScanDocument document) async {
+    try {
+      _showSnackBar('Generating PDF...');
+
+      // Create PDF document
+      final pdf = pw.Document();
+
+      // Add each image as a separate page
+      for (final imagePath in document.imagePaths) {
+        final imageFile = File(imagePath);
+        if (!imageFile.existsSync()) continue;
+
+        final imageBytes = await imageFile.readAsBytes();
+        final image = pw.MemoryImage(imageBytes);
+
+        pdf.addPage(
+          pw.Page(
+            pageFormat: PdfPageFormat.a4,
+            build: (pw.Context context) {
+              return pw.Center(
+                child: pw.Image(image, fit: pw.BoxFit.contain),
+              );
+            },
+          ),
+        );
+      }
+
+      // Generate filename
+      final timestamp = DateTime.now().toString().substring(0, 19).replaceAll(':', '-');
+      final fileName = '${document.name}_$timestamp.pdf';
+
+      // Get PDF bytes
+      final pdfBytes = await pdf.save();
+
+      // Save to temporary file first
+      final tempDir = await getTemporaryDirectory();
+      final tempFile = File(path.join(tempDir.path, fileName));
+      await tempFile.writeAsBytes(pdfBytes);
+
+      // Initialize MediaStore
+      await MediaStore.ensureInitialized();
+      MediaStore.appFolder = 'Scannie';
+
+      // Save to Downloads folder using MediaStore (no permission required!)
+      final mediaStore = MediaStore();
+      final saveInfo = await mediaStore.saveFile(
+        tempFilePath: tempFile.path,
+        dirType: DirType.download,
+        dirName: DirName.download,
+        relativePath: FilePath.root, // Save to root of Downloads folder
+      );
+
+      debugPrint('PDF saved to MediaStore: ${saveInfo?.uri}');
+
+      if (!mounted) return;
+      _showSnackBar('PDF saved to Downloads');
+
+      // Open file manager to show the downloaded file
+      await openFileManager();
+    } catch (e) {
+      debugPrint('Error saving PDF: $e');
+      if (!mounted) return;
+      _showSnackBar('Failed to save PDF');
     }
   }
 

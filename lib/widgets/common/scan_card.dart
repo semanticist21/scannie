@@ -12,6 +12,7 @@ class ScanCard extends StatelessWidget {
   final VoidCallback? onEdit;
   final VoidCallback? onEditScan;
   final VoidCallback? onDelete;
+  final VoidCallback? onSavePdf;
   final VoidCallback? onShare;
 
   const ScanCard({
@@ -21,6 +22,7 @@ class ScanCard extends StatelessWidget {
     this.onEdit,
     this.onEditScan,
     this.onDelete,
+    this.onSavePdf,
     this.onShare,
   });
 
@@ -213,7 +215,6 @@ class ScanCard extends StatelessWidget {
               ListTile(
                 leading: const Icon(Icons.edit_document, color: AppColors.primary),
                 title: const Text('Edit Scan'),
-                subtitle: const Text('Add, delete, or reorder pages'),
                 onTap: () {
                   Navigator.pop(sheetContext);
                   onEditScan?.call();
@@ -228,11 +229,19 @@ class ScanCard extends StatelessWidget {
                   onEdit?.call();
                 },
               ),
+            if (onSavePdf != null)
+              ListTile(
+                leading: const Icon(Icons.download, color: AppColors.accent),
+                title: const Text('Save PDF'),
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  onSavePdf?.call();
+                },
+              ),
             if (onShare != null)
               ListTile(
-                leading: const Icon(Icons.picture_as_pdf, color: AppColors.accent),
-                title: const Text('Download PDF'),
-                subtitle: const Text('Export and share as PDF'),
+                leading: const Icon(Icons.share, color: AppColors.accent),
+                title: const Text('Share PDF'),
                 onTap: () {
                   Navigator.pop(sheetContext);
                   onShare?.call();

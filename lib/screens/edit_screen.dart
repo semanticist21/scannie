@@ -14,6 +14,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:open_file_manager/open_file_manager.dart';
+import 'package:media_store_plus/media_store_plus.dart';
 
 /// Edit screen for managing scanned images
 /// Features: Reorder, Delete, Add more images
@@ -222,7 +224,84 @@ class _EditScreenState extends State<EditScreen> {
     return result ?? false;
   }
 
-  /// Export images to PDF
+  /// Save PDF to Downloads folder and open file manager
+  /// Save PDF to Downloads folder using MediaStore (no permission required)
+  Future<void> _savePdfLocally() async {
+    setState(() => _isLoading = true);
+
+    try {
+      // Create PDF document
+      final pdf = pw.Document();
+
+      // Add each image as a separate page
+      for (final imagePath in _imagePaths) {
+        final imageFile = File(imagePath);
+        final imageBytes = await imageFile.readAsBytes();
+        final image = pw.MemoryImage(imageBytes);
+
+        pdf.addPage(
+          pw.Page(
+            pageFormat: PdfPageFormat.a4,
+            build: (pw.Context context) {
+              return pw.Center(
+                child: pw.Image(image, fit: pw.BoxFit.contain),
+              );
+            },
+          ),
+        );
+      }
+
+      // Generate filename with timestamp
+      final timestamp = DateTime.now().toString().substring(0, 19).replaceAll(':', '-');
+      final fileName = 'Scan_$timestamp.pdf';
+
+      // Get PDF bytes
+      final pdfBytes = await pdf.save();
+
+      // Save to temporary file first
+      final tempDir = await getTemporaryDirectory();
+      final tempFile = File(path.join(tempDir.path, fileName));
+      await tempFile.writeAsBytes(pdfBytes);
+
+      // Initialize MediaStore
+      await MediaStore.ensureInitialized();
+      MediaStore.appFolder = 'Scannie';
+
+      // Save to Downloads folder using MediaStore (no permission required!)
+      final mediaStore = MediaStore();
+      final saveInfo = await mediaStore.saveFile(
+        tempFilePath: tempFile.path,
+        dirType: DirType.download,
+        dirName: DirName.download,
+        relativePath: FilePath.root, // Save to root of Downloads folder
+      );
+
+      debugPrint('PDF saved to MediaStore: ${saveInfo?.uri}');
+
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+
+      _showToast(
+        'PDF saved to Downloads',
+        AppColors.success,
+        Icons.check_circle,
+      );
+
+      // Open file manager to show the downloaded file
+      await openFileManager();
+    } catch (e) {
+      debugPrint('Error saving PDF: $e');
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+      _showToast(
+        'Failed to save PDF',
+        AppColors.error,
+        Icons.error,
+      );
+    }
+  }
+
+  /// Export images to PDF (Share)
   Future<void> _exportToPdf() async {
     setState(() => _isLoading = true);
 
@@ -479,70 +558,136 @@ class _EditScreenState extends State<EditScreen> {
       padding: EdgeInsets.only(
         left: AppSpacing.md,
         right: AppSpacing.md,
-        top: AppSpacing.md,
+        top: AppSpacing.lg,
         bottom: AppSpacing.md + bottomPadding, // Add safe area padding
       ),
       decoration: BoxDecoration(
         color: AppColors.surface,
+        border: Border(
+          top: BorderSide(
+            color: AppColors.textSecondary.withValues(alpha: 0.1),
+            width: 1,
+          ),
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 8,
-            offset: const Offset(0, -2),
+            color: Colors.black.withValues(alpha: 0.08),
+            blurRadius: 16,
+            offset: const Offset(0, -4),
           ),
         ],
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Row 1: Add More + Export PDF (Secondary actions)
+          // Row 1: Icon buttons for quick actions
           Row(
             children: [
-              // Add More images
+              // Add More Images
               Expanded(
-                child: OutlinedButton.icon(
+                child: _buildIconButton(
+                  icon: Icons.add_photo_alternate_outlined,
+                  label: 'Add More',
                   onPressed: _addMoreImages,
-                  icon: const Icon(Icons.add_photo_alternate),
-                  label: const Text('Add More'),
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: AppSpacing.sm,
-                    ),
-                  ),
                 ),
               ),
               const SizedBox(width: AppSpacing.sm),
-              // Export PDF and delete
+              // Save PDF
               Expanded(
-                child: OutlinedButton.icon(
+                child: _buildIconButton(
+                  icon: Icons.picture_as_pdf_outlined,
+                  label: 'Save PDF',
+                  onPressed: _savePdfLocally,
+                ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              // Share PDF
+              Expanded(
+                child: _buildIconButton(
+                  icon: Icons.share_outlined,
+                  label: 'Share',
                   onPressed: _exportToPdf,
-                  icon: const Icon(Icons.picture_as_pdf),
-                  label: const Text('Export PDF'),
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: AppSpacing.sm,
-                    ),
-                  ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.sm),
-          // Row 2: Save (Primary action)
+          const SizedBox(height: AppSpacing.md),
+          // Row 2: Primary action - Save to Gallery
           SizedBox(
             width: double.infinity,
             child: FilledButton.icon(
               onPressed: _saveScan,
-              icon: const Icon(Icons.check_circle_outline),
-              label: const Text('Save to Gallery'),
+              icon: const Icon(Icons.save_outlined, size: 20),
+              label: const Text(
+                'Save to Gallery',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.5,
+                ),
+              ),
               style: FilledButton.styleFrom(
                 padding: const EdgeInsets.symmetric(
-                  vertical: AppSpacing.md,
+                  vertical: AppSpacing.md + 4,
+                ),
+                elevation: 2,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppRadius.md),
                 ),
               ),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  /// Build icon button for footer actions
+  Widget _buildIconButton({
+    required IconData icon,
+    required String label,
+    required VoidCallback onPressed,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onPressed,
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            vertical: AppSpacing.sm + 4,
+            horizontal: AppSpacing.xs,
+          ),
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(AppRadius.md),
+            border: Border.all(
+              color: AppColors.textSecondary.withValues(alpha: 0.2),
+              width: 1,
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                icon,
+                size: 28,
+                color: AppColors.primary,
+              ),
+              const SizedBox(height: AppSpacing.xs),
+              Text(
+                label,
+                style: AppTextStyles.caption.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.textPrimary,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
