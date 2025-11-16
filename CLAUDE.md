@@ -23,11 +23,23 @@ Scannie는 문서 스캔 Flutter 모바일 애플리케이션입니다. 네이�
 ```bash
 # 앱 실행
 flutter devices                # 사용 가능한 기기 확인
-flutter run -d <device-id>     # 실행 (Hot Reload: r, Hot Restart: R, 종료: q)
+flutter run -d <device-id>     # 실행
+# Hot Reload: r (빠름, 상태 유지)
+# Hot Restart: R (전체 재시작)
+# 종료: q
 
 # 개발 도구
 flutter analyze                # 린트 분석 (코드 수정 전/후 필수!)
 flutter clean && flutter pub get  # 의존성 초기화
+
+# 테스트
+flutter test                          # 모든 테스트 실행
+flutter test test/path/to/test.dart   # 단일 테스트 파일 실행
+
+# 빌드
+flutter build apk --release           # Android 릴리스 APK
+flutter build ios --release           # iOS 릴리스 빌드
+flutter build appbundle               # Android App Bundle (Play Store)
 
 # 빌드 경고 무시 (beta 채널)
 flutter run -d <device-id> --android-skip-build-dependency-validation
@@ -138,6 +150,27 @@ flutter analyze
 ```
 
 ## 아키텍처
+
+### 상태 관리
+
+**현재 패턴**: StatefulWidget + setState (외부 상태 관리 라이브러리 사용 안 함)
+
+### Import 순서 규칙
+
+```dart
+// 1. Dart 코어 라이브러리
+import 'dart:io';
+
+// 2. Flutter 라이브러리
+import 'package:flutter/material.dart';
+
+// 3. 서드파티 패키지
+import 'package:path/path.dart' as path;  // path는 반드시 'as path' 사용!
+
+// 4. 프로젝트 임포트
+import '../theme/app_colors.dart';
+import '../models/scan_document.dart';
+```
 
 ### 디렉토리 구조
 
@@ -417,3 +450,25 @@ Widget _buildBottomActions() {
 - iOS: 홈 인디케이터 영역만큼 자동 패딩
 - Android: 제스처 네비게이션 영역만큼 자동 패딩
 - 일반 기기: bottomPadding = 0
+
+## Git 워크플로우
+
+```bash
+# 변경사항 확인
+git status
+git diff
+
+# 커밋
+git add .
+git commit -m "feat: 기능 설명"
+
+# 푸시
+git push
+```
+
+**커밋 메시지 컨벤션**:
+- `feat:` 새 기능
+- `fix:` 버그 수정
+- `refactor:` 리팩토링
+- `docs:` 문서 수정
+- `style:` 코드 포맷팅

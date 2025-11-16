@@ -12,6 +12,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
+import 'package:fluttertoast/fluttertoast.dart';
 
 /// Edit screen for managing scanned images
 /// Features: Reorder, Delete, Add more images
@@ -102,7 +103,6 @@ class _EditScreenState extends State<EditScreen> {
 
   /// Save and return
   void _saveScan() async {
-    final messenger = ScaffoldMessenger.of(context);
     final navigator = Navigator.of(context);
 
     // Create a new scan document
@@ -114,19 +114,10 @@ class _EditScreenState extends State<EditScreen> {
       isProcessed: true,
     );
 
-    messenger.showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            const Icon(Icons.check_circle, color: Colors.white),
-            const SizedBox(width: AppSpacing.sm),
-            Text('${_imagePaths.length} image(s) saved'),
-          ],
-        ),
-        backgroundColor: AppColors.success,
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 1),
-      ),
+    _showToast(
+      '${_imagePaths.length} image(s) saved',
+      AppColors.success,
+      Icons.check_circle,
     );
 
     // Return to GalleryScreen
@@ -135,8 +126,6 @@ class _EditScreenState extends State<EditScreen> {
 
   /// Export images to PDF
   Future<void> _exportToPdf() async {
-    final messenger = ScaffoldMessenger.of(context);
-
     setState(() => _isLoading = true);
 
     try {
@@ -176,34 +165,19 @@ class _EditScreenState extends State<EditScreen> {
         filename: fileName,
       );
 
-      messenger.showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              const Icon(Icons.check_circle, color: Colors.white),
-              const SizedBox(width: AppSpacing.sm),
-              Text('PDF exported: $fileName'),
-            ],
-          ),
-          backgroundColor: AppColors.success,
-          behavior: SnackBarBehavior.floating,
-          duration: const Duration(seconds: 2),
-        ),
+      if (!mounted) return;
+      _showToast(
+        'PDF exported: $fileName',
+        AppColors.success,
+        Icons.check_circle,
       );
     } catch (e) {
       debugPrint('Error exporting PDF: $e');
-      messenger.showSnackBar(
-        const SnackBar(
-          content: Row(
-            children: [
-              Icon(Icons.error, color: Colors.white),
-              SizedBox(width: AppSpacing.sm),
-              Text('Failed to export PDF'),
-            ],
-          ),
-          backgroundColor: AppColors.error,
-          behavior: SnackBarBehavior.floating,
-        ),
+      if (!mounted) return;
+      _showToast(
+        'Failed to export PDF',
+        AppColors.error,
+        Icons.error,
       );
     } finally {
       setState(() => _isLoading = false);
@@ -211,12 +185,38 @@ class _EditScreenState extends State<EditScreen> {
   }
 
   void _showMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: const Duration(seconds: 1),
-        behavior: SnackBarBehavior.floating,
+    _showToast(message, Colors.black87, Icons.info);
+  }
+
+  void _showToast(String message, Color backgroundColor, IconData icon) {
+    FToast fToast = FToast();
+    fToast.init(context);
+
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12.0),
+        color: backgroundColor,
       ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: Colors.white),
+          const SizedBox(width: 12.0),
+          Flexible(
+            child: Text(
+              message,
+              style: const TextStyle(color: Colors.white, fontSize: 16.0),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    fToast.showToast(
+      child: toast,
+      gravity: ToastGravity.TOP,
+      toastDuration: const Duration(seconds: 3),
     );
   }
 
