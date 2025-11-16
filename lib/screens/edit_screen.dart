@@ -124,10 +124,12 @@ class _EditScreenState extends State<EditScreen> {
   /// Show confirmation dialog before discarding changes
   Future<bool> _confirmDiscard() async {
     debugPrint('🚨 _confirmDiscard called - showing dialog');
+
     final result = await showDialog<bool>(
       context: context,
-      barrierDismissible: false, // Prevent dismissing by tapping outside
+      barrierDismissible: false,
       builder: (dialogContext) => AlertDialog(
+        icon: const Icon(Icons.warning_amber_rounded, size: 48, color: AppColors.warning),
         title: const Text('Discard Changes?'),
         content: const Text(
           'Are you sure you want to discard this scan? All images will be lost.',
@@ -135,10 +137,10 @@ class _EditScreenState extends State<EditScreen> {
         actions: [
           TextButton(
             onPressed: () {
-              debugPrint('🚨 User clicked Cancel');
+              debugPrint('🚨 User clicked Keep Editing');
               Navigator.of(dialogContext).pop(false);
             },
-            child: const Text('Cancel'),
+            child: const Text('Keep Editing'),
           ),
           FilledButton(
             onPressed: () {
@@ -153,6 +155,7 @@ class _EditScreenState extends State<EditScreen> {
         ],
       ),
     );
+
     debugPrint('🚨 Dialog result: $result');
     return result ?? false;
   }

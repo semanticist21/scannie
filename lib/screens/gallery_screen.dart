@@ -9,6 +9,12 @@ import '../theme/app_theme.dart';
 import '../theme/app_text_styles.dart';
 import '../widgets/common/scan_card.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
+import 'package:awesome_dialog/awesome_dialog.dart';
 
 /// Gallery screen displaying scanned documents
 class GalleryScreen extends StatefulWidget {
@@ -138,6 +144,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
         return ScanCard(
           document: document,
           onTap: () => _openDocument(document),
+          onEdit: () => _editDocumentName(document),
+          onEditScan: () => _editScan(document),
           onDelete: () => _deleteDocument(document),
           onShare: () => _shareDocument(document),
         );
@@ -317,38 +325,167 @@ class _GalleryScreenState extends State<GalleryScreen> {
     );
   }
 
-  void _deleteDocument(ScanDocument document) {
-    showDialog(
+  void _editDocumentName(ScanDocument document) async {
+    final TextEditingController controller = TextEditingController(text: document.name);
+
+    AwesomeDialog(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Delete Document'),
-        content: Text('Are you sure you want to delete "${document.name}"?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () async {
-              final navigator = Navigator.of(dialogContext);
-              setState(() {
-                _documents.removeWhere((d) => d.id == document.id);
-              });
-              await _saveDocuments();
-              if (!mounted) return;
-              navigator.pop();
-              _showSnackBar('Document deleted');
-            },
-            style: TextButton.styleFrom(foregroundColor: AppColors.error),
-            child: const Text('Delete'),
-          ),
-        ],
+      dialogType: DialogType.noHeader,
+      animType: AnimType.scale,
+      title: 'Rename Scan',
+      desc: 'Enter a new name for this document',
+      body: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Column(
+          children: [
+            const Text(
+              'Rename Scan',
+              style: AppTextStyles.h2,
+            ),
+            const SizedBox(height: AppSpacing.md),
+            TextField(
+              controller: controller,
+              decoration: InputDecoration(
+                labelText: 'Document name',
+                hintText: 'Enter new name',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(AppRadius.md),
+                ),
+              ),
+              autofocus: true,
+              textCapitalization: TextCapitalization.words,
+            ),
+          ],
+        ),
       ),
-    );
+      btnCancelOnPress: () {},
+      btnOkOnPress: () async {
+        final newName = controller.text.trim();
+        if (newName.isEmpty) {
+          _showSnackBar('Name cannot be empty');
+          return;
+        }
+
+        setState(() {
+          final index = _documents.indexWhere((d) => d.id == document.id);
+          if (index != -1) {
+            _documents[index] = document.copyWith(name: newName);
+          }
+        });
+
+        await _saveDocuments();
+        if (!mounted) return;
+        _showSnackBar('Document renamed');
+      },
+      btnOkText: 'Save',
+      btnCancelText: 'Cancel',
+      btnCancelColor: AppColors.textSecondary,
+    ).show();
+  }
+
+  void _deleteDocument(ScanDocument document) async {
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.warning,
+      animType: AnimType.scale,
+      title: 'Delete Scan',
+      desc: 'Delete "${document.name}"?',
+      btnCancelOnPress: () {},
+      btnOkOnPress: () async {
+        setState(() {
+          _documents.removeWhere((d) => d.id == document.id);
+        });
+        await _saveDocuments();
+        if (!mounted) return;
+        _showSnackBar('Document deleted');
+      },
+      btnOkText: 'Delete',
+      btnCancelText: 'Cancel',
+      btnOkColor: AppColors.error,
+      btnCancelColor: AppColors.textSecondary,
+    ).show();
   }
 
   void _shareDocument(ScanDocument document) {
-    _showSnackBar('Sharing: ${document.name}');
+    _exportToPdf(document);
+  }
+
+  /// Edit scan - navigate to EditScreen to add/delete/reorder images
+  void _editScan(ScanDocument document) async {
+    final navigator = Navigator.of(context);
+
+    // Navigate to EditScreen with existing images
+    final result = await navigator.pushNamed(
+      '/edit',
+      arguments: document.imagePaths,
+    );
+
+    // If user saved changes, update the document
+    if (result != null && result is ScanDocument && mounted) {
+      setState(() {
+        final index = _documents.indexWhere((d) => d.id == document.id);
+        if (index != -1) {
+          // Keep the same ID and name, but update images
+          _documents[index] = document.copyWith(
+            imagePaths: result.imagePaths,
+          );
+        }
+      });
+      await _saveDocuments();
+      _showSnackBar('Scan updated successfully');
+    }
+  }
+
+  /// Export document to PDF
+  Future<void> _exportToPdf(ScanDocument document) async {
+    try {
+      _showSnackBar('Generating PDF...');
+
+      // Create PDF document
+      final pdf = pw.Document();
+
+      // Add each image as a separate page
+      for (final imagePath in document.imagePaths) {
+        final imageFile = File(imagePath);
+        if (!imageFile.existsSync()) continue;
+
+        final imageBytes = await imageFile.readAsBytes();
+        final image = pw.MemoryImage(imageBytes);
+
+        pdf.addPage(
+          pw.Page(
+            pageFormat: PdfPageFormat.a4,
+            build: (pw.Context context) {
+              return pw.Center(
+                child: pw.Image(image, fit: pw.BoxFit.contain),
+              );
+            },
+          ),
+        );
+      }
+
+      // Generate filename
+      final timestamp = DateTime.now().toString().substring(0, 19).replaceAll(':', '-');
+      final fileName = '${document.name}_$timestamp.pdf';
+
+      // Save PDF to temporary directory
+      final tempDir = await getTemporaryDirectory();
+      final file = File(path.join(tempDir.path, fileName));
+      await file.writeAsBytes(await pdf.save());
+
+      if (!mounted) return;
+
+      // Share the PDF using the printing package
+      await Printing.sharePdf(
+        bytes: await pdf.save(),
+        filename: fileName,
+      );
+
+      _showSnackBar('PDF exported: $fileName');
+    } catch (e) {
+      debugPrint('Error exporting PDF: $e');
+      _showSnackBar('Failed to export PDF');
+    }
   }
 
   void _showSearch() {
