@@ -42,11 +42,17 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
   void initState() {
     super.initState();
     _imagePaths = List.from(widget.document.imagePaths);
-    _loadPdfPreview();
+    // Only load PDF preview if there are images
+    if (_imagePaths.isNotEmpty) {
+      _loadPdfPreview();
+    }
   }
 
   /// Load PDF preview (cached or generate new)
   Future<void> _loadPdfPreview() async {
+    // Skip if no images
+    if (_imagePaths.isEmpty) return;
+
     setState(() => _isLoadingPdf = true);
 
     try {
@@ -93,14 +99,16 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
           // Document info card
           _buildDocumentInfo(),
 
-          // PDF Preview toggle
-          _buildPdfPreviewToggle(),
+          // PDF Preview toggle (only show if there are images)
+          if (_imagePaths.isNotEmpty) _buildPdfPreviewToggle(),
 
           // PDF Preview or Pages gallery
           Expanded(
-            child: _showPdfPreview
-                ? _buildPdfPreview()
-                : (_isGridView ? _buildGridView() : _buildListView()),
+            child: _imagePaths.isEmpty
+                ? _buildEmptyState()
+                : (_showPdfPreview
+                    ? _buildPdfPreview()
+                    : (_isGridView ? _buildGridView() : _buildListView())),
           ),
         ],
       ),
@@ -223,6 +231,33 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
       enableTextSelection: false,
       canShowScrollHead: true,
       canShowScrollStatus: true,
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(
+            Icons.image_not_supported_outlined,
+            size: 120,
+            color: AppColors.textHint,
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          const Text(
+            'No pages in this document',
+            style: AppTextStyles.h2,
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            'Tap Edit Scan to add images',
+            style: AppTextStyles.bodyMedium.copyWith(
+              color: AppColors.textSecondary,
+            ),
+          ),
+        ],
+      ),
     );
   }
 

@@ -69,107 +69,146 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
     final pageCount = widget.document.imagePaths.length;
     final formattedDate = _formatDate(widget.document.createdAt);
 
-    // Material 3 card design with subtle scale animation
+    // Material 3 card design with subtle scale animation and swipe-to-delete
     return ScaleTransition(
       scale: _scaleAnimation,
-      child: Card.filled(
-        margin: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.md,
-          vertical: AppSpacing.sm,
+      child: Dismissible(
+        key: ValueKey(widget.document.id),
+        direction: DismissDirection.endToStart, // Swipe left only
+        confirmDismiss: (direction) async {
+          // Don't dismiss automatically, just show delete button
+          return false;
+        },
+        background: Container(
+          margin: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.md,
+            vertical: AppSpacing.sm,
+          ),
+          decoration: BoxDecoration(
+            color: AppColors.error,
+            borderRadius: BorderRadius.circular(AppRadius.lg),
+          ),
+          alignment: Alignment.centerRight,
+          padding: const EdgeInsets.only(right: AppSpacing.lg),
+          child: GestureDetector(
+            onTap: () {
+              // Trigger delete callback
+              widget.onDelete?.call();
+            },
+            child: Container(
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.2),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.delete_outline,
+                color: Colors.white,
+                size: 28,
+              ),
+            ),
+          ),
         ),
-        child: InkWell(
-          onTap: widget.onTap,
-          onTapDown: _onTapDown,
-          onTapUp: _onTapUp,
-          onTapCancel: _onTapCancel,
-          onLongPress: () => _showContextMenu(context),
-          borderRadius: BorderRadius.circular(AppRadius.lg),
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.md),
-            child: Row(
-              children: [
-                // Thumbnail with subtle elevation
-                Container(
-                  width: 75,
-                  height: 95,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(AppRadius.md),
-                    color: AppColors.surface,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.08),
-                        blurRadius: 6,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(AppRadius.md),
-                    child: _buildThumbnail(),
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.md),
-
-                // Document info
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        widget.document.name,
-                        style: AppTextStyles.bodyLarge.copyWith(
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: -0.3,
-                          height: 1.2,
+        child: Card.filled(
+          margin: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.md,
+            vertical: AppSpacing.sm,
+          ),
+          child: InkWell(
+            onTap: widget.onTap,
+            onTapDown: _onTapDown,
+            onTapUp: _onTapUp,
+            onTapCancel: _onTapCancel,
+            onLongPress: () => _showContextMenu(context),
+            borderRadius: BorderRadius.circular(AppRadius.lg),
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.md),
+              child: Row(
+                children: [
+                  // Thumbnail with subtle elevation
+                  Container(
+                    width: 75,
+                    height: 95,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(AppRadius.md),
+                      color: AppColors.surface,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.08),
+                          blurRadius: 6,
+                          offset: const Offset(0, 2),
                         ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: AppSpacing.xs),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.insert_drive_file_outlined,
-                            size: 14,
-                            color: AppColors.textSecondary.withValues(alpha: 0.7),
-                          ),
-                          const SizedBox(width: AppSpacing.xs),
-                          Text(
-                            '$pageCount ${pageCount == 1 ? 'page' : 'pages'}',
-                            style: AppTextStyles.bodySmall.copyWith(
-                              color: AppColors.textSecondary,
-                            ),
-                          ),
-                          const SizedBox(width: AppSpacing.sm),
-                          Text(
-                            '•',
-                            style: AppTextStyles.bodySmall.copyWith(
-                              color: AppColors.textHint,
-                            ),
-                          ),
-                          const SizedBox(width: AppSpacing.sm),
-                          Text(
-                            formattedDate,
-                            style: AppTextStyles.caption.copyWith(
-                              color: AppColors.textSecondary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(AppRadius.md),
+                      child: _buildThumbnail(),
+                    ),
                   ),
-                ),
+                  const SizedBox(width: AppSpacing.md),
 
-                // Action button
-                IconButton(
-                  icon: const Icon(Icons.more_vert),
-                  onPressed: () => _showContextMenu(context),
-                  color: AppColors.textSecondary,
-                  iconSize: 20,
-                ),
-              ],
+                  // Document info
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          widget.document.name,
+                          style: AppTextStyles.bodyLarge.copyWith(
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: -0.3,
+                            height: 1.2,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: AppSpacing.xs),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.insert_drive_file_outlined,
+                              size: 14,
+                              color: AppColors.textSecondary.withValues(alpha: 0.7),
+                            ),
+                            const SizedBox(width: AppSpacing.xs),
+                            Text(
+                              '$pageCount ${pageCount == 1 ? 'page' : 'pages'}',
+                              style: AppTextStyles.bodySmall.copyWith(
+                                color: AppColors.textSecondary,
+                              ),
+                            ),
+                            const SizedBox(width: AppSpacing.sm),
+                            Text(
+                              '•',
+                              style: AppTextStyles.bodySmall.copyWith(
+                                color: AppColors.textHint,
+                              ),
+                            ),
+                            const SizedBox(width: AppSpacing.sm),
+                            Text(
+                              formattedDate,
+                              style: AppTextStyles.caption.copyWith(
+                                color: AppColors.textSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Action button
+                  IconButton(
+                    icon: const Icon(Icons.more_vert),
+                    onPressed: () => _showContextMenu(context),
+                    color: AppColors.textSecondary,
+                    iconSize: 20,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
