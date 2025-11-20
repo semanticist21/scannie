@@ -11,6 +11,7 @@ Scannie는 문서 스캔 Flutter 모바일 애플리케이션입니다. 네이�
 - `cunning_document_scanner_plus` v1.0.3 (네이티브 iOS/Android 스캐너 + 필터/크롭)
 - `reorderable_grid_view` v2.2.8 (드래그 앤 드롭 순서 변경)
 - `pdf` + `printing` (PDF 생성/공유)
+- `syncfusion_flutter_pdfviewer` (PDF 미리보기)
 
 **현재 상태**:
 - ✅ 문서 스캔 (네이티브 필터/크롭/회전 포함)
@@ -35,9 +36,9 @@ flutter devices                # 사용 가능한 기기 확인
 flutter analyze                # 린트 분석 (코드 수정 전/후 필수!)
 flutter clean && flutter pub get  # 의존성 초기화
 
-# 테스트
-flutter test                          # 모든 테스트 실행
-flutter test test/path/to/test.dart   # 단일 테스트 파일 실행
+# 테스트 (현재 테스트 파일 없음)
+# flutter test                          # 모든 테스트 실행
+# flutter test test/path/to/test.dart   # 단일 테스트 파일 실행
 
 # 빌드
 flutter build apk --release           # Android 릴리스 APK
@@ -189,7 +190,8 @@ lib/
 │   ├── custom_app_bar.dart
 │   └── custom_button.dart
 ├── services/         # 비즈니스 로직
-│   └── document_storage.dart         # 문서 영구 저장/로드
+│   ├── document_storage.dart         # 문서 영구 저장/로드
+│   └── pdf_cache_service.dart        # PDF 생성 캐싱 (SHA256 기반)
 ├── theme/            # 디자인 시스템
 │   ├── app_theme.dart        # M3 ThemeData 구성
 │   ├── app_colors.dart       # 색상 팔레트
@@ -389,6 +391,22 @@ final result = await navigator.pushNamed('/edit', arguments: scannedImages);
 1. **Share** (공유): `Printing.sharePdf()` - 시스템 공유 시트
 2. **Download** (다운로드): MediaStore API - Downloads/Scannie/ 폴더
 
+### PDF 캐싱 시스템
+
+`PdfCacheService`는 싱글톤 패턴으로 PDF 생성을 캐싱합니다:
+
+```dart
+import 'services/pdf_cache_service.dart';
+
+// PDF 가져오기 (캐시 히트 시 즉시 반환)
+final pdfFile = await PdfCacheService().getOrGeneratePdf(
+  imagePaths: document.imagePaths,
+  documentName: document.name,
+);
+```
+
+**캐시 키**: 이미지 경로 리스트의 SHA256 해시 → 동일 이미지 조합은 항상 같은 캐시 키
+
 ### Android MediaStore API 사용
 
 **Why MediaStore?**
@@ -473,7 +491,7 @@ android {
 
 **영향받는 플러그인**:
 - `media_store_plus` v0.1.3
-- `open_file_manager` v0.0.4
+- `open_file_manager` v0.0.2
 
 ⚠️ **주의**: `.pub-cache` 수정은 `flutter clean` 후 재설정 필요!
 
