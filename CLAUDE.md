@@ -547,6 +547,24 @@ flutter pub get
 flutter run -d <device-id>
 ```
 
+### iOS Pod 관련 빌드 에러
+
+**증상**: `No podspec found for 'xxx' in '.'` 또는 `Build input file cannot be found`
+
+**원인**: pubspec.yaml에서 패키지를 제거했지만 ios/Podfile에 참조가 남아있음
+
+**해결**:
+1. `ios/Podfile` 확인 - 제거된 패키지 참조가 있는지 검사
+2. `post_install` 섹션에서도 해당 패키지 관련 설정 제거
+3. 캐시 정리 후 재빌드:
+```bash
+rm -rf ios/.symlinks ios/Pods ios/Podfile.lock
+flutter clean && flutter pub get
+flutter run -d <device-id>
+```
+
+**⚠️ 재발 방지**: pubspec.yaml에서 패키지 제거 시 반드시 ios/Podfile도 함께 확인!
+
 ### RenderFlex Overflow
 
 Column/Row에 `mainAxisSize: MainAxisSize.min` 추가:
