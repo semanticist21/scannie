@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 import '../../theme/app_colors.dart';
 
 /// Custom app bar widget with consistent styling
@@ -23,7 +24,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: leading ??
           (showBackButton
               ? IconButton(
-                  icon: const Icon(Icons.arrow_back),
+                  icon: const Icon(LucideIcons.arrowLeft),
                   onPressed: () => Navigator.of(context).pop(),
                 )
               : null),

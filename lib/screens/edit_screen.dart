@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:cunning_document_scanner_plus/cunning_document_scanner_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:reorderable_grid_view/reorderable_grid_view.dart';
 import '../models/scan_document.dart';
 import '../theme/app_colors.dart';
@@ -12,8 +13,6 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:open_file_manager/open_file_manager.dart';
 import 'package:media_store_plus/media_store_plus.dart';
 
@@ -132,98 +131,86 @@ class _EditScreenState extends State<EditScreen> {
     // Show dialog to input document name
     final TextEditingController nameController = TextEditingController(text: defaultName);
 
-    AwesomeDialog(
+    showShadDialog(
       context: context,
-      dialogType: DialogType.noHeader,
-      animType: AnimType.scale,
-      title: isEditingExisting ? 'Save Changes' : 'Save Scan',
-      desc: isEditingExisting
-          ? 'Update the name for this scan'
-          : 'Enter a name for this scan',
-      body: Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        child: Column(
-          children: [
-            Text(
-              isEditingExisting ? 'Save Changes' : 'Save Scan',
-              style: AppTextStyles.h2,
-            ),
-            const SizedBox(height: AppSpacing.md),
-            TextField(
-              controller: nameController,
-              maxLength: 50,
-              decoration: InputDecoration(
-                labelText: 'Document name',
-                hintText: 'Enter name',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(AppRadius.md),
-                ),
-                counterText: '', // Hide character counter
-              ),
-              autofocus: true,
-              textCapitalization: TextCapitalization.words,
-            ),
-          ],
+      builder: (dialogContext) => ShadDialog(
+        title: Text(isEditingExisting ? 'Save Changes' : 'Save Scan'),
+        description: Text(isEditingExisting
+            ? 'Update the name for this scan'
+            : 'Enter a name for this scan'),
+        actions: [
+          ShadButton.outline(
+            child: const Text('Cancel'),
+            onPressed: () => Navigator.of(dialogContext).pop(),
+          ),
+          ShadButton(
+            child: const Text('Save'),
+            onPressed: () async {
+              final documentName = nameController.text.trim();
+              if (documentName.isEmpty) {
+                _showMessage('Name cannot be empty');
+                return;
+              }
+
+              Navigator.of(dialogContext).pop();
+
+              final navigator = Navigator.of(context);
+
+              // Create a new scan document with user-provided name
+              // When editing, preserve the original ID and createdAt
+              final newDocument = ScanDocument(
+                id: _existingDocumentId ?? DateTime.now().millisecondsSinceEpoch.toString(),
+                name: documentName,
+                createdAt: DateTime.now(), // Always update timestamp
+                imagePaths: _imagePaths,
+                isProcessed: true,
+              );
+
+              // Return to GalleryScreen
+              if (!mounted) return;
+              navigator.pop(newDocument);
+            },
+          ),
+        ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+          child: ShadInput(
+            controller: nameController,
+            placeholder: const Text('Document name'),
+            autofocus: true,
+          ),
         ),
       ),
-      btnCancelOnPress: () {},
-      btnOkOnPress: () async {
-        final documentName = nameController.text.trim();
-        if (documentName.isEmpty) {
-          _showMessage('Name cannot be empty');
-          return;
-        }
-
-        final navigator = Navigator.of(context);
-
-        // Create a new scan document with user-provided name
-        // When editing, preserve the original ID and createdAt
-        final newDocument = ScanDocument(
-          id: _existingDocumentId ?? DateTime.now().millisecondsSinceEpoch.toString(),
-          name: documentName,
-          createdAt: DateTime.now(), // Always update timestamp
-          imagePaths: _imagePaths,
-          isProcessed: true,
-        );
-
-        // No toast for successful save - user clicked Save button intentionally
-        // Only show toast for errors
-
-        // Return to GalleryScreen
-        if (!mounted) return;
-        navigator.pop(newDocument);
-      },
-      btnOkText: 'Save',
-      btnCancelText: 'Cancel',
-      btnCancelColor: AppColors.textSecondary,
-    ).show();
+    );
   }
 
   /// Show confirmation dialog before discarding changes
   Future<bool> _confirmDiscard() async {
     debugPrint('🚨 _confirmDiscard called - showing dialog');
 
-    bool? result;
-
-    await AwesomeDialog(
+    final result = await showShadDialog<bool>(
       context: context,
-      dialogType: DialogType.warning,
-      animType: AnimType.scale,
-      title: 'Discard Changes?',
-      desc: 'Are you sure you want to discard this scan? All images will be lost.',
-      btnCancelOnPress: () {
-        debugPrint('🚨 User clicked Cancel');
-        result = false;
-      },
-      btnOkOnPress: () {
-        debugPrint('🚨 User clicked Discard');
-        result = true;
-      },
-      btnOkText: 'Discard',
-      btnCancelText: 'Cancel',
-      btnOkColor: AppColors.error,
-      btnCancelColor: AppColors.textSecondary,
-    ).show();
+      builder: (dialogContext) => ShadDialog.alert(
+        title: const Text('Discard Changes?'),
+        description: const Text('Are you sure you want to discard this scan? All images will be lost.'),
+        actions: [
+          ShadButton.outline(
+            child: const Text('Cancel'),
+            onPressed: () {
+              debugPrint('🚨 User clicked Cancel');
+              Navigator.of(dialogContext).pop(false);
+            },
+          ),
+          ShadButton.destructive(
+            child: const Text('Discard'),
+            onPressed: () {
+              debugPrint('🚨 User clicked Discard');
+              Navigator.of(dialogContext).pop(true);
+            },
+          ),
+        ],
+      ),
+    );
 
     debugPrint('🚨 Dialog result: $result');
     return result ?? false;
@@ -289,7 +276,7 @@ class _EditScreenState extends State<EditScreen> {
       _showToast(
         'PDF saved to Downloads',
         AppColors.success,
-        Icons.check_circle,
+        LucideIcons.circleCheck,
       );
 
       // Open file manager to show the downloaded file
@@ -301,7 +288,7 @@ class _EditScreenState extends State<EditScreen> {
       _showToast(
         'Failed to save PDF',
         AppColors.error,
-        Icons.error,
+        LucideIcons.circleAlert,
       );
     }
   }
@@ -354,7 +341,7 @@ class _EditScreenState extends State<EditScreen> {
       _showToast(
         'Failed to export PDF',
         AppColors.error,
-        Icons.error,
+        LucideIcons.circleAlert,
       );
     } finally {
       setState(() => _isLoading = false);
@@ -362,38 +349,18 @@ class _EditScreenState extends State<EditScreen> {
   }
 
   void _showMessage(String message) {
-    _showToast(message, Colors.black87, Icons.info);
+    ShadToaster.of(context).show(
+      ShadToast(
+        title: Text(message),
+      ),
+    );
   }
 
   void _showToast(String message, Color backgroundColor, IconData icon) {
-    FToast fToast = FToast();
-    fToast.init(context);
-
-    Widget toast = Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12.0),
-        color: backgroundColor,
+    ShadToaster.of(context).show(
+      ShadToast(
+        title: Text(message),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: Colors.white),
-          const SizedBox(width: 12.0),
-          Flexible(
-            child: Text(
-              message,
-              style: const TextStyle(color: Colors.white, fontSize: 16.0),
-            ),
-          ),
-        ],
-      ),
-    );
-
-    fToast.showToast(
-      child: toast,
-      gravity: ToastGravity.TOP,
-      toastDuration: const Duration(seconds: 3),
     );
   }
 
@@ -432,7 +399,7 @@ class _EditScreenState extends State<EditScreen> {
         appBar: CustomAppBar(
           title: 'Edit Scan (${_imagePaths.length})',
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
+            icon: const Icon(LucideIcons.arrowLeft),
             onPressed: _handleBackPress, // Custom back handler
           ),
         ),
@@ -461,7 +428,7 @@ class _EditScreenState extends State<EditScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Icon(
-              Icons.image_not_supported_outlined,
+              LucideIcons.imageOff,
               size: 120,
               color: AppColors.textHint,
             ),
@@ -595,7 +562,7 @@ class _EditScreenState extends State<EditScreen> {
                     ),
                   ),
                   child: const Icon(
-                    Icons.close_rounded,
+                    LucideIcons.x,
                     color: Colors.white,
                     size: 18,
                   ),
@@ -644,7 +611,7 @@ class _EditScreenState extends State<EditScreen> {
               // Add More Images
               Expanded(
                 child: _buildIconButton(
-                  icon: Icons.add_photo_alternate_outlined,
+                  icon: LucideIcons.imagePlus,
                   label: 'Add More',
                   onPressed: _addMoreImages,
                 ),
@@ -653,7 +620,7 @@ class _EditScreenState extends State<EditScreen> {
               // Save PDF
               Expanded(
                 child: _buildIconButton(
-                  icon: Icons.picture_as_pdf_outlined,
+                  icon: LucideIcons.fileText,
                   label: 'Save PDF',
                   onPressed: _savePdfLocally,
                 ),
@@ -662,7 +629,7 @@ class _EditScreenState extends State<EditScreen> {
               // Share PDF
               Expanded(
                 child: _buildIconButton(
-                  icon: Icons.share_outlined,
+                  icon: LucideIcons.share2,
                   label: 'Share',
                   onPressed: _exportToPdf,
                 ),
@@ -673,26 +640,10 @@ class _EditScreenState extends State<EditScreen> {
           // Row 2: Primary action - Save to Gallery
           SizedBox(
             width: double.infinity,
-            child: FilledButton.icon(
+            child: ShadButton(
               onPressed: _saveScan,
-              icon: const Icon(Icons.save_outlined, size: 20),
-              label: const Text(
-                'Save to Gallery',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 0.5,
-                ),
-              ),
-              style: FilledButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  vertical: AppSpacing.md + 4,
-                ),
-                elevation: 2,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(AppRadius.md),
-                ),
-              ),
+              leading: const Icon(LucideIcons.save, size: 18),
+              child: const Text('Save to Gallery'),
             ),
           ),
         ],
@@ -788,7 +739,7 @@ class _ImageViewerScreenState extends State<_ImageViewerScreen> {
           style: const TextStyle(color: Colors.white),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.close, color: Colors.white),
+          icon: const Icon(LucideIcons.x, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),

@@ -1,12 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:reorderable_grid_view/reorderable_grid_view.dart';
 import '../models/scan_document.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
 import '../theme/app_text_styles.dart';
 import '../widgets/common/custom_app_bar.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:printing/printing.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
@@ -14,7 +14,6 @@ import 'package:open_file_manager/open_file_manager.dart';
 import 'package:media_store_plus/media_store_plus.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../services/pdf_cache_service.dart';
-import 'package:awesome_dialog/awesome_dialog.dart';
 import '../services/document_storage.dart';
 
 /// Document viewer screen showing all pages in a gallery
@@ -82,14 +81,14 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
         title: widget.document.name,
         actions: [
           IconButton(
-            icon: Icon(_isGridView ? Icons.view_list : Icons.grid_view),
+            icon: Icon(_isGridView ? LucideIcons.list : LucideIcons.layoutGrid),
             onPressed: () {
               setState(() => _isGridView = !_isGridView);
             },
             tooltip: _isGridView ? 'List View' : 'Grid View',
           ),
           IconButton(
-            icon: const Icon(Icons.more_vert),
+            icon: const Icon(LucideIcons.ellipsisVertical),
             onPressed: _showOptions,
           ),
         ],
@@ -122,7 +121,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
       child: Row(
         children: [
           const Icon(
-            Icons.description,
+            LucideIcons.fileText,
             color: AppColors.primary,
             size: 32,
           ),
@@ -164,12 +163,12 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
                 ButtonSegment(
                   value: false,
                   label: Text('Pages'),
-                  icon: Icon(Icons.photo_library),
+                  icon: Icon(LucideIcons.images),
                 ),
                 ButtonSegment(
                   value: true,
                   label: Text('PDF Preview'),
-                  icon: Icon(Icons.picture_as_pdf),
+                  icon: Icon(LucideIcons.fileText),
                 ),
               ],
               selected: {_showPdfPreview},
@@ -203,7 +202,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Icon(
-              Icons.error_outline,
+              LucideIcons.circleAlert,
               size: 64,
               color: AppColors.textHint,
             ),
@@ -217,7 +216,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
             const SizedBox(height: AppSpacing.md),
             FilledButton.icon(
               onPressed: _loadPdfPreview,
-              icon: const Icon(Icons.refresh),
+              icon: const Icon(LucideIcons.refreshCw),
               label: const Text('Retry'),
             ),
           ],
@@ -240,7 +239,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Icon(
-            Icons.image_not_supported_outlined,
+            LucideIcons.imageOff,
             size: 120,
             color: AppColors.textHint,
           ),
@@ -356,7 +355,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
                           color: AppColors.background,
                           child: Center(
                             child: Icon(
-                              Icons.broken_image_outlined,
+                              LucideIcons.imageOff,
                               size: isListView ? 80 : 60,
                               color: AppColors.textHint,
                             ),
@@ -368,7 +367,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
                       color: AppColors.background,
                       child: Center(
                         child: Icon(
-                          Icons.image_outlined,
+                          LucideIcons.image,
                           size: isListView ? 80 : 60,
                           color: AppColors.textHint,
                         ),
@@ -426,7 +425,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              leading: const Icon(Icons.share),
+              leading: const Icon(LucideIcons.share2),
               title: const Text('Share PDF'),
               onTap: () {
                 Navigator.pop(context);
@@ -434,7 +433,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.download),
+              leading: const Icon(LucideIcons.download),
               title: const Text('Download PDF'),
               onTap: () {
                 Navigator.pop(context);
@@ -443,7 +442,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
             ),
             const Divider(),
             ListTile(
-              leading: const Icon(Icons.delete, color: AppColors.error),
+              leading: const Icon(LucideIcons.trash2, color: AppColors.error),
               title: const Text(
                 'Delete Document',
                 style: TextStyle(color: AppColors.error),
@@ -461,21 +460,26 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
 
   /// Show delete confirmation dialog
   Future<void> _confirmDelete() async {
-    await AwesomeDialog(
+    showShadDialog(
       context: context,
-      dialogType: DialogType.warning,
-      animType: AnimType.scale,
-      title: 'Delete Document?',
-      desc: 'This will permanently delete "${widget.document.name}" and all its pages. This action cannot be undone.',
-      btnCancelOnPress: () {},
-      btnOkOnPress: () async {
-        await _deleteDocument();
-      },
-      btnOkText: 'Delete',
-      btnCancelText: 'Cancel',
-      btnOkColor: AppColors.error,
-      btnCancelColor: AppColors.textSecondary,
-    ).show();
+      builder: (dialogContext) => ShadDialog.alert(
+        title: const Text('Delete Document?'),
+        description: Text('This will permanently delete "${widget.document.name}" and all its pages. This action cannot be undone.'),
+        actions: [
+          ShadButton.outline(
+            child: const Text('Cancel'),
+            onPressed: () => Navigator.of(dialogContext).pop(),
+          ),
+          ShadButton.destructive(
+            child: const Text('Delete'),
+            onPressed: () async {
+              Navigator.of(dialogContext).pop();
+              await _deleteDocument();
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   /// Delete the document and return to gallery
@@ -583,34 +587,10 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
   }
 
   void _showSnackBar(String message) {
-    FToast fToast = FToast();
-    fToast.init(context);
-
-    Widget toast = Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12.0),
-        color: Colors.black87,
+    ShadToaster.of(context).show(
+      ShadToast(
+        title: Text(message),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(Icons.info, color: Colors.white),
-          const SizedBox(width: 12.0),
-          Flexible(
-            child: Text(
-              message,
-              style: const TextStyle(color: Colors.white, fontSize: 16.0),
-            ),
-          ),
-        ],
-      ),
-    );
-
-    fToast.showToast(
-      child: toast,
-      gravity: ToastGravity.TOP,
-      toastDuration: const Duration(seconds: 3),
     );
   }
 }
@@ -664,7 +644,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Icon(
-                Icons.broken_image_outlined,
+                LucideIcons.imageOff,
                 size: 120,
                 color: AppColors.textHint,
               ),
@@ -698,7 +678,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Icon(
-                    Icons.error_outline,
+                    LucideIcons.circleAlert,
                     size: 120,
                     color: Colors.white54,
                   ),
@@ -770,7 +750,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                   child: Row(
                     children: [
                       IconButton(
-                        icon: const Icon(Icons.close, color: Colors.white),
+                        icon: const Icon(LucideIcons.x, color: Colors.white),
                         onPressed: () => Navigator.pop(context),
                       ),
                       Expanded(
@@ -808,7 +788,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
-                          icon: const Icon(Icons.chevron_left, color: Colors.white),
+                          icon: const Icon(LucideIcons.chevronLeft, color: Colors.white),
                           onPressed: _currentPage > 0
                               ? () => _pageController.previousPage(
                                     duration: const Duration(milliseconds: 300),
@@ -824,7 +804,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                           ),
                         ),
                         IconButton(
-                          icon: const Icon(Icons.chevron_right, color: Colors.white),
+                          icon: const Icon(LucideIcons.chevronRight, color: Colors.white),
                           onPressed: _currentPage < widget.imagePaths.length - 1
                               ? () => _pageController.nextPage(
                                     duration: const Duration(milliseconds: 300),

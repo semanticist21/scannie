@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 import '../../models/scan_document.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_theme.dart';
@@ -103,7 +104,7 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
                 shape: BoxShape.circle,
               ),
               child: const Icon(
-                Icons.delete_outline,
+                LucideIcons.trash2,
                 color: Colors.white,
                 size: 28,
               ),
@@ -169,7 +170,7 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
                         Row(
                           children: [
                             Icon(
-                              Icons.insert_drive_file_outlined,
+                              LucideIcons.file,
                               size: 14,
                               color: AppColors.textSecondary.withValues(alpha: 0.7),
                             ),
@@ -202,7 +203,7 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
 
                   // Action button
                   IconButton(
-                    icon: const Icon(Icons.more_vert),
+                    icon: const Icon(LucideIcons.ellipsisVertical),
                     onPressed: () => _showContextMenu(context),
                     color: AppColors.textSecondary,
                     iconSize: 20,
@@ -243,7 +244,7 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
             // Actions
             if (widget.onEditScan != null)
               ListTile(
-                leading: const Icon(Icons.edit_document, color: AppColors.primary),
+                leading: const Icon(LucideIcons.filePen, color: AppColors.primary),
                 title: const Text('Edit Scan'),
                 onTap: () {
                   Navigator.pop(sheetContext);
@@ -252,7 +253,7 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
               ),
             if (widget.onEdit != null)
               ListTile(
-                leading: const Icon(Icons.edit_outlined),
+                leading: const Icon(LucideIcons.pencil),
                 title: const Text('Rename'),
                 onTap: () {
                   Navigator.pop(sheetContext);
@@ -261,7 +262,7 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
               ),
             if (widget.onSavePdf != null)
               ListTile(
-                leading: const Icon(Icons.download, color: AppColors.accent),
+                leading: const Icon(LucideIcons.download, color: AppColors.accent),
                 title: const Text('Save PDF'),
                 onTap: () {
                   Navigator.pop(sheetContext);
@@ -270,7 +271,7 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
               ),
             if (widget.onShare != null)
               ListTile(
-                leading: const Icon(Icons.share, color: AppColors.accent),
+                leading: const Icon(LucideIcons.share2, color: AppColors.accent),
                 title: const Text('Share PDF'),
                 onTap: () {
                   Navigator.pop(sheetContext);
@@ -279,7 +280,7 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
               ),
             if (widget.onDelete != null)
               ListTile(
-                leading: const Icon(Icons.delete_outline, color: AppColors.error),
+                leading: const Icon(LucideIcons.trash2, color: AppColors.error),
                 title: const Text('Delete', style: TextStyle(color: AppColors.error)),
                 onTap: () {
                   Navigator.pop(sheetContext);
@@ -308,7 +309,7 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
             return Container(
               color: AppColors.primaryLight.withValues(alpha: 0.15),
               child: const Icon(
-                Icons.description_outlined,
+                LucideIcons.fileText,
                 color: AppColors.primary,
                 size: 36,
               ),
@@ -322,7 +323,7 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
     return Container(
       color: AppColors.primaryLight.withValues(alpha: 0.15),
       child: const Icon(
-        Icons.description_outlined,
+        LucideIcons.fileText,
         color: AppColors.primary,
         size: 36,
       ),

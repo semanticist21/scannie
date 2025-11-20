@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 import 'theme/app_theme.dart';
 import 'screens/gallery_screen.dart';
 import 'screens/edit_screen.dart';
@@ -26,10 +27,20 @@ class ScannierApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return ShadApp(
       title: 'Scannie',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
+
+      // Shadcn theme configuration
+      theme: ShadThemeData(
+        brightness: Brightness.light,
+        colorScheme: const ShadSlateColorScheme.light(),
+      ),
+
+      // Material theme for backwards compatibility with existing Material widgets
+      materialThemeBuilder: (context, theme) {
+        return AppTheme.lightTheme;
+      },
 
       // Initial route
       home: const GalleryScreen(),

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:cunning_document_scanner_plus/cunning_document_scanner_plus.dart';
 import '../models/scan_document.dart';
 import '../services/document_storage.dart';
@@ -8,13 +9,11 @@ import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
 import '../theme/app_text_styles.dart';
 import '../widgets/common/scan_card.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:open_file_manager/open_file_manager.dart';
 import 'package:media_store_plus/media_store_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -100,12 +99,12 @@ class _GalleryScreenState extends State<GalleryScreen> {
         title: const Text('My Scans'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.add),
+            icon: const Icon(LucideIcons.plus),
             onPressed: _createEmptyDocument,
             tooltip: 'Create Empty Document',
           ),
           IconButton(
-            icon: Icon(_isGridView ? Icons.list : Icons.grid_view),
+            icon: Icon(_isGridView ? LucideIcons.list : LucideIcons.layoutGrid),
             onPressed: () {
               final newViewMode = !_isGridView;
               setState(() => _isGridView = newViewMode);
@@ -114,69 +113,67 @@ class _GalleryScreenState extends State<GalleryScreen> {
             tooltip: _isGridView ? 'List View' : 'Grid View',
           ),
           IconButton(
-            icon: const Icon(Icons.search),
+            icon: const Icon(LucideIcons.search),
             onPressed: _showSearch,
             tooltip: 'Search',
           ),
         ],
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              AppColors.background,
-              AppColors.primaryLight.withValues(alpha: 0.1),
-              AppColors.background,
-            ],
-            stops: const [0.0, 0.5, 1.0],
+      body: SizedBox.expand(
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                AppColors.background,
+                AppColors.primaryLight.withValues(alpha: 0.1),
+                AppColors.background,
+              ],
+              stops: const [0.0, 0.5, 1.0],
+            ),
           ),
+          child: _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : _documents.isEmpty
+                  ? _buildEmptyState()
+                  : _buildDocumentList(),
         ),
-        child: _isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : _documents.isEmpty
-                ? _buildEmptyState()
-                : _buildDocumentList(),
       ),
-      floatingActionButton: FilledButton.icon(
+      floatingActionButton: ShadButton(
         onPressed: _openCamera,
-        icon: const Icon(Icons.camera_alt),
-        label: const Text('Scan'),
-        style: FilledButton.styleFrom(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.lg,
-            vertical: AppSpacing.md,
-          ),
-          elevation: 4,
-        ),
+        leading: const Icon(LucideIcons.camera, size: 18),
+        child: const Text('Scan'),
       ),
     );
   }
 
   Widget _buildEmptyState() {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(
-            Icons.description_outlined,
-            size: 120,
-            color: AppColors.textHint,
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          const Text(
-            'No scans yet',
-            style: AppTextStyles.h2,
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          Text(
-            'Tap the button below to start scanning',
-            style: AppTextStyles.bodyMedium.copyWith(
-              color: AppColors.textSecondary,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 80), // 시각적 중앙 보정
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(
+              LucideIcons.fileText,
+              size: 100,
+              color: AppColors.textHint,
             ),
-          ),
-        ],
+            const SizedBox(height: AppSpacing.lg),
+            const Text(
+              'No scans yet',
+              style: AppTextStyles.h2,
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              'Tap the button below to start scanning',
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -288,7 +285,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                     Row(
                       children: [
                         Icon(
-                          Icons.insert_drive_file_outlined,
+                          LucideIcons.file,
                           size: 14,
                           color: AppColors.textSecondary.withValues(alpha: 0.7),
                         ),
@@ -327,7 +324,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
               color: AppColors.primaryLight.withValues(alpha: 0.15),
               child: const Center(
                 child: Icon(
-                  Icons.description_outlined,
+                  LucideIcons.fileText,
                   size: 48,
                   color: AppColors.primary,
                 ),
@@ -343,7 +340,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
       color: AppColors.primaryLight.withValues(alpha: 0.15),
       child: const Center(
         child: Icon(
-          Icons.description_outlined,
+          LucideIcons.fileText,
           size: 48,
           color: AppColors.primary,
         ),
@@ -357,67 +354,55 @@ class _GalleryScreenState extends State<GalleryScreen> {
       text: 'Scan ${DateTime.now().toString().substring(0, 10)}',
     );
 
-    AwesomeDialog(
+    showShadDialog(
       context: context,
-      dialogType: DialogType.noHeader,
-      animType: AnimType.scale,
-      title: 'Create New Document',
-      desc: 'Enter a name for the new document',
-      body: Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        child: Column(
-          children: [
-            const Text(
-              'Create New Document',
-              style: AppTextStyles.h2,
-            ),
-            const SizedBox(height: AppSpacing.md),
-            TextField(
-              controller: nameController,
-              maxLength: 50,
-              decoration: InputDecoration(
-                labelText: 'Document name',
-                hintText: 'Enter name',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(AppRadius.md),
-                ),
-                counterText: '', // Hide character counter
-              ),
-              autofocus: true,
-              textCapitalization: TextCapitalization.words,
-            ),
-          ],
+      builder: (dialogContext) => ShadDialog(
+        title: const Text('Create New Document'),
+        description: const Text('Enter a name for the new document'),
+        actions: [
+          ShadButton.outline(
+            child: const Text('Cancel'),
+            onPressed: () => Navigator.of(dialogContext).pop(),
+          ),
+          ShadButton(
+            child: const Text('Create'),
+            onPressed: () async {
+              final documentName = nameController.text.trim();
+              if (documentName.isEmpty) {
+                _showSnackBar('Name cannot be empty');
+                return;
+              }
+
+              Navigator.of(dialogContext).pop();
+
+              final newDocument = ScanDocument(
+                id: DateTime.now().millisecondsSinceEpoch.toString(),
+                name: documentName,
+                createdAt: DateTime.now(),
+                imagePaths: [],
+                isProcessed: true,
+              );
+
+              setState(() {
+                _documents.insert(0, newDocument);
+              });
+              await _saveDocuments();
+
+              if (!mounted) return;
+              _showSnackBar('Empty document created');
+            },
+          ),
+        ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+          child: ShadInput(
+            controller: nameController,
+            placeholder: const Text('Document name'),
+            autofocus: true,
+          ),
         ),
       ),
-      btnCancelOnPress: () {},
-      btnOkOnPress: () async {
-        final documentName = nameController.text.trim();
-        if (documentName.isEmpty) {
-          _showSnackBar('Name cannot be empty');
-          return;
-        }
-
-        // Create empty document
-        final newDocument = ScanDocument(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
-          name: documentName,
-          createdAt: DateTime.now(),
-          imagePaths: [], // Empty list
-          isProcessed: true,
-        );
-
-        setState(() {
-          _documents.insert(0, newDocument);
-        });
-        await _saveDocuments();
-
-        if (!mounted) return;
-        _showSnackBar('Empty document created');
-      },
-      btnOkText: 'Create',
-      btnCancelText: 'Cancel',
-      btnCancelColor: AppColors.textSecondary,
-    ).show();
+    );
   }
 
   Future<void> _openCamera() async {
@@ -488,84 +473,79 @@ class _GalleryScreenState extends State<GalleryScreen> {
   void _editDocumentName(ScanDocument document) async {
     final TextEditingController controller = TextEditingController(text: document.name);
 
-    AwesomeDialog(
+    showShadDialog(
       context: context,
-      dialogType: DialogType.noHeader,
-      animType: AnimType.scale,
-      title: 'Rename Scan',
-      desc: 'Enter a new name for this document',
-      body: Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        child: Column(
-          children: [
-            const Text(
-              'Rename Scan',
-              style: AppTextStyles.h2,
-            ),
-            const SizedBox(height: AppSpacing.md),
-            TextField(
-              controller: controller,
-              maxLength: 50,
-              decoration: InputDecoration(
-                labelText: 'Document name',
-                hintText: 'Enter new name',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(AppRadius.md),
-                ),
-                counterText: '', // Hide character counter
-              ),
-              autofocus: true,
-              textCapitalization: TextCapitalization.words,
-            ),
-          ],
+      builder: (dialogContext) => ShadDialog(
+        title: const Text('Rename Scan'),
+        description: const Text('Enter a new name for this document'),
+        actions: [
+          ShadButton.outline(
+            child: const Text('Cancel'),
+            onPressed: () => Navigator.of(dialogContext).pop(),
+          ),
+          ShadButton(
+            child: const Text('Save'),
+            onPressed: () async {
+              final newName = controller.text.trim();
+              if (newName.isEmpty) {
+                _showSnackBar('Name cannot be empty');
+                return;
+              }
+
+              Navigator.of(dialogContext).pop();
+
+              setState(() {
+                final index = _documents.indexWhere((d) => d.id == document.id);
+                if (index != -1) {
+                  _documents[index] = document.copyWith(name: newName);
+                }
+              });
+
+              await _saveDocuments();
+              if (!mounted) return;
+              _showSnackBar('Document renamed');
+            },
+          ),
+        ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+          child: ShadInput(
+            controller: controller,
+            placeholder: const Text('Document name'),
+            autofocus: true,
+          ),
         ),
       ),
-      btnCancelOnPress: () {},
-      btnOkOnPress: () async {
-        final newName = controller.text.trim();
-        if (newName.isEmpty) {
-          _showSnackBar('Name cannot be empty');
-          return;
-        }
-
-        setState(() {
-          final index = _documents.indexWhere((d) => d.id == document.id);
-          if (index != -1) {
-            _documents[index] = document.copyWith(name: newName);
-          }
-        });
-
-        await _saveDocuments();
-        if (!mounted) return;
-        _showSnackBar('Document renamed');
-      },
-      btnOkText: 'Save',
-      btnCancelText: 'Cancel',
-      btnCancelColor: AppColors.textSecondary,
-    ).show();
+    );
   }
 
   void _deleteDocument(ScanDocument document) async {
-    AwesomeDialog(
+    showShadDialog(
       context: context,
-      dialogType: DialogType.warning,
-      animType: AnimType.scale,
-      title: 'Delete Scan',
-      desc: 'Delete "${document.name}"?',
-      btnCancelOnPress: () {},
-      btnOkOnPress: () async {
-        setState(() {
-          _documents.removeWhere((d) => d.id == document.id);
-        });
-        await _saveDocuments();
-        if (!mounted) return;
-        _showSnackBar('Document deleted');
-      },
-      btnOkText: 'Delete',
-      btnCancelText: 'Cancel',
-      btnOkColor: AppColors.error,
-      btnCancelColor: AppColors.textSecondary,
-    ).show();
+      builder: (dialogContext) => ShadDialog.alert(
+        title: const Text('Delete Scan'),
+        description: Text('Delete "${document.name}"?'),
+        actions: [
+          ShadButton.outline(
+            child: const Text('Cancel'),
+            onPressed: () => Navigator.of(dialogContext).pop(),
+          ),
+          ShadButton.destructive(
+            child: const Text('Delete'),
+            onPressed: () async {
+              Navigator.of(dialogContext).pop();
+
+              setState(() {
+                _documents.removeWhere((d) => d.id == document.id);
+              });
+              await _saveDocuments();
+              if (!mounted) return;
+              _showSnackBar('Document deleted');
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   void _savePdfDocument(ScanDocument document) {
@@ -727,34 +707,10 @@ class _GalleryScreenState extends State<GalleryScreen> {
   }
 
   void _showSnackBar(String message) {
-    FToast fToast = FToast();
-    fToast.init(context);
-
-    Widget toast = Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12.0),
-        color: Colors.black87,
+    ShadToaster.of(context).show(
+      ShadToast(
+        title: Text(message),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(Icons.info, color: Colors.white),
-          const SizedBox(width: 12.0),
-          Flexible(
-            child: Text(
-              message,
-              style: const TextStyle(color: Colors.white, fontSize: 16.0),
-            ),
-          ),
-        ],
-      ),
-    );
-
-    fToast.showToast(
-      child: toast,
-      gravity: ToastGravity.TOP,
-      toastDuration: const Duration(seconds: 3),
     );
   }
 }
@@ -769,7 +725,7 @@ class DocumentSearchDelegate extends SearchDelegate<ScanDocument?> {
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: const Icon(Icons.clear),
+        icon: const Icon(LucideIcons.x),
         onPressed: () => query = '',
       ),
     ];
@@ -778,7 +734,7 @@ class DocumentSearchDelegate extends SearchDelegate<ScanDocument?> {
   @override
   Widget buildLeading(BuildContext context) {
     return IconButton(
-      icon: const Icon(Icons.arrow_back),
+      icon: const Icon(LucideIcons.arrowLeft),
       onPressed: () => close(context, null),
     );
   }
@@ -804,7 +760,7 @@ class DocumentSearchDelegate extends SearchDelegate<ScanDocument?> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Icon(
-              Icons.search_off,
+              LucideIcons.searchX,
               size: 64,
               color: AppColors.textHint,
             ),
@@ -825,7 +781,7 @@ class DocumentSearchDelegate extends SearchDelegate<ScanDocument?> {
       itemBuilder: (context, index) {
         final document = results[index];
         return ListTile(
-          leading: const Icon(Icons.description),
+          leading: const Icon(LucideIcons.fileText),
           title: Text(document.name),
           subtitle: Text('${document.imagePaths.length} pages'),
           onTap: () => close(context, document),
