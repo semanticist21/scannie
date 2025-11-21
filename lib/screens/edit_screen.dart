@@ -8,6 +8,7 @@ import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
 import '../theme/app_text_styles.dart';
 import '../widgets/common/custom_app_bar.dart';
+import '../widgets/common/full_screen_image_viewer.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -97,10 +98,9 @@ class _EditScreenState extends State<EditScreen> {
     final navigator = Navigator.of(context);
     navigator.push(
       MaterialPageRoute(
-        builder: (context) => _ImageViewerScreen(
-          imagePath: imagePath,
-          pageNumber: index + 1,
-          totalPages: _imagePaths.length,
+        builder: (context) => FullScreenImageViewer(
+          imagePaths: _imagePaths,
+          initialPage: index,
         ),
       ),
     );
@@ -138,6 +138,8 @@ class _EditScreenState extends State<EditScreen> {
         description: Text(isEditingExisting
             ? 'Update the name for this scan'
             : 'Enter a name for this scan'),
+        constraints: const BoxConstraints(maxWidth: 320),
+        radius: const BorderRadius.all(Radius.circular(16)),
         actions: [
           ShadButton.outline(
             child: const Text('Cancel'),
@@ -193,6 +195,8 @@ class _EditScreenState extends State<EditScreen> {
       builder: (dialogContext) => ShadDialog.alert(
         title: const Text('Discard Changes?'),
         description: const Text('Are you sure you want to discard this scan? All images will be lost.'),
+        constraints: const BoxConstraints(maxWidth: 320),
+        radius: const BorderRadius.all(Radius.circular(16)),
         actions: [
           ShadButton.outline(
             child: const Text('Cancel'),
@@ -695,62 +699,6 @@ class _EditScreenState extends State<EditScreen> {
                 overflow: TextOverflow.ellipsis,
               ),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Full-screen image viewer with zoom and pan
-class _ImageViewerScreen extends StatefulWidget {
-  final String imagePath;
-  final int pageNumber;
-  final int totalPages;
-
-  const _ImageViewerScreen({
-    required this.imagePath,
-    required this.pageNumber,
-    required this.totalPages,
-  });
-
-  @override
-  State<_ImageViewerScreen> createState() => _ImageViewerScreenState();
-}
-
-class _ImageViewerScreenState extends State<_ImageViewerScreen> {
-  final TransformationController _transformationController = TransformationController();
-
-  @override
-  void dispose() {
-    _transformationController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        foregroundColor: Colors.white,
-        title: Text(
-          'Page ${widget.pageNumber} / ${widget.totalPages}',
-          style: const TextStyle(color: Colors.white),
-        ),
-        leading: IconButton(
-          icon: const Icon(LucideIcons.x, color: Colors.white),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
-      body: InteractiveViewer(
-        transformationController: _transformationController,
-        minScale: 0.5,
-        maxScale: 4.0,
-        child: Center(
-          child: Image.file(
-            File(widget.imagePath),
-            fit: BoxFit.contain,
           ),
         ),
       ),

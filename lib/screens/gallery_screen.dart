@@ -359,6 +359,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
       builder: (dialogContext) => ShadDialog(
         title: const Text('Create New Document'),
         description: const Text('Enter a name for the new document'),
+        constraints: const BoxConstraints(maxWidth: 320),
+        radius: const BorderRadius.all(Radius.circular(16)),
         actions: [
           ShadButton.outline(
             child: const Text('Cancel'),
@@ -478,6 +480,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
       builder: (dialogContext) => ShadDialog(
         title: const Text('Rename Scan'),
         description: const Text('Enter a new name for this document'),
+        constraints: const BoxConstraints(maxWidth: 320),
+        radius: const BorderRadius.all(Radius.circular(16)),
         actions: [
           ShadButton.outline(
             child: const Text('Cancel'),
@@ -525,6 +529,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
       builder: (dialogContext) => ShadDialog.alert(
         title: const Text('Delete Scan'),
         description: Text('Delete "${document.name}"?'),
+        constraints: const BoxConstraints(maxWidth: 320),
+        radius: const BorderRadius.all(Radius.circular(16)),
         actions: [
           ShadButton.outline(
             child: const Text('Cancel'),
