@@ -64,9 +64,11 @@ class _EditScreenState extends State<EditScreen> {
 
     try {
       final newImages = await CunningDocumentScanner.getPictures(
-        mode: ScannerMode.full, // Enable AI Enhance + Clean features
-        noOfPages: 100, // Allow multiple pages (user taps Done when finished)
-      ) ?? [];
+            mode: ScannerMode.full, // Enable AI Enhance + Clean features
+            noOfPages:
+                100, // Allow multiple pages (user taps Done when finished)
+          ) ??
+          [];
 
       if (newImages.isNotEmpty) {
         setState(() {
@@ -130,17 +132,65 @@ class _EditScreenState extends State<EditScreen> {
         : 'Scan ${DateTime.now().toString().substring(0, 10)}'; // New scan: use date
 
     // Show dialog to input document name
-    final TextEditingController nameController = TextEditingController(text: defaultName);
+    final TextEditingController nameController =
+        TextEditingController(text: defaultName);
 
-    showShadDialog(
+    showDialog(
       context: context,
-      builder: (dialogContext) => ShadDialog(
-        title: Text(isEditingExisting ? 'Save Changes' : 'Save Scan'),
-        description: Text(isEditingExisting
-            ? 'Update the name for this scan'
-            : 'Enter a name for this scan'),
-        constraints: const BoxConstraints(maxWidth: 320),
-        radius: const BorderRadius.all(Radius.circular(16)),
+      builder: (dialogContext) => AlertDialog(
+        title: Text(
+          isEditingExisting ? 'Save Changes' : 'Save Scan',
+          style: AppTextStyles.h3,
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              isEditingExisting
+                  ? 'Update the name for this scan'
+                  : 'Enter a name for this scan',
+              style: AppTextStyles.bodySmall.copyWith(
+                color: AppColors.textSecondary,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            TextField(
+              controller: nameController,
+              autofocus: true,
+              decoration: InputDecoration(
+                hintText: 'Document name',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(AppRadius.sm),
+                  borderSide: BorderSide(color: AppColors.border),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(AppRadius.sm),
+                  borderSide: BorderSide(color: AppColors.border),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(AppRadius.sm),
+                  borderSide: BorderSide(color: AppColors.primary, width: 2),
+                ),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.sm,
+                  vertical: AppSpacing.sm,
+                ),
+              ),
+            ),
+          ],
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.lg),
+          side: BorderSide(color: AppColors.border),
+        ),
+        backgroundColor: AppColors.surface,
+        actionsPadding: const EdgeInsets.fromLTRB(
+          AppSpacing.lg,
+          0,
+          AppSpacing.lg,
+          AppSpacing.lg,
+        ),
         actions: [
           ShadButton.outline(
             child: const Text('Cancel'),
@@ -162,7 +212,8 @@ class _EditScreenState extends State<EditScreen> {
               // Create a new scan document with user-provided name
               // When editing, preserve the original ID and createdAt
               final newDocument = ScanDocument(
-                id: _existingDocumentId ?? DateTime.now().millisecondsSinceEpoch.toString(),
+                id: _existingDocumentId ??
+                    DateTime.now().millisecondsSinceEpoch.toString(),
                 name: documentName,
                 createdAt: DateTime.now(), // Always update timestamp
                 imagePaths: _imagePaths,
@@ -175,14 +226,6 @@ class _EditScreenState extends State<EditScreen> {
             },
           ),
         ],
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
-          child: ShadInput(
-            controller: nameController,
-            placeholder: const Text('Document name'),
-            autofocus: true,
-          ),
-        ),
       ),
     );
   }
@@ -191,13 +234,30 @@ class _EditScreenState extends State<EditScreen> {
   Future<bool> _confirmDiscard() async {
     debugPrint('🚨 _confirmDiscard called - showing dialog');
 
-    final result = await showShadDialog<bool>(
+    final result = await showDialog<bool>(
       context: context,
-      builder: (dialogContext) => ShadDialog.alert(
-        title: const Text('Discard Changes?'),
-        description: const Text('Are you sure you want to discard this scan? All images will be lost.'),
-        constraints: const BoxConstraints(maxWidth: 320),
-        radius: const BorderRadius.all(Radius.circular(16)),
+      builder: (dialogContext) => AlertDialog(
+        title: Text(
+          'Discard Changes?',
+          style: AppTextStyles.h3,
+        ),
+        content: Text(
+          'Are you sure you want to discard this scan? All images will be lost.',
+          style: AppTextStyles.bodySmall.copyWith(
+            color: AppColors.textSecondary,
+          ),
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.lg),
+          side: BorderSide(color: AppColors.border),
+        ),
+        backgroundColor: AppColors.surface,
+        actionsPadding: const EdgeInsets.fromLTRB(
+          AppSpacing.lg,
+          0,
+          AppSpacing.lg,
+          AppSpacing.lg,
+        ),
         actions: [
           ShadButton.outline(
             child: const Text('Cancel'),
@@ -249,7 +309,8 @@ class _EditScreenState extends State<EditScreen> {
       }
 
       // Generate filename with timestamp
-      final timestamp = DateTime.now().toString().substring(0, 19).replaceAll(':', '-');
+      final timestamp =
+          DateTime.now().toString().substring(0, 19).replaceAll(':', '-');
       final fileName = 'Scan_$timestamp.pdf';
 
       // Get PDF bytes
@@ -325,7 +386,8 @@ class _EditScreenState extends State<EditScreen> {
       }
 
       // Generate filename with timestamp
-      final timestamp = DateTime.now().toString().substring(0, 19).replaceAll(':', '-');
+      final timestamp =
+          DateTime.now().toString().substring(0, 19).replaceAll(':', '-');
       final fileName = 'Scan_$timestamp.pdf';
 
       // Save PDF to temporary directory
@@ -637,6 +699,7 @@ class _EditScreenState extends State<EditScreen> {
     return ShadButton.outline(
       onPressed: onPressed,
       height: 64,
+      width: double.infinity, // Constrain width to parent
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,

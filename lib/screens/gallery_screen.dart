@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:ndialog/ndialog.dart';
 import 'package:cunning_document_scanner_plus/cunning_document_scanner_plus.dart';
 import '../models/scan_document.dart';
 import '../services/document_storage.dart';
@@ -354,57 +355,95 @@ class _GalleryScreenState extends State<GalleryScreen> {
       text: 'Scan ${DateTime.now().toString().substring(0, 10)}',
     );
 
-    showShadDialog(
-      context: context,
-      builder: (dialogContext) => ShadDialog(
-        title: const Text('Create New Document'),
-        description: const Text('Enter a name for the new document'),
-        constraints: const BoxConstraints(maxWidth: 320),
-        radius: const BorderRadius.all(Radius.circular(16)),
-        actions: [
-          ShadButton.outline(
-            child: const Text('Cancel'),
-            onPressed: () => Navigator.of(dialogContext).pop(),
-          ),
-          ShadButton(
-            child: const Text('Create'),
-            onPressed: () async {
-              final documentName = nameController.text.trim();
-              if (documentName.isEmpty) {
-                _showSnackBar('Name cannot be empty');
-                return;
-              }
+    DialogBackground(
+      blur: 6,
+      dismissable: true,
+      barrierColor: Colors.black.withValues(alpha: 0.4),
+      dialog: Material(
+        color: Colors.transparent,
+        child: Center(
+          child: Container(
+            width: 320,
+            margin: const EdgeInsets.all(AppSpacing.lg),
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(AppRadius.lg),
+              border: Border.all(color: AppColors.border),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.08),
+                  blurRadius: 24,
+                  offset: const Offset(0, 12),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Create New Document',
+                  style: AppTextStyles.h3,
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  'Enter a name for the new document',
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.md),
+                ShadInput(
+                  controller: nameController,
+                  placeholder: const Text('Document name'),
+                  autofocus: true,
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ShadButton.outline(
+                      child: const Text('Cancel'),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    ShadButton(
+                      child: const Text('Create'),
+                      onPressed: () async {
+                        final documentName = nameController.text.trim();
+                        if (documentName.isEmpty) {
+                          _showSnackBar('Name cannot be empty');
+                          return;
+                        }
 
-              Navigator.of(dialogContext).pop();
+                        Navigator.of(context).pop();
 
-              final newDocument = ScanDocument(
-                id: DateTime.now().millisecondsSinceEpoch.toString(),
-                name: documentName,
-                createdAt: DateTime.now(),
-                imagePaths: [],
-                isProcessed: true,
-              );
+                        final newDocument = ScanDocument(
+                          id: DateTime.now().millisecondsSinceEpoch.toString(),
+                          name: documentName,
+                          createdAt: DateTime.now(),
+                          imagePaths: [],
+                          isProcessed: true,
+                        );
 
-              setState(() {
-                _documents.insert(0, newDocument);
-              });
-              await _saveDocuments();
+                        setState(() {
+                          _documents.insert(0, newDocument);
+                        });
+                        await _saveDocuments();
 
-              if (!mounted) return;
-              _showSnackBar('Empty document created');
-            },
-          ),
-        ],
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
-          child: ShadInput(
-            controller: nameController,
-            placeholder: const Text('Document name'),
-            autofocus: true,
+                        if (!mounted) return;
+                        _showSnackBar('Empty document created');
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
-    );
+    ).show(context, transitionType: DialogTransitionType.Shrink);
   }
 
   Future<void> _openCamera() async {
@@ -476,83 +515,161 @@ class _GalleryScreenState extends State<GalleryScreen> {
   void _editDocumentName(ScanDocument document) async {
     final TextEditingController controller = TextEditingController(text: document.name);
 
-    showShadDialog(
-      context: context,
-      builder: (dialogContext) => ShadDialog(
-        title: const Text('Rename Scan'),
-        description: const Text('Enter a new name for this document'),
-        constraints: const BoxConstraints(maxWidth: 320),
-        radius: const BorderRadius.all(Radius.circular(16)),
-        actions: [
-          ShadButton.outline(
-            child: const Text('Cancel'),
-            onPressed: () => Navigator.of(dialogContext).pop(),
-          ),
-          ShadButton(
-            child: const Text('Save'),
-            onPressed: () async {
-              final newName = controller.text.trim();
-              if (newName.isEmpty) {
-                _showSnackBar('Name cannot be empty');
-                return;
-              }
+    DialogBackground(
+      blur: 6,
+      dismissable: true,
+      barrierColor: Colors.black.withValues(alpha: 0.4),
+      dialog: Material(
+        color: Colors.transparent,
+        child: Center(
+          child: Container(
+            width: 320,
+            margin: const EdgeInsets.all(AppSpacing.lg),
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(AppRadius.lg),
+              border: Border.all(color: AppColors.border),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.08),
+                  blurRadius: 24,
+                  offset: const Offset(0, 12),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Rename Scan',
+                  style: AppTextStyles.h3,
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  'Enter a new name for this document',
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.md),
+                ShadInput(
+                  controller: controller,
+                  placeholder: const Text('Document name'),
+                  autofocus: true,
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ShadButton.outline(
+                      child: const Text('Cancel'),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    ShadButton(
+                      child: const Text('Save'),
+                      onPressed: () async {
+                        final newName = controller.text.trim();
+                        if (newName.isEmpty) {
+                          _showSnackBar('Name cannot be empty');
+                          return;
+                        }
 
-              Navigator.of(dialogContext).pop();
+                        Navigator.of(context).pop();
 
-              setState(() {
-                final index = _documents.indexWhere((d) => d.id == document.id);
-                if (index != -1) {
-                  _documents[index] = document.copyWith(name: newName);
-                }
-              });
+                        setState(() {
+                          final index = _documents.indexWhere((d) => d.id == document.id);
+                          if (index != -1) {
+                            _documents[index] = document.copyWith(name: newName);
+                          }
+                        });
 
-              await _saveDocuments();
-              if (!mounted) return;
-              _showSnackBar('Document renamed');
-            },
-          ),
-        ],
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
-          child: ShadInput(
-            controller: controller,
-            placeholder: const Text('Document name'),
-            autofocus: true,
+                        await _saveDocuments();
+                        if (!mounted) return;
+                        _showSnackBar('Document renamed');
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
-    );
+    ).show(context, transitionType: DialogTransitionType.Shrink);
   }
 
   void _deleteDocument(ScanDocument document) async {
-    showShadDialog(
-      context: context,
-      builder: (dialogContext) => ShadDialog.alert(
-        title: const Text('Delete Scan'),
-        description: Text('Delete "${document.name}"?'),
-        constraints: const BoxConstraints(maxWidth: 320),
-        radius: const BorderRadius.all(Radius.circular(16)),
-        actions: [
-          ShadButton.outline(
-            child: const Text('Cancel'),
-            onPressed: () => Navigator.of(dialogContext).pop(),
-          ),
-          ShadButton.destructive(
-            child: const Text('Delete'),
-            onPressed: () async {
-              Navigator.of(dialogContext).pop();
+    DialogBackground(
+      blur: 6,
+      dismissable: true,
+      barrierColor: Colors.black.withValues(alpha: 0.4),
+      dialog: Material(
+        color: Colors.transparent,
+        child: Center(
+          child: Container(
+            width: 320,
+            margin: const EdgeInsets.all(AppSpacing.lg),
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(AppRadius.lg),
+              border: Border.all(color: AppColors.border),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.08),
+                  blurRadius: 24,
+                  offset: const Offset(0, 12),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Delete Scan',
+                  style: AppTextStyles.h3,
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  'Delete "${document.name}"?',
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ShadButton.outline(
+                      child: const Text('Cancel'),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    ShadButton.destructive(
+                      child: const Text('Delete'),
+                      onPressed: () async {
+                        Navigator.of(context).pop();
 
-              setState(() {
-                _documents.removeWhere((d) => d.id == document.id);
-              });
-              await _saveDocuments();
-              if (!mounted) return;
-              _showSnackBar('Document deleted');
-            },
+                        setState(() {
+                          _documents.removeWhere((d) => d.id == document.id);
+                        });
+                        await _saveDocuments();
+                        if (!mounted) return;
+                        _showSnackBar('Document deleted');
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ],
+        ),
       ),
-    );
+    ).show(context, transitionType: DialogTransitionType.Shrink);
   }
 
   void _savePdfDocument(ScanDocument document) {

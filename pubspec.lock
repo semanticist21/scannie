@@ -381,6 +381,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  ndialog:
+    dependency: "direct main"
+    description:
+      name: ndialog
+      sha256: "6d74b247b0d5d34d57df4489c5ef6fc4e508f03a786068998e6cad3980a154a1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.5.0+1"
   objective_c:
     dependency: transitive
     description:
@@ -601,10 +609,10 @@ packages:
     dependency: "direct main"
     description:
       name: shadcn_ui
-      sha256: "994d9bf4d4daa84479211899bad3357369f9eaf19664820e6437eab167b95d00"
+      sha256: "0159d9d83cae8fb3b72c5973d2526749ec7cab504dfc40afc216935f48af900e"
       url: "https://pub.dev"
     source: hosted
-    version: "0.39.7"
+    version: "0.39.8"
   share_plus:
     dependency: "direct main"
     description:

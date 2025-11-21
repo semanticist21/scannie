@@ -30,22 +30,38 @@ class DocumentViewerScreen extends StatefulWidget {
   State<DocumentViewerScreen> createState() => _DocumentViewerScreenState();
 }
 
-class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
+class _DocumentViewerScreenState extends State<DocumentViewerScreen>
+    with SingleTickerProviderStateMixin {
   bool _isGridView = true;
   late List<String> _imagePaths;
   final _pdfCacheService = PdfCacheService();
   File? _cachedPdfFile;
   bool _isLoadingPdf = false;
   bool _showPdfPreview = false;
+  late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
     _imagePaths = List.from(widget.document.imagePaths);
+    _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() {
+      if (!_tabController.indexIsChanging) {
+        setState(() {
+          _showPdfPreview = _tabController.index == 1;
+        });
+      }
+    });
     // Only load PDF preview if there are images
     if (_imagePaths.isNotEmpty) {
       _loadPdfPreview();
     }
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   /// Load PDF preview (cached or generate new)
@@ -78,6 +94,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: CustomAppBar(
         title: widget.document.name,
         actions: [
@@ -96,13 +113,13 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
       ),
       body: Column(
         children: [
-          // Document info card
-          _buildDocumentInfo(),
+          // Document info card with gradient
+          _buildDocumentInfoHeader(),
 
-          // PDF Preview toggle (only show if there are images)
-          if (_imagePaths.isNotEmpty) _buildPdfPreviewToggle(),
+          // Tab bar for Pages/PDF toggle
+          if (_imagePaths.isNotEmpty) _buildTabBar(),
 
-          // PDF Preview or Pages gallery
+          // Content area
           Expanded(
             child: _imagePaths.isEmpty
                 ? _buildEmptyState()
@@ -115,67 +132,130 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
     );
   }
 
-  Widget _buildDocumentInfo() {
-    return Container(
+  Widget _buildDocumentInfoHeader() {
+    return Padding(
       padding: const EdgeInsets.all(AppSpacing.md),
-      color: AppColors.surface,
-      child: Row(
-        children: [
-          const Icon(
-            LucideIcons.fileText,
-            color: AppColors.primary,
-            size: 32,
-          ),
-          const SizedBox(width: AppSpacing.md),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      child: ShadCard(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Document name with icon
+            Row(
               children: [
-                Text(
-                  '${_imagePaths.length} pages',
-                  style: AppTextStyles.bodyLarge.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+                const Icon(
+                  LucideIcons.fileText,
+                  color: AppColors.primary,
+                  size: 24,
                 ),
-                Text(
-                  'Created ${_formatDate(widget.document.createdAt)}',
-                  style: AppTextStyles.caption,
+                const SizedBox(width: AppSpacing.sm),
+                Expanded(
+                  child: Text(
+                    widget.document.name,
+                    style: AppTextStyles.bodyLarge.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ],
             ),
-          ),
-        ],
+            const SizedBox(height: AppSpacing.md),
+            // Info badges (square-ish)
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.sm,
+                    vertical: AppSpacing.xs,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(AppRadius.sm),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(LucideIcons.images, size: 14, color: AppColors.primary),
+                      const SizedBox(width: 6),
+                      Text(
+                        '${_imagePaths.length} ${_imagePaths.length == 1 ? 'page' : 'pages'}',
+                        style: AppTextStyles.caption.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.sm,
+                    vertical: AppSpacing.xs,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.textSecondary.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(AppRadius.sm),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(LucideIcons.calendar, size: 14, color: AppColors.textSecondary),
+                      const SizedBox(width: 6),
+                      Text(
+                        _formatDateExact(widget.document.createdAt),
+                        style: AppTextStyles.caption.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildPdfPreviewToggle() {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.md,
-        vertical: AppSpacing.sm,
-      ),
-      color: AppColors.background,
-      child: Row(
-        children: [
-          Expanded(
-            child: SegmentedButton<bool>(
-              segments: const [
-                ButtonSegment(
-                  value: false,
-                  label: Text('Pages'),
-                  icon: Icon(LucideIcons.images),
-                ),
-                ButtonSegment(
-                  value: true,
-                  label: Text('PDF Preview'),
-                  icon: Icon(LucideIcons.fileText),
-                ),
+  Widget _buildTabBar() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+      child: ShadTabs<int>(
+        value: _showPdfPreview ? 1 : 0,
+        onChanged: (value) {
+          setState(() {
+            _showPdfPreview = value == 1;
+            _tabController.animateTo(value);
+          });
+        },
+        tabs: [
+          ShadTab(
+            value: 0,
+            content: const SizedBox.shrink(),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(LucideIcons.images, size: 16),
+                const SizedBox(width: 8),
+                const Text('Pages'),
               ],
-              selected: {_showPdfPreview},
-              onSelectionChanged: (Set<bool> selection) {
-                setState(() => _showPdfPreview = selection.first);
-              },
+            ),
+          ),
+          ShadTab(
+            value: 1,
+            content: const SizedBox.shrink(),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(LucideIcons.fileText, size: 16),
+                const SizedBox(width: 8),
+                const Text('PDF'),
+              ],
             ),
           ),
         ],
@@ -185,13 +265,25 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
 
   Widget _buildPdfPreview() {
     if (_isLoadingPdf) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircularProgressIndicator(),
-            SizedBox(height: AppSpacing.lg),
-            Text('Generating PDF preview...'),
+            SizedBox(
+              width: 48,
+              height: 48,
+              child: CircularProgressIndicator(
+                strokeWidth: 3,
+                color: AppColors.primary,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            Text(
+              'Generating PDF preview...',
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: AppColors.textSecondary,
+              ),
+            ),
           ],
         ),
       );
@@ -202,61 +294,105 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              LucideIcons.circleAlert,
-              size: 64,
-              color: AppColors.textHint,
+            Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                color: AppColors.error.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                LucideIcons.circleAlert,
+                size: 40,
+                color: AppColors.error,
+              ),
             ),
             const SizedBox(height: AppSpacing.lg),
             Text(
               'PDF preview not available',
               style: AppTextStyles.bodyLarge.copyWith(
+                fontWeight: FontWeight.w600,
+                color: AppColors.textPrimary,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              'There was an error generating the preview',
+              style: AppTextStyles.bodySmall.copyWith(
                 color: AppColors.textSecondary,
               ),
             ),
-            const SizedBox(height: AppSpacing.md),
-            FilledButton.icon(
+            const SizedBox(height: AppSpacing.lg),
+            ShadButton.outline(
               onPressed: _loadPdfPreview,
-              icon: const Icon(LucideIcons.refreshCw),
-              label: const Text('Retry'),
+              leading: const Icon(LucideIcons.refreshCw, size: 16),
+              child: const Text('Retry'),
             ),
           ],
         ),
       );
     }
 
-    return SfPdfViewer.file(
-      _cachedPdfFile!,
-      enableDoubleTapZooming: true,
-      enableTextSelection: false,
-      canShowScrollHead: true,
-      canShowScrollStatus: true,
+    return Container(
+      margin: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        border: Border.all(
+          color: AppColors.border,
+          width: 1,
+        ),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        child: SfPdfViewer.file(
+          _cachedPdfFile!,
+          enableDoubleTapZooming: true,
+          enableTextSelection: false,
+          canShowScrollHead: true,
+          canShowScrollStatus: true,
+        ),
+      ),
     );
   }
 
   Widget _buildEmptyState() {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(
-            LucideIcons.imageOff,
-            size: 120,
-            color: AppColors.textHint,
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          const Text(
-            'No pages in this document',
-            style: AppTextStyles.h2,
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          Text(
-            'Tap Edit Scan to add images',
-            style: AppTextStyles.bodyMedium.copyWith(
-              color: AppColors.textSecondary,
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.xl),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 120,
+              height: 120,
+              decoration: BoxDecoration(
+                color: AppColors.textHint.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                LucideIcons.imageOff,
+                size: 60,
+                color: AppColors.textHint,
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: AppSpacing.xl),
+            Text(
+              'No pages in this document',
+              style: AppTextStyles.h3.copyWith(
+                fontWeight: FontWeight.w600,
+                color: AppColors.textPrimary,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              'This document appears to be empty.\nTry editing to add new scans.',
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: AppColors.textSecondary,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -323,74 +459,82 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
     );
   }
 
-  Widget _buildCardContent(int index, File imageFile, {bool isListView = false}) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        border: Border.all(
-          color: AppColors.border,
-          width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+  Widget _buildCardContent(int index, File imageFile,
+      {bool isListView = false}) {
+    final imageWidget = imageFile.existsSync()
+        ? Image.file(
+            imageFile,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return Container(
+                color: AppColors.background,
+                child: Center(
+                  child: Icon(
+                    LucideIcons.imageOff,
+                    size: isListView ? 80 : 48,
+                    color: AppColors.textHint,
+                  ),
+                ),
+              );
+            },
+          )
+        : Container(
+            color: AppColors.background,
+            child: Center(
+              child: Icon(
+                LucideIcons.image,
+                size: isListView ? 80 : 48,
+                color: AppColors.textHint,
+              ),
+            ),
+          );
+
+    return ShadCard(
+      padding: EdgeInsets.zero,
+      height: isListView ? 280 : null,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+        child: Stack(
           children: [
-            // Image
-            Expanded(
-              child: imageFile.existsSync()
-                  ? Image.file(
-                      imageFile,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          color: AppColors.background,
-                          child: Center(
-                            child: Icon(
-                              LucideIcons.imageOff,
-                              size: isListView ? 80 : 60,
-                              color: AppColors.textHint,
-                            ),
-                          ),
-                        );
-                      },
-                    )
-                  : Container(
-                      color: AppColors.background,
-                      child: Center(
-                        child: Icon(
-                          LucideIcons.image,
-                          size: isListView ? 80 : 60,
-                          color: AppColors.textHint,
-                        ),
+            // Image fills the card
+            Positioned.fill(child: imageWidget),
+            // Page number badge at bottom
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: AppSpacing.sm,
+                  horizontal: AppSpacing.md,
+                ),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.transparent,
+                      Colors.black.withValues(alpha: 0.7),
+                    ],
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Page ${index + 1}',
+                      style: AppTextStyles.bodySmall.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
                       ),
                     ),
-            ),
-            // Page number
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(
-                vertical: AppSpacing.sm,
-              ),
-              decoration: const BoxDecoration(
-                color: AppColors.surface,
-              ),
-              child: Text(
-                'Page ${index + 1}',
-                style: AppTextStyles.bodySmall.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.textPrimary,
+                    Icon(
+                      LucideIcons.expand,
+                      size: 14,
+                      color: Colors.white.withValues(alpha: 0.8),
+                    ),
+                  ],
                 ),
-                textAlign: TextAlign.center,
               ),
             ),
           ],
@@ -398,7 +542,6 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
       ),
     );
   }
-
 
   void _viewFullScreen(int index) {
     Navigator.push(
@@ -415,45 +558,153 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
   void _showOptions() {
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(AppRadius.lg),
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        decoration: const BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(AppRadius.xl),
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Handle bar
+              Container(
+                margin: const EdgeInsets.only(top: AppSpacing.sm),
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: AppColors.textHint.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: AppSpacing.md),
+              // Title
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+                child: Text(
+                  'Document Options',
+                  style: AppTextStyles.bodyLarge.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              const SizedBox(height: AppSpacing.md),
+              // Options
+              _buildOptionTile(
+                icon: LucideIcons.share2,
+                title: 'Share PDF',
+                subtitle: 'Share document via other apps',
+                onTap: () {
+                  Navigator.pop(context);
+                  _exportToPdf();
+                },
+              ),
+              _buildOptionTile(
+                icon: LucideIcons.download,
+                title: 'Download PDF',
+                subtitle: 'Save to Downloads folder',
+                onTap: () {
+                  Navigator.pop(context);
+                  _savePdfLocally();
+                },
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.lg,
+                  vertical: AppSpacing.sm,
+                ),
+                child: Divider(
+                  color: AppColors.border,
+                  height: 1,
+                ),
+              ),
+              _buildOptionTile(
+                icon: LucideIcons.trash2,
+                title: 'Delete Document',
+                subtitle: 'Permanently remove this document',
+                isDestructive: true,
+                onTap: () {
+                  Navigator.pop(context);
+                  _confirmDelete();
+                },
+              ),
+              const SizedBox(height: AppSpacing.md),
+            ],
+          ),
         ),
       ),
-      builder: (context) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(LucideIcons.share2),
-              title: const Text('Share PDF'),
-              onTap: () {
-                Navigator.pop(context);
-                _exportToPdf();
-              },
-            ),
-            ListTile(
-              leading: const Icon(LucideIcons.download),
-              title: const Text('Download PDF'),
-              onTap: () {
-                Navigator.pop(context);
-                _savePdfLocally();
-              },
-            ),
-            const Divider(),
-            ListTile(
-              leading: const Icon(LucideIcons.trash2, color: AppColors.error),
-              title: const Text(
-                'Delete Document',
-                style: TextStyle(color: AppColors.error),
+    );
+  }
+
+  Widget _buildOptionTile({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+    bool isDestructive = false,
+  }) {
+    final color = isDestructive ? AppColors.error : AppColors.textPrimary;
+    final iconBgColor = isDestructive
+        ? AppColors.error.withValues(alpha: 0.1)
+        : AppColors.primary.withValues(alpha: 0.1);
+    final iconColor = isDestructive ? AppColors.error : AppColors.primary;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.lg,
+            vertical: AppSpacing.md,
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: iconBgColor,
+                  borderRadius: BorderRadius.circular(AppRadius.md),
+                ),
+                child: Icon(
+                  icon,
+                  size: 20,
+                  color: iconColor,
+                ),
               ),
-              onTap: () {
-                Navigator.pop(context);
-                _confirmDelete();
-              },
-            ),
-          ],
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: color,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitle,
+                      style: AppTextStyles.caption.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(
+                LucideIcons.chevronRight,
+                size: 18,
+                color: AppColors.textHint,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -461,13 +712,30 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
 
   /// Show delete confirmation dialog
   Future<void> _confirmDelete() async {
-    showShadDialog(
+    showDialog(
       context: context,
-      builder: (dialogContext) => ShadDialog.alert(
-        title: const Text('Delete Document?'),
-        description: Text('This will permanently delete "${widget.document.name}" and all its pages. This action cannot be undone.'),
-        constraints: const BoxConstraints(maxWidth: 320),
-        radius: const BorderRadius.all(Radius.circular(16)),
+      builder: (dialogContext) => AlertDialog(
+        title: Text(
+          'Delete Document?',
+          style: AppTextStyles.h3,
+        ),
+        content: Text(
+          'This will permanently delete "${widget.document.name}" and all its pages. This action cannot be undone.',
+          style: AppTextStyles.bodySmall.copyWith(
+            color: AppColors.textSecondary,
+          ),
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.lg),
+          side: BorderSide(color: AppColors.border),
+        ),
+        backgroundColor: AppColors.surface,
+        actionsPadding: const EdgeInsets.fromLTRB(
+          AppSpacing.lg,
+          0,
+          AppSpacing.lg,
+          AppSpacing.lg,
+        ),
         actions: [
           ShadButton.outline(
             child: const Text('Cancel'),
@@ -507,7 +775,6 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
     }
   }
 
-
   /// Export document to PDF and share (uses cached PDF)
   Future<void> _exportToPdf() async {
     try {
@@ -522,7 +789,8 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
       if (!mounted) return;
 
       // Generate filename with timestamp
-      final timestamp = DateTime.now().toString().substring(0, 19).replaceAll(':', '-');
+      final timestamp =
+          DateTime.now().toString().substring(0, 19).replaceAll(':', '-');
       final fileName = '${widget.document.name}_$timestamp.pdf';
 
       // Share the PDF using the printing package
@@ -550,7 +818,8 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
       );
 
       // Generate filename with timestamp
-      final timestamp = DateTime.now().toString().substring(0, 19).replaceAll(':', '-');
+      final timestamp =
+          DateTime.now().toString().substring(0, 19).replaceAll(':', '-');
       final fileName = '${widget.document.name}_$timestamp.pdf';
 
       // Copy to new temp file with timestamp filename
@@ -584,9 +853,10 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
     }
   }
 
-
-  String _formatDate(DateTime date) {
-    return '${date.day}/${date.month}/${date.year}';
+  String _formatDateExact(DateTime date) {
+    final hour = date.hour.toString().padLeft(2, '0');
+    final minute = date.minute.toString().padLeft(2, '0');
+    return '${date.year}.${date.month.toString().padLeft(2, '0')}.${date.day.toString().padLeft(2, '0')} $hour:$minute';
   }
 
   void _showSnackBar(String message) {
