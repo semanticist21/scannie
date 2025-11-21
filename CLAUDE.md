@@ -9,9 +9,11 @@ Scannie는 문서 스캔 Flutter 모바일 애플리케이션입니다. 네이�
 **핵심 기술**:
 - Flutter 3.39.0-0.1.pre (beta), Dart 3.11.0, Material Design 3
 - `cunning_document_scanner_plus` v1.0.3 (네이티브 iOS/Android 스캐너 + 필터/크롭)
+- `shadcn_ui` (UI 컴포넌트 - ShadButton, ShadBadge, LucideIcons)
 - `reorderable_grid_view` v2.2.8 (드래그 앤 드롭 순서 변경)
 - `pdf` + `printing` (PDF 생성/공유)
 - `syncfusion_flutter_pdfviewer` (PDF 미리보기)
+- `elegant_notification` (토스트 알림)
 
 **현재 상태**:
 - ✅ 문서 스캔 (네이티브 필터/크롭/회전 포함)
@@ -20,6 +22,7 @@ Scannie는 문서 스캔 Flutter 모바일 애플리케이션입니다. 네이�
 - ✅ PDF 내보내기 - A4 사이즈 고정 (공유 + 다운로드)
 - ✅ **PDF 다운로드** (MediaStore API - 권한 불필요)
 - ✅ DocumentViewerScreen (페이지 갤러리, 전체 화면 뷰어)
+- ✅ **FullScreenImageViewer 필터** (Original, B&W, Contrast, Brighten, Document)
 
 ## Quick Reference
 
@@ -50,7 +53,7 @@ flutter run -d <device-id> --android-skip-build-dependency-validation
 ```
 
 **핵심 규칙**:
-- ✅ Material 3 네이티브 컴포넌트 우선 (FilledButton, SegmentedButton, Card)
+- ✅ shadcn_ui 컴포넌트 우선 (ShadButton, ShadBadge, LucideIcons)
 - ✅ 테마 시스템 필수 (`AppSpacing`, `AppColors`, `AppTextStyles`)
 - ✅ **`flutter analyze` 통과 필수** - 모든 코드 수정 후 실행하여 에러/경고 0개 확인!
 - ⚠️ **Claude는 `flutter run` 절대 실행 금지** - 사용자가 직접 실행합니다!
@@ -188,7 +191,8 @@ lib/
 ├── widgets/common/   # 재사용 위젯
 │   ├── scan_card.dart
 │   ├── custom_app_bar.dart
-│   └── custom_button.dart
+│   ├── custom_button.dart
+│   └── full_screen_image_viewer.dart  # 이미지 뷰어 + 필터 + 저장
 ├── services/         # 비즈니스 로직
 │   ├── document_storage.dart         # 문서 영구 저장/로드
 │   └── pdf_cache_service.dart        # PDF 생성 캐싱 (SHA256 기반)
@@ -325,6 +329,77 @@ Widget _buildReorderableGrid() {
     }).toList(),
   );
 }
+```
+
+## FullScreenImageViewer 필터 기능
+
+### 개요
+
+FullScreenImageViewer는 이미지를 전체 화면으로 보고, Flutter 내장 `ColorFiltered`를 사용한 필터를 적용하여 저장할 수 있는 위젯입니다.
+
+### 사용 가능한 필터
+
+| 필터 | 설명 | Color Matrix |
+|------|------|--------------|
+| Original | 원본 이미지 | null |
+| B&W (Grayscale) | 흑백 변환 | Luminosity matrix |
+| High Contrast | 대비 강화 | 1.5x + -40 offset |
+| Brighten | 밝기 증가 | +30 offset |
+| Document | 문서 스캔용 | 1.8x + -60 offset |
+
+### 구현 패턴
+
+```dart
+// ColorFilter.matrix를 사용한 필터 적용
+ColorFilter? _getColorFilter() {
+  switch (_currentFilter) {
+    case ImageFilterType.grayscale:
+      return const ColorFilter.matrix(<double>[
+        0.2126, 0.7152, 0.0722, 0, 0,
+        0.2126, 0.7152, 0.0722, 0, 0,
+        0.2126, 0.7152, 0.0722, 0, 0,
+        0, 0, 0, 1, 0,
+      ]);
+    // ... 다른 필터들
+  }
+}
+
+// ColorFiltered 위젯으로 적용
+ColorFiltered(
+  colorFilter: colorFilter,
+  child: Image.file(imageFile),
+)
+```
+
+### 필터된 이미지 저장
+
+```dart
+// dart:ui를 사용한 이미지 렌더링
+final recorder = ui.PictureRecorder();
+final canvas = Canvas(recorder);
+final paint = Paint()..colorFilter = _getColorFilter();
+canvas.drawImage(image, Offset.zero, paint);
+final filteredImage = await picture.toImage(width, height);
+
+// PNG로 변환 후 갤러리에 저장
+final byteData = await filteredImage.toByteData(format: ui.ImageByteFormat.png);
+await ImageGallerySaverPlus.saveFile(tempFile.path);
+```
+
+### Toast 알림 (elegant_notification)
+
+```dart
+// shadcn 스타일에 맞춘 커스터마이징
+ElegantNotification.success(
+  title: Text('Saved', style: AppTextStyles.bodyMedium.copyWith(...)),
+  description: Text(message, style: AppTextStyles.caption.copyWith(...)),
+  width: 280,
+  height: 60,
+  showProgressIndicator: false,
+  displayCloseButton: false,
+  borderRadius: BorderRadius.circular(AppRadius.md),
+  background: AppColors.surface,
+).show(context);
 ```
 
 ## 문서 스캔 (cunning_document_scanner_plus)

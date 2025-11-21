@@ -413,6 +413,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
       // This allows users to apply filters during scanning
       final scannedImages = await CunningDocumentScanner.getPictures(
         mode: ScannerMode.full, // Enable AI Enhance + Clean features
+        noOfPages: 100, // Allow multiple pages (user taps Done when finished)
       ) ?? [];
 
       if (!mounted) return;

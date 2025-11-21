@@ -65,6 +65,7 @@ class _EditScreenState extends State<EditScreen> {
     try {
       final newImages = await CunningDocumentScanner.getPictures(
         mode: ScannerMode.full, // Enable AI Enhance + Clean features
+        noOfPages: 100, // Allow multiple pages (user taps Done when finished)
       ) ?? [];
 
       if (newImages.isNotEmpty) {
@@ -431,21 +432,23 @@ class _EditScreenState extends State<EditScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
+            Icon(
               LucideIcons.imageOff,
-              size: 120,
-              color: AppColors.textHint,
+              size: 64,
+              color: AppColors.textHint.withValues(alpha: 0.5),
             ),
-            const SizedBox(height: AppSpacing.lg),
-            const Text(
-              'No images added yet',
-              style: AppTextStyles.h2,
-            ),
-            const SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.md),
             Text(
-              'Tap "Add More" below to add images',
+              'No images added yet',
               style: AppTextStyles.bodyMedium.copyWith(
                 color: AppColors.textSecondary,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              'Tap "Add More" to start',
+              style: AppTextStyles.caption.copyWith(
+                color: AppColors.textHint,
               ),
             ),
           ],
@@ -514,62 +517,32 @@ class _EditScreenState extends State<EditScreen> {
             ),
           ),
 
-          // Page number
+          // Page number badge (shadcn style)
           Positioned(
             top: AppSpacing.sm,
             left: AppSpacing.sm,
-            child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.sm,
-                vertical: AppSpacing.xs,
-              ),
-              decoration: BoxDecoration(
-                color: AppColors.primary,
-                borderRadius: BorderRadius.circular(AppRadius.sm),
-              ),
-              child: Text(
-                '${index + 1}',
-                style: AppTextStyles.caption.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+            child: ShadBadge(
+              child: Text('${index + 1}'),
             ),
           ),
 
-          // Delete button (overlapping corner like CSS absolute + z-index)
+          // Delete button (red circular style)
           Positioned(
-            top: -8, // Negative offset to overlap outside card
-            right: -8, // Negative offset to overlap outside card
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: () => _deleteImage(index),
-                borderRadius: BorderRadius.circular(AppRadius.round),
-                child: Container(
-                  width: 32,
-                  height: 32,
-                  decoration: BoxDecoration(
-                    color: AppColors.error,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.4),
-                        blurRadius: 6,
-                        spreadRadius: 1,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                    border: Border.all(
-                      color: Colors.white,
-                      width: 2,
-                    ),
-                  ),
-                  child: const Icon(
-                    LucideIcons.x,
-                    color: Colors.white,
-                    size: 18,
-                  ),
+            top: -6,
+            right: -6,
+            child: GestureDetector(
+              onTap: () => _deleteImage(index),
+              child: Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: AppColors.error,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  LucideIcons.x,
+                  color: Colors.white,
+                  size: 18,
                 ),
               ),
             ),
@@ -661,46 +634,29 @@ class _EditScreenState extends State<EditScreen> {
     required String label,
     required VoidCallback onPressed,
   }) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onPressed,
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        child: Container(
-          padding: const EdgeInsets.symmetric(
-            vertical: AppSpacing.sm + 4,
-            horizontal: AppSpacing.xs,
+    return ShadButton.outline(
+      onPressed: onPressed,
+      height: 64,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            icon,
+            size: 22,
           ),
-          decoration: BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.circular(AppRadius.md),
-            border: Border.all(
-              color: AppColors.textSecondary.withValues(alpha: 0.2),
-              width: 1,
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
             ),
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                icon,
-                size: 28,
-                color: AppColors.primary,
-              ),
-              const SizedBox(height: AppSpacing.xs),
-              Text(
-                label,
-                style: AppTextStyles.caption.copyWith(
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.textPrimary,
-                ),
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
-        ),
+        ],
       ),
     );
   }

@@ -1,13 +1,25 @@
 import 'dart:io';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:elegant_notification/elegant_notification.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/app_text_styles.dart';
 
-/// Full screen image viewer with zoom, download and share
+/// Filter type for document enhancement
+enum ImageFilterType {
+  original,
+  grayscale,
+  highContrast,
+  brighten,
+  document,
+}
+
+/// Full screen image viewer with zoom, filters, download and share
 class FullScreenImageViewer extends StatefulWidget {
   final List<String> imagePaths;
   final int initialPage;
@@ -26,12 +38,66 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
   late PageController _pageController;
   late int _currentPage;
   bool _showControls = true;
-  final GlobalKey<ScaffoldMessengerState> _messengerKey = GlobalKey<ScaffoldMessengerState>();
+  ImageFilterType _currentFilter = ImageFilterType.original;
 
-  void _showSnackBar(String message) {
-    _messengerKey.currentState?.showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+  void _showToast(String message, {bool isError = false}) {
+    if (isError) {
+      ElegantNotification.error(
+        title: Text(
+          'Error',
+          style: AppTextStyles.bodyMedium.copyWith(
+            fontWeight: FontWeight.w600,
+            color: AppColors.error,
+          ),
+        ),
+        description: Text(
+          message,
+          style: AppTextStyles.caption.copyWith(
+            color: AppColors.textSecondary,
+          ),
+        ),
+        width: 280,
+        height: 60,
+        toastDuration: const Duration(seconds: 3),
+        showProgressIndicator: false,
+        displayCloseButton: false,
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        background: AppColors.surface,
+        shadow: BoxShadow(
+          color: Colors.black.withValues(alpha: 0.1),
+          blurRadius: 8,
+          offset: const Offset(0, 2),
+        ),
+      ).show(context);
+    } else {
+      ElegantNotification.success(
+        title: Text(
+          'Saved',
+          style: AppTextStyles.bodyMedium.copyWith(
+            fontWeight: FontWeight.w600,
+            color: AppColors.primary,
+          ),
+        ),
+        description: Text(
+          message,
+          style: AppTextStyles.caption.copyWith(
+            color: AppColors.textSecondary,
+          ),
+        ),
+        width: 280,
+        height: 60,
+        toastDuration: const Duration(seconds: 3),
+        showProgressIndicator: false,
+        displayCloseButton: false,
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        background: AppColors.surface,
+        shadow: BoxShadow(
+          color: Colors.black.withValues(alpha: 0.1),
+          blurRadius: 8,
+          offset: const Offset(0, 2),
+        ),
+      ).show(context);
+    }
   }
 
   @override
@@ -47,6 +113,110 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
     super.dispose();
   }
 
+  /// Get color matrix for filter
+  ColorFilter? _getColorFilter() {
+    switch (_currentFilter) {
+      case ImageFilterType.original:
+        return null;
+      case ImageFilterType.grayscale:
+        return const ColorFilter.matrix(<double>[
+          0.2126, 0.7152, 0.0722, 0, 0,
+          0.2126, 0.7152, 0.0722, 0, 0,
+          0.2126, 0.7152, 0.0722, 0, 0,
+          0, 0, 0, 1, 0,
+        ]);
+      case ImageFilterType.highContrast:
+        return const ColorFilter.matrix(<double>[
+          1.5, 0, 0, 0, -40,
+          0, 1.5, 0, 0, -40,
+          0, 0, 1.5, 0, -40,
+          0, 0, 0, 1, 0,
+        ]);
+      case ImageFilterType.brighten:
+        return const ColorFilter.matrix(<double>[
+          1, 0, 0, 0, 30,
+          0, 1, 0, 0, 30,
+          0, 0, 1, 0, 30,
+          0, 0, 0, 1, 0,
+        ]);
+      case ImageFilterType.document:
+        // High contrast + slight brightness for document scanning
+        return const ColorFilter.matrix(<double>[
+          1.8, 0, 0, 0, -60,
+          0, 1.8, 0, 0, -60,
+          0, 0, 1.8, 0, -60,
+          0, 0, 0, 1, 0,
+        ]);
+    }
+  }
+
+  /// Save filtered image
+  Future<void> _saveFilteredImage() async {
+    try {
+      final imagePath = widget.imagePaths[_currentPage];
+
+      if (_currentFilter == ImageFilterType.original) {
+        // Save original directly
+        final result = await ImageGallerySaverPlus.saveFile(
+          imagePath,
+          name: 'Scannie_${DateTime.now().millisecondsSinceEpoch}',
+        );
+        final success = result['isSuccess'] == true;
+        _showToast(success ? 'Image saved to Photos' : 'Failed to save image', isError: !success);
+      } else {
+        // Apply filter and save
+        final imageFile = File(imagePath);
+        final imageBytes = await imageFile.readAsBytes();
+        final codec = await ui.instantiateImageCodec(imageBytes);
+        final frame = await codec.getNextFrame();
+        final image = frame.image;
+
+        // Create filtered image
+        final recorder = ui.PictureRecorder();
+        final canvas = Canvas(recorder);
+        final paint = Paint();
+
+        final colorFilter = _getColorFilter();
+        if (colorFilter != null) {
+          paint.colorFilter = colorFilter;
+        }
+
+        canvas.drawImage(image, Offset.zero, paint);
+        final picture = recorder.endRecording();
+        final filteredImage = await picture.toImage(image.width, image.height);
+
+        // Convert to bytes
+        final byteData = await filteredImage.toByteData(format: ui.ImageByteFormat.png);
+        if (byteData == null) {
+          _showToast('Failed to process image');
+          return;
+        }
+
+        final pngBytes = byteData.buffer.asUint8List();
+
+        // Save to temp file first
+        final tempDir = await getTemporaryDirectory();
+        final tempFile = File('${tempDir.path}/filtered_${DateTime.now().millisecondsSinceEpoch}.png');
+        await tempFile.writeAsBytes(pngBytes);
+
+        // Save to gallery
+        final result = await ImageGallerySaverPlus.saveFile(
+          tempFile.path,
+          name: 'Scannie_${DateTime.now().millisecondsSinceEpoch}',
+        );
+
+        // Clean up temp file
+        await tempFile.delete();
+
+        final success = result['isSuccess'] == true;
+        _showToast(success ? 'Filtered image saved to Photos' : 'Failed to save image');
+      }
+    } catch (e) {
+      debugPrint('Error saving filtered image: $e');
+      _showToast('Failed to save image: $e');
+    }
+  }
+
   /// Download current image to device
   Future<void> _downloadCurrentImage() async {
     try {
@@ -54,7 +224,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
       final imageFile = File(imagePath);
 
       if (!imageFile.existsSync()) {
-        _showSnackBar('Image file not found');
+        _showToast('Image file not found');
         return;
       }
 
@@ -65,12 +235,12 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
       );
 
       final success = result['isSuccess'] == true;
-      _showSnackBar(success ? 'Image saved to Photos' : 'Failed to save image');
+      _showToast(success ? 'Image saved to Photos' : 'Failed to save image');
 
       debugPrint('Image saved to gallery: $result');
     } catch (e) {
       debugPrint('Error saving image: $e');
-      _showSnackBar('Failed to save image: $e');
+      _showToast('Failed to save image: $e');
     }
   }
 
@@ -81,7 +251,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
       final imageFile = File(imagePath);
 
       if (!imageFile.existsSync()) {
-        _showSnackBar('Image file not found');
+        _showToast('Image file not found');
         return;
       }
 
@@ -93,7 +263,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
       );
     } catch (e) {
       debugPrint('Error sharing image: $e');
-      _showSnackBar('Failed to share image: $e');
+      _showToast('Failed to share image: $e');
     }
   }
 
@@ -130,6 +300,41 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
       );
     }
 
+    Widget imageWidget = Image.file(
+      imageFile,
+      fit: BoxFit.contain,
+      errorBuilder: (context, error, stackTrace) {
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(
+                LucideIcons.circleAlert,
+                size: 120,
+                color: Colors.white54,
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              Text(
+                'Failed to load image',
+                style: AppTextStyles.h2.copyWith(
+                  color: Colors.white54,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
+    // Apply color filter if not original
+    final colorFilter = _getColorFilter();
+    if (colorFilter != null) {
+      imageWidget = ColorFiltered(
+        colorFilter: colorFilter,
+        child: imageWidget,
+      );
+    }
+
     return Container(
       margin: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
@@ -138,30 +343,49 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(AppRadius.sm),
-        child: Image.file(
-          imageFile,
-          fit: BoxFit.contain,
-          errorBuilder: (context, error, stackTrace) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(
-                    LucideIcons.circleAlert,
-                    size: 120,
-                    color: Colors.white54,
-                  ),
-                  const SizedBox(height: AppSpacing.lg),
-                  Text(
-                    'Failed to load image',
-                    style: AppTextStyles.h2.copyWith(
-                      color: Colors.white54,
-                    ),
-                  ),
-                ],
+        child: imageWidget,
+      ),
+    );
+  }
+
+  Widget _buildFilterButton(ImageFilterType filter, String label, IconData icon) {
+    final isSelected = _currentFilter == filter;
+    return GestureDetector(
+      onTap: () => setState(() => _currentFilter = filter),
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.sm,
+          vertical: AppSpacing.xs,
+        ),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? Colors.white.withValues(alpha: 0.2)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(AppRadius.sm),
+          border: Border.all(
+            color: isSelected
+                ? Colors.white.withValues(alpha: 0.5)
+                : Colors.transparent,
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              color: isSelected ? Colors.white : Colors.white70,
+              size: 20,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: TextStyle(
+                color: isSelected ? Colors.white : Colors.white70,
+                fontSize: 10,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
               ),
-            );
-          },
+            ),
+          ],
         ),
       ),
     );
@@ -169,11 +393,9 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
 
   @override
   Widget build(BuildContext context) {
-    return ScaffoldMessenger(
-      key: _messengerKey,
-      child: Scaffold(
-        backgroundColor: Colors.black,
-        body: SafeArea(
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: SafeArea(
         child: Stack(
           children: [
             // Page viewer with zoom
@@ -249,58 +471,83 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                 ),
               ),
 
-              // Page indicator
+              // Bottom bar with filters and save
               Positioned(
-                bottom: AppSpacing.xl,
+                bottom: 0,
                 left: 0,
                 right: 0,
-                child: Center(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.lg,
-                      vertical: AppSpacing.sm,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.6),
-                      borderRadius: BorderRadius.circular(AppRadius.round),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: const Icon(LucideIcons.chevronLeft, color: Colors.white),
-                          onPressed: _currentPage > 0
-                              ? () => _pageController.previousPage(
-                                    duration: const Duration(milliseconds: 300),
-                                    curve: Curves.easeInOut,
-                                  )
-                              : null,
-                        ),
-                        Text(
-                          '${_currentPage + 1} / ${widget.imagePaths.length}',
-                          style: AppTextStyles.bodyMedium.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        IconButton(
-                          icon: const Icon(LucideIcons.chevronRight, color: Colors.white),
-                          onPressed: _currentPage < widget.imagePaths.length - 1
-                              ? () => _pageController.nextPage(
-                                    duration: const Duration(milliseconds: 300),
-                                    curve: Curves.easeInOut,
-                                  )
-                              : null,
-                        ),
+                child: Container(
+                  padding: const EdgeInsets.all(AppSpacing.md),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
+                      colors: [
+                        Colors.black.withValues(alpha: 0.8),
+                        Colors.transparent,
                       ],
                     ),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Filter options
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            _buildFilterButton(
+                              ImageFilterType.original,
+                              'Original',
+                              LucideIcons.image,
+                            ),
+                            const SizedBox(width: AppSpacing.md),
+                            _buildFilterButton(
+                              ImageFilterType.grayscale,
+                              'B&W',
+                              LucideIcons.contrast,
+                            ),
+                            const SizedBox(width: AppSpacing.md),
+                            _buildFilterButton(
+                              ImageFilterType.highContrast,
+                              'Contrast',
+                              LucideIcons.sunDim,
+                            ),
+                            const SizedBox(width: AppSpacing.md),
+                            _buildFilterButton(
+                              ImageFilterType.brighten,
+                              'Brighten',
+                              LucideIcons.sun,
+                            ),
+                            const SizedBox(width: AppSpacing.md),
+                            _buildFilterButton(
+                              ImageFilterType.document,
+                              'Document',
+                              LucideIcons.fileText,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+                      // Save button
+                      SizedBox(
+                        width: double.infinity,
+                        child: ShadButton(
+                          onPressed: _saveFilteredImage,
+                          leading: const Icon(LucideIcons.save, size: 18, color: Colors.black),
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.black,
+                          child: const Text('Save with Filter'),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
             ],
           ],
         ),
-      ),
       ),
     );
   }
