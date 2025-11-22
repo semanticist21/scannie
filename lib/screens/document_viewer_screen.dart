@@ -26,6 +26,7 @@ import '../widgets/common/page_card.dart';
 import '../widgets/common/quality_selector_sheet.dart';
 import '../widgets/common/rename_dialog.dart';
 import '../widgets/common/confirm_dialog.dart';
+import '../widgets/common/empty_state.dart';
 
 /// Creates ZIP archive from image paths in a separate isolate
 Future<List<int>?> _createZipArchive(List<String> imagePaths) async {
@@ -443,44 +444,10 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
   }
 
   Widget _buildEmptyState() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.xl),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 120,
-              height: 120,
-              decoration: BoxDecoration(
-                color: AppColors.textHint.withValues(alpha: 0.1),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                LucideIcons.imageOff,
-                size: 60,
-                color: AppColors.textHint,
-              ),
-            ),
-            const SizedBox(height: AppSpacing.xl),
-            Text(
-              'No pages in this document',
-              style: AppTextStyles.h3.copyWith(
-                fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
-              ),
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            Text(
-              'This document appears to be empty.\nTry editing to add new scans.',
-              style: AppTextStyles.bodyMedium.copyWith(
-                color: AppColors.textSecondary,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
+    return const EmptyState(
+      icon: LucideIcons.sparkles,
+      title: 'No pages',
+      subtitle: 'This document is empty.\nTry editing to add new scans.',
     );
   }
 

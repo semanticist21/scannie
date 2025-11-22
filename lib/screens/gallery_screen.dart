@@ -27,6 +27,7 @@ import '../widgets/common/quality_selector_sheet.dart';
 import '../widgets/common/rename_dialog.dart';
 import '../widgets/common/confirm_dialog.dart';
 import '../widgets/common/text_input_dialog.dart';
+import '../widgets/common/premium_dialog.dart';
 
 /// Creates ZIP archive from image paths in a separate isolate
 Future<List<int>?> _createZipArchiveGallery(List<String> imagePaths) async {
@@ -58,12 +59,49 @@ class _GalleryScreenState extends State<GalleryScreen> {
   List<ScanDocument> _documents = [];
   bool _isGridView = false;
   bool _isLoading = true;
+  bool _isPremium = false;
 
   @override
   void initState() {
     super.initState();
     _loadViewMode();
     _loadDocuments();
+    _loadPremiumStatus();
+  }
+
+  /// Load premium status from persistent storage
+  Future<void> _loadPremiumStatus() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final isPremium = prefs.getBool('isPremium') ?? false;
+      if (mounted) {
+        setState(() {
+          _isPremium = isPremium;
+        });
+      }
+    } catch (e) {
+      debugPrint('Failed to load premium status: $e');
+    }
+  }
+
+  /// Save premium status to persistent storage
+  Future<void> _savePremiumStatus(bool isPremium) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isPremium', isPremium);
+      if (mounted) {
+        setState(() {
+          _isPremium = isPremium;
+        });
+      }
+    } catch (e) {
+      debugPrint('Failed to save premium status: $e');
+    }
+  }
+
+  /// Check if user can add more documents (premium or no documents yet)
+  bool _canAddDocument() {
+    return _isPremium || _documents.isEmpty;
   }
 
   /// Load view mode preference from persistent storage
@@ -127,6 +165,11 @@ class _GalleryScreenState extends State<GalleryScreen> {
         title: const Text('My Scans'),
         actions: [
           IconButton(
+            icon: const Icon(LucideIcons.sparkles),
+            onPressed: () => PremiumDialog.show(context),
+            tooltip: 'Premium',
+          ),
+          IconButton(
             icon: const Icon(LucideIcons.plus),
             onPressed: _createEmptyDocument,
             tooltip: 'Create Empty Document',
@@ -165,7 +208,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
   Widget _buildEmptyState() {
     return const EmptyState(
-      icon: LucideIcons.fileText,
+      icon: LucideIcons.sparkles,
       title: 'No scans yet',
       subtitle: 'Tap the button below to start scanning',
     );
@@ -230,6 +273,12 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
   /// Create empty document with name input
   void _createEmptyDocument() {
+    // Check premium status
+    if (!_canAddDocument()) {
+      PremiumDialog.show(context, onPurchase: () => _savePremiumStatus(true));
+      return;
+    }
+
     TextInputDialog.show(
       context: context,
       title: 'Create New Document',
@@ -258,6 +307,12 @@ class _GalleryScreenState extends State<GalleryScreen> {
   }
 
   Future<void> _openCamera() async {
+    // Check premium status
+    if (!_canAddDocument()) {
+      PremiumDialog.show(context, onPurchase: () => _savePremiumStatus(true));
+      return;
+    }
+
     try {
       // Launch cunning_document_scanner_plus with filters mode
       // This allows users to apply filters during scanning
