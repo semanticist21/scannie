@@ -174,15 +174,29 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
                     ),
                   ),
 
-                  // Action button
-                  SizedBox(
-                    width: 32,
-                    height: 32,
-                    child: IconButton(
-                      padding: EdgeInsets.zero,
-                      icon: const Icon(LucideIcons.ellipsisVertical, size: 18),
-                      onPressed: () => _showContextMenu(context),
-                    ),
+                  // Action buttons
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        width: 32,
+                        height: 32,
+                        child: IconButton(
+                          padding: EdgeInsets.zero,
+                          icon: const Icon(LucideIcons.download, size: 18),
+                          onPressed: () => _showExportOptions(context),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 32,
+                        height: 32,
+                        child: IconButton(
+                          padding: EdgeInsets.zero,
+                          icon: const Icon(LucideIcons.ellipsisVertical, size: 18),
+                          onPressed: () => _showContextMenu(context),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -190,6 +204,35 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
           ),
         ),
       ),
+    );
+  }
+
+  void _showExportOptions(BuildContext context) {
+    final items = <ContextMenuItem>[
+      if (widget.onSavePdf != null)
+        ContextMenuItem(
+          icon: LucideIcons.download,
+          label: 'Save PDF',
+          onTap: () {
+            Navigator.pop(context);
+            widget.onSavePdf?.call();
+          },
+        ),
+      if (widget.onShare != null)
+        ContextMenuItem(
+          icon: LucideIcons.share2,
+          label: 'Share PDF',
+          onTap: () {
+            Navigator.pop(context);
+            widget.onShare?.call();
+          },
+        ),
+    ];
+
+    ContextMenuSheet.show(
+      context: context,
+      title: 'Export',
+      items: items,
     );
   }
 
@@ -211,26 +254,6 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
           onTap: () {
             Navigator.pop(context);
             widget.onEdit?.call();
-          },
-        ),
-      if (widget.onSavePdf != null)
-        ContextMenuItem(
-          icon: LucideIcons.download,
-          label: 'Save PDF',
-          color: AppColors.primary,
-          onTap: () {
-            Navigator.pop(context);
-            widget.onSavePdf?.call();
-          },
-        ),
-      if (widget.onShare != null)
-        ContextMenuItem(
-          icon: LucideIcons.share2,
-          label: 'Share PDF',
-          color: AppColors.primary,
-          onTap: () {
-            Navigator.pop(context);
-            widget.onShare?.call();
           },
         ),
       if (widget.onDelete != null)

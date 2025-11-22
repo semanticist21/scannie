@@ -137,6 +137,11 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
             tooltip: _isGridView ? 'List View' : 'Grid View',
           ),
           IconButton(
+            icon: const Icon(LucideIcons.download),
+            onPressed: _showExportOptions,
+            tooltip: 'Export PDF',
+          ),
+          IconButton(
             icon: const Icon(LucideIcons.ellipsisVertical),
             onPressed: _showOptions,
           ),
@@ -401,6 +406,33 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
     );
   }
 
+  void _showExportOptions() {
+    final items = <ContextMenuItem>[
+      ContextMenuItem(
+        icon: LucideIcons.download,
+        label: 'Save PDF',
+        onTap: () {
+          Navigator.pop(context);
+          _savePdfLocally();
+        },
+      ),
+      ContextMenuItem(
+        icon: LucideIcons.share2,
+        label: 'Share PDF',
+        onTap: () {
+          Navigator.pop(context);
+          _exportToPdf();
+        },
+      ),
+    ];
+
+    ContextMenuSheet.show(
+      context: context,
+      title: 'Export',
+      items: items,
+    );
+  }
+
   void _showOptions() {
     final items = <ContextMenuItem>[
       ContextMenuItem(
@@ -425,24 +457,6 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
         onTap: () {
           Navigator.pop(context);
           _showQualitySelector();
-        },
-      ),
-      ContextMenuItem(
-        icon: LucideIcons.download,
-        label: 'Save PDF',
-        color: AppColors.primary,
-        onTap: () {
-          Navigator.pop(context);
-          _savePdfLocally();
-        },
-      ),
-      ContextMenuItem(
-        icon: LucideIcons.share2,
-        label: 'Share PDF',
-        color: AppColors.primary,
-        onTap: () {
-          Navigator.pop(context);
-          _exportToPdf();
         },
       ),
       ContextMenuItem(
