@@ -125,6 +125,97 @@ ElegantNotification.success(...).show(context);
 ElegantNotification.error(...).show(context);
 ```
 
+## 다이얼로그 (DialogBackground)
+
+**필수**: 모든 다이얼로그는 `ndialog` 패키지의 `DialogBackground`를 사용합니다.
+
+### 사용 패턴
+
+```dart
+import 'package:ndialog/ndialog.dart';
+
+void _showConfirmDialog() {
+  DialogBackground(
+    blur: 6,
+    dismissable: true,
+    barrierColor: Colors.black.withValues(alpha: 0.4),
+    dialog: Material(
+      color: Colors.transparent,
+      child: Center(
+        child: Container(
+          width: 320,
+          margin: const EdgeInsets.all(AppSpacing.lg),
+          padding: const EdgeInsets.all(AppSpacing.lg),
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(AppRadius.lg),
+            border: Border.all(color: AppColors.border),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.08),
+                blurRadius: 24,
+                offset: const Offset(0, 12),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Dialog Title', style: AppTextStyles.h3),
+              const SizedBox(height: AppSpacing.xs),
+              Text(
+                'Dialog message content',
+                style: AppTextStyles.bodyMedium.copyWith(
+                  color: AppColors.textSecondary,
+                ),
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ShadButton.outline(
+                    child: const Text('Cancel'),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  ShadButton(
+                    child: const Text('Confirm'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      // 액션 수행
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  ).show(context, transitionType: DialogTransitionType.Shrink);
+}
+```
+
+### 버튼 스타일 가이드
+
+- **일반 확인**: `ShadButton` (Primary)
+- **취소**: `ShadButton.outline`
+- **삭제/위험 액션**: `ShadButton.destructive`
+
+### 금지 사항
+
+```dart
+// ❌ WRONG - 기본 AlertDialog 사용 금지
+showDialog(
+  context: context,
+  builder: (context) => AlertDialog(...),
+);
+
+// ✅ CORRECT - DialogBackground 사용
+DialogBackground(...).show(context, transitionType: DialogTransitionType.Shrink);
+```
+
 ## Flutter API 주의사항
 
 ### 🚫 절대 사용 금지 (Deprecated in Flutter 3.27+)

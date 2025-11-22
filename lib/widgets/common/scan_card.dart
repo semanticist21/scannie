@@ -182,15 +182,16 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      SizedBox(
-                        width: 32,
-                        height: 32,
-                        child: IconButton(
-                          padding: EdgeInsets.zero,
-                          icon: const Icon(LucideIcons.download, size: 18),
-                          onPressed: () => _showExportOptions(context),
+                      if (widget.document.imagePaths.isNotEmpty)
+                        SizedBox(
+                          width: 32,
+                          height: 32,
+                          child: IconButton(
+                            padding: EdgeInsets.zero,
+                            icon: const Icon(LucideIcons.download, size: 18),
+                            onPressed: () => _showExportOptions(context),
+                          ),
                         ),
-                      ),
                       SizedBox(
                         width: 32,
                         height: 32,

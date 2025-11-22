@@ -667,10 +667,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
       debugPrint('PDF saved to MediaStore: ${saveInfo?.uri}');
 
-      if (!mounted) return;
-      AppToast.show(context,'PDF saved to Downloads');
-
       // Open file manager to show the downloaded file
+      if (!mounted) return;
       await openFileManager();
     } catch (e) {
       debugPrint('Error saving PDF: $e');
@@ -728,36 +726,96 @@ class _GalleryScreenState extends State<GalleryScreen> {
   }
 
   /// Save individual images to gallery
-  Future<void> _saveImagesDocument(ScanDocument document) async {
-    if (!mounted) return;
-    AppToast.info(context, 'Saving images...');
+  void _saveImagesDocument(ScanDocument document) {
+    final imageCount = document.imagePaths.length;
 
-    try {
-      int savedCount = 0;
+    DialogBackground(
+      blur: 6,
+      dismissable: true,
+      barrierColor: Colors.black.withValues(alpha: 0.4),
+      dialog: Material(
+        color: Colors.transparent,
+        child: Center(
+          child: Container(
+            width: 320,
+            margin: const EdgeInsets.all(AppSpacing.lg),
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(AppRadius.lg),
+              border: Border.all(color: AppColors.border),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.08),
+                  blurRadius: 24,
+                  offset: const Offset(0, 12),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Download Images',
+                  style: AppTextStyles.h3,
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  'Download $imageCount ${imageCount == 1 ? 'image' : 'images'} to gallery?',
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ShadButton.outline(
+                      child: const Text('Cancel'),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    ShadButton(
+                      child: const Text('Download'),
+                      onPressed: () async {
+                        Navigator.of(context).pop();
 
-      for (int i = 0; i < document.imagePaths.length; i++) {
-        final imageFile = File(document.imagePaths[i]);
-        if (!await imageFile.exists()) continue;
+                        if (!mounted) return;
+                        AppToast.info(context, 'Saving images...');
 
-        final result = await ImageGallerySaverPlus.saveFile(imageFile.path);
-        if (result['isSuccess'] == true) {
-          savedCount++;
-        }
-      }
+                        try {
+                          int savedCount = 0;
 
-      if (!mounted) return;
-      if (savedCount == document.imagePaths.length) {
-        AppToast.show(context, '$savedCount images saved to gallery');
-      } else if (savedCount > 0) {
-        AppToast.show(context, '$savedCount of ${document.imagePaths.length} images saved');
-      } else {
-        AppToast.show(context, 'Failed to save images', isError: true);
-      }
-    } catch (e) {
-      debugPrint('Error saving images: $e');
-      if (!mounted) return;
-      AppToast.show(context, 'Failed to save images', isError: true);
-    }
+                          for (int i = 0; i < document.imagePaths.length; i++) {
+                            final imageFile = File(document.imagePaths[i]);
+                            if (!await imageFile.exists()) continue;
+
+                            final result = await ImageGallerySaverPlus.saveFile(imageFile.path);
+                            if (result['isSuccess'] == true) {
+                              savedCount++;
+                            }
+                          }
+
+                          if (!mounted) return;
+                          if (savedCount == 0) {
+                            AppToast.show(context, 'Failed to save images', isError: true);
+                          }
+                        } catch (e) {
+                          debugPrint('Error saving images: $e');
+                          if (!mounted) return;
+                          AppToast.show(context, 'Failed to save images', isError: true);
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    ).show(context, transitionType: DialogTransitionType.Shrink);
   }
 
   void _showSearch() {

@@ -173,18 +173,20 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
       appBar: CustomAppBar(
         title: '',
         actions: [
-          IconButton(
-            icon: Icon(_isGridView ? LucideIcons.list : LucideIcons.layoutGrid),
-            onPressed: () {
-              setState(() => _isGridView = !_isGridView);
-            },
-            tooltip: _isGridView ? 'List View' : 'Grid View',
-          ),
-          IconButton(
-            icon: const Icon(LucideIcons.download),
-            onPressed: _showExportOptions,
-            tooltip: 'Export PDF',
-          ),
+          if (_imagePaths.isNotEmpty)
+            IconButton(
+              icon: Icon(_isGridView ? LucideIcons.list : LucideIcons.layoutGrid),
+              onPressed: () {
+                setState(() => _isGridView = !_isGridView);
+              },
+              tooltip: _isGridView ? 'List View' : 'Grid View',
+            ),
+          if (_imagePaths.isNotEmpty)
+            IconButton(
+              icon: const Icon(LucideIcons.download),
+              onPressed: _showExportOptions,
+              tooltip: 'Export PDF',
+            ),
           IconButton(
             icon: const Icon(LucideIcons.ellipsisVertical),
             onPressed: _showOptions,
@@ -906,10 +908,8 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
 
       debugPrint('PDF saved to MediaStore: ${saveInfo?.uri}');
 
-      if (!mounted) return;
-      AppToast.show(context,'PDF saved to Downloads');
-
       // Open file manager to show the downloaded file
+      if (!mounted) return;
       await openFileManager();
     } catch (e) {
       debugPrint('Error saving PDF: $e');
@@ -967,35 +967,95 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
   }
 
   /// Save individual images to gallery
-  Future<void> _saveImages() async {
-    if (!mounted) return;
-    AppToast.info(context, 'Saving images...');
+  void _saveImages() {
+    final imageCount = _imagePaths.length;
 
-    try {
-      int savedCount = 0;
+    DialogBackground(
+      blur: 6,
+      dismissable: true,
+      barrierColor: Colors.black.withValues(alpha: 0.4),
+      dialog: Material(
+        color: Colors.transparent,
+        child: Center(
+          child: Container(
+            width: 320,
+            margin: const EdgeInsets.all(AppSpacing.lg),
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(AppRadius.lg),
+              border: Border.all(color: AppColors.border),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.08),
+                  blurRadius: 24,
+                  offset: const Offset(0, 12),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Download Images',
+                  style: AppTextStyles.h3,
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  'Download $imageCount ${imageCount == 1 ? 'image' : 'images'} to gallery?',
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ShadButton.outline(
+                      child: const Text('Cancel'),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    ShadButton(
+                      child: const Text('Download'),
+                      onPressed: () async {
+                        Navigator.of(context).pop();
 
-      for (int i = 0; i < _imagePaths.length; i++) {
-        final imageFile = File(_imagePaths[i]);
-        if (!await imageFile.exists()) continue;
+                        if (!mounted) return;
+                        AppToast.info(context, 'Saving images...');
 
-        final result = await ImageGallerySaverPlus.saveFile(imageFile.path);
-        if (result['isSuccess'] == true) {
-          savedCount++;
-        }
-      }
+                        try {
+                          int savedCount = 0;
 
-      if (!mounted) return;
-      if (savedCount == _imagePaths.length) {
-        AppToast.show(context, '$savedCount images saved to gallery');
-      } else if (savedCount > 0) {
-        AppToast.show(context, '$savedCount of ${_imagePaths.length} images saved');
-      } else {
-        AppToast.show(context, 'Failed to save images', isError: true);
-      }
-    } catch (e) {
-      debugPrint('Error saving images: $e');
-      if (!mounted) return;
-      AppToast.show(context, 'Failed to save images', isError: true);
-    }
+                          for (int i = 0; i < _imagePaths.length; i++) {
+                            final imageFile = File(_imagePaths[i]);
+                            if (!await imageFile.exists()) continue;
+
+                            final result = await ImageGallerySaverPlus.saveFile(imageFile.path);
+                            if (result['isSuccess'] == true) {
+                              savedCount++;
+                            }
+                          }
+
+                          if (!mounted) return;
+                          if (savedCount == 0) {
+                            AppToast.show(context, 'Failed to save images', isError: true);
+                          }
+                        } catch (e) {
+                          debugPrint('Error saving images: $e');
+                          if (!mounted) return;
+                          AppToast.show(context, 'Failed to save images', isError: true);
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    ).show(context, transitionType: DialogTransitionType.Shrink);
   }
 }
