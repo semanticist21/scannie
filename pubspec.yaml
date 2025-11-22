@@ -28,6 +28,7 @@ dependencies:
   google_fonts: ^6.2.1
   flutter_image_compress: ^2.4.0
   archive: ^3.6.1
+  flutter_neumorphic_plus: ^3.5.0
 
 dev_dependencies:
   flutter_test:

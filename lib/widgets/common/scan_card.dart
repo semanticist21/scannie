@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:flutter/material.dart';
+import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import '../../models/scan_document.dart';
 import '../../theme/app_colors.dart';
@@ -18,6 +18,7 @@ class ScanCard extends StatefulWidget {
   final VoidCallback? onShare;
   final VoidCallback? onSaveZip;
   final VoidCallback? onSaveImages;
+  final VoidCallback? onQualityChange;
 
   const ScanCard({
     super.key,
@@ -30,6 +31,7 @@ class ScanCard extends StatefulWidget {
     this.onShare,
     this.onSaveZip,
     this.onSaveImages,
+    this.onQualityChange,
   });
 
   @override
@@ -116,17 +118,22 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
             ),
           ),
         ),
-        child: Container(
-          margin: const EdgeInsets.symmetric(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.md,
             vertical: AppSpacing.sm,
           ),
-          decoration: BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.circular(AppRadius.lg),
-            border: Border.all(color: AppColors.border),
-          ),
-          child: InkWell(
+          child: Neumorphic(
+            style: NeumorphicStyle(
+              depth: 3,
+              intensity: 0.5,
+              surfaceIntensity: 0.1,
+              color: AppColors.surface,
+              boxShape: NeumorphicBoxShape.roundRect(
+                BorderRadius.circular(AppRadius.lg),
+              ),
+            ),
+            child: InkWell(
             onTap: widget.onTap,
             onTapDown: _onTapDown,
             onTapUp: _onTapUp,
@@ -184,20 +191,21 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
                     children: [
                       if (widget.document.imagePaths.isNotEmpty)
                         SizedBox(
-                          width: 32,
-                          height: 32,
+                          width: 36,
+                          height: 36,
                           child: IconButton(
                             padding: EdgeInsets.zero,
-                            icon: const Icon(LucideIcons.download, size: 18),
+                            icon: const Icon(LucideIcons.download, size: 20),
                             onPressed: () => _showExportOptions(context),
                           ),
                         ),
+                      const SizedBox(width: AppSpacing.xs),
                       SizedBox(
-                        width: 32,
-                        height: 32,
+                        width: 36,
+                        height: 36,
                         child: IconButton(
                           padding: EdgeInsets.zero,
-                          icon: const Icon(LucideIcons.ellipsisVertical, size: 18),
+                          icon: const Icon(LucideIcons.ellipsisVertical, size: 20),
                           onPressed: () => _showContextMenu(context),
                         ),
                       ),
@@ -208,6 +216,7 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
             ),
           ),
         ),
+      ),
       ),
     );
   }
@@ -279,6 +288,15 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
             widget.onEdit?.call();
           },
         ),
+      if (widget.onQualityChange != null)
+        ContextMenuItem(
+          icon: LucideIcons.settings2,
+          label: 'PDF Quality (${widget.document.pdfQuality.displayName})',
+          onTap: () {
+            Navigator.pop(context);
+            widget.onQualityChange?.call();
+          },
+        ),
       if (widget.onDelete != null)
         ContextMenuItem(
           icon: LucideIcons.trash2,
@@ -311,12 +329,21 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
           fit: BoxFit.cover,
           cacheWidth: 250,
           errorBuilder: (context, error, stackTrace) {
-            return Container(
-              color: AppColors.primaryLight.withValues(alpha: 0.15),
-              child: const Icon(
-                LucideIcons.fileText,
-                color: AppColors.primary,
-                size: 36,
+            return Neumorphic(
+              style: NeumorphicStyle(
+                depth: 2,
+                intensity: 0.6,
+                color: const Color(0xFFE0E5EC),
+                boxShape: NeumorphicBoxShape.roundRect(
+                  BorderRadius.circular(AppRadius.sm),
+                ),
+              ),
+              child: const Center(
+                child: Icon(
+                  LucideIcons.fileText,
+                  color: Color(0xFF8E9AAF),
+                  size: 28,
+                ),
               ),
             );
           },
@@ -325,12 +352,21 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
     }
 
     // Fallback to icon if no images or file doesn't exist
-    return Container(
-      color: AppColors.primaryLight.withValues(alpha: 0.15),
-      child: const Icon(
-        LucideIcons.fileText,
-        color: AppColors.primary,
-        size: 36,
+    return Neumorphic(
+      style: NeumorphicStyle(
+        depth: 2,
+        intensity: 0.6,
+        color: const Color(0xFFE0E5EC),
+        boxShape: NeumorphicBoxShape.roundRect(
+          BorderRadius.circular(AppRadius.sm),
+        ),
+      ),
+      child: const Center(
+        child: Icon(
+          LucideIcons.fileText,
+          color: Color(0xFF8E9AAF),
+          size: 28,
+        ),
       ),
     );
   }

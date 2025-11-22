@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:ndialog/ndialog.dart';
 import 'package:cunning_document_scanner_plus/cunning_document_scanner_plus.dart';
@@ -24,6 +25,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:archive/archive.dart';
 import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import '../utils/app_toast.dart';
+import '../widgets/common/quality_selector_sheet.dart';
 
 /// Creates ZIP archive from image paths in a separate isolate
 Future<List<int>?> _createZipArchiveGallery(List<String> imagePaths) async {
@@ -144,26 +146,13 @@ class _GalleryScreenState extends State<GalleryScreen> {
           ),
         ],
       ),
+      backgroundColor: const Color(0xFFE0E5EC),
       body: SizedBox.expand(
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                AppColors.background,
-                AppColors.primaryLight.withValues(alpha: 0.1),
-                AppColors.background,
-              ],
-              stops: const [0.0, 0.5, 1.0],
-            ),
-          ),
-          child: _isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : _documents.isEmpty
-                  ? _buildEmptyState()
-                  : _buildDocumentList(),
-        ),
+        child: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : _documents.isEmpty
+                ? _buildEmptyState()
+                : _buildDocumentList(),
       ),
       floatingActionButton: ShadButton(
         onPressed: _openCamera,
@@ -204,6 +193,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
           onShare: () => _sharePdfDocument(document),
           onSaveZip: () => _saveZipDocument(document),
           onSaveImages: () => _saveImagesDocument(document),
+          onQualityChange: () => _showQualitySelector(document),
         );
       },
     );
@@ -224,6 +214,14 @@ class _GalleryScreenState extends State<GalleryScreen> {
         return DocumentGridCard(
           document: document,
           onTap: () => _openDocument(document),
+          onEdit: () => _editDocumentName(document),
+          onEditScan: () => _editScan(document),
+          onDelete: () => _deleteDocument(document),
+          onSavePdf: () => _savePdfDocument(document),
+          onShare: () => _sharePdfDocument(document),
+          onSaveZip: () => _saveZipDocument(document),
+          onSaveImages: () => _saveImagesDocument(document),
+          onQualityChange: () => _showQualitySelector(document),
         );
       },
     );
@@ -570,6 +568,41 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
   void _sharePdfDocument(ScanDocument document) {
     _exportToPdf(document);
+  }
+
+  /// Show quality selector for document
+  void _showQualitySelector(ScanDocument document) async {
+    // Calculate total file size for the quality selector
+    int totalSize = 0;
+    for (final imagePath in document.imagePaths) {
+      final file = File(imagePath);
+      if (await file.exists()) {
+        totalSize += await file.length();
+      }
+    }
+
+    if (!mounted) return;
+
+    QualitySelectorSheet.show(
+      context: context,
+      currentQuality: document.pdfQuality,
+      totalFileSize: totalSize,
+      onQualitySelected: (quality) async {
+        if (quality == document.pdfQuality) return;
+
+        // Update document with new quality
+        final updatedDoc = document.copyWith(pdfQuality: quality);
+
+        setState(() {
+          final index = _documents.indexWhere((d) => d.id == document.id);
+          if (index != -1) {
+            _documents[index] = updatedDoc;
+          }
+        });
+
+        await _saveDocuments();
+      },
+    );
   }
 
   /// Edit scan - navigate to EditScreen to add/delete/reorder images
