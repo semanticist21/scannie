@@ -9,6 +9,7 @@ class EmptyState extends StatelessWidget {
   final String title;
   final String subtitle;
   final double iconSize;
+  final double verticalOffset;
 
   const EmptyState({
     super.key,
@@ -16,16 +17,19 @@ class EmptyState extends StatelessWidget {
     required this.title,
     required this.subtitle,
     this.iconSize = 60,
+    this.verticalOffset = 0,
   });
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.xl),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+      child: Transform.translate(
+        offset: Offset(0, verticalOffset),
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.xl),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
             Container(
               width: 120,
               height: 120,
@@ -55,7 +59,8 @@ class EmptyState extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-          ],
+            ],
+          ),
         ),
       ),
     );

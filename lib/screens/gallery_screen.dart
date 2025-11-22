@@ -144,7 +144,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
-        AppToast.show(context,'Failed to load documents: $e', isError: true);
+        AppToast.show(context, 'Failed to load documents: $e', isError: true);
       }
     }
   }
@@ -212,6 +212,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
       icon: LucideIcons.sparkles,
       title: 'No scans yet',
       subtitle: 'Tap the button below to start scanning',
+      verticalOffset: -40,
     );
   }
 
@@ -357,10 +358,10 @@ class _GalleryScreenState extends State<GalleryScreen> {
       }
     } on PlatformException catch (e) {
       if (!mounted) return;
-      AppToast.show(context,'Scan failed: ${e.message}', isError: true);
+      AppToast.show(context, 'Scan failed: ${e.message}', isError: true);
     } catch (e) {
       if (!mounted) return;
-      AppToast.show(context,'Scan failed: $e', isError: true);
+      AppToast.show(context, 'Scan failed: $e', isError: true);
     }
   }
 
@@ -486,7 +487,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
       });
       await _saveDocuments();
       if (!mounted) return;
-      AppToast.show(context,'Scan updated successfully');
+      AppToast.show(context, 'Scan updated successfully');
     }
   }
 
@@ -519,7 +520,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
     } catch (e) {
       debugPrint('Error exporting PDF: $e');
       if (!mounted) return;
-      AppToast.show(context,'Failed to export PDF', isError: true);
+      AppToast.show(context, 'Failed to export PDF', isError: true);
     }
   }
 
@@ -566,7 +567,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
     } catch (e) {
       debugPrint('Error saving PDF: $e');
       if (!mounted) return;
-      AppToast.show(context,'Failed to save PDF', isError: true);
+      AppToast.show(context, 'Failed to save PDF', isError: true);
     }
   }
 
@@ -577,7 +578,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
     try {
       // Create archive in separate isolate
-      final zipData = await compute(_createZipArchiveGallery, document.imagePaths);
+      final zipData =
+          await compute(_createZipArchiveGallery, document.imagePaths);
       if (zipData == null) {
         if (!mounted) return;
         AppToast.show(context, 'Failed to create ZIP', isError: true);
@@ -625,7 +627,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
     ConfirmDialog.show(
       context: context,
       title: 'Download Images',
-      message: 'Download $imageCount ${imageCount == 1 ? 'image' : 'images'} to gallery?',
+      message:
+          'Download $imageCount ${imageCount == 1 ? 'image' : 'images'} to gallery?',
       confirmText: 'Download',
       onConfirm: () async {
         try {
@@ -660,5 +663,4 @@ class _GalleryScreenState extends State<GalleryScreen> {
       delegate: DocumentSearchDelegate(_documents),
     );
   }
-
 }
