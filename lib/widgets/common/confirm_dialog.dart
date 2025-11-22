@@ -82,7 +82,7 @@ class ConfirmDialog {
           ),
         ),
       ),
-    ).show(context, transitionType: DialogTransitionType.Shrink);
+    ).show(context, transitionType: DialogTransitionType.Shrink, dismissable: true);
   }
 
   /// Show a confirmation dialog and return true if confirmed, false if cancelled
@@ -164,7 +164,7 @@ class ConfirmDialog {
           ),
         ),
       ),
-    ).show(context, transitionType: DialogTransitionType.Shrink);
+    ).show(context, transitionType: DialogTransitionType.Shrink, dismissable: true);
 
     return completer.future;
   }

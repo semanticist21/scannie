@@ -34,12 +34,12 @@ class DocumentInfoHeader extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.1),
+                color: AppColors.textHint.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(AppRadius.sm),
               ),
               child: Icon(
                 LucideIcons.fileText,
-                color: AppColors.primary,
+                color: AppColors.textHint,
                 size: 20,
               ),
             ),

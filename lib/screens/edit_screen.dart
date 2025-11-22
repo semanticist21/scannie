@@ -79,7 +79,7 @@ class _EditScreenState extends State<EditScreen> {
     } catch (e) {
       debugPrint('Error adding scans: $e');
       if (mounted) {
-        AppToast.show(context,'Failed to add scans', isError: true);
+        AppToast.show(context, 'Failed to add scans', isError: true);
       }
     } finally {
       if (mounted) {
@@ -109,7 +109,7 @@ class _EditScreenState extends State<EditScreen> {
     } catch (e) {
       debugPrint('❌ Error adding photos: $e');
       if (mounted) {
-        AppToast.show(context,'Failed to add photos', isError: true);
+        AppToast.show(context, 'Failed to add photos', isError: true);
       }
     } finally {
       if (mounted) {
@@ -162,7 +162,8 @@ class _EditScreenState extends State<EditScreen> {
   void _saveScan() async {
     // Check if there are any images
     if (_imagePaths.isEmpty) {
-      AppToast.show(context,'Please add at least one image to save', isError: true);
+      AppToast.show(context, 'Please add at least one image to save',
+          isError: true);
       return;
     }
 
@@ -196,7 +197,8 @@ class _EditScreenState extends State<EditScreen> {
     }
 
     // For new scans, show name input dialog
-    final String defaultName = 'Scan ${DateTime.now().toString().substring(0, 10)}';
+    final String defaultName =
+        'Scan ${DateTime.now().toString().substring(0, 10)}';
 
     TextInputDialog.show(
       context: context,
@@ -248,7 +250,6 @@ class _EditScreenState extends State<EditScreen> {
     debugPrint('🚨 Dialog result: $result');
     return result;
   }
-
 
   /// Handle back button press with confirmation
   Future<void> _handleBackPress() async {

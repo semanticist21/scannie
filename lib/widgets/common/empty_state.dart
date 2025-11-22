@@ -15,26 +15,37 @@ class EmptyState extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.subtitle,
-    this.iconSize = 100,
+    this.iconSize = 60,
   });
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.only(bottom: 80), // Visual center correction
+        padding: const EdgeInsets.all(AppSpacing.xl),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              icon,
-              size: iconSize,
-              color: AppColors.textHint,
+            Container(
+              width: 120,
+              height: 120,
+              decoration: BoxDecoration(
+                color: AppColors.textHint.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                icon,
+                size: iconSize,
+                color: AppColors.textHint,
+              ),
             ),
-            const SizedBox(height: AppSpacing.lg),
+            const SizedBox(height: AppSpacing.xl),
             Text(
               title,
-              style: AppTextStyles.h2,
+              style: AppTextStyles.h3.copyWith(
+                fontWeight: FontWeight.w600,
+                color: AppColors.textPrimary,
+              ),
             ),
             const SizedBox(height: AppSpacing.sm),
             Text(

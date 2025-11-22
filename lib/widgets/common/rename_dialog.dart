@@ -133,6 +133,6 @@ class RenameDialog {
           ),
         ),
       ),
-    ).show(context, transitionType: DialogTransitionType.Shrink);
+    ).show(context, transitionType: DialogTransitionType.Shrink, dismissable: true);
   }
 }
