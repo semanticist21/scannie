@@ -26,6 +26,7 @@ dependencies:
   shadcn_ui: ^0.39.7
   elegant_notification: ^2.5.1
   ndialog: ^4.5.0+1
+  google_fonts: ^6.2.1
 
 dev_dependencies:
   flutter_test:

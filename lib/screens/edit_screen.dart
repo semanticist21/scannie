@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:cunning_document_scanner_plus/cunning_document_scanner_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:ndialog/ndialog.dart';
 import 'package:reorderable_grid_view/reorderable_grid_view.dart';
 import '../models/scan_document.dart';
 import '../theme/app_colors.dart';
@@ -135,150 +137,177 @@ class _EditScreenState extends State<EditScreen> {
     final TextEditingController nameController =
         TextEditingController(text: defaultName);
 
-    showDialog(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(
-          isEditingExisting ? 'Save Changes' : 'Save Scan',
-          style: AppTextStyles.h3,
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              isEditingExisting
-                  ? 'Update the name for this scan'
-                  : 'Enter a name for this scan',
-              style: AppTextStyles.bodySmall.copyWith(
-                color: AppColors.textSecondary,
-              ),
+    DialogBackground(
+      blur: 6,
+      dismissable: true,
+      barrierColor: Colors.black.withValues(alpha: 0.4),
+      dialog: Material(
+        color: Colors.transparent,
+        child: Center(
+          child: Container(
+            width: 320,
+            margin: const EdgeInsets.all(AppSpacing.lg),
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(AppRadius.lg),
+              border: Border.all(color: AppColors.border),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.08),
+                  blurRadius: 24,
+                  offset: const Offset(0, 12),
+                ),
+              ],
             ),
-            const SizedBox(height: AppSpacing.md),
-            TextField(
-              controller: nameController,
-              autofocus: true,
-              decoration: InputDecoration(
-                hintText: 'Document name',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(AppRadius.sm),
-                  borderSide: BorderSide(color: AppColors.border),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  isEditingExisting ? 'Save Changes' : 'Save Scan',
+                  style: AppTextStyles.h3,
                 ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(AppRadius.sm),
-                  borderSide: BorderSide(color: AppColors.border),
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  isEditingExisting
+                      ? 'Update the name for this scan'
+                      : 'Enter a name for this scan',
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
                 ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(AppRadius.sm),
-                  borderSide: BorderSide(color: AppColors.primary, width: 2),
+                const SizedBox(height: AppSpacing.md),
+                ShadInput(
+                  controller: nameController,
+                  placeholder: const Text('Document name'),
+                  autofocus: true,
                 ),
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.sm,
-                  vertical: AppSpacing.sm,
+                const SizedBox(height: AppSpacing.lg),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ShadButton.outline(
+                      child: const Text('Cancel'),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    ShadButton(
+                      child: const Text('Save'),
+                      onPressed: () async {
+                        final documentName = nameController.text.trim();
+                        if (documentName.isEmpty) {
+                          _showMessage('Name cannot be empty');
+                          return;
+                        }
+
+                        Navigator.of(context).pop();
+
+                        final navigator = Navigator.of(context);
+
+                        // Create a new scan document with user-provided name
+                        // When editing, preserve the original ID and createdAt
+                        final newDocument = ScanDocument(
+                          id: _existingDocumentId ??
+                              DateTime.now().millisecondsSinceEpoch.toString(),
+                          name: documentName,
+                          createdAt: DateTime.now(), // Always update timestamp
+                          imagePaths: _imagePaths,
+                          isProcessed: true,
+                        );
+
+                        // Return to GalleryScreen
+                        if (!mounted) return;
+                        navigator.pop(newDocument);
+                      },
+                    ),
+                  ],
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadius.lg),
-          side: BorderSide(color: AppColors.border),
-        ),
-        backgroundColor: AppColors.surface,
-        actionsPadding: const EdgeInsets.fromLTRB(
-          AppSpacing.lg,
-          0,
-          AppSpacing.lg,
-          AppSpacing.lg,
-        ),
-        actions: [
-          ShadButton.outline(
-            child: const Text('Cancel'),
-            onPressed: () => Navigator.of(dialogContext).pop(),
           ),
-          ShadButton(
-            child: const Text('Save'),
-            onPressed: () async {
-              final documentName = nameController.text.trim();
-              if (documentName.isEmpty) {
-                _showMessage('Name cannot be empty');
-                return;
-              }
-
-              Navigator.of(dialogContext).pop();
-
-              final navigator = Navigator.of(context);
-
-              // Create a new scan document with user-provided name
-              // When editing, preserve the original ID and createdAt
-              final newDocument = ScanDocument(
-                id: _existingDocumentId ??
-                    DateTime.now().millisecondsSinceEpoch.toString(),
-                name: documentName,
-                createdAt: DateTime.now(), // Always update timestamp
-                imagePaths: _imagePaths,
-                isProcessed: true,
-              );
-
-              // Return to GalleryScreen
-              if (!mounted) return;
-              navigator.pop(newDocument);
-            },
-          ),
-        ],
+        ),
       ),
-    );
+    ).show(context, transitionType: DialogTransitionType.Shrink);
   }
 
   /// Show confirmation dialog before discarding changes
   Future<bool> _confirmDiscard() async {
     debugPrint('🚨 _confirmDiscard called - showing dialog');
 
-    final result = await showDialog<bool>(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(
-          'Discard Changes?',
-          style: AppTextStyles.h3,
-        ),
-        content: Text(
-          'Are you sure you want to discard this scan? All images will be lost.',
-          style: AppTextStyles.bodySmall.copyWith(
-            color: AppColors.textSecondary,
-          ),
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadius.lg),
-          side: BorderSide(color: AppColors.border),
-        ),
-        backgroundColor: AppColors.surface,
-        actionsPadding: const EdgeInsets.fromLTRB(
-          AppSpacing.lg,
-          0,
-          AppSpacing.lg,
-          AppSpacing.lg,
-        ),
-        actions: [
-          ShadButton.outline(
-            child: const Text('Cancel'),
-            onPressed: () {
-              debugPrint('🚨 User clicked Cancel');
-              Navigator.of(dialogContext).pop(false);
-            },
-          ),
-          ShadButton.destructive(
-            child: const Text('Discard'),
-            onPressed: () {
-              debugPrint('🚨 User clicked Discard');
-              Navigator.of(dialogContext).pop(true);
-            },
-          ),
-        ],
-      ),
-    );
+    final completer = Completer<bool>();
 
+    DialogBackground(
+      blur: 6,
+      dismissable: false,
+      barrierColor: Colors.black.withValues(alpha: 0.4),
+      dialog: Material(
+        color: Colors.transparent,
+        child: Center(
+          child: Container(
+            width: 320,
+            margin: const EdgeInsets.all(AppSpacing.lg),
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(AppRadius.lg),
+              border: Border.all(color: AppColors.border),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.08),
+                  blurRadius: 24,
+                  offset: const Offset(0, 12),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Discard Changes?',
+                  style: AppTextStyles.h3,
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  'Are you sure you want to discard this scan? All images will be lost.',
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ShadButton.outline(
+                      child: const Text('Cancel'),
+                      onPressed: () {
+                        debugPrint('🚨 User clicked Cancel');
+                        Navigator.of(context).pop();
+                        completer.complete(false);
+                      },
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    ShadButton.destructive(
+                      child: const Text('Discard'),
+                      onPressed: () {
+                        debugPrint('🚨 User clicked Discard');
+                        Navigator.of(context).pop();
+                        completer.complete(true);
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    ).show(context, transitionType: DialogTransitionType.Shrink);
+
+    final result = await completer.future;
     debugPrint('🚨 Dialog result: $result');
-    return result ?? false;
+    return result;
   }
 
   /// Save PDF to Downloads folder and open file manager
@@ -534,21 +563,21 @@ class _EditScreenState extends State<EditScreen> {
   }
 
   Widget _buildImageTile(int index, String imagePath) {
-    return Card(
+    return Container(
       key: ValueKey(imagePath),
-      elevation: 4,
-      shape: RoundedRectangleBorder(
+      decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppRadius.md),
+        border: Border.all(color: AppColors.border),
       ),
       child: Stack(
-        clipBehavior: Clip.none, // Allow overflow like CSS overflow: visible
+        clipBehavior: Clip.none,
         fit: StackFit.expand,
         children: [
           // Image (tappable)
           GestureDetector(
             onTap: () => _viewImage(imagePath, index),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(AppRadius.md),
+              borderRadius: BorderRadius.circular(AppRadius.md - 1),
               child: Image.file(
                 File(imagePath),
                 fit: BoxFit.cover,
@@ -556,55 +585,54 @@ class _EditScreenState extends State<EditScreen> {
             ),
           ),
 
-          // Gradient overlay
+          // Page number badge
           Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
+            top: AppSpacing.sm,
+            left: AppSpacing.sm,
             child: Container(
-              height: 60,
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.sm,
+                vertical: AppSpacing.xs,
+              ),
               decoration: BoxDecoration(
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(AppRadius.md),
-                ),
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.black.withValues(alpha: 0.6),
-                    Colors.transparent,
-                  ],
+                color: Colors.black.withValues(alpha: 0.6),
+                borderRadius: BorderRadius.circular(AppRadius.sm),
+              ),
+              child: Text(
+                '${index + 1}',
+                style: AppTextStyles.caption.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),
           ),
 
-          // Page number badge (shadcn style)
+          // Delete button
           Positioned(
-            top: AppSpacing.sm,
-            left: AppSpacing.sm,
-            child: ShadBadge(
-              child: Text('${index + 1}'),
-            ),
-          ),
-
-          // Delete button (red circular style)
-          Positioned(
-            top: -6,
-            right: -6,
+            top: -8,
+            right: -8,
             child: GestureDetector(
               onTap: () => _deleteImage(index),
               child: Container(
-                width: 32,
-                height: 32,
+                width: 24,
+                height: 24,
                 decoration: BoxDecoration(
-                  color: AppColors.error,
+                  color: AppColors.surface,
                   shape: BoxShape.circle,
+                  border: Border.all(color: AppColors.border),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.1),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
                 ),
                 child: const Icon(
                   LucideIcons.x,
-                  color: Colors.white,
-                  size: 18,
+                  color: AppColors.textSecondary,
+                  size: 14,
                 ),
               ),
             ),

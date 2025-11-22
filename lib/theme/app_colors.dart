@@ -13,8 +13,8 @@ class AppColors {
   static const Color accent = Color(0xFF00BCD4);
   static const Color accentDark = Color(0xFF0097A7);
 
-  // Neutral colors
-  static const Color background = Color(0xFFFAFAFA);
+  // Neutral colors - Shadcn Slate
+  static const Color background = Color(0xFFF8FAFC);
   static const Color surface = Color(0xFFFFFFFF);
   static const Color cardBackground = Color(0xFFFFFFFF);
 

@@ -135,91 +135,65 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
   Widget _buildDocumentInfoHeader() {
     return Padding(
       padding: const EdgeInsets.all(AppSpacing.md),
-      child: ShadCard(
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      child: Container(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(AppRadius.md),
+          border: Border.all(color: AppColors.border),
+        ),
+        child: Row(
           children: [
-            // Document name with icon
-            Row(
-              children: [
-                const Icon(
-                  LucideIcons.fileText,
-                  color: AppColors.primary,
-                  size: 24,
-                ),
-                const SizedBox(width: AppSpacing.sm),
-                Expanded(
-                  child: Text(
+            // Document icon
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(AppRadius.sm),
+              ),
+              child: const Icon(
+                LucideIcons.fileText,
+                color: AppColors.primary,
+                size: 20,
+              ),
+            ),
+            const SizedBox(width: AppSpacing.md),
+            // Document info
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
                     widget.document.name,
-                    style: AppTextStyles.bodyLarge.copyWith(
+                    style: AppTextStyles.bodyMedium.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.md),
-            // Info badges (square-ish)
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.sm,
-                    vertical: AppSpacing.xs,
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(
+                    '${_imagePaths.length} ${_imagePaths.length == 1 ? 'page' : 'pages'} · ${_formatDateShort(widget.document.createdAt)}',
+                    style: AppTextStyles.caption.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
                   ),
-                  decoration: BoxDecoration(
-                    color: AppColors.primary.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(AppRadius.sm),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(LucideIcons.images, size: 14, color: AppColors.primary),
-                      const SizedBox(width: 6),
-                      Text(
-                        '${_imagePaths.length} ${_imagePaths.length == 1 ? 'page' : 'pages'}',
-                        style: AppTextStyles.caption.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.primary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.sm),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.sm,
-                    vertical: AppSpacing.xs,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.textSecondary.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(AppRadius.sm),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(LucideIcons.calendar, size: 14, color: AppColors.textSecondary),
-                      const SizedBox(width: 6),
-                      Text(
-                        _formatDateExact(widget.document.createdAt),
-                        style: AppTextStyles.caption.copyWith(
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.textSecondary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  String _formatDateShort(DateTime date) {
+    final year = date.year.toString();
+    final month = date.month.toString().padLeft(2, '0');
+    final day = date.day.toString().padLeft(2, '0');
+    return '$year.$month.$day';
   }
 
   Widget _buildTabBar() {
@@ -489,51 +463,37 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
             ),
           );
 
-    return ShadCard(
-      padding: EdgeInsets.zero,
+    return Container(
       height: isListView ? 280 : null,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(AppRadius.sm),
+        border: Border.all(color: AppColors.border.withValues(alpha: 0.5)),
+      ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(AppRadius.lg),
+        borderRadius: BorderRadius.circular(AppRadius.sm - 1),
         child: Stack(
           children: [
             // Image fills the card
             Positioned.fill(child: imageWidget),
-            // Page number badge at bottom
+            // Page number badge at top left
             Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
+              top: AppSpacing.sm,
+              left: AppSpacing.sm,
               child: Container(
                 padding: const EdgeInsets.symmetric(
-                  vertical: AppSpacing.sm,
-                  horizontal: AppSpacing.md,
+                  horizontal: AppSpacing.sm,
+                  vertical: AppSpacing.xs,
                 ),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.transparent,
-                      Colors.black.withValues(alpha: 0.7),
-                    ],
-                  ),
+                  color: Colors.black.withValues(alpha: 0.6),
+                  borderRadius: BorderRadius.circular(AppRadius.sm),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Page ${index + 1}',
-                      style: AppTextStyles.bodySmall.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Icon(
-                      LucideIcons.expand,
-                      size: 14,
-                      color: Colors.white.withValues(alpha: 0.8),
-                    ),
-                  ],
+                child: Text(
+                  '${index + 1}',
+                  style: AppTextStyles.caption.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
@@ -851,12 +811,6 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
       debugPrint('Error saving PDF: $e');
       _showSnackBar('Failed to save PDF');
     }
-  }
-
-  String _formatDateExact(DateTime date) {
-    final hour = date.hour.toString().padLeft(2, '0');
-    final minute = date.minute.toString().padLeft(2, '0');
-    return '${date.year}.${date.month.toString().padLeft(2, '0')}.${date.day.toString().padLeft(2, '0')} $hour:$minute';
   }
 
   void _showSnackBar(String message) {

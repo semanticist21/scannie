@@ -111,10 +111,15 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
             ),
           ),
         ),
-        child: Card.filled(
+        child: Container(
           margin: const EdgeInsets.symmetric(
             horizontal: AppSpacing.md,
             vertical: AppSpacing.sm,
+          ),
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(AppRadius.lg),
+            border: Border.all(color: AppColors.border),
           ),
           child: InkWell(
             onTap: widget.onTap,
@@ -127,23 +132,16 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
               padding: const EdgeInsets.all(AppSpacing.md),
               child: Row(
                 children: [
-                  // Thumbnail with subtle elevation
+                  // Thumbnail
                   Container(
-                    width: 75,
-                    height: 95,
+                    width: 56,
+                    height: 72,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(AppRadius.md),
-                      color: AppColors.surface,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.08),
-                          blurRadius: 6,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
+                      borderRadius: BorderRadius.circular(AppRadius.sm),
+                      color: AppColors.divider,
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(AppRadius.md),
+                      borderRadius: BorderRadius.circular(AppRadius.sm),
                       child: _buildThumbnail(),
                     ),
                   ),
@@ -158,55 +156,33 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
                       children: [
                         Text(
                           widget.document.name,
-                          style: AppTextStyles.bodyLarge.copyWith(
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: -0.3,
-                            height: 1.2,
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            fontWeight: FontWeight.w500,
                           ),
-                          maxLines: 2,
+                          maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: AppSpacing.xs),
-                        Row(
-                          children: [
-                            Icon(
-                              LucideIcons.file,
-                              size: 14,
-                              color: AppColors.textSecondary.withValues(alpha: 0.7),
-                            ),
-                            const SizedBox(width: AppSpacing.xs),
-                            Text(
-                              '$pageCount ${pageCount == 1 ? 'page' : 'pages'}',
-                              style: AppTextStyles.bodySmall.copyWith(
-                                color: AppColors.textSecondary,
-                              ),
-                            ),
-                            const SizedBox(width: AppSpacing.sm),
-                            Text(
-                              '•',
-                              style: AppTextStyles.bodySmall.copyWith(
-                                color: AppColors.textHint,
-                              ),
-                            ),
-                            const SizedBox(width: AppSpacing.sm),
-                            Text(
-                              formattedDate,
-                              style: AppTextStyles.caption.copyWith(
-                                color: AppColors.textSecondary,
-                              ),
-                            ),
-                          ],
+                        Text(
+                          '$pageCount ${pageCount == 1 ? 'page' : 'pages'} · $formattedDate',
+                          style: AppTextStyles.caption.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
                         ),
                       ],
                     ),
                   ),
 
                   // Action button
-                  IconButton(
-                    icon: const Icon(LucideIcons.ellipsisVertical),
-                    onPressed: () => _showContextMenu(context),
-                    color: AppColors.textSecondary,
-                    iconSize: 20,
+                  SizedBox(
+                    width: 32,
+                    height: 32,
+                    child: IconButton(
+                      padding: EdgeInsets.zero,
+                      icon: const Icon(LucideIcons.ellipsisVertical, size: 18),
+                      onPressed: () => _showContextMenu(context),
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                 ],
               ),
@@ -220,74 +196,129 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
   void _showContextMenu(BuildContext context) {
     showModalBottomSheet(
       context: context,
+      backgroundColor: AppColors.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
       ),
       builder: (sheetContext) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Handle bar
+            Center(
+              child: Container(
+                margin: const EdgeInsets.only(top: AppSpacing.sm),
+                width: 32,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: AppColors.border,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
             // Header
             Padding(
-              padding: const EdgeInsets.all(AppSpacing.md),
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.lg,
+                AppSpacing.md,
+                AppSpacing.lg,
+                AppSpacing.sm,
+              ),
               child: Text(
                 widget.document.name,
-                style: AppTextStyles.bodyLarge.copyWith(
+                style: AppTextStyles.bodyMedium.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            const Divider(height: 1),
+            const Divider(height: 1, color: AppColors.border),
 
             // Actions
-            if (widget.onEditScan != null)
-              ListTile(
-                leading: const Icon(LucideIcons.filePen, color: AppColors.primary),
-                title: const Text('Edit Scan'),
-                onTap: () {
-                  Navigator.pop(sheetContext);
-                  widget.onEditScan?.call();
-                },
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+              child: Column(
+                children: [
+                  if (widget.onEditScan != null)
+                    _buildMenuItem(
+                      icon: LucideIcons.filePen,
+                      label: 'Edit Scan',
+                      onTap: () {
+                        Navigator.pop(sheetContext);
+                        widget.onEditScan?.call();
+                      },
+                    ),
+                  if (widget.onEdit != null)
+                    _buildMenuItem(
+                      icon: LucideIcons.pencil,
+                      label: 'Rename',
+                      onTap: () {
+                        Navigator.pop(sheetContext);
+                        widget.onEdit?.call();
+                      },
+                    ),
+                  if (widget.onSavePdf != null)
+                    _buildMenuItem(
+                      icon: LucideIcons.download,
+                      label: 'Save PDF',
+                      onTap: () {
+                        Navigator.pop(sheetContext);
+                        widget.onSavePdf?.call();
+                      },
+                    ),
+                  if (widget.onShare != null)
+                    _buildMenuItem(
+                      icon: LucideIcons.share2,
+                      label: 'Share PDF',
+                      onTap: () {
+                        Navigator.pop(sheetContext);
+                        widget.onShare?.call();
+                      },
+                    ),
+                  if (widget.onDelete != null)
+                    _buildMenuItem(
+                      icon: LucideIcons.trash2,
+                      label: 'Delete',
+                      color: AppColors.error,
+                      onTap: () {
+                        Navigator.pop(sheetContext);
+                        widget.onDelete?.call();
+                      },
+                    ),
+                ],
               ),
-            if (widget.onEdit != null)
-              ListTile(
-                leading: const Icon(LucideIcons.pencil),
-                title: const Text('Rename'),
-                onTap: () {
-                  Navigator.pop(sheetContext);
-                  widget.onEdit?.call();
-                },
-              ),
-            if (widget.onSavePdf != null)
-              ListTile(
-                leading: const Icon(LucideIcons.download, color: AppColors.accent),
-                title: const Text('Save PDF'),
-                onTap: () {
-                  Navigator.pop(sheetContext);
-                  widget.onSavePdf?.call();
-                },
-              ),
-            if (widget.onShare != null)
-              ListTile(
-                leading: const Icon(LucideIcons.share2, color: AppColors.accent),
-                title: const Text('Share PDF'),
-                onTap: () {
-                  Navigator.pop(sheetContext);
-                  widget.onShare?.call();
-                },
-              ),
-            if (widget.onDelete != null)
-              ListTile(
-                leading: const Icon(LucideIcons.trash2, color: AppColors.error),
-                title: const Text('Delete', style: TextStyle(color: AppColors.error)),
-                onTap: () {
-                  Navigator.pop(sheetContext);
-                  widget.onDelete?.call();
-                },
-              ),
+            ),
             const SizedBox(height: AppSpacing.sm),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMenuItem({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+    Color? color,
+  }) {
+    final itemColor = color ?? AppColors.textPrimary;
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.lg,
+          vertical: AppSpacing.md,
+        ),
+        child: Row(
+          children: [
+            Icon(icon, size: 20, color: itemColor),
+            const SizedBox(width: AppSpacing.md),
+            Text(
+              label,
+              style: AppTextStyles.bodyMedium.copyWith(color: itemColor),
+            ),
           ],
         ),
       ),
@@ -331,17 +362,9 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
   }
 
   String _formatDate(DateTime date) {
-    final now = DateTime.now();
-    final difference = now.difference(date);
-
-    if (difference.inDays == 0) {
-      return 'Today';
-    } else if (difference.inDays == 1) {
-      return 'Yesterday';
-    } else if (difference.inDays < 7) {
-      return '${difference.inDays} days ago';
-    } else {
-      return '${date.day}/${date.month}/${date.year}';
-    }
+    final year = date.year.toString();
+    final month = date.month.toString().padLeft(2, '0');
+    final day = date.day.toString().padLeft(2, '0');
+    return '$year.$month.$day';
   }
 }
