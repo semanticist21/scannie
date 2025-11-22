@@ -20,7 +20,7 @@ import 'package:path/path.dart' as path;
 import 'package:open_file_manager/open_file_manager.dart';
 import 'package:media_store_plus/media_store_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:elegant_notification/elegant_notification.dart';
+import '../utils/app_toast.dart';
 
 /// Gallery screen displaying scanned documents
 class GalleryScreen extends StatefulWidget {
@@ -82,7 +82,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
-        _showSnackBar('Failed to load documents: $e', isError: true);
+        AppToast.show(context,'Failed to load documents: $e', isError: true);
       }
     }
   }
@@ -270,7 +270,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                       onPressed: () async {
                         final documentName = nameController.text.trim();
                         if (documentName.isEmpty) {
-                          _showSnackBar('Name cannot be empty', isError: true);
+                          AppToast.show(context,'Name cannot be empty', isError: true);
                           return;
                         }
 
@@ -290,7 +290,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                         await _saveDocuments();
 
                         if (!mounted) return;
-                        _showSnackBar('Empty document created');
+                        AppToast.show(context,'Empty document created');
                       },
                     ),
                   ],
@@ -347,10 +347,10 @@ class _GalleryScreenState extends State<GalleryScreen> {
       }
     } on PlatformException catch (e) {
       if (!mounted) return;
-      _showSnackBar('Scan failed: ${e.message}', isError: true);
+      AppToast.show(context,'Scan failed: ${e.message}', isError: true);
     } catch (e) {
       if (!mounted) return;
-      _showSnackBar('Scan failed: $e', isError: true);
+      AppToast.show(context,'Scan failed: $e', isError: true);
     }
   }
 
@@ -440,7 +440,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                       onPressed: () async {
                         final newName = controller.text.trim();
                         if (newName.isEmpty) {
-                          _showSnackBar('Name cannot be empty', isError: true);
+                          AppToast.show(context,'Name cannot be empty', isError: true);
                           return;
                         }
 
@@ -457,7 +457,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
                         await _saveDocuments();
                         if (!mounted) return;
-                        _showSnackBar('Document renamed');
+                        AppToast.show(context,'Document renamed');
                       },
                     ),
                   ],
@@ -528,7 +528,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                         });
                         await _saveDocuments();
                         if (!mounted) return;
-                        _showSnackBar('Document deleted');
+                        AppToast.show(context,'Document deleted');
                       },
                     ),
                   ],
@@ -569,19 +569,14 @@ class _GalleryScreenState extends State<GalleryScreen> {
         }
       });
       await _saveDocuments();
-      _showSnackBar('Scan updated successfully');
+      AppToast.show(context,'Scan updated successfully');
     }
   }
 
   /// Export document to PDF
   Future<void> _exportToPdf(ScanDocument document) async {
     try {
-      ElegantNotification.info(
-        title: const Text('Processing'),
-        description: const Text('Generating PDF...'),
-        toastDuration: const Duration(seconds: 5),
-        showProgressIndicator: true,
-      ).show(context);
+      AppToast.info(context, 'Generating PDF...');
 
       // Generate PDF with quality setting
       final pdfFile = await PdfCacheService().getOrGeneratePdf(
@@ -606,19 +601,14 @@ class _GalleryScreenState extends State<GalleryScreen> {
       // No snackbar for share - dialog is self-explanatory
     } catch (e) {
       debugPrint('Error exporting PDF: $e');
-      _showSnackBar('Failed to export PDF', isError: true);
+      AppToast.show(context,'Failed to export PDF', isError: true);
     }
   }
 
   /// Save PDF to Downloads folder using MediaStore (no permission required)
   Future<void> _savePdfLocally(ScanDocument document) async {
     try {
-      ElegantNotification.info(
-        title: const Text('Processing'),
-        description: const Text('Generating PDF...'),
-        toastDuration: const Duration(seconds: 5),
-        showProgressIndicator: true,
-      ).show(context);
+      AppToast.info(context, 'Generating PDF...');
 
       // Generate PDF with quality setting
       final pdfFile = await PdfCacheService().getOrGeneratePdf(
@@ -653,14 +643,14 @@ class _GalleryScreenState extends State<GalleryScreen> {
       debugPrint('PDF saved to MediaStore: ${saveInfo?.uri}');
 
       if (!mounted) return;
-      _showSnackBar('PDF saved to Downloads');
+      AppToast.show(context,'PDF saved to Downloads');
 
       // Open file manager to show the downloaded file
       await openFileManager();
     } catch (e) {
       debugPrint('Error saving PDF: $e');
       if (!mounted) return;
-      _showSnackBar('Failed to save PDF', isError: true);
+      AppToast.show(context,'Failed to save PDF', isError: true);
     }
   }
 
@@ -671,21 +661,4 @@ class _GalleryScreenState extends State<GalleryScreen> {
     );
   }
 
-  void _showSnackBar(String message, {bool isError = false}) {
-    if (isError) {
-      ElegantNotification.error(
-        title: const Text('Error'),
-        description: Text(message),
-        toastDuration: const Duration(seconds: 3),
-        showProgressIndicator: true,
-      ).show(context);
-    } else {
-      ElegantNotification.success(
-        title: const Text('Success'),
-        description: Text(message),
-        toastDuration: const Duration(seconds: 3),
-        showProgressIndicator: true,
-      ).show(context);
-    }
-  }
 }

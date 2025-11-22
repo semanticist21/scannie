@@ -18,7 +18,7 @@ import '../services/document_storage.dart';
 import '../widgets/common/full_screen_image_viewer.dart';
 import '../widgets/common/context_menu_sheet.dart';
 import '../widgets/common/document_info_header.dart';
-import 'package:elegant_notification/elegant_notification.dart';
+import '../utils/app_toast.dart';
 import '../widgets/common/page_card.dart';
 import '../widgets/common/quality_selector_sheet.dart';
 
@@ -489,7 +489,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
         }
       });
 
-      _showSnackBar('Scan updated successfully');
+      AppToast.show(context,'Scan updated successfully');
     }
   }
 
@@ -556,7 +556,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
                       onPressed: () async {
                         final newName = controller.text.trim();
                         if (newName.isEmpty) {
-                          _showSnackBar('Name cannot be empty', isError: true);
+                          AppToast.show(context,'Name cannot be empty', isError: true);
                           return;
                         }
 
@@ -577,7 +577,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
                         }
 
                         if (!mounted) return;
-                        _showSnackBar('Document renamed');
+                        AppToast.show(context,'Document renamed');
                       },
                     ),
                   ],
@@ -695,26 +695,21 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
 
       if (!mounted) return;
 
-      _showSnackBar('Document deleted');
+      AppToast.show(context,'Document deleted');
 
       // Return to gallery with delete flag
       final navigator = Navigator.of(context);
       navigator.pop({'deleted': true, 'documentId': _document.id});
     } catch (e) {
       debugPrint('Error deleting document: $e');
-      _showSnackBar('Failed to delete document', isError: true);
+      AppToast.show(context,'Failed to delete document', isError: true);
     }
   }
 
   /// Export document to PDF and share (uses cached PDF)
   Future<void> _exportToPdf() async {
     try {
-      ElegantNotification.info(
-        title: const Text('Processing'),
-        description: const Text('Preparing PDF...'),
-        toastDuration: const Duration(seconds: 5),
-        showProgressIndicator: true,
-      ).show(context);
+      AppToast.info(context, 'Preparing PDF...');
 
       // Get or generate PDF with quality setting (uses cache)
       final pdfFile = await _pdfCacheService.getOrGeneratePdf(
@@ -739,19 +734,14 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
       // No snackbar for share - dialog is self-explanatory
     } catch (e) {
       debugPrint('Error exporting PDF: $e');
-      _showSnackBar('Failed to export PDF', isError: true);
+      AppToast.show(context,'Failed to export PDF', isError: true);
     }
   }
 
   /// Save PDF to Downloads folder using MediaStore (uses cached PDF)
   Future<void> _savePdfLocally() async {
     try {
-      ElegantNotification.info(
-        title: const Text('Processing'),
-        description: const Text('Preparing PDF...'),
-        toastDuration: const Duration(seconds: 5),
-        showProgressIndicator: true,
-      ).show(context);
+      AppToast.info(context, 'Preparing PDF...');
 
       // Get or generate PDF with quality setting (uses cache)
       final pdfFile = await _pdfCacheService.getOrGeneratePdf(
@@ -786,31 +776,14 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
       debugPrint('PDF saved to MediaStore: ${saveInfo?.uri}');
 
       if (!mounted) return;
-      _showSnackBar('PDF saved to Downloads');
+      AppToast.show(context,'PDF saved to Downloads');
 
       // Open file manager to show the downloaded file
       await openFileManager();
     } catch (e) {
       debugPrint('Error saving PDF: $e');
-      _showSnackBar('Failed to save PDF', isError: true);
+      AppToast.show(context,'Failed to save PDF', isError: true);
     }
   }
 
-  void _showSnackBar(String message, {bool isError = false}) {
-    if (isError) {
-      ElegantNotification.error(
-        title: const Text('Error'),
-        description: Text(message),
-        toastDuration: const Duration(seconds: 3),
-        showProgressIndicator: true,
-      ).show(context);
-    } else {
-      ElegantNotification.success(
-        title: const Text('Success'),
-        description: Text(message),
-        toastDuration: const Duration(seconds: 3),
-        showProgressIndicator: true,
-      ).show(context);
-    }
-  }
 }

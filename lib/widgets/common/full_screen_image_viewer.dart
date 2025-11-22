@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:elegant_notification/elegant_notification.dart';
+import '../../utils/app_toast.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/app_text_styles.dart';
@@ -44,24 +44,6 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
   late int _currentPage;
   bool _showControls = true;
   ImageFilterType _currentFilter = ImageFilterType.original;
-
-  void _showToast(String message, {bool isError = false}) {
-    if (isError) {
-      ElegantNotification.error(
-        title: const Text('Error'),
-        description: Text(message),
-        toastDuration: const Duration(seconds: 3),
-        showProgressIndicator: true,
-      ).show(context);
-    } else {
-      ElegantNotification.success(
-        title: const Text('Success'),
-        description: Text(message),
-        toastDuration: const Duration(seconds: 3),
-        showProgressIndicator: true,
-      ).show(context);
-    }
-  }
 
   @override
   void initState() {
@@ -311,7 +293,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
       final byteData =
           await filteredImage.toByteData(format: ui.ImageByteFormat.png);
       if (byteData == null) {
-        _showToast('Failed to process image', isError: true);
+        AppToast.show(context,'Failed to process image', isError: true);
         return;
       }
 
@@ -328,7 +310,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
       navigator.pop(true); // Return true to indicate image was modified
     } catch (e) {
       debugPrint('Error saving filtered image: $e');
-      _showToast('Failed to save image: $e', isError: true);
+      AppToast.show(context,'Failed to save image: $e', isError: true);
     }
   }
 
@@ -339,7 +321,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
       final imageFile = File(imagePath);
 
       if (!imageFile.existsSync()) {
-        _showToast('Image file not found', isError: true);
+        AppToast.show(context,'Image file not found', isError: true);
         return;
       }
 
@@ -351,15 +333,15 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
 
       final success = result['isSuccess'] == true;
       if (success) {
-        _showToast('Image saved to Photos');
+        AppToast.show(context,'Image saved to Photos');
       } else {
-        _showToast('Failed to save image', isError: true);
+        AppToast.show(context,'Failed to save image', isError: true);
       }
 
       debugPrint('Image saved to gallery: $result');
     } catch (e) {
       debugPrint('Error saving image: $e');
-      _showToast('Failed to save image: $e', isError: true);
+      AppToast.show(context,'Failed to save image: $e', isError: true);
     }
   }
 
@@ -370,7 +352,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
       final imageFile = File(imagePath);
 
       if (!imageFile.existsSync()) {
-        _showToast('Image file not found', isError: true);
+        AppToast.show(context,'Image file not found', isError: true);
         return;
       }
 
@@ -382,7 +364,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
       );
     } catch (e) {
       debugPrint('Error sharing image: $e');
-      _showToast('Failed to share image: $e', isError: true);
+      AppToast.show(context,'Failed to share image: $e', isError: true);
     }
   }
 
