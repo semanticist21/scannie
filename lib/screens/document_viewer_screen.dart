@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
-import 'package:reorderable_grid_view/reorderable_grid_view.dart';
 import 'package:ndialog/ndialog.dart';
+import 'package:elegant_notification/elegant_notification.dart';
 import '../models/scan_document.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
@@ -64,8 +64,8 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
     // Defer operations to after screen transition completes
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _calculateTotalSize();
-      // Load PDF after transition animation (~300ms) to avoid jank
-      Future.delayed(const Duration(milliseconds: 350), () {
+      // Load PDF after transition animation to avoid jank
+      Future.delayed(const Duration(milliseconds: 550), () {
         if (mounted && _imagePaths.isNotEmpty) {
           _loadPdfPreview();
         }
@@ -342,49 +342,34 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
   }
 
   Widget _buildGridView() {
-    return ReorderableGridView.count(
-      crossAxisCount: 2,
-      crossAxisSpacing: AppSpacing.md,
-      mainAxisSpacing: AppSpacing.md,
-      childAspectRatio: 210 / 297, // A4 ratio
+    return GridView.builder(
       padding: const EdgeInsets.all(AppSpacing.md),
-      onReorder: (oldIndex, newIndex) {
-        setState(() {
-          final item = _imagePaths.removeAt(oldIndex);
-          _imagePaths.insert(newIndex, item);
-        });
-      },
-      children: List.generate(
-        _imagePaths.length,
-        (index) {
-          final imagePath = _imagePaths[index];
-          final imageFile = File(imagePath);
-
-          return PageCard(
-            key: ValueKey(imagePath),
-            index: index,
-            imageFile: imageFile,
-            onTap: () => _viewFullScreen(index),
-            isListView: false,
-          );
-        },
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: AppSpacing.md,
+        mainAxisSpacing: AppSpacing.md,
+        childAspectRatio: 210 / 297, // A4 ratio
       ),
+      itemCount: _imagePaths.length,
+      itemBuilder: (context, index) {
+        final imagePath = _imagePaths[index];
+        final imageFile = File(imagePath);
+
+        return PageCard(
+          key: ValueKey(imagePath),
+          index: index,
+          imageFile: imageFile,
+          onTap: () => _viewFullScreen(index),
+          isListView: false,
+        );
+      },
     );
   }
 
   Widget _buildListView() {
-    return ReorderableListView.builder(
+    return ListView.builder(
       padding: const EdgeInsets.all(AppSpacing.md),
       itemCount: _imagePaths.length,
-      onReorder: (oldIndex, newIndex) {
-        setState(() {
-          if (newIndex > oldIndex) {
-            newIndex -= 1;
-          }
-          final item = _imagePaths.removeAt(oldIndex);
-          _imagePaths.insert(newIndex, item);
-        });
-      },
       itemBuilder: (context, index) {
         final imagePath = _imagePaths[index];
         final imageFile = File(imagePath);
@@ -409,6 +394,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
         builder: (context) => FullScreenImageViewer(
           imagePaths: _imagePaths,
           initialPage: index,
+          showFilters: false,
         ),
       ),
     );
@@ -500,7 +486,27 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
         }
       });
 
-      _showSnackBar('Scan updated');
+      ElegantNotification.success(
+        title: Text(
+          'Updated',
+          style: AppTextStyles.bodyMedium.copyWith(
+            fontWeight: FontWeight.w600,
+            color: AppColors.textPrimary,
+          ),
+        ),
+        description: Text(
+          'Scan updated successfully',
+          style: AppTextStyles.caption.copyWith(
+            color: AppColors.textSecondary,
+          ),
+        ),
+        width: 280,
+        height: 60,
+        showProgressIndicator: false,
+        displayCloseButton: false,
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        background: AppColors.surface,
+      ).show(context);
     }
   }
 

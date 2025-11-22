@@ -69,13 +69,13 @@ class ImageTile extends StatelessWidget {
 
           // Delete button
           Positioned(
-            top: -8,
-            right: -8,
+            top: -10,
+            right: -10,
             child: GestureDetector(
               onTap: onDelete,
               child: Container(
-                width: 24,
-                height: 24,
+                width: 32,
+                height: 32,
                 decoration: BoxDecoration(
                   color: AppColors.surface,
                   shape: BoxShape.circle,
@@ -91,7 +91,7 @@ class ImageTile extends StatelessWidget {
                 child: const Icon(
                   LucideIcons.x,
                   color: AppColors.textSecondary,
-                  size: 14,
+                  size: 18,
                 ),
               ),
             ),

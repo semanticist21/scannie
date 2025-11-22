@@ -1,11 +1,11 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:cunning_document_scanner_plus/cunning_document_scanner_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:ndialog/ndialog.dart';
 import 'package:reorderable_grid_view/reorderable_grid_view.dart';
 import '../models/scan_document.dart';
+import '../services/document_storage.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
 import '../theme/app_text_styles.dart';
@@ -13,13 +13,6 @@ import '../widgets/common/custom_app_bar.dart';
 import '../widgets/common/full_screen_image_viewer.dart';
 import '../widgets/common/image_tile.dart';
 import '../widgets/common/edit_bottom_actions.dart';
-import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
-import 'package:printing/printing.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart' as path;
-import 'package:open_file_manager/open_file_manager.dart';
-import 'package:media_store_plus/media_store_plus.dart';
 
 /// Edit screen for managing scanned images
 /// Features: Reorder, Delete, Add more images
@@ -101,16 +94,23 @@ class _EditScreenState extends State<EditScreen> {
   }
 
   /// View image in full screen
-  void _viewImage(String imagePath, int index) {
+  Future<void> _viewImage(String imagePath, int index) async {
     final navigator = Navigator.of(context);
-    navigator.push(
+    final result = await navigator.push<bool>(
       MaterialPageRoute(
         builder: (context) => FullScreenImageViewer(
           imagePaths: _imagePaths,
           initialPage: index,
+          showFilters: true,
         ),
       ),
     );
+
+    // If image was modified, rebuild to show updated image
+    if (result == true && mounted) {
+      setState(() {});
+      debugPrint('🔄 Image modified, refreshing grid');
+    }
   }
 
   /// Reorder images
@@ -129,13 +129,14 @@ class _EditScreenState extends State<EditScreen> {
       return;
     }
 
-    // Determine default name based on context
+    final navigator = Navigator.of(context);
     final bool isEditingExisting = _existingDocumentId != null;
-    final String defaultName = isEditingExisting
-        ? _existingDocumentName! // Use existing name when editing
-        : 'Scan ${DateTime.now().toString().substring(0, 10)}'; // New scan: use date
 
-    // Show dialog to input document name
+    // Determine default name based on context
+    final String defaultName = isEditingExisting
+        ? _existingDocumentName!
+        : 'Scan ${DateTime.now().toString().substring(0, 10)}';
+
     final TextEditingController nameController =
         TextEditingController(text: defaultName);
 
@@ -167,14 +168,12 @@ class _EditScreenState extends State<EditScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  isEditingExisting ? 'Save Changes' : 'Save Scan',
+                  'Save Scan',
                   style: AppTextStyles.h3,
                 ),
                 const SizedBox(height: AppSpacing.xs),
                 Text(
-                  isEditingExisting
-                      ? 'Update the name for this scan'
-                      : 'Enter a name for this scan',
+                  'Enter a name for this scan',
                   style: AppTextStyles.bodyMedium.copyWith(
                     color: AppColors.textSecondary,
                   ),
@@ -205,22 +204,54 @@ class _EditScreenState extends State<EditScreen> {
 
                         Navigator.of(context).pop();
 
-                        final navigator = Navigator.of(context);
+                        if (isEditingExisting) {
+                          // Update existing document
+                          final updatedDocument = ScanDocument(
+                            id: _existingDocumentId!,
+                            name: documentName,
+                            createdAt: DateTime.now(),
+                            imagePaths: _imagePaths,
+                            isProcessed: true,
+                          );
 
-                        // Create a new scan document with user-provided name
-                        // When editing, preserve the original ID and createdAt
-                        final newDocument = ScanDocument(
-                          id: _existingDocumentId ??
-                              DateTime.now().millisecondsSinceEpoch.toString(),
-                          name: documentName,
-                          createdAt: DateTime.now(), // Always update timestamp
-                          imagePaths: _imagePaths,
-                          isProcessed: true,
-                        );
+                          if (!mounted) return;
 
-                        // Return to GalleryScreen
-                        if (!mounted) return;
-                        navigator.pop(newDocument);
+                          // Update in storage
+                          final documents =
+                              await DocumentStorage.loadDocuments();
+                          final index = documents
+                              .indexWhere((d) => d.id == _existingDocumentId);
+                          if (index != -1) {
+                            documents[index] = updatedDocument;
+                            await DocumentStorage.saveDocuments(documents);
+                          }
+
+                          navigator.pop(updatedDocument);
+                        } else {
+                          // Create new scan document
+                          final newDocument = ScanDocument(
+                            id: DateTime.now()
+                                .millisecondsSinceEpoch
+                                .toString(),
+                            name: documentName,
+                            createdAt: DateTime.now(),
+                            imagePaths: _imagePaths,
+                            isProcessed: true,
+                          );
+
+                          if (!mounted) return;
+
+                          // Save to storage and navigate to viewer
+                          final documents =
+                              await DocumentStorage.loadDocuments();
+                          documents.insert(0, newDocument);
+                          await DocumentStorage.saveDocuments(documents);
+
+                          navigator.pushReplacementNamed(
+                            '/viewer',
+                            arguments: newDocument,
+                          );
+                        }
                       },
                     ),
                   ],
@@ -238,6 +269,7 @@ class _EditScreenState extends State<EditScreen> {
     debugPrint('🚨 _confirmDiscard called - showing dialog');
 
     final completer = Completer<bool>();
+    final bool isNewScan = _existingDocumentId == null;
 
     DialogBackground(
       blur: 6,
@@ -272,7 +304,9 @@ class _EditScreenState extends State<EditScreen> {
                 ),
                 const SizedBox(height: AppSpacing.xs),
                 Text(
-                  'Are you sure you want to discard this scan? All images will be lost.',
+                  isNewScan
+                      ? 'Are you sure you want to discard this scan? All images will be lost.'
+                      : 'Are you sure you want to discard changes? Your changes will not be saved.',
                   style: AppTextStyles.bodyMedium.copyWith(
                     color: AppColors.textSecondary,
                   ),
@@ -312,149 +346,7 @@ class _EditScreenState extends State<EditScreen> {
     return result;
   }
 
-  /// Save PDF to Downloads folder and open file manager
-  /// Save PDF to Downloads folder using MediaStore (no permission required)
-  Future<void> _savePdfLocally() async {
-    setState(() => _isLoading = true);
-
-    try {
-      // Create PDF document
-      final pdf = pw.Document();
-
-      // Add each image as a separate page
-      for (final imagePath in _imagePaths) {
-        final imageFile = File(imagePath);
-        final imageBytes = await imageFile.readAsBytes();
-        final image = pw.MemoryImage(imageBytes);
-
-        pdf.addPage(
-          pw.Page(
-            pageFormat: PdfPageFormat.a4,
-            build: (pw.Context context) {
-              return pw.Center(
-                child: pw.Image(image, fit: pw.BoxFit.contain),
-              );
-            },
-          ),
-        );
-      }
-
-      // Generate filename with timestamp
-      final timestamp =
-          DateTime.now().toString().substring(0, 19).replaceAll(':', '-');
-      final fileName = 'Scan_$timestamp.pdf';
-
-      // Get PDF bytes
-      final pdfBytes = await pdf.save();
-
-      // Save to temporary file first
-      final tempDir = await getTemporaryDirectory();
-      final tempFile = File(path.join(tempDir.path, fileName));
-      await tempFile.writeAsBytes(pdfBytes);
-
-      // Initialize MediaStore
-      await MediaStore.ensureInitialized();
-      MediaStore.appFolder = 'Scannie';
-
-      // Save to Downloads folder using MediaStore (no permission required!)
-      final mediaStore = MediaStore();
-      final saveInfo = await mediaStore.saveFile(
-        tempFilePath: tempFile.path,
-        dirType: DirType.download,
-        dirName: DirName.download,
-        relativePath: FilePath.root, // Save to root of Downloads folder
-      );
-
-      debugPrint('PDF saved to MediaStore: ${saveInfo?.uri}');
-
-      if (!mounted) return;
-      setState(() => _isLoading = false);
-
-      _showToast(
-        'PDF saved to Downloads',
-        AppColors.success,
-        LucideIcons.circleCheck,
-      );
-
-      // Open file manager to show the downloaded file
-      await openFileManager();
-    } catch (e) {
-      debugPrint('Error saving PDF: $e');
-      if (!mounted) return;
-      setState(() => _isLoading = false);
-      _showToast(
-        'Failed to save PDF',
-        AppColors.error,
-        LucideIcons.circleAlert,
-      );
-    }
-  }
-
-  /// Export images to PDF (Share)
-  Future<void> _exportToPdf() async {
-    setState(() => _isLoading = true);
-
-    try {
-      // Create PDF document
-      final pdf = pw.Document();
-
-      // Add each image as a separate page
-      for (final imagePath in _imagePaths) {
-        final imageFile = File(imagePath);
-        final imageBytes = await imageFile.readAsBytes();
-        final image = pw.MemoryImage(imageBytes);
-
-        pdf.addPage(
-          pw.Page(
-            pageFormat: PdfPageFormat.a4,
-            build: (pw.Context context) {
-              return pw.Center(
-                child: pw.Image(image, fit: pw.BoxFit.contain),
-              );
-            },
-          ),
-        );
-      }
-
-      // Generate filename with timestamp
-      final timestamp =
-          DateTime.now().toString().substring(0, 19).replaceAll(':', '-');
-      final fileName = 'Scan_$timestamp.pdf';
-
-      // Save PDF to temporary directory
-      final output = await getTemporaryDirectory();
-      final file = File(path.join(output.path, fileName));
-      await file.writeAsBytes(await pdf.save());
-
-      // Share the PDF using the printing package
-      await Printing.sharePdf(
-        bytes: await pdf.save(),
-        filename: fileName,
-      );
-
-      // No toast - share dialog is self-explanatory
-    } catch (e) {
-      debugPrint('Error exporting PDF: $e');
-      if (!mounted) return;
-      _showToast(
-        'Failed to export PDF',
-        AppColors.error,
-        LucideIcons.circleAlert,
-      );
-    } finally {
-      setState(() => _isLoading = false);
-    }
-  }
-
   void _showMessage(String message) {
-    ShadToaster.of(context).show(
-      ShadToast(
-        title: Text(message),
-      ),
-    );
-  }
-
-  void _showToast(String message, Color backgroundColor, IconData icon) {
     ShadToaster.of(context).show(
       ShadToast(
         title: Text(message),
@@ -513,8 +405,6 @@ class _EditScreenState extends State<EditScreen> {
                   // Bottom Actions
                   EditBottomActions(
                     onAddMore: _addMoreImages,
-                    onSavePdf: _savePdfLocally,
-                    onShare: _exportToPdf,
                     onSave: _saveScan,
                   ),
                 ],

@@ -6,15 +6,11 @@ import '../../theme/app_theme.dart';
 /// Bottom action bar for EditScreen
 class EditBottomActions extends StatelessWidget {
   final VoidCallback onAddMore;
-  final VoidCallback onSavePdf;
-  final VoidCallback onShare;
   final VoidCallback onSave;
 
   const EditBottomActions({
     super.key,
     required this.onAddMore,
-    required this.onSavePdf,
-    required this.onShare,
     required this.onSave,
   });
 
@@ -27,7 +23,7 @@ class EditBottomActions extends StatelessWidget {
       padding: EdgeInsets.only(
         left: AppSpacing.md,
         right: AppSpacing.md,
-        top: AppSpacing.lg,
+        top: AppSpacing.md,
         bottom: AppSpacing.md + bottomPadding, // Add safe area padding
       ),
       decoration: BoxDecoration(
@@ -46,92 +42,26 @@ class EditBottomActions extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
+      child: Row(
         children: [
-          // Row 1: Icon buttons for quick actions
-          Row(
-            children: [
-              // Add More Images
-              Expanded(
-                child: _IconActionButton(
-                  icon: LucideIcons.imagePlus,
-                  label: 'Add More',
-                  onPressed: onAddMore,
-                ),
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              // Save PDF
-              Expanded(
-                child: _IconActionButton(
-                  icon: LucideIcons.fileText,
-                  label: 'Save PDF',
-                  onPressed: onSavePdf,
-                ),
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              // Share PDF
-              Expanded(
-                child: _IconActionButton(
-                  icon: LucideIcons.share2,
-                  label: 'Share',
-                  onPressed: onShare,
-                ),
-              ),
-            ],
+          // Add More button (outline)
+          Expanded(
+            child: ShadButton.outline(
+              onPressed: onAddMore,
+              height: 48,
+              leading: const Icon(LucideIcons.imagePlus, size: 18),
+              child: const Text('Add More'),
+            ),
           ),
-          const SizedBox(height: AppSpacing.md),
-          // Row 2: Primary action - Save to Gallery
-          SizedBox(
-            width: double.infinity,
+          const SizedBox(width: AppSpacing.md),
+          // Save button (primary)
+          Expanded(
             child: ShadButton(
               onPressed: onSave,
-              leading: const Icon(LucideIcons.save, size: 18),
-              child: const Text('Save to Gallery'),
+              height: 48,
+              leading: const Icon(LucideIcons.check, size: 18),
+              child: const Text('Save'),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Icon button for footer actions
-class _IconActionButton extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final VoidCallback onPressed;
-
-  const _IconActionButton({
-    required this.icon,
-    required this.label,
-    required this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ShadButton.outline(
-      onPressed: onPressed,
-      height: 64,
-      width: double.infinity, // Constrain width to parent
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            size: 22,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w500,
-            ),
-            textAlign: TextAlign.center,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),
