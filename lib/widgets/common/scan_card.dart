@@ -5,6 +5,7 @@ import '../../models/scan_document.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/app_text_styles.dart';
+import 'context_menu_sheet.dart';
 
 /// Card widget for displaying a scanned document
 class ScanCard extends StatefulWidget {
@@ -181,7 +182,6 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
                       padding: EdgeInsets.zero,
                       icon: const Icon(LucideIcons.ellipsisVertical, size: 18),
                       onPressed: () => _showContextMenu(context),
-                      color: AppColors.textSecondary,
                     ),
                   ),
                 ],
@@ -194,134 +194,59 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
   }
 
   void _showContextMenu(BuildContext context) {
-    showModalBottomSheet(
+    final items = <ContextMenuItem>[
+      if (widget.onEditScan != null)
+        ContextMenuItem(
+          icon: LucideIcons.filePen,
+          label: 'Edit Scan',
+          onTap: () {
+            Navigator.pop(context);
+            widget.onEditScan?.call();
+          },
+        ),
+      if (widget.onEdit != null)
+        ContextMenuItem(
+          icon: LucideIcons.pencil,
+          label: 'Rename',
+          onTap: () {
+            Navigator.pop(context);
+            widget.onEdit?.call();
+          },
+        ),
+      if (widget.onSavePdf != null)
+        ContextMenuItem(
+          icon: LucideIcons.download,
+          label: 'Save PDF',
+          onTap: () {
+            Navigator.pop(context);
+            widget.onSavePdf?.call();
+          },
+        ),
+      if (widget.onShare != null)
+        ContextMenuItem(
+          icon: LucideIcons.share2,
+          label: 'Share PDF',
+          onTap: () {
+            Navigator.pop(context);
+            widget.onShare?.call();
+          },
+        ),
+      if (widget.onDelete != null)
+        ContextMenuItem(
+          icon: LucideIcons.trash2,
+          label: 'Delete',
+          color: AppColors.error,
+          onTap: () {
+            Navigator.pop(context);
+            widget.onDelete?.call();
+          },
+        ),
+    ];
+
+    ContextMenuSheet.show(
       context: context,
-      backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
-      ),
-      builder: (sheetContext) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Handle bar
-            Center(
-              child: Container(
-                margin: const EdgeInsets.only(top: AppSpacing.sm),
-                width: 32,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: AppColors.border,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-            ),
-            // Header
-            Padding(
-              padding: const EdgeInsets.fromLTRB(
-                AppSpacing.lg,
-                AppSpacing.md,
-                AppSpacing.lg,
-                AppSpacing.sm,
-              ),
-              child: Text(
-                widget.document.name,
-                style: AppTextStyles.bodyMedium.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const Divider(height: 1, color: AppColors.border),
-
-            // Actions
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
-              child: Column(
-                children: [
-                  if (widget.onEditScan != null)
-                    _buildMenuItem(
-                      icon: LucideIcons.filePen,
-                      label: 'Edit Scan',
-                      onTap: () {
-                        Navigator.pop(sheetContext);
-                        widget.onEditScan?.call();
-                      },
-                    ),
-                  if (widget.onEdit != null)
-                    _buildMenuItem(
-                      icon: LucideIcons.pencil,
-                      label: 'Rename',
-                      onTap: () {
-                        Navigator.pop(sheetContext);
-                        widget.onEdit?.call();
-                      },
-                    ),
-                  if (widget.onSavePdf != null)
-                    _buildMenuItem(
-                      icon: LucideIcons.download,
-                      label: 'Save PDF',
-                      onTap: () {
-                        Navigator.pop(sheetContext);
-                        widget.onSavePdf?.call();
-                      },
-                    ),
-                  if (widget.onShare != null)
-                    _buildMenuItem(
-                      icon: LucideIcons.share2,
-                      label: 'Share PDF',
-                      onTap: () {
-                        Navigator.pop(sheetContext);
-                        widget.onShare?.call();
-                      },
-                    ),
-                  if (widget.onDelete != null)
-                    _buildMenuItem(
-                      icon: LucideIcons.trash2,
-                      label: 'Delete',
-                      color: AppColors.error,
-                      onTap: () {
-                        Navigator.pop(sheetContext);
-                        widget.onDelete?.call();
-                      },
-                    ),
-                ],
-              ),
-            ),
-            const SizedBox(height: AppSpacing.sm),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMenuItem({
-    required IconData icon,
-    required String label,
-    required VoidCallback onTap,
-    Color? color,
-  }) {
-    final itemColor = color ?? AppColors.textPrimary;
-    return InkWell(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.lg,
-          vertical: AppSpacing.md,
-        ),
-        child: Row(
-          children: [
-            Icon(icon, size: 20, color: itemColor),
-            const SizedBox(width: AppSpacing.md),
-            Text(
-              label,
-              style: AppTextStyles.bodyMedium.copyWith(color: itemColor),
-            ),
-          ],
-        ),
-      ),
+      title: widget.document.name,
+      items: items,
     );
   }
 

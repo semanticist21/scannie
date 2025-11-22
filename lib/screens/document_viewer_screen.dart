@@ -16,6 +16,7 @@ import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../services/pdf_cache_service.dart';
 import '../services/document_storage.dart';
 import '../widgets/common/full_screen_image_viewer.dart';
+import '../widgets/common/context_menu_sheet.dart';
 
 /// Document viewer screen showing all pages in a gallery
 class DocumentViewerScreen extends StatefulWidget {
@@ -34,16 +35,19 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
     with SingleTickerProviderStateMixin {
   bool _isGridView = true;
   late List<String> _imagePaths;
+  late ScanDocument _document;
   final _pdfCacheService = PdfCacheService();
   File? _cachedPdfFile;
   bool _isLoadingPdf = false;
   bool _showPdfPreview = false;
   late TabController _tabController;
+  int _totalFileSize = 0;
 
   @override
   void initState() {
     super.initState();
-    _imagePaths = List.from(widget.document.imagePaths);
+    _document = widget.document;
+    _imagePaths = List.from(_document.imagePaths);
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
@@ -52,9 +56,32 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
         });
       }
     });
+    // Calculate total file size
+    _calculateTotalSize();
     // Only load PDF preview if there are images
     if (_imagePaths.isNotEmpty) {
       _loadPdfPreview();
+    }
+  }
+
+  void _calculateTotalSize() {
+    int total = 0;
+    for (final imagePath in _imagePaths) {
+      final file = File(imagePath);
+      if (file.existsSync()) {
+        total += file.lengthSync();
+      }
+    }
+    _totalFileSize = total;
+  }
+
+  String _formatFileSize(int bytes) {
+    if (bytes < 1024) {
+      return '$bytes B';
+    } else if (bytes < 1024 * 1024) {
+      return '${(bytes / 1024).toStringAsFixed(1)} KB';
+    } else {
+      return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
     }
   }
 
@@ -74,7 +101,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
     try {
       final pdfFile = await _pdfCacheService.getOrGeneratePdf(
         imagePaths: _imagePaths,
-        documentName: widget.document.name,
+        documentName: _document.name,
       );
 
       if (mounted) {
@@ -96,7 +123,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: CustomAppBar(
-        title: widget.document.name,
+        title: '',
         actions: [
           IconButton(
             icon: Icon(_isGridView ? LucideIcons.list : LucideIcons.layoutGrid),
@@ -119,13 +146,21 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
           // Tab bar for Pages/PDF toggle
           if (_imagePaths.isNotEmpty) _buildTabBar(),
 
-          // Content area
+          // Content area with animation
           Expanded(
             child: _imagePaths.isEmpty
                 ? _buildEmptyState()
-                : (_showPdfPreview
-                    ? _buildPdfPreview()
-                    : (_isGridView ? _buildGridView() : _buildListView())),
+                : AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 200),
+                    switchInCurve: Curves.easeInOut,
+                    switchOutCurve: Curves.easeInOut,
+                    child: KeyedSubtree(
+                      key: ValueKey(_showPdfPreview ? 'pdf' : 'pages'),
+                      child: _showPdfPreview
+                          ? _buildPdfPreview()
+                          : (_isGridView ? _buildGridView() : _buildListView()),
+                    ),
+                  ),
           ),
         ],
       ),
@@ -166,7 +201,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    widget.document.name,
+                    _document.name,
                     style: AppTextStyles.bodyMedium.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
@@ -175,7 +210,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
                   ),
                   const SizedBox(height: AppSpacing.xs),
                   Text(
-                    '${_imagePaths.length} ${_imagePaths.length == 1 ? 'page' : 'pages'} · ${_formatDateShort(widget.document.createdAt)}',
+                    '${_imagePaths.length} ${_imagePaths.length == 1 ? 'page' : 'pages'} · ${_formatDateShort(_document.createdAt)} · ~${_formatFileSize((_totalFileSize * _document.pdfQuality.compressionRatio).round())}',
                     style: AppTextStyles.caption.copyWith(
                       color: AppColors.textSecondary,
                     ),
@@ -516,158 +551,164 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
   }
 
   void _showOptions() {
+    final items = <ContextMenuItem>[
+      ContextMenuItem(
+        icon: LucideIcons.settings2,
+        label: 'PDF Quality (${_document.pdfQuality.displayName})',
+        onTap: () {
+          Navigator.pop(context);
+          _showQualitySelector();
+        },
+      ),
+      ContextMenuItem(
+        icon: LucideIcons.share2,
+        label: 'Share PDF',
+        onTap: () {
+          Navigator.pop(context);
+          _exportToPdf();
+        },
+      ),
+      ContextMenuItem(
+        icon: LucideIcons.download,
+        label: 'Save PDF',
+        onTap: () {
+          Navigator.pop(context);
+          _savePdfLocally();
+        },
+      ),
+      ContextMenuItem(
+        icon: LucideIcons.trash2,
+        label: 'Delete',
+        color: AppColors.error,
+        onTap: () {
+          Navigator.pop(context);
+          _confirmDelete();
+        },
+      ),
+    ];
+
+    ContextMenuSheet.show(
+      context: context,
+      title: _document.name,
+      items: items,
+    );
+  }
+
+  void _showQualitySelector() {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        decoration: const BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(AppRadius.xl),
-          ),
-        ),
-        child: SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Handle bar
-              Container(
+      backgroundColor: AppColors.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
+      ),
+      builder: (sheetContext) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Handle bar
+            Center(
+              child: Container(
                 margin: const EdgeInsets.only(top: AppSpacing.sm),
-                width: 40,
+                width: 32,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: AppColors.textHint.withValues(alpha: 0.3),
+                  color: AppColors.border,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              const SizedBox(height: AppSpacing.md),
-              // Title
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-                child: Text(
-                  'Document Options',
-                  style: AppTextStyles.bodyLarge.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+            ),
+            // Header
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.lg,
+                AppSpacing.md,
+                AppSpacing.lg,
+                AppSpacing.sm,
+              ),
+              child: Text(
+                'PDF Quality',
+                style: AppTextStyles.bodyMedium.copyWith(
+                  fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(height: AppSpacing.md),
-              // Options
-              _buildOptionTile(
-                icon: LucideIcons.share2,
-                title: 'Share PDF',
-                subtitle: 'Share document via other apps',
-                onTap: () {
-                  Navigator.pop(context);
-                  _exportToPdf();
-                },
+            ),
+            const Divider(height: 1, color: AppColors.border),
+
+            // Quality options
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+              child: Column(
+                children: PdfQuality.values.map((quality) {
+                  final isSelected = quality == _document.pdfQuality;
+                  final estimatedSize = (_totalFileSize * quality.compressionRatio).round();
+
+                  return InkWell(
+                    onTap: () {
+                      Navigator.pop(sheetContext);
+                      _updateQuality(quality);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.lg,
+                        vertical: AppSpacing.md,
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            isSelected
+                                ? LucideIcons.circleCheck
+                                : LucideIcons.circle,
+                            size: 22,
+                            color: isSelected
+                                ? AppColors.primary
+                                : AppColors.textSecondary,
+                          ),
+                          const SizedBox(width: AppSpacing.md),
+                          Expanded(
+                            child: Text(
+                              quality.displayName,
+                              style: AppTextStyles.bodyMedium.copyWith(
+                                fontWeight: isSelected
+                                    ? FontWeight.w600
+                                    : FontWeight.normal,
+                              ),
+                            ),
+                          ),
+                          Text(
+                            '~${_formatFileSize(estimatedSize)}',
+                            style: AppTextStyles.caption.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }).toList(),
               ),
-              _buildOptionTile(
-                icon: LucideIcons.download,
-                title: 'Download PDF',
-                subtitle: 'Save to Downloads folder',
-                onTap: () {
-                  Navigator.pop(context);
-                  _savePdfLocally();
-                },
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.lg,
-                  vertical: AppSpacing.sm,
-                ),
-                child: Divider(
-                  color: AppColors.border,
-                  height: 1,
-                ),
-              ),
-              _buildOptionTile(
-                icon: LucideIcons.trash2,
-                title: 'Delete Document',
-                subtitle: 'Permanently remove this document',
-                isDestructive: true,
-                onTap: () {
-                  Navigator.pop(context);
-                  _confirmDelete();
-                },
-              ),
-              const SizedBox(height: AppSpacing.md),
-            ],
-          ),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildOptionTile({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required VoidCallback onTap,
-    bool isDestructive = false,
-  }) {
-    final color = isDestructive ? AppColors.error : AppColors.textPrimary;
-    final iconBgColor = isDestructive
-        ? AppColors.error.withValues(alpha: 0.1)
-        : AppColors.primary.withValues(alpha: 0.1);
-    final iconColor = isDestructive ? AppColors.error : AppColors.primary;
+  void _updateQuality(PdfQuality quality) async {
+    if (quality == _document.pdfQuality) return;
 
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.lg,
-            vertical: AppSpacing.md,
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: iconBgColor,
-                  borderRadius: BorderRadius.circular(AppRadius.md),
-                ),
-                child: Icon(
-                  icon,
-                  size: 20,
-                  color: iconColor,
-                ),
-              ),
-              const SizedBox(width: AppSpacing.md),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: AppTextStyles.bodyMedium.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: color,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      subtitle,
-                      style: AppTextStyles.caption.copyWith(
-                        color: AppColors.textSecondary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Icon(
-                LucideIcons.chevronRight,
-                size: 18,
-                color: AppColors.textHint,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+    setState(() {
+      _document = _document.copyWith(pdfQuality: quality);
+    });
+
+    // Save to storage
+    final documents = await DocumentStorage.loadDocuments();
+    final index = documents.indexWhere((doc) => doc.id == _document.id);
+    if (index != -1) {
+      documents[index] = _document;
+      await DocumentStorage.saveDocuments(documents);
+    }
   }
 
   /// Show delete confirmation dialog
@@ -680,7 +721,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
           style: AppTextStyles.h3,
         ),
         content: Text(
-          'This will permanently delete "${widget.document.name}" and all its pages. This action cannot be undone.',
+          'This will permanently delete "${_document.name}" and all its pages. This action cannot be undone.',
           style: AppTextStyles.bodySmall.copyWith(
             color: AppColors.textSecondary,
           ),
@@ -717,7 +758,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
   Future<void> _deleteDocument() async {
     try {
       final storage = DocumentStorage();
-      await storage.deleteDocument(widget.document.id);
+      await storage.deleteDocument(_document.id);
 
       // Clear cached PDF for this document
       await _pdfCacheService.removePdfFromCache(_imagePaths);
@@ -728,7 +769,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
 
       // Return to gallery with delete flag
       final navigator = Navigator.of(context);
-      navigator.pop({'deleted': true, 'documentId': widget.document.id});
+      navigator.pop({'deleted': true, 'documentId': _document.id});
     } catch (e) {
       debugPrint('Error deleting document: $e');
       _showSnackBar('Failed to delete document');
@@ -740,10 +781,11 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
     try {
       _showSnackBar('Preparing PDF...');
 
-      // Get or generate PDF (uses cache)
+      // Get or generate PDF with quality setting (uses cache)
       final pdfFile = await _pdfCacheService.getOrGeneratePdf(
-        imagePaths: widget.document.imagePaths,
-        documentName: widget.document.name,
+        imagePaths: _document.imagePaths,
+        documentName: _document.name,
+        quality: _document.pdfQuality,
       );
 
       if (!mounted) return;
@@ -751,7 +793,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
       // Generate filename with timestamp
       final timestamp =
           DateTime.now().toString().substring(0, 19).replaceAll(':', '-');
-      final fileName = '${widget.document.name}_$timestamp.pdf';
+      final fileName = '${_document.name}_$timestamp.pdf';
 
       // Share the PDF using the printing package
       await Printing.sharePdf(
@@ -771,16 +813,17 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
     try {
       _showSnackBar('Preparing PDF...');
 
-      // Get or generate PDF (uses cache)
+      // Get or generate PDF with quality setting (uses cache)
       final pdfFile = await _pdfCacheService.getOrGeneratePdf(
-        imagePaths: widget.document.imagePaths,
-        documentName: widget.document.name,
+        imagePaths: _document.imagePaths,
+        documentName: _document.name,
+        quality: _document.pdfQuality,
       );
 
       // Generate filename with timestamp
       final timestamp =
           DateTime.now().toString().substring(0, 19).replaceAll(':', '-');
-      final fileName = '${widget.document.name}_$timestamp.pdf';
+      final fileName = '${_document.name}_$timestamp.pdf';
 
       // Copy to new temp file with timestamp filename
       final tempDir = await getTemporaryDirectory();

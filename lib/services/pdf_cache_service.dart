@@ -1,11 +1,14 @@
 import 'dart:io';
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
+import '../models/scan_document.dart';
 
 /// PDF cache service for managing PDF generation and caching
 class PdfCacheService {
@@ -15,10 +18,10 @@ class PdfCacheService {
 
   final _cacheManager = DefaultCacheManager();
 
-  /// Generate cache key from image paths
-  /// Same image paths = same cache key
-  String _generateCacheKey(List<String> imagePaths) {
-    final combined = imagePaths.join('|');
+  /// Generate cache key from image paths and quality
+  /// Same image paths + quality = same cache key
+  String _generateCacheKey(List<String> imagePaths, PdfQuality quality) {
+    final combined = '${imagePaths.join('|')}|${quality.name}';
     final bytes = utf8.encode(combined);
     final digest = sha256.convert(bytes);
     return 'pdf_${digest.toString()}';
@@ -29,8 +32,9 @@ class PdfCacheService {
   Future<File> getOrGeneratePdf({
     required List<String> imagePaths,
     required String documentName,
+    PdfQuality quality = PdfQuality.high,
   }) async {
-    final cacheKey = _generateCacheKey(imagePaths);
+    final cacheKey = _generateCacheKey(imagePaths, quality);
 
     // Check cache first
     final cachedFile = await _cacheManager.getFileFromCache(cacheKey);
@@ -42,6 +46,7 @@ class PdfCacheService {
     final pdfFile = await _generatePdf(
       imagePaths: imagePaths,
       documentName: documentName,
+      quality: quality,
     );
 
     // Cache the generated PDF
@@ -58,6 +63,7 @@ class PdfCacheService {
   Future<File> _generatePdf({
     required List<String> imagePaths,
     required String documentName,
+    PdfQuality quality = PdfQuality.high,
   }) async {
     final pdf = pw.Document();
 
@@ -66,7 +72,8 @@ class PdfCacheService {
       final imageFile = File(imagePath);
       if (!imageFile.existsSync()) continue;
 
-      final imageBytes = await imageFile.readAsBytes();
+      // Compress image based on quality setting
+      final imageBytes = await _compressImage(imagePath, quality);
       final image = pw.MemoryImage(imageBytes);
 
       pdf.addPage(
@@ -91,14 +98,40 @@ class PdfCacheService {
     return file;
   }
 
+  /// Compress image based on quality setting
+  Future<Uint8List> _compressImage(String imagePath, PdfQuality quality) async {
+    // For original quality, return uncompressed
+    if (quality == PdfQuality.original) {
+      return await File(imagePath).readAsBytes();
+    }
+
+    final result = await FlutterImageCompress.compressWithFile(
+      imagePath,
+      minWidth: quality.maxDimension,
+      minHeight: quality.maxDimension,
+      quality: quality.jpegQuality,
+      format: CompressFormat.jpeg,
+    );
+
+    // If compression fails, return original
+    if (result == null) {
+      return await File(imagePath).readAsBytes();
+    }
+
+    return result;
+  }
+
   /// Clear all cached PDFs
   Future<void> clearCache() async {
     await _cacheManager.emptyCache();
   }
 
-  /// Remove specific PDF from cache
+  /// Remove specific PDF from cache for all quality levels
   Future<void> removePdfFromCache(List<String> imagePaths) async {
-    final cacheKey = _generateCacheKey(imagePaths);
-    await _cacheManager.removeFile(cacheKey);
+    // Remove cache for all quality levels
+    for (final quality in PdfQuality.values) {
+      final cacheKey = _generateCacheKey(imagePaths, quality);
+      await _cacheManager.removeFile(cacheKey);
+    }
   }
 }

@@ -6,12 +6,11 @@ import 'package:ndialog/ndialog.dart';
 import 'package:cunning_document_scanner_plus/cunning_document_scanner_plus.dart';
 import '../models/scan_document.dart';
 import '../services/document_storage.dart';
+import '../services/pdf_cache_service.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
 import '../theme/app_text_styles.dart';
 import '../widgets/common/scan_card.dart';
-import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
@@ -510,6 +509,13 @@ class _GalleryScreenState extends State<GalleryScreen> {
         _documents.removeWhere((doc) => doc.id == deletedId);
       });
     }
+    // Reload documents to reflect any changes (e.g., quality updates)
+    else {
+      final updatedDocuments = await DocumentStorage.loadDocuments();
+      setState(() {
+        _documents = updatedDocuments;
+      });
+    }
   }
 
   void _editDocumentName(ScanDocument document) async {
@@ -709,43 +715,22 @@ class _GalleryScreenState extends State<GalleryScreen> {
     try {
       _showSnackBar('Generating PDF...');
 
-      // Create PDF document
-      final pdf = pw.Document();
-
-      // Add each image as a separate page
-      for (final imagePath in document.imagePaths) {
-        final imageFile = File(imagePath);
-        if (!imageFile.existsSync()) continue;
-
-        final imageBytes = await imageFile.readAsBytes();
-        final image = pw.MemoryImage(imageBytes);
-
-        pdf.addPage(
-          pw.Page(
-            pageFormat: PdfPageFormat.a4,
-            build: (pw.Context context) {
-              return pw.Center(
-                child: pw.Image(image, fit: pw.BoxFit.contain),
-              );
-            },
-          ),
-        );
-      }
-
-      // Generate filename
-      final timestamp = DateTime.now().toString().substring(0, 19).replaceAll(':', '-');
-      final fileName = '${document.name}_$timestamp.pdf';
-
-      // Save PDF to temporary directory
-      final tempDir = await getTemporaryDirectory();
-      final file = File(path.join(tempDir.path, fileName));
-      await file.writeAsBytes(await pdf.save());
+      // Generate PDF with quality setting
+      final pdfFile = await PdfCacheService().getOrGeneratePdf(
+        imagePaths: document.imagePaths,
+        documentName: document.name,
+        quality: document.pdfQuality,
+      );
 
       if (!mounted) return;
 
+      // Generate filename for sharing
+      final timestamp = DateTime.now().toString().substring(0, 19).replaceAll(':', '-');
+      final fileName = '${document.name}_$timestamp.pdf';
+
       // Share the PDF using the printing package
       await Printing.sharePdf(
-        bytes: await pdf.save(),
+        bytes: await pdfFile.readAsBytes(),
         filename: fileName,
       );
 
@@ -761,40 +746,21 @@ class _GalleryScreenState extends State<GalleryScreen> {
     try {
       _showSnackBar('Generating PDF...');
 
-      // Create PDF document
-      final pdf = pw.Document();
-
-      // Add each image as a separate page
-      for (final imagePath in document.imagePaths) {
-        final imageFile = File(imagePath);
-        if (!imageFile.existsSync()) continue;
-
-        final imageBytes = await imageFile.readAsBytes();
-        final image = pw.MemoryImage(imageBytes);
-
-        pdf.addPage(
-          pw.Page(
-            pageFormat: PdfPageFormat.a4,
-            build: (pw.Context context) {
-              return pw.Center(
-                child: pw.Image(image, fit: pw.BoxFit.contain),
-              );
-            },
-          ),
-        );
-      }
+      // Generate PDF with quality setting
+      final pdfFile = await PdfCacheService().getOrGeneratePdf(
+        imagePaths: document.imagePaths,
+        documentName: document.name,
+        quality: document.pdfQuality,
+      );
 
       // Generate filename
       final timestamp = DateTime.now().toString().substring(0, 19).replaceAll(':', '-');
       final fileName = '${document.name}_$timestamp.pdf';
 
-      // Get PDF bytes
-      final pdfBytes = await pdf.save();
-
-      // Save to temporary file first
+      // Copy to new temp file with proper name
       final tempDir = await getTemporaryDirectory();
       final tempFile = File(path.join(tempDir.path, fileName));
-      await tempFile.writeAsBytes(pdfBytes);
+      await pdfFile.copy(tempFile.path);
 
       // Initialize MediaStore
       await MediaStore.ensureInitialized();
