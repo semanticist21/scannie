@@ -6,7 +6,7 @@ import 'package:ndialog/ndialog.dart';
 import 'package:cunning_document_scanner_plus/cunning_document_scanner_plus.dart';
 import '../models/scan_document.dart';
 import '../services/document_storage.dart';
-import '../services/pdf_cache_service.dart';
+import '../services/pdf_generator.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
 import '../theme/app_text_styles.dart';
@@ -569,6 +569,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
         }
       });
       await _saveDocuments();
+      if (!mounted) return;
       AppToast.show(context,'Scan updated successfully');
     }
   }
@@ -579,7 +580,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
       AppToast.info(context, 'Generating PDF...');
 
       // Generate PDF with quality setting
-      final pdfFile = await PdfCacheService().getOrGeneratePdf(
+      final pdfFile = await PdfGenerator.generatePdf(
         imagePaths: document.imagePaths,
         documentName: document.name,
         quality: document.pdfQuality,
@@ -601,6 +602,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
       // No snackbar for share - dialog is self-explanatory
     } catch (e) {
       debugPrint('Error exporting PDF: $e');
+      if (!mounted) return;
       AppToast.show(context,'Failed to export PDF', isError: true);
     }
   }
@@ -611,7 +613,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
       AppToast.info(context, 'Generating PDF...');
 
       // Generate PDF with quality setting
-      final pdfFile = await PdfCacheService().getOrGeneratePdf(
+      final pdfFile = await PdfGenerator.generatePdf(
         imagePaths: document.imagePaths,
         documentName: document.name,
         quality: document.pdfQuality,

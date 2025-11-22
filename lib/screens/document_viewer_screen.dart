@@ -12,8 +12,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:open_file_manager/open_file_manager.dart';
 import 'package:media_store_plus/media_store_plus.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
-import '../services/pdf_cache_service.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
+import '../services/pdf_generator.dart';
 import '../services/document_storage.dart';
 import '../widgets/common/full_screen_image_viewer.dart';
 import '../widgets/common/context_menu_sheet.dart';
@@ -40,12 +40,14 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
   bool _isGridView = true;
   late List<String> _imagePaths;
   late ScanDocument _document;
-  final _pdfCacheService = PdfCacheService();
   File? _cachedPdfFile;
   bool _isLoadingPdf = false;
   bool _showPdfPreview = false;
   late TabController _tabController;
   int _totalFileSize = 0;
+  bool _isInitialLoading = true;
+  int _currentPdfPage = 0;
+  int _totalPdfPages = 0;
 
   @override
   void initState() {
@@ -63,14 +65,35 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
 
     // Defer operations to after screen transition completes
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _calculateTotalSize();
-      // Load PDF after transition animation to avoid jank
-      Future.delayed(const Duration(milliseconds: 550), () {
-        if (mounted && _imagePaths.isNotEmpty) {
-          _loadPdfPreview();
-        }
-      });
+      _loadInitialData();
     });
+  }
+
+  Future<void> _loadInitialData() async {
+    // Run both operations in parallel
+    await Future.wait([
+      _calculateTotalSize(),
+      _loadPdfPreviewInitial(),
+    ]);
+
+    // Mark initial loading as complete
+    if (mounted) {
+      setState(() {
+        _isInitialLoading = false;
+      });
+    }
+  }
+
+  Future<void> _loadPdfPreviewInitial() async {
+    if (_imagePaths.isEmpty) {
+      return;
+    }
+
+    // Small delay for smooth transition
+    await Future.delayed(const Duration(milliseconds: 300));
+
+    if (!mounted) return;
+    await _loadPdfPreview();
   }
 
   Future<void> _calculateTotalSize() async {
@@ -94,7 +117,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
     super.dispose();
   }
 
-  /// Load PDF preview (cached or generate new)
+  /// Load PDF preview
   Future<void> _loadPdfPreview() async {
     // Skip if no images
     if (_imagePaths.isEmpty) return;
@@ -102,7 +125,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
     setState(() => _isLoadingPdf = true);
 
     try {
-      final pdfFile = await _pdfCacheService.getOrGeneratePdf(
+      final pdfFile = await PdfGenerator.generatePdf(
         imagePaths: _imagePaths,
         documentName: _document.name,
         quality: _document.pdfQuality,
@@ -147,46 +170,60 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
           ),
         ],
       ),
-      body: Column(
-        children: [
-          // Document info card with gradient
-          DocumentInfoHeader(
-            document: _document,
-            cachedPdfFile: _cachedPdfFile,
-          ),
+      body: _isInitialLoading
+          ? _buildLoadingState()
+          : Column(
+              children: [
+                // Document info card with gradient
+                DocumentInfoHeader(
+                  document: _document,
+                  cachedPdfFile: _cachedPdfFile,
+                ),
 
-          // Tab bar for Pages/PDF toggle
-          if (_imagePaths.isNotEmpty) _buildTabBar(),
+                // Tab bar for Pages/PDF toggle
+                if (_imagePaths.isNotEmpty) _buildTabBar(),
 
-          // Content area - Stack with fade animation (keeps PDF cached)
-          Expanded(
-            child: _imagePaths.isEmpty
-                ? _buildEmptyState()
-                : Stack(
-                    children: [
-                      // Pages view - fades out when PDF is shown
-                      AnimatedOpacity(
-                        opacity: _showPdfPreview ? 0.0 : 1.0,
-                        duration: const Duration(milliseconds: 200),
-                        child: IgnorePointer(
-                          ignoring: _showPdfPreview,
-                          child:
-                              _isGridView ? _buildGridView() : _buildListView(),
+                // Content area - Stack with fade animation (keeps PDF cached)
+                Expanded(
+                  child: _imagePaths.isEmpty
+                      ? _buildEmptyState()
+                      : Stack(
+                          children: [
+                            // Pages view - fades out when PDF is shown
+                            AnimatedOpacity(
+                              opacity: _showPdfPreview ? 0.0 : 1.0,
+                              duration: const Duration(milliseconds: 200),
+                              child: IgnorePointer(
+                                ignoring: _showPdfPreview,
+                                child: _isGridView
+                                    ? _buildGridView()
+                                    : _buildListView(),
+                              ),
+                            ),
+                            // PDF view - fades in when selected (stays in memory)
+                            AnimatedOpacity(
+                              opacity: _showPdfPreview ? 1.0 : 0.0,
+                              duration: const Duration(milliseconds: 200),
+                              child: IgnorePointer(
+                                ignoring: !_showPdfPreview,
+                                child: _buildPdfPreview(),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      // PDF view - fades in when selected (stays in memory)
-                      AnimatedOpacity(
-                        opacity: _showPdfPreview ? 1.0 : 0.0,
-                        duration: const Duration(milliseconds: 200),
-                        child: IgnorePointer(
-                          ignoring: !_showPdfPreview,
-                          child: _buildPdfPreview(),
-                        ),
-                      ),
-                    ],
-                  ),
-          ),
-        ],
+                ),
+              ],
+            ),
+    );
+  }
+
+  Widget _buildLoadingState() {
+    return Center(
+      child: Text(
+        'Loading...',
+        style: AppTextStyles.bodyMedium.copyWith(
+          color: AppColors.textSecondary,
+        ),
       ),
     );
   }
@@ -295,11 +332,55 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(AppRadius.md),
-        child: SfPdfViewer.file(
-          _cachedPdfFile!,
-          enableDoubleTapZooming: true,
-          enableTextSelection: false,
-          canShowScrollHead: true,
+        child: Stack(
+          children: [
+            PDFView(
+              filePath: _cachedPdfFile!.path,
+              enableSwipe: true,
+              swipeHorizontal: false,
+              autoSpacing: true,
+              pageFling: true,
+              pageSnap: true,
+              fitPolicy: FitPolicy.BOTH,
+              onRender: (pages) {
+                setState(() {
+                  _totalPdfPages = pages ?? 0;
+                });
+              },
+              onPageChanged: (page, total) {
+                setState(() {
+                  _currentPdfPage = page ?? 0;
+                  if (total != null) _totalPdfPages = total;
+                });
+              },
+            ),
+            // Page indicator overlay
+            if (_totalPdfPages > 0)
+              Positioned(
+                bottom: AppSpacing.md,
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.md,
+                      vertical: AppSpacing.xs,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.6),
+                      borderRadius: BorderRadius.circular(AppRadius.round),
+                    ),
+                    child: Text(
+                      '${_currentPdfPage + 1} / $_totalPdfPages',
+                      style: AppTextStyles.caption.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+          ],
         ),
       ),
     );
@@ -704,9 +785,6 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
       final storage = DocumentStorage();
       await storage.deleteDocument(_document.id);
 
-      // Clear cached PDF for this document
-      await _pdfCacheService.removePdfFromCache(_imagePaths);
-
       if (!mounted) return;
 
       AppToast.show(context,'Document deleted');
@@ -720,13 +798,13 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
     }
   }
 
-  /// Export document to PDF and share (uses cached PDF)
+  /// Export document to PDF and share
   Future<void> _exportToPdf() async {
     try {
       AppToast.info(context, 'Preparing PDF...');
 
-      // Get or generate PDF with quality setting (uses cache)
-      final pdfFile = await _pdfCacheService.getOrGeneratePdf(
+      // Generate PDF with quality setting
+      final pdfFile = await PdfGenerator.generatePdf(
         imagePaths: _document.imagePaths,
         documentName: _document.name,
         quality: _document.pdfQuality,
@@ -748,17 +826,19 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
       // No snackbar for share - dialog is self-explanatory
     } catch (e) {
       debugPrint('Error exporting PDF: $e');
+      if (!mounted) return;
       AppToast.show(context,'Failed to export PDF', isError: true);
     }
   }
 
-  /// Save PDF to Downloads folder using MediaStore (uses cached PDF)
+  /// Save PDF to Downloads folder using MediaStore
   Future<void> _savePdfLocally() async {
-    try {
-      AppToast.info(context, 'Preparing PDF...');
+    if (!mounted) return;
+    AppToast.info(context, 'Preparing PDF...');
 
-      // Get or generate PDF with quality setting (uses cache)
-      final pdfFile = await _pdfCacheService.getOrGeneratePdf(
+    try {
+      // Generate PDF with quality setting
+      final pdfFile = await PdfGenerator.generatePdf(
         imagePaths: _document.imagePaths,
         documentName: _document.name,
         quality: _document.pdfQuality,
@@ -796,6 +876,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
       await openFileManager();
     } catch (e) {
       debugPrint('Error saving PDF: $e');
+      if (!mounted) return;
       AppToast.show(context,'Failed to save PDF', isError: true);
     }
   }

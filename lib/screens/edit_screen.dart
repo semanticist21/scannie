@@ -77,9 +77,13 @@ class _EditScreenState extends State<EditScreen> {
       }
     } catch (e) {
       debugPrint('Error adding scans: $e');
-      AppToast.show(context,'Failed to add scans', isError: true);
+      if (mounted) {
+        AppToast.show(context,'Failed to add scans', isError: true);
+      }
     } finally {
-      setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -103,9 +107,13 @@ class _EditScreenState extends State<EditScreen> {
       }
     } catch (e) {
       debugPrint('❌ Error adding photos: $e');
-      AppToast.show(context,'Failed to add photos', isError: true);
+      if (mounted) {
+        AppToast.show(context,'Failed to add photos', isError: true);
+      }
     } finally {
-      setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 

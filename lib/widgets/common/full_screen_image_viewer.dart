@@ -293,7 +293,9 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
       final byteData =
           await filteredImage.toByteData(format: ui.ImageByteFormat.png);
       if (byteData == null) {
-        AppToast.show(context,'Failed to process image', isError: true);
+        if (mounted) {
+          AppToast.show(context,'Failed to process image', isError: true);
+        }
         return;
       }
 
@@ -310,7 +312,9 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
       navigator.pop(true); // Return true to indicate image was modified
     } catch (e) {
       debugPrint('Error saving filtered image: $e');
-      AppToast.show(context,'Failed to save image: $e', isError: true);
+      if (mounted) {
+        AppToast.show(context,'Failed to save image: $e', isError: true);
+      }
     }
   }
 
@@ -332,16 +336,20 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
       );
 
       final success = result['isSuccess'] == true;
-      if (success) {
-        AppToast.show(context,'Image saved to Photos');
-      } else {
-        AppToast.show(context,'Failed to save image', isError: true);
+      if (mounted) {
+        if (success) {
+          AppToast.show(context,'Image saved to Photos');
+        } else {
+          AppToast.show(context,'Failed to save image', isError: true);
+        }
       }
 
       debugPrint('Image saved to gallery: $result');
     } catch (e) {
       debugPrint('Error saving image: $e');
-      AppToast.show(context,'Failed to save image: $e', isError: true);
+      if (mounted) {
+        AppToast.show(context,'Failed to save image: $e', isError: true);
+      }
     }
   }
 
@@ -364,7 +372,9 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
       );
     } catch (e) {
       debugPrint('Error sharing image: $e');
-      AppToast.show(context,'Failed to share image: $e', isError: true);
+      if (mounted) {
+        AppToast.show(context,'Failed to share image: $e', isError: true);
+      }
     }
   }
 
