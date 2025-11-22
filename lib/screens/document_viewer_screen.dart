@@ -165,7 +165,8 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
                         duration: const Duration(milliseconds: 200),
                         child: IgnorePointer(
                           ignoring: _showPdfPreview,
-                          child: _isGridView ? _buildGridView() : _buildListView(),
+                          child:
+                              _isGridView ? _buildGridView() : _buildListView(),
                         ),
                       ),
                       // PDF view - fades in when selected (stays in memory)
@@ -429,6 +430,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
       ContextMenuItem(
         icon: LucideIcons.download,
         label: 'Save PDF',
+        color: AppColors.primary,
         onTap: () {
           Navigator.pop(context);
           _savePdfLocally();
@@ -437,6 +439,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
       ContextMenuItem(
         icon: LucideIcons.share2,
         label: 'Share PDF',
+        color: AppColors.primary,
         onTap: () {
           Navigator.pop(context);
           _exportToPdf();
@@ -492,7 +495,8 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
 
   /// Rename document
   void _renameDocument() {
-    final TextEditingController controller = TextEditingController(text: _document.name);
+    final TextEditingController controller =
+        TextEditingController(text: _document.name);
 
     DialogBackground(
       blur: 6,
@@ -565,7 +569,8 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
 
                         // Save to storage
                         final documents = await DocumentStorage.loadDocuments();
-                        final index = documents.indexWhere((doc) => doc.id == _document.id);
+                        final index = documents
+                            .indexWhere((doc) => doc.id == _document.id);
                         if (index != -1) {
                           documents[index] = _document;
                           await DocumentStorage.saveDocuments(documents);
@@ -797,14 +802,14 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
         title: const Text('Error'),
         description: Text(message),
         toastDuration: const Duration(seconds: 3),
-        showProgressIndicator: false,
+        showProgressIndicator: true,
       ).show(context);
     } else {
       ElegantNotification.success(
         title: const Text('Success'),
         description: Text(message),
         toastDuration: const Duration(seconds: 3),
-        showProgressIndicator: false,
+        showProgressIndicator: true,
       ).show(context);
     }
   }

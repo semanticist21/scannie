@@ -308,9 +308,11 @@ class _GalleryScreenState extends State<GalleryScreen> {
       // Launch cunning_document_scanner_plus with filters mode
       // This allows users to apply filters during scanning
       final scannedImages = await CunningDocumentScanner.getPictures(
-        mode: ScannerMode.full, // Enable AI Enhance + Clean features
-        noOfPages: 100, // Allow multiple pages (user taps Done when finished)
-      ) ?? [];
+            mode: ScannerMode.full, // Enable AI Enhance + Clean features
+            noOfPages:
+                100, // Allow multiple pages (user taps Done when finished)
+          ) ??
+          [];
 
       if (!mounted) return;
 
@@ -377,7 +379,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
   }
 
   void _editDocumentName(ScanDocument document) async {
-    final TextEditingController controller = TextEditingController(text: document.name);
+    final TextEditingController controller =
+        TextEditingController(text: document.name);
 
     DialogBackground(
       blur: 6,
@@ -444,9 +447,11 @@ class _GalleryScreenState extends State<GalleryScreen> {
                         Navigator.of(context).pop();
 
                         setState(() {
-                          final index = _documents.indexWhere((d) => d.id == document.id);
+                          final index =
+                              _documents.indexWhere((d) => d.id == document.id);
                           if (index != -1) {
-                            _documents[index] = document.copyWith(name: newName);
+                            _documents[index] =
+                                document.copyWith(name: newName);
                           }
                         });
 
@@ -588,7 +593,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
       if (!mounted) return;
 
       // Generate filename for sharing
-      final timestamp = DateTime.now().toString().substring(0, 19).replaceAll(':', '-');
+      final timestamp =
+          DateTime.now().toString().substring(0, 19).replaceAll(':', '-');
       final fileName = '${document.name}_$timestamp.pdf';
 
       // Share the PDF using the printing package
@@ -622,7 +628,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
       );
 
       // Generate filename
-      final timestamp = DateTime.now().toString().substring(0, 19).replaceAll(':', '-');
+      final timestamp =
+          DateTime.now().toString().substring(0, 19).replaceAll(':', '-');
       final fileName = '${document.name}_$timestamp.pdf';
 
       // Copy to new temp file with proper name
@@ -670,14 +677,14 @@ class _GalleryScreenState extends State<GalleryScreen> {
         title: const Text('Error'),
         description: Text(message),
         toastDuration: const Duration(seconds: 3),
-        showProgressIndicator: false,
+        showProgressIndicator: true,
       ).show(context);
     } else {
       ElegantNotification.success(
         title: const Text('Success'),
         description: Text(message),
         toastDuration: const Duration(seconds: 3),
-        showProgressIndicator: false,
+        showProgressIndicator: true,
       ).show(context);
     }
   }

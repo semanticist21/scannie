@@ -380,14 +380,14 @@ class _EditScreenState extends State<EditScreen> {
         title: const Text('Error'),
         description: Text(message),
         toastDuration: const Duration(seconds: 3),
-        showProgressIndicator: false,
+        showProgressIndicator: true,
       ).show(context);
     } else {
       ElegantNotification.success(
         title: const Text('Success'),
         description: Text(message),
         toastDuration: const Duration(seconds: 3),
-        showProgressIndicator: false,
+        showProgressIndicator: true,
       ).show(context);
     }
   }

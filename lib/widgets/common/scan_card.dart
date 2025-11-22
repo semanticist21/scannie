@@ -217,6 +217,7 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
         ContextMenuItem(
           icon: LucideIcons.download,
           label: 'Save PDF',
+          color: AppColors.primary,
           onTap: () {
             Navigator.pop(context);
             widget.onSavePdf?.call();
@@ -226,6 +227,7 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
         ContextMenuItem(
           icon: LucideIcons.share2,
           label: 'Share PDF',
+          color: AppColors.primary,
           onTap: () {
             Navigator.pop(context);
             widget.onShare?.call();

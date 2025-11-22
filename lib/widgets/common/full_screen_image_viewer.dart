@@ -51,14 +51,14 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
         title: const Text('Error'),
         description: Text(message),
         toastDuration: const Duration(seconds: 3),
-        showProgressIndicator: false,
+        showProgressIndicator: true,
       ).show(context);
     } else {
       ElegantNotification.success(
         title: const Text('Success'),
         description: Text(message),
         toastDuration: const Duration(seconds: 3),
-        showProgressIndicator: false,
+        showProgressIndicator: true,
       ).show(context);
     }
   }
@@ -83,64 +83,192 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
         return null;
       case ImageFilterType.grayscale:
         return const ColorFilter.matrix(<double>[
-          0.2126, 0.7152, 0.0722, 0, 0,
-          0.2126, 0.7152, 0.0722, 0, 0,
-          0.2126, 0.7152, 0.0722, 0, 0,
-          0, 0, 0, 1, 0,
+          0.2126,
+          0.7152,
+          0.0722,
+          0,
+          0,
+          0.2126,
+          0.7152,
+          0.0722,
+          0,
+          0,
+          0.2126,
+          0.7152,
+          0.0722,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
         ]);
       case ImageFilterType.highContrast:
         return const ColorFilter.matrix(<double>[
-          1.5, 0, 0, 0, -40,
-          0, 1.5, 0, 0, -40,
-          0, 0, 1.5, 0, -40,
-          0, 0, 0, 1, 0,
+          1.5,
+          0,
+          0,
+          0,
+          -40,
+          0,
+          1.5,
+          0,
+          0,
+          -40,
+          0,
+          0,
+          1.5,
+          0,
+          -40,
+          0,
+          0,
+          0,
+          1,
+          0,
         ]);
       case ImageFilterType.brighten:
         return const ColorFilter.matrix(<double>[
-          1, 0, 0, 0, 30,
-          0, 1, 0, 0, 30,
-          0, 0, 1, 0, 30,
-          0, 0, 0, 1, 0,
+          1,
+          0,
+          0,
+          0,
+          30,
+          0,
+          1,
+          0,
+          0,
+          30,
+          0,
+          0,
+          1,
+          0,
+          30,
+          0,
+          0,
+          0,
+          1,
+          0,
         ]);
       case ImageFilterType.document:
         // High contrast + slight brightness for document scanning
         return const ColorFilter.matrix(<double>[
-          1.8, 0, 0, 0, -60,
-          0, 1.8, 0, 0, -60,
-          0, 0, 1.8, 0, -60,
-          0, 0, 0, 1, 0,
+          1.8,
+          0,
+          0,
+          0,
+          -60,
+          0,
+          1.8,
+          0,
+          0,
+          -60,
+          0,
+          0,
+          1.8,
+          0,
+          -60,
+          0,
+          0,
+          0,
+          1,
+          0,
         ]);
       case ImageFilterType.sepia:
         // Warm brownish vintage tone
         return const ColorFilter.matrix(<double>[
-          0.393, 0.769, 0.189, 0, 0,
-          0.349, 0.686, 0.168, 0, 0,
-          0.272, 0.534, 0.131, 0, 0,
-          0, 0, 0, 1, 0,
+          0.393,
+          0.769,
+          0.189,
+          0,
+          0,
+          0.349,
+          0.686,
+          0.168,
+          0,
+          0,
+          0.272,
+          0.534,
+          0.131,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
         ]);
       case ImageFilterType.invert:
         // Negative/inverted colors
         return const ColorFilter.matrix(<double>[
-          -1, 0, 0, 0, 255,
-          0, -1, 0, 0, 255,
-          0, 0, -1, 0, 255,
-          0, 0, 0, 1, 0,
+          -1,
+          0,
+          0,
+          0,
+          255,
+          0,
+          -1,
+          0,
+          0,
+          255,
+          0,
+          0,
+          -1,
+          0,
+          255,
+          0,
+          0,
+          0,
+          1,
+          0,
         ]);
       case ImageFilterType.warm:
         // Warm tone (increase red/yellow)
         return const ColorFilter.matrix(<double>[
-          1.2, 0, 0, 0, 10,
-          0, 1.0, 0, 0, 0,
-          0, 0, 0.8, 0, -10,
-          0, 0, 0, 1, 0,
+          1.2,
+          0,
+          0,
+          0,
+          10,
+          0,
+          1.0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0.8,
+          0,
+          -10,
+          0,
+          0,
+          0,
+          1,
+          0,
         ]);
       case ImageFilterType.cool:
         // Cool tone (increase blue)
         return const ColorFilter.matrix(<double>[
-          0.9, 0, 0, 0, -10,
-          0, 1.0, 0, 0, 0,
-          0, 0, 1.2, 0, 20,
-          0, 0, 0, 1, 0,
+          0.9,
+          0,
+          0,
+          0,
+          -10,
+          0,
+          1.0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1.2,
+          0,
+          20,
+          0,
+          0,
+          0,
+          1,
+          0,
         ]);
     }
   }
@@ -180,7 +308,8 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
       final filteredImage = await picture.toImage(image.width, image.height);
 
       // Convert to bytes
-      final byteData = await filteredImage.toByteData(format: ui.ImageByteFormat.png);
+      final byteData =
+          await filteredImage.toByteData(format: ui.ImageByteFormat.png);
       if (byteData == null) {
         _showToast('Failed to process image', isError: true);
         return;
@@ -338,7 +467,8 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
     );
   }
 
-  Widget _buildFilterButton(ImageFilterType filter, String label, IconData icon) {
+  Widget _buildFilterButton(
+      ImageFilterType filter, String label, IconData icon) {
     final isSelected = _currentFilter == filter;
     return GestureDetector(
       onTap: () => setState(() => _currentFilter = filter),
@@ -452,12 +582,14 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                         ),
                       ),
                       IconButton(
-                        icon: const Icon(LucideIcons.download, color: Colors.white),
+                        icon: const Icon(LucideIcons.download,
+                            color: Colors.white),
                         onPressed: _downloadCurrentImage,
                         tooltip: 'Save to Photos',
                       ),
                       IconButton(
-                        icon: const Icon(LucideIcons.share2, color: Colors.white),
+                        icon:
+                            const Icon(LucideIcons.share2, color: Colors.white),
                         onPressed: _shareCurrentImage,
                         tooltip: 'Share Image',
                       ),

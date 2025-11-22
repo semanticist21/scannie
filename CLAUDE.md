@@ -16,6 +16,9 @@ Scannie는 문서 스캔 Flutter 모바일 애플리케이션입니다. 네이�
 - `flutter_image_compress` (PDF 품질별 이미지 압축)
 - `image_picker` (앨범에서 이미지 가져오기)
 - `elegant_notification` (토스트 알림)
+- `share_plus` (파일 공유)
+- `google_fonts` (커스텀 폰트)
+- `crypto` (SHA256 해싱 - PDF 캐시 키)
 
 **현재 상태**:
 - ✅ 문서 스캔 (네이티브 필터/크롭/회전 포함)
@@ -81,14 +84,14 @@ void _showMessage(String message, {bool isError = false}) {
       title: const Text('Error'),
       description: Text(message),
       toastDuration: const Duration(seconds: 3),
-      showProgressIndicator: false,
+      showProgressIndicator: true,
     ).show(context);
   } else {
     ElegantNotification.success(
       title: const Text('Success'),
       description: Text(message),
       toastDuration: const Duration(seconds: 3),
-      showProgressIndicator: false,
+      showProgressIndicator: true,
     ).show(context);
   }
 }
@@ -249,11 +252,19 @@ lib/
 │   ├── edit_screen.dart              # 이미지 관리 (드래그앤드롭 순서, 삭제, 추가)
 │   └── document_viewer_screen.dart   # 페이지 갤러리, 전체 화면 뷰어
 ├── widgets/common/   # 재사용 위젯
-│   ├── scan_card.dart
-│   ├── custom_app_bar.dart
-│   ├── custom_button.dart
-│   ├── context_menu_sheet.dart        # 공통 컨텍스트 메뉴 (bottom sheet)
-│   └── full_screen_image_viewer.dart  # 이미지 뷰어 + 필터 + 저장
+│   ├── scan_card.dart              # 문서 카드 (GalleryScreen 그리드)
+│   ├── document_grid_card.dart     # 문서 그리드 카드 (대체 레이아웃)
+│   ├── page_card.dart              # 개별 페이지 카드 (DocumentViewer)
+│   ├── image_tile.dart             # EditScreen 이미지 타일
+│   ├── custom_app_bar.dart         # 커스텀 AppBar
+│   ├── custom_button.dart          # 커스텀 버튼
+│   ├── context_menu_sheet.dart     # 공통 컨텍스트 메뉴 (bottom sheet)
+│   ├── quality_selector_sheet.dart # PDF 품질 선택 시트
+│   ├── edit_bottom_actions.dart    # EditScreen 하단 액션 버튼
+│   ├── document_info_header.dart   # 문서 정보 헤더
+│   ├── document_search_delegate.dart # 문서 검색 기능
+│   ├── empty_state.dart            # 빈 상태 표시 위젯
+│   └── full_screen_image_viewer.dart # 이미지 뷰어 + 필터 + 저장
 ├── services/         # 비즈니스 로직
 │   ├── document_storage.dart         # 문서 영구 저장/로드
 │   └── pdf_cache_service.dart        # PDF 생성 캐싱 (SHA256 기반)
@@ -264,6 +275,19 @@ lib/
 └── models/
     └── scan_document.dart    # ScanDocument + PdfQuality enum
 ```
+
+### 위젯 책임 분리
+
+| 위젯 | 용도 | 사용 화면 |
+|------|------|-----------|
+| `scan_card.dart` | 문서 카드 (리스트/그리드 뷰) | GalleryScreen |
+| `document_grid_card.dart` | 대체 그리드 카드 레이아웃 | GalleryScreen |
+| `page_card.dart` | 단일 페이지 썸네일 카드 | DocumentViewerScreen |
+| `image_tile.dart` | 드래그 가능한 이미지 타일 | EditScreen |
+| `quality_selector_sheet.dart` | PDF 품질 선택 바텀 시트 | GalleryScreen |
+| `edit_bottom_actions.dart` | 저장/추가 버튼 그룹 | EditScreen |
+| `document_search_delegate.dart` | 검색 기능 구현 | GalleryScreen |
+| `empty_state.dart` | 빈 문서 목록 상태 표시 | GalleryScreen |
 
 ### 테마 시스템 (필수)
 
@@ -456,7 +480,7 @@ ElegantNotification.success(
   description: Text(message, style: AppTextStyles.caption.copyWith(...)),
   width: 280,
   height: 60,
-  showProgressIndicator: false,
+  showProgressIndicator: true,
   displayCloseButton: false,
   borderRadius: BorderRadius.circular(AppRadius.md),
   background: AppColors.surface,
