@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:reorderable_grid_view/reorderable_grid_view.dart';
+import 'package:ndialog/ndialog.dart';
 import '../models/scan_document.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
@@ -60,21 +61,31 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
       }
     });
 
-    // Defer size calculation to after first frame
+    // Defer operations to after screen transition completes
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _calculateTotalSize();
+      // Load PDF after transition animation (~300ms) to avoid jank
+      Future.delayed(const Duration(milliseconds: 350), () {
+        if (mounted && _imagePaths.isNotEmpty) {
+          _loadPdfPreview();
+        }
+      });
     });
   }
 
-  void _calculateTotalSize() {
+  Future<void> _calculateTotalSize() async {
     int total = 0;
     for (final imagePath in _imagePaths) {
       final file = File(imagePath);
-      if (file.existsSync()) {
-        total += file.lengthSync();
+      if (await file.exists()) {
+        total += await file.length();
       }
     }
-    _totalFileSize = total;
+    if (mounted) {
+      setState(() {
+        _totalFileSize = total;
+      });
+    }
   }
 
   @override
@@ -142,17 +153,30 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
           // Tab bar for Pages/PDF toggle
           if (_imagePaths.isNotEmpty) _buildTabBar(),
 
-          // Content area - IndexedStack keeps PDF in memory
+          // Content area - Stack with fade animation (keeps PDF cached)
           Expanded(
             child: _imagePaths.isEmpty
                 ? _buildEmptyState()
-                : IndexedStack(
-                    index: _showPdfPreview ? 1 : 0,
+                : Stack(
                     children: [
-                      // Pages view
-                      _isGridView ? _buildGridView() : _buildListView(),
-                      // PDF view (kept in memory)
-                      _buildPdfPreview(),
+                      // Pages view - fades out when PDF is shown
+                      AnimatedOpacity(
+                        opacity: _showPdfPreview ? 0.0 : 1.0,
+                        duration: const Duration(milliseconds: 200),
+                        child: IgnorePointer(
+                          ignoring: _showPdfPreview,
+                          child: _isGridView ? _buildGridView() : _buildListView(),
+                        ),
+                      ),
+                      // PDF view - fades in when selected (stays in memory)
+                      AnimatedOpacity(
+                        opacity: _showPdfPreview ? 1.0 : 0.0,
+                        duration: const Duration(milliseconds: 200),
+                        child: IgnorePointer(
+                          ignoring: !_showPdfPreview,
+                          child: _buildPdfPreview(),
+                        ),
+                      ),
                     ],
                   ),
           ),
@@ -229,13 +253,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
     }
 
     if (_cachedPdfFile == null || !_cachedPdfFile!.existsSync()) {
-      // Trigger PDF loading on first view
-      if (!_isLoadingPdf && _imagePaths.isNotEmpty) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          _loadPdfPreview();
-        });
-      }
-      // Show loading state while waiting
+      // Show loading state (PDF loading starts from initState)
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -399,6 +417,22 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
   void _showOptions() {
     final items = <ContextMenuItem>[
       ContextMenuItem(
+        icon: LucideIcons.filePen,
+        label: 'Edit Scan',
+        onTap: () {
+          Navigator.pop(context);
+          _editScan();
+        },
+      ),
+      ContextMenuItem(
+        icon: LucideIcons.pencil,
+        label: 'Rename',
+        onTap: () {
+          Navigator.pop(context);
+          _renameDocument();
+        },
+      ),
+      ContextMenuItem(
         icon: LucideIcons.settings2,
         label: 'PDF Quality (${_document.pdfQuality.displayName})',
         onTap: () {
@@ -407,19 +441,19 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
         },
       ),
       ContextMenuItem(
-        icon: LucideIcons.share2,
-        label: 'Share PDF',
-        onTap: () {
-          Navigator.pop(context);
-          _exportToPdf();
-        },
-      ),
-      ContextMenuItem(
         icon: LucideIcons.download,
         label: 'Save PDF',
         onTap: () {
           Navigator.pop(context);
           _savePdfLocally();
+        },
+      ),
+      ContextMenuItem(
+        icon: LucideIcons.share2,
+        label: 'Share PDF',
+        onTap: () {
+          Navigator.pop(context);
+          _exportToPdf();
         },
       ),
       ContextMenuItem(
@@ -438,6 +472,131 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
       title: _document.name,
       items: items,
     );
+  }
+
+  /// Edit scan - navigate to EditScreen to add/delete/reorder images
+  void _editScan() async {
+    final navigator = Navigator.of(context);
+
+    // Navigate to EditScreen with entire document
+    final result = await navigator.pushNamed(
+      '/edit',
+      arguments: _document,
+    );
+
+    // If user saved changes, update the document
+    if (result != null && result is ScanDocument && mounted) {
+      setState(() {
+        _document = result;
+        _imagePaths = List.from(result.imagePaths);
+        _cachedPdfFile = null; // Invalidate PDF cache
+      });
+
+      // Recalculate size and reload PDF
+      _calculateTotalSize();
+      Future.delayed(const Duration(milliseconds: 350), () {
+        if (mounted && _imagePaths.isNotEmpty) {
+          _loadPdfPreview();
+        }
+      });
+
+      _showSnackBar('Scan updated');
+    }
+  }
+
+  /// Rename document
+  void _renameDocument() {
+    final TextEditingController controller = TextEditingController(text: _document.name);
+
+    DialogBackground(
+      blur: 6,
+      dismissable: true,
+      barrierColor: Colors.black.withValues(alpha: 0.4),
+      dialog: Material(
+        color: Colors.transparent,
+        child: Center(
+          child: Container(
+            width: 320,
+            margin: const EdgeInsets.all(AppSpacing.lg),
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(AppRadius.lg),
+              border: Border.all(color: AppColors.border),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.08),
+                  blurRadius: 24,
+                  offset: const Offset(0, 12),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Rename Scan',
+                  style: AppTextStyles.h3,
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  'Enter a new name for this document',
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.md),
+                ShadInput(
+                  controller: controller,
+                  placeholder: const Text('Document name'),
+                  autofocus: true,
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ShadButton.outline(
+                      child: const Text('Cancel'),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    ShadButton(
+                      child: const Text('Save'),
+                      onPressed: () async {
+                        final newName = controller.text.trim();
+                        if (newName.isEmpty) {
+                          _showSnackBar('Name cannot be empty');
+                          return;
+                        }
+
+                        Navigator.of(context).pop();
+
+                        // Update local state
+                        setState(() {
+                          _document = _document.copyWith(name: newName);
+                        });
+
+                        // Save to storage
+                        final documents = await DocumentStorage.loadDocuments();
+                        final index = documents.indexWhere((doc) => doc.id == _document.id);
+                        if (index != -1) {
+                          documents[index] = _document;
+                          await DocumentStorage.saveDocuments(documents);
+                        }
+
+                        if (!mounted) return;
+                        _showSnackBar('Document renamed');
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    ).show(context, transitionType: DialogTransitionType.Shrink);
   }
 
   void _showQualitySelector() {
@@ -470,45 +629,68 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
 
   /// Show delete confirmation dialog
   Future<void> _confirmDelete() async {
-    showDialog(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(
-          'Delete Document?',
-          style: AppTextStyles.h3,
-        ),
-        content: Text(
-          'This will permanently delete "${_document.name}" and all its pages. This action cannot be undone.',
-          style: AppTextStyles.bodySmall.copyWith(
-            color: AppColors.textSecondary,
+    DialogBackground(
+      blur: 6,
+      dismissable: true,
+      barrierColor: Colors.black.withValues(alpha: 0.4),
+      dialog: Material(
+        color: Colors.transparent,
+        child: Center(
+          child: Container(
+            width: 320,
+            margin: const EdgeInsets.all(AppSpacing.lg),
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(AppRadius.lg),
+              border: Border.all(color: AppColors.border),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.08),
+                  blurRadius: 24,
+                  offset: const Offset(0, 12),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Delete Document?',
+                  style: AppTextStyles.h3,
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  'This will permanently delete "${_document.name}" and all its pages. This action cannot be undone.',
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ShadButton.outline(
+                      child: const Text('Cancel'),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    ShadButton.destructive(
+                      child: const Text('Delete'),
+                      onPressed: () async {
+                        Navigator.of(context).pop();
+                        await _deleteDocument();
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadius.lg),
-          side: BorderSide(color: AppColors.border),
-        ),
-        backgroundColor: AppColors.surface,
-        actionsPadding: const EdgeInsets.fromLTRB(
-          AppSpacing.lg,
-          0,
-          AppSpacing.lg,
-          AppSpacing.lg,
-        ),
-        actions: [
-          ShadButton.outline(
-            child: const Text('Cancel'),
-            onPressed: () => Navigator.of(dialogContext).pop(),
-          ),
-          ShadButton.destructive(
-            child: const Text('Delete'),
-            onPressed: () async {
-              Navigator.of(dialogContext).pop();
-              await _deleteDocument();
-            },
-          ),
-        ],
       ),
-    );
+    ).show(context, transitionType: DialogTransitionType.Shrink);
   }
 
   /// Delete the document and return to gallery
