@@ -5,12 +5,14 @@ import '../../theme/app_theme.dart';
 
 /// Bottom action bar for EditScreen
 class EditBottomActions extends StatelessWidget {
-  final VoidCallback onAddMore;
+  final VoidCallback onAddScan;
+  final VoidCallback onAddPhoto;
   final VoidCallback onSave;
 
   const EditBottomActions({
     super.key,
-    required this.onAddMore,
+    required this.onAddScan,
+    required this.onAddPhoto,
     required this.onSave,
   });
 
@@ -44,16 +46,26 @@ class EditBottomActions extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Add More button (outline)
+          // Add Scan button (outline)
           Expanded(
             child: ShadButton.outline(
-              onPressed: onAddMore,
+              onPressed: onAddScan,
               height: 48,
-              leading: const Icon(LucideIcons.imagePlus, size: 18),
-              child: const Text('Add More'),
+              leading: const Icon(LucideIcons.scan, size: 18),
+              child: const Text('Scan'),
             ),
           ),
-          const SizedBox(width: AppSpacing.md),
+          const SizedBox(width: AppSpacing.sm),
+          // Add Photo button (outline)
+          Expanded(
+            child: ShadButton.outline(
+              onPressed: onAddPhoto,
+              height: 48,
+              leading: const Icon(LucideIcons.image, size: 18),
+              child: const Text('Photo'),
+            ),
+          ),
+          const SizedBox(width: AppSpacing.sm),
           // Save button (primary)
           Expanded(
             child: ShadButton(

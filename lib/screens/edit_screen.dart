@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:ndialog/ndialog.dart';
 import 'package:reorderable_grid_view/reorderable_grid_view.dart';
+import 'package:image_picker/image_picker.dart';
 import '../models/scan_document.dart';
 import '../services/document_storage.dart';
 import '../theme/app_colors.dart';
@@ -55,8 +56,8 @@ class _EditScreenState extends State<EditScreen> {
     }
   }
 
-  /// Add more images to current session
-  Future<void> _addMoreImages() async {
+  /// Add more scans using document scanner
+  Future<void> _addMoreScans() async {
     setState(() => _isLoading = true);
 
     try {
@@ -71,11 +72,37 @@ class _EditScreenState extends State<EditScreen> {
         setState(() {
           _imagePaths.addAll(newImages);
         });
-        _showMessage('${newImages.length} image(s) added');
+        // Success toast removed - visual feedback is the grid update itself
       }
     } catch (e) {
-      debugPrint('Error adding images: $e');
-      _showMessage('Failed to add images');
+      debugPrint('Error adding scans: $e');
+      _showMessage('Failed to add scans');
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  /// Add photos from gallery
+  Future<void> _addFromGallery() async {
+    setState(() => _isLoading = true);
+
+    try {
+      final picker = ImagePicker();
+      final pickedFiles = await picker.pickMultiImage();
+
+      debugPrint('📷 Picked ${pickedFiles.length} photos from gallery');
+
+      if (pickedFiles.isNotEmpty) {
+        final newPaths = pickedFiles.map((file) => file.path).toList();
+        debugPrint('📷 Photo paths: $newPaths');
+        setState(() {
+          _imagePaths.addAll(newPaths);
+        });
+        // Success toast removed - visual feedback is the grid update itself
+      }
+    } catch (e) {
+      debugPrint('❌ Error adding photos: $e');
+      _showMessage('Failed to add photos');
     } finally {
       setState(() => _isLoading = false);
     }
@@ -404,7 +431,8 @@ class _EditScreenState extends State<EditScreen> {
 
                   // Bottom Actions
                   EditBottomActions(
-                    onAddMore: _addMoreImages,
+                    onAddScan: _addMoreScans,
+                    onAddPhoto: _addFromGallery,
                     onSave: _saveScan,
                   ),
                 ],

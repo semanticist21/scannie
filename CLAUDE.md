@@ -14,7 +14,7 @@ Scannie는 문서 스캔 Flutter 모바일 애플리케이션입니다. 네이�
 - `pdf` + `printing` (PDF 생성/공유)
 - `syncfusion_flutter_pdfviewer` (PDF 미리보기)
 - `flutter_image_compress` (PDF 품질별 이미지 압축)
-- `elegant_notification` (토스트 알림)
+- `image_picker` (앨범에서 이미지 가져오기)
 
 **현재 상태**:
 - ✅ 문서 스캔 (네이티브 필터/크롭/회전 포함)
@@ -63,6 +63,50 @@ flutter run -d <device-id> --android-skip-build-dependency-validation
 - ❌ Async gap 후 BuildContext 직접 사용 금지 → Navigator 인스턴스 저장
 - ❌ path 패키지는 `import 'package:path/path.dart' as path;` 형식으로만
 - ❌ `print()` 사용 금지 → `debugPrint()` 사용 (프로덕션 빌드에서 자동 제거)
+
+## 토스트 알림 (ShadToast)
+
+**필수**: 모든 토스트는 `ShadToast`를 사용합니다 (shadcn_ui 라이브러리).
+
+### 사용 패턴
+
+```dart
+// 메서드 정의
+void _showMessage(String message) {
+  ShadToaster.of(context).show(
+    ShadToast(
+      title: Text(message),
+    ),
+  );
+}
+
+// 사용
+_showMessage('Document renamed');
+_showMessage('Failed to save PDF');
+```
+
+### 토스트 표시 규칙
+
+**에러만 표시하는 경우** (성공은 UI 변화로 충분):
+- 이미지 추가 (Add Scan, Add Photo) - 그리드 업데이트가 시각적 피드백
+- 이미지 삭제 - 즉시 그리드에서 제거됨
+- 필터 저장 후 뒤로가기 - 이미지 변경이 시각적 피드백
+
+**성공/에러 모두 표시하는 경우**:
+- 문서 저장/이름 변경 - 사용자 확인 필요
+- PDF 공유/다운로드 - 완료 알림 필요
+- 문서 삭제 - 중요한 작업 확인
+
+### 금지 사항
+
+```dart
+// ❌ WRONG - 다른 토스트 라이브러리 사용 금지
+ElegantNotification.success(...).show(context);
+ScaffoldMessenger.of(context).showSnackBar(...);
+
+// ✅ CORRECT - ShadToast만 사용
+ShadToaster.of(context).show(ShadToast(...));
+```
 
 ## Flutter API 주의사항
 

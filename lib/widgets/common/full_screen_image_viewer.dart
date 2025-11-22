@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:elegant_notification/elegant_notification.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/app_text_styles.dart';
@@ -46,63 +45,11 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
   ImageFilterType _currentFilter = ImageFilterType.original;
 
   void _showToast(String message, {bool isError = false}) {
-    if (isError) {
-      ElegantNotification.error(
-        title: Text(
-          'Error',
-          style: AppTextStyles.bodyMedium.copyWith(
-            fontWeight: FontWeight.w600,
-            color: AppColors.error,
-          ),
-        ),
-        description: Text(
-          message,
-          style: AppTextStyles.caption.copyWith(
-            color: AppColors.textSecondary,
-          ),
-        ),
-        width: 280,
-        height: 60,
-        toastDuration: const Duration(seconds: 3),
-        showProgressIndicator: false,
-        displayCloseButton: false,
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        background: AppColors.surface,
-        shadow: BoxShadow(
-          color: Colors.black.withValues(alpha: 0.1),
-          blurRadius: 8,
-          offset: const Offset(0, 2),
-        ),
-      ).show(context);
-    } else {
-      ElegantNotification.success(
-        title: Text(
-          'Saved',
-          style: AppTextStyles.bodyMedium.copyWith(
-            fontWeight: FontWeight.w600,
-            color: AppColors.primary,
-          ),
-        ),
-        description: Text(
-          message,
-          style: AppTextStyles.caption.copyWith(
-            color: AppColors.textSecondary,
-          ),
-        ),
-        width: 280,
-        height: 60,
-        toastDuration: const Duration(seconds: 3),
-        showProgressIndicator: false,
-        displayCloseButton: false,
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        background: AppColors.surface,
-        shadow: BoxShadow(
-          color: Colors.black.withValues(alpha: 0.1),
-          blurRadius: 8,
-          offset: const Offset(0, 2),
-        ),
-      ).show(context);
-    }
+    ShadToaster.of(context).show(
+      ShadToast(
+        title: Text(message),
+      ),
+    );
   }
 
   @override

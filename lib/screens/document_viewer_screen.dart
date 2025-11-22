@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:ndialog/ndialog.dart';
-import 'package:elegant_notification/elegant_notification.dart';
 import '../models/scan_document.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
@@ -486,27 +485,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
         }
       });
 
-      ElegantNotification.success(
-        title: Text(
-          'Updated',
-          style: AppTextStyles.bodyMedium.copyWith(
-            fontWeight: FontWeight.w600,
-            color: AppColors.textPrimary,
-          ),
-        ),
-        description: Text(
-          'Scan updated successfully',
-          style: AppTextStyles.caption.copyWith(
-            color: AppColors.textSecondary,
-          ),
-        ),
-        width: 280,
-        height: 60,
-        showProgressIndicator: false,
-        displayCloseButton: false,
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        background: AppColors.surface,
-      ).show(context);
+      _showSnackBar('Scan updated successfully');
     }
   }
 
