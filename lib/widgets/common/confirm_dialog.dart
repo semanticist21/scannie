@@ -21,7 +21,7 @@ class ConfirmDialog {
     DialogBackground(
       blur: 6,
       dismissable: true,
-      barrierColor: Colors.black.withValues(alpha: 0.4),
+      barrierColor: AppColors.barrier,
       dialog: Material(
         color: Colors.transparent,
         child: Center(
@@ -33,13 +33,7 @@ class ConfirmDialog {
               color: AppColors.surface,
               borderRadius: BorderRadius.circular(AppRadius.lg),
               border: Border.all(color: AppColors.border),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.08),
-                  blurRadius: 24,
-                  offset: const Offset(0, 12),
-                ),
-              ],
+              boxShadow: AppShadows.dialog,
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -106,7 +100,7 @@ class ConfirmDialog {
     DialogBackground(
       blur: 6,
       dismissable: dismissable,
-      barrierColor: Colors.black.withValues(alpha: 0.4),
+      barrierColor: AppColors.barrier,
       dialog: Material(
         color: Colors.transparent,
         child: Center(
@@ -118,13 +112,7 @@ class ConfirmDialog {
               color: AppColors.surface,
               borderRadius: BorderRadius.circular(AppRadius.lg),
               border: Border.all(color: AppColors.border),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.08),
-                  blurRadius: 24,
-                  offset: const Offset(0, 12),
-                ),
-              ],
+              boxShadow: AppShadows.dialog,
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,

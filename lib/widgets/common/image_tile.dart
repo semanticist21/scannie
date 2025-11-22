@@ -55,13 +55,13 @@ class ImageTile extends StatelessWidget {
                 vertical: AppSpacing.xs,
               ),
               decoration: BoxDecoration(
-                color: Colors.black.withValues(alpha: 0.6),
+                color: AppColors.shadowDark,
                 borderRadius: BorderRadius.circular(AppRadius.sm),
               ),
               child: Text(
                 '${index + 1}',
                 style: AppTextStyles.caption.copyWith(
-                  color: Colors.white,
+                  color: AppColors.darkTextPrimary,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -81,13 +81,7 @@ class ImageTile extends StatelessWidget {
                   color: AppColors.surface,
                   shape: BoxShape.circle,
                   border: Border.all(color: AppColors.border),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.1),
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
+                  boxShadow: AppShadows.card,
                 ),
                 child: const Icon(
                   LucideIcons.x,

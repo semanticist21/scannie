@@ -108,12 +108,12 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
               width: 60,
               height: 60,
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
+                color: AppColors.darkOverlay,
                 shape: BoxShape.circle,
               ),
               child: const Icon(
                 LucideIcons.trash2,
-                color: Colors.white,
+                color: AppColors.darkTextPrimary,
                 size: 28,
               ),
             ),
@@ -127,13 +127,7 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
           decoration: BoxDecoration(
             color: AppColors.surface,
             borderRadius: BorderRadius.circular(AppRadius.lg),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.08),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
+            boxShadow: AppShadows.card,
           ),
           child: InkWell(
             onTap: widget.onTap,

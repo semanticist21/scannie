@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import '../../theme/app_colors.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/app_text_styles.dart';
 
@@ -35,39 +36,33 @@ class PageCard extends StatelessWidget {
             cacheWidth: isListView ? 600 : 900,
             errorBuilder: (context, error, stackTrace) {
               return Container(
-                color: const Color(0xFFE0E5EC),
+                color: AppColors.neumorphicBase,
                 child: Center(
                   child: Icon(
                     LucideIcons.imageOff,
                     size: isListView ? 80 : 48,
-                    color: const Color(0xFF8E9AAF),
+                    color: AppColors.neumorphicShadowDark,
                   ),
                 ),
               );
             },
           )
         : Container(
-            color: const Color(0xFFE0E5EC),
+            color: AppColors.neumorphicBase,
             child: Center(
               child: Icon(
                 LucideIcons.image,
                 size: isListView ? 80 : 48,
-                color: const Color(0xFF8E9AAF),
+                color: AppColors.neumorphicShadowDark,
               ),
             ),
           );
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadius.md),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        boxShadow: AppShadows.card,
       ),
       child: SizedBox(
         height: isListView ? 280 : null,
@@ -87,14 +82,14 @@ class PageCard extends StatelessWidget {
                     vertical: AppSpacing.xs,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.black.withValues(alpha: 0.6),
+                    color: AppColors.shadowDark,
                     borderRadius: BorderRadius.circular(AppRadius.sm),
                   ),
                   child: Text(
                     '${index + 1}',
                     style: AppTextStyles.caption.copyWith(
                       fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                      color: AppColors.darkTextPrimary,
                     ),
                   ),
                 ),

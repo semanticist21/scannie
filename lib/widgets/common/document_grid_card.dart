@@ -51,13 +51,7 @@ class DocumentGridCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(AppRadius.lg),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.08),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
+          boxShadow: AppShadows.card,
         ),
         child: InkWell(
           onTap: onTap,
@@ -75,13 +69,7 @@ class DocumentGridCard extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(AppRadius.md),
                         color: AppColors.surface,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.08),
-                            blurRadius: 6,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
+                        boxShadow: AppShadows.card,
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(AppRadius.md),
@@ -158,13 +146,13 @@ class DocumentGridCard extends StatelessWidget {
                     width: 32,
                     height: 32,
                     decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.5),
+                      color: AppColors.overlay,
                       borderRadius: BorderRadius.circular(AppRadius.sm),
                     ),
                     child: IconButton(
                       padding: EdgeInsets.zero,
                       iconSize: 18,
-                      icon: const Icon(LucideIcons.download, color: Colors.white),
+                      icon: const Icon(LucideIcons.download, color: AppColors.darkTextPrimary),
                       onPressed: () => _showExportOptions(context),
                     ),
                   ),

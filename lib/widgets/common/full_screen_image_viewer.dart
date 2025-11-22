@@ -410,13 +410,13 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
               const Icon(
                 LucideIcons.circleAlert,
                 size: 120,
-                color: Colors.white54,
+                color: AppColors.darkTextTertiary,
               ),
               const SizedBox(height: AppSpacing.lg),
               Text(
                 'Failed to load image',
                 style: AppTextStyles.h2.copyWith(
-                  color: Colors.white54,
+                  color: AppColors.darkTextTertiary,
                 ),
               ),
             ],
@@ -437,7 +437,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
     return Container(
       margin: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
-        color: Colors.black,
+        color: AppColors.darkBackground,
         borderRadius: BorderRadius.circular(AppRadius.sm),
       ),
       child: ClipRRect(
@@ -459,12 +459,12 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
         ),
         decoration: BoxDecoration(
           color: isSelected
-              ? Colors.white.withValues(alpha: 0.2)
+              ? AppColors.darkOverlay
               : Colors.transparent,
           borderRadius: BorderRadius.circular(AppRadius.sm),
           border: Border.all(
             color: isSelected
-                ? Colors.white.withValues(alpha: 0.5)
+                ? AppColors.darkOverlayLight
                 : Colors.transparent,
           ),
         ),
@@ -473,15 +473,14 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
           children: [
             Icon(
               icon,
-              color: isSelected ? Colors.white : Colors.white70,
+              color: isSelected ? AppColors.darkTextPrimary : AppColors.darkTextSecondary,
               size: 20,
             ),
             const SizedBox(height: 4),
             Text(
               label,
-              style: TextStyle(
-                color: isSelected ? Colors.white : Colors.white70,
-                fontSize: 10,
+              style: AppTextStyles.overline.copyWith(
+                color: isSelected ? AppColors.darkTextPrimary : AppColors.darkTextSecondary,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
               ),
             ),
@@ -494,7 +493,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.darkBackground,
       body: SafeArea(
         child: Stack(
           children: [
@@ -540,7 +539,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        Colors.black.withValues(alpha: 0.7),
+                        AppColors.shadowDarker,
                         Colors.transparent,
                       ],
                     ),
@@ -548,14 +547,14 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                   child: Row(
                     children: [
                       IconButton(
-                        icon: const Icon(LucideIcons.x, color: Colors.white),
+                        icon: const Icon(LucideIcons.x, color: AppColors.darkTextPrimary),
                         onPressed: () => Navigator.pop(context),
                       ),
                       Expanded(
                         child: Text(
                           'Page ${_currentPage + 1} of ${widget.imagePaths.length}',
                           style: AppTextStyles.bodyLarge.copyWith(
-                            color: Colors.white,
+                            color: AppColors.darkTextPrimary,
                             fontWeight: FontWeight.w600,
                           ),
                           textAlign: TextAlign.center,
@@ -563,13 +562,13 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                       ),
                       IconButton(
                         icon: const Icon(LucideIcons.download,
-                            color: Colors.white),
+                            color: AppColors.darkTextPrimary),
                         onPressed: _downloadCurrentImage,
                         tooltip: 'Save to Photos',
                       ),
                       IconButton(
                         icon:
-                            const Icon(LucideIcons.share2, color: Colors.white),
+                            const Icon(LucideIcons.share2, color: AppColors.darkTextPrimary),
                         onPressed: _shareCurrentImage,
                         tooltip: 'Share Image',
                       ),
@@ -591,7 +590,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                         begin: Alignment.bottomCenter,
                         end: Alignment.topCenter,
                         colors: [
-                          Colors.black.withValues(alpha: 0.8),
+                          AppColors.shadowDarkest,
                           Colors.transparent,
                         ],
                       ),

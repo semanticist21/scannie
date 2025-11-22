@@ -20,11 +20,62 @@ class AppSpacing {
 class AppRadius {
   AppRadius._();
 
+  static const double xs = 2.0;
   static const double sm = 4.0;
   static const double md = 8.0;
   static const double lg = 16.0;
   static const double xl = 24.0;
   static const double round = 999.0;
+}
+
+/// Shadow presets for consistent elevation
+class AppShadows {
+  AppShadows._();
+
+  /// Subtle card shadow (8% black, 4px blur)
+  static const List<BoxShadow> card = [
+    BoxShadow(
+      color: AppColors.shadowLight,
+      blurRadius: 4,
+      offset: Offset(0, 2),
+    ),
+  ];
+
+  /// Dialog shadow (8% black, 20px blur)
+  static const List<BoxShadow> dialog = [
+    BoxShadow(
+      color: AppColors.shadowLight,
+      blurRadius: 20,
+      offset: Offset(0, 8),
+    ),
+  ];
+
+  /// Subtle shadow for flat elements (10% black, 4px blur)
+  static const List<BoxShadow> subtle = [
+    BoxShadow(
+      color: AppColors.shadowMedium,
+      blurRadius: 4,
+      offset: Offset(0, 2),
+    ),
+  ];
+
+  /// Overlay badge shadow (60% black, 4px blur)
+  static const List<BoxShadow> badge = [
+    BoxShadow(
+      color: AppColors.shadowDark,
+      blurRadius: 4,
+      offset: Offset(0, 2),
+    ),
+  ];
+
+  /// Darker overlay for text on images (50% black, 2px blur)
+  static const List<BoxShadow> textOnImage = [
+    BoxShadow(
+      color: AppColors.overlay,
+      blurRadius: 2,
+      offset: Offset(0, 1),
+    ),
+  ];
 }
 
 /// App theme configuration

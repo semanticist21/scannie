@@ -162,7 +162,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFE0E5EC),
+      backgroundColor: AppColors.neumorphicBase,
       appBar: CustomAppBar(
         title: '',
         actions: [
@@ -385,7 +385,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
                     vertical: AppSpacing.sm,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.black.withValues(alpha: 0.7),
+                    color: AppColors.shadowDarker,
                     borderRadius: BorderRadius.circular(AppRadius.lg),
                   ),
                   child: Row(
@@ -395,7 +395,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
                         child: Text(
                           '${_currentPdfPage + 1}',
                           style: AppTextStyles.bodyMedium.copyWith(
-                            color: Colors.white,
+                            color: AppColors.darkTextPrimary,
                             fontWeight: FontWeight.w600,
                           ),
                           textAlign: TextAlign.center,
@@ -404,10 +404,10 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
                       Expanded(
                         child: SliderTheme(
                           data: SliderTheme.of(context).copyWith(
-                            activeTrackColor: Colors.white,
-                            inactiveTrackColor: Colors.white.withValues(alpha: 0.3),
-                            thumbColor: Colors.white,
-                            overlayColor: Colors.white.withValues(alpha: 0.2),
+                            activeTrackColor: AppColors.darkTextPrimary,
+                            inactiveTrackColor: AppColors.darkTextSecondary,
+                            thumbColor: AppColors.darkTextPrimary,
+                            overlayColor: AppColors.darkOverlay,
                             trackHeight: 6,
                           ),
                           child: Slider(
@@ -426,7 +426,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
                         child: Text(
                           '$_totalPdfPages',
                           style: AppTextStyles.bodyMedium.copyWith(
-                            color: Colors.white,
+                            color: AppColors.darkTextPrimary,
                             fontWeight: FontWeight.w600,
                           ),
                           textAlign: TextAlign.center,

@@ -9,6 +9,7 @@ import '../models/scan_document.dart';
 import '../services/document_storage.dart';
 import '../services/pdf_generator.dart';
 import '../theme/app_theme.dart';
+import '../theme/app_colors.dart';
 import '../widgets/common/scan_card.dart';
 import '../widgets/common/empty_state.dart';
 import '../widgets/common/document_grid_card.dart';
@@ -146,7 +147,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
           ),
         ],
       ),
-      backgroundColor: const Color(0xFFE0E5EC),
+      backgroundColor: AppColors.neumorphicBase,
       body: SizedBox.expand(
         child: _isLoading
             ? const Center(child: CircularProgressIndicator())
