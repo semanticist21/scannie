@@ -704,7 +704,12 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
   /// Export document to PDF and share (uses cached PDF)
   Future<void> _exportToPdf() async {
     try {
-      _showSnackBar('Preparing PDF...');
+      ElegantNotification.info(
+        title: const Text('Processing'),
+        description: const Text('Preparing PDF...'),
+        toastDuration: const Duration(seconds: 5),
+        showProgressIndicator: true,
+      ).show(context);
 
       // Get or generate PDF with quality setting (uses cache)
       final pdfFile = await _pdfCacheService.getOrGeneratePdf(
@@ -736,7 +741,12 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
   /// Save PDF to Downloads folder using MediaStore (uses cached PDF)
   Future<void> _savePdfLocally() async {
     try {
-      _showSnackBar('Preparing PDF...');
+      ElegantNotification.info(
+        title: const Text('Processing'),
+        description: const Text('Preparing PDF...'),
+        toastDuration: const Duration(seconds: 5),
+        showProgressIndicator: true,
+      ).show(context);
 
       // Get or generate PDF with quality setting (uses cache)
       final pdfFile = await _pdfCacheService.getOrGeneratePdf(

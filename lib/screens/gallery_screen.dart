@@ -571,7 +571,12 @@ class _GalleryScreenState extends State<GalleryScreen> {
   /// Export document to PDF
   Future<void> _exportToPdf(ScanDocument document) async {
     try {
-      _showSnackBar('Generating PDF...');
+      ElegantNotification.info(
+        title: const Text('Processing'),
+        description: const Text('Generating PDF...'),
+        toastDuration: const Duration(seconds: 5),
+        showProgressIndicator: true,
+      ).show(context);
 
       // Generate PDF with quality setting
       final pdfFile = await PdfCacheService().getOrGeneratePdf(
@@ -602,7 +607,12 @@ class _GalleryScreenState extends State<GalleryScreen> {
   /// Save PDF to Downloads folder using MediaStore (no permission required)
   Future<void> _savePdfLocally(ScanDocument document) async {
     try {
-      _showSnackBar('Generating PDF...');
+      ElegantNotification.info(
+        title: const Text('Processing'),
+        description: const Text('Generating PDF...'),
+        toastDuration: const Duration(seconds: 5),
+        showProgressIndicator: true,
+      ).show(context);
 
       // Generate PDF with quality setting
       final pdfFile = await PdfCacheService().getOrGeneratePdf(
