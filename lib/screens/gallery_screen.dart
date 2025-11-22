@@ -20,6 +20,7 @@ import 'package:path/path.dart' as path;
 import 'package:open_file_manager/open_file_manager.dart';
 import 'package:media_store_plus/media_store_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:elegant_notification/elegant_notification.dart';
 
 /// Gallery screen displaying scanned documents
 class GalleryScreen extends StatefulWidget {
@@ -81,7 +82,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
-        _showSnackBar('Failed to load documents: $e');
+        _showSnackBar('Failed to load documents: $e', isError: true);
       }
     }
   }
@@ -269,7 +270,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                       onPressed: () async {
                         final documentName = nameController.text.trim();
                         if (documentName.isEmpty) {
-                          _showSnackBar('Name cannot be empty');
+                          _showSnackBar('Name cannot be empty', isError: true);
                           return;
                         }
 
@@ -344,10 +345,10 @@ class _GalleryScreenState extends State<GalleryScreen> {
       }
     } on PlatformException catch (e) {
       if (!mounted) return;
-      _showSnackBar('Scan failed: ${e.message}');
+      _showSnackBar('Scan failed: ${e.message}', isError: true);
     } catch (e) {
       if (!mounted) return;
-      _showSnackBar('Scan failed: $e');
+      _showSnackBar('Scan failed: $e', isError: true);
     }
   }
 
@@ -436,7 +437,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                       onPressed: () async {
                         final newName = controller.text.trim();
                         if (newName.isEmpty) {
-                          _showSnackBar('Name cannot be empty');
+                          _showSnackBar('Name cannot be empty', isError: true);
                           return;
                         }
 
@@ -594,7 +595,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
       // No snackbar for share - dialog is self-explanatory
     } catch (e) {
       debugPrint('Error exporting PDF: $e');
-      _showSnackBar('Failed to export PDF');
+      _showSnackBar('Failed to export PDF', isError: true);
     }
   }
 
@@ -642,7 +643,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
     } catch (e) {
       debugPrint('Error saving PDF: $e');
       if (!mounted) return;
-      _showSnackBar('Failed to save PDF');
+      _showSnackBar('Failed to save PDF', isError: true);
     }
   }
 
@@ -653,11 +654,21 @@ class _GalleryScreenState extends State<GalleryScreen> {
     );
   }
 
-  void _showSnackBar(String message) {
-    ShadToaster.of(context).show(
-      ShadToast(
-        title: Text(message),
-      ),
-    );
+  void _showSnackBar(String message, {bool isError = false}) {
+    if (isError) {
+      ElegantNotification.error(
+        title: const Text('Error'),
+        description: Text(message),
+        toastDuration: const Duration(seconds: 3),
+        showProgressIndicator: false,
+      ).show(context);
+    } else {
+      ElegantNotification.success(
+        title: const Text('Success'),
+        description: Text(message),
+        toastDuration: const Duration(seconds: 3),
+        showProgressIndicator: false,
+      ).show(context);
+    }
   }
 }

@@ -15,6 +15,7 @@ Scannie는 문서 스캔 Flutter 모바일 애플리케이션입니다. 네이�
 - `syncfusion_flutter_pdfviewer` (PDF 미리보기)
 - `flutter_image_compress` (PDF 품질별 이미지 압축)
 - `image_picker` (앨범에서 이미지 가져오기)
+- `elegant_notification` (토스트 알림)
 
 **현재 상태**:
 - ✅ 문서 스캔 (네이티브 필터/크롭/회전 포함)
@@ -64,25 +65,37 @@ flutter run -d <device-id> --android-skip-build-dependency-validation
 - ❌ path 패키지는 `import 'package:path/path.dart' as path;` 형식으로만
 - ❌ `print()` 사용 금지 → `debugPrint()` 사용 (프로덕션 빌드에서 자동 제거)
 
-## 토스트 알림 (ShadToast)
+## 토스트 알림 (ElegantNotification)
 
-**필수**: 모든 토스트는 `ShadToast`를 사용합니다 (shadcn_ui 라이브러리).
+**필수**: 모든 토스트는 `ElegantNotification`을 사용합니다.
 
 ### 사용 패턴
 
 ```dart
+import 'package:elegant_notification/elegant_notification.dart';
+
 // 메서드 정의
-void _showMessage(String message) {
-  ShadToaster.of(context).show(
-    ShadToast(
-      title: Text(message),
-    ),
-  );
+void _showMessage(String message, {bool isError = false}) {
+  if (isError) {
+    ElegantNotification.error(
+      title: const Text('Error'),
+      description: Text(message),
+      toastDuration: const Duration(seconds: 3),
+      showProgressIndicator: false,
+    ).show(context);
+  } else {
+    ElegantNotification.success(
+      title: const Text('Success'),
+      description: Text(message),
+      toastDuration: const Duration(seconds: 3),
+      showProgressIndicator: false,
+    ).show(context);
+  }
 }
 
 // 사용
 _showMessage('Document renamed');
-_showMessage('Failed to save PDF');
+_showMessage('Failed to save PDF', isError: true);
 ```
 
 ### 토스트 표시 규칙
@@ -101,11 +114,12 @@ _showMessage('Failed to save PDF');
 
 ```dart
 // ❌ WRONG - 다른 토스트 라이브러리 사용 금지
-ElegantNotification.success(...).show(context);
+ShadToaster.of(context).show(ShadToast(...));
 ScaffoldMessenger.of(context).showSnackBar(...);
 
-// ✅ CORRECT - ShadToast만 사용
-ShadToaster.of(context).show(ShadToast(...));
+// ✅ CORRECT - ElegantNotification만 사용
+ElegantNotification.success(...).show(context);
+ElegantNotification.error(...).show(context);
 ```
 
 ## Flutter API 주의사항

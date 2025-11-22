@@ -18,6 +18,7 @@ import '../services/document_storage.dart';
 import '../widgets/common/full_screen_image_viewer.dart';
 import '../widgets/common/context_menu_sheet.dart';
 import '../widgets/common/document_info_header.dart';
+import 'package:elegant_notification/elegant_notification.dart';
 import '../widgets/common/page_card.dart';
 import '../widgets/common/quality_selector_sheet.dart';
 
@@ -551,7 +552,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
                       onPressed: () async {
                         final newName = controller.text.trim();
                         if (newName.isEmpty) {
-                          _showSnackBar('Name cannot be empty');
+                          _showSnackBar('Name cannot be empty', isError: true);
                           return;
                         }
 
@@ -696,7 +697,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
       navigator.pop({'deleted': true, 'documentId': _document.id});
     } catch (e) {
       debugPrint('Error deleting document: $e');
-      _showSnackBar('Failed to delete document');
+      _showSnackBar('Failed to delete document', isError: true);
     }
   }
 
@@ -728,7 +729,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
       // No snackbar for share - dialog is self-explanatory
     } catch (e) {
       debugPrint('Error exporting PDF: $e');
-      _showSnackBar('Failed to export PDF');
+      _showSnackBar('Failed to export PDF', isError: true);
     }
   }
 
@@ -776,15 +777,25 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
       await openFileManager();
     } catch (e) {
       debugPrint('Error saving PDF: $e');
-      _showSnackBar('Failed to save PDF');
+      _showSnackBar('Failed to save PDF', isError: true);
     }
   }
 
-  void _showSnackBar(String message) {
-    ShadToaster.of(context).show(
-      ShadToast(
-        title: Text(message),
-      ),
-    );
+  void _showSnackBar(String message, {bool isError = false}) {
+    if (isError) {
+      ElegantNotification.error(
+        title: const Text('Error'),
+        description: Text(message),
+        toastDuration: const Duration(seconds: 3),
+        showProgressIndicator: false,
+      ).show(context);
+    } else {
+      ElegantNotification.success(
+        title: const Text('Success'),
+        description: Text(message),
+        toastDuration: const Duration(seconds: 3),
+        showProgressIndicator: false,
+      ).show(context);
+    }
   }
 }

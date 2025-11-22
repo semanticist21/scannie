@@ -5,6 +5,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:ndialog/ndialog.dart';
 import 'package:reorderable_grid_view/reorderable_grid_view.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:elegant_notification/elegant_notification.dart';
 import '../models/scan_document.dart';
 import '../services/document_storage.dart';
 import '../theme/app_colors.dart';
@@ -76,7 +77,7 @@ class _EditScreenState extends State<EditScreen> {
       }
     } catch (e) {
       debugPrint('Error adding scans: $e');
-      _showMessage('Failed to add scans');
+      _showMessage('Failed to add scans', isError: true);
     } finally {
       setState(() => _isLoading = false);
     }
@@ -102,7 +103,7 @@ class _EditScreenState extends State<EditScreen> {
       }
     } catch (e) {
       debugPrint('❌ Error adding photos: $e');
-      _showMessage('Failed to add photos');
+      _showMessage('Failed to add photos', isError: true);
     } finally {
       setState(() => _isLoading = false);
     }
@@ -152,7 +153,7 @@ class _EditScreenState extends State<EditScreen> {
   void _saveScan() async {
     // Check if there are any images
     if (_imagePaths.isEmpty) {
-      _showMessage('Please add at least one image to save');
+      _showMessage('Please add at least one image to save', isError: true);
       return;
     }
 
@@ -225,7 +226,7 @@ class _EditScreenState extends State<EditScreen> {
                       onPressed: () async {
                         final documentName = nameController.text.trim();
                         if (documentName.isEmpty) {
-                          _showMessage('Name cannot be empty');
+                          _showMessage('Name cannot be empty', isError: true);
                           return;
                         }
 
@@ -373,12 +374,22 @@ class _EditScreenState extends State<EditScreen> {
     return result;
   }
 
-  void _showMessage(String message) {
-    ShadToaster.of(context).show(
-      ShadToast(
-        title: Text(message),
-      ),
-    );
+  void _showMessage(String message, {bool isError = false}) {
+    if (isError) {
+      ElegantNotification.error(
+        title: const Text('Error'),
+        description: Text(message),
+        toastDuration: const Duration(seconds: 3),
+        showProgressIndicator: false,
+      ).show(context);
+    } else {
+      ElegantNotification.success(
+        title: const Text('Success'),
+        description: Text(message),
+        toastDuration: const Duration(seconds: 3),
+        showProgressIndicator: false,
+      ).show(context);
+    }
   }
 
   /// Handle back button press with confirmation
