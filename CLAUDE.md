@@ -68,37 +68,23 @@ flutter run -d <device-id> --android-skip-build-dependency-validation
 - ❌ path 패키지는 `import 'package:path/path.dart' as path;` 형식으로만
 - ❌ `print()` 사용 금지 → `debugPrint()` 사용 (프로덕션 빌드에서 자동 제거)
 
-## 토스트 알림 (ElegantNotification)
+## 토스트 알림 (AppToast)
 
-**필수**: 모든 토스트는 `ElegantNotification`을 사용합니다.
+**필수**: 모든 토스트는 `AppToast` 유틸리티를 사용합니다.
 
 ### 사용 패턴
 
 ```dart
-import 'package:elegant_notification/elegant_notification.dart';
+import '../utils/app_toast.dart';
 
-// 메서드 정의
-void _showMessage(String message, {bool isError = false}) {
-  if (isError) {
-    ElegantNotification.error(
-      title: const Text('Error'),
-      description: Text(message),
-      toastDuration: const Duration(seconds: 3),
-      showProgressIndicator: true,
-    ).show(context);
-  } else {
-    ElegantNotification.success(
-      title: const Text('Success'),
-      description: Text(message),
-      toastDuration: const Duration(seconds: 3),
-      showProgressIndicator: true,
-    ).show(context);
-  }
-}
+// 간편 사용 (권장)
+AppToast.show(context, 'Document saved');
+AppToast.show(context, 'Failed to save PDF', isError: true);
 
-// 사용
-_showMessage('Document renamed');
-_showMessage('Failed to save PDF', isError: true);
+// 명시적 메서드
+AppToast.success(context, 'Document saved');
+AppToast.error(context, 'Failed to save PDF');
+AppToast.info(context, 'Processing...');
 ```
 
 ### 토스트 표시 규칙
@@ -120,82 +106,87 @@ _showMessage('Failed to save PDF', isError: true);
 ShadToaster.of(context).show(ShadToast(...));
 ScaffoldMessenger.of(context).showSnackBar(...);
 
-// ✅ CORRECT - ElegantNotification만 사용
+// ❌ WRONG - ElegantNotification 직접 사용 금지
 ElegantNotification.success(...).show(context);
-ElegantNotification.error(...).show(context);
+
+// ✅ CORRECT - AppToast 유틸리티 사용
+AppToast.show(context, 'Message');
+AppToast.success(context, 'Success');
+AppToast.error(context, 'Error');
 ```
 
-## 다이얼로그 (DialogBackground)
+## 다이얼로그 (공통 위젯 사용)
 
-**필수**: 모든 다이얼로그는 `ndialog` 패키지의 `DialogBackground`를 사용합니다.
+**필수**: 공통 다이얼로그 위젯을 우선 사용합니다.
+
+### 공통 다이얼로그 위젯
+
+| 위젯 | 용도 | 위치 |
+|------|------|------|
+| `ConfirmDialog` | 확인/삭제/폐기 다이얼로그 | `widgets/common/confirm_dialog.dart` |
+| `RenameDialog` | 문서 이름 변경 | `widgets/common/rename_dialog.dart` |
+| `TextInputDialog` | 텍스트 입력 (새 문서 생성 등) | `widgets/common/text_input_dialog.dart` |
 
 ### 사용 패턴
 
 ```dart
-import 'package:ndialog/ndialog.dart';
+// 확인 다이얼로그
+import '../widgets/common/confirm_dialog.dart';
 
-void _showConfirmDialog() {
-  DialogBackground(
-    blur: 6,
-    dismissable: true,
-    barrierColor: Colors.black.withValues(alpha: 0.4),
-    dialog: Material(
-      color: Colors.transparent,
-      child: Center(
-        child: Container(
-          width: 320,
-          margin: const EdgeInsets.all(AppSpacing.lg),
-          padding: const EdgeInsets.all(AppSpacing.lg),
-          decoration: BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.circular(AppRadius.lg),
-            border: Border.all(color: AppColors.border),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.08),
-                blurRadius: 24,
-                offset: const Offset(0, 12),
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Dialog Title', style: AppTextStyles.h3),
-              const SizedBox(height: AppSpacing.xs),
-              Text(
-                'Dialog message content',
-                style: AppTextStyles.bodyMedium.copyWith(
-                  color: AppColors.textSecondary,
-                ),
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  ShadButton.outline(
-                    child: const Text('Cancel'),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
-                  ShadButton(
-                    child: const Text('Confirm'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      // 액션 수행
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    ),
-  ).show(context, transitionType: DialogTransitionType.Shrink);
-}
+ConfirmDialog.show(
+  context: context,
+  title: 'Delete Scan',
+  message: 'Delete "${document.name}"?',
+  confirmText: 'Delete',
+  isDestructive: true,
+  onConfirm: () async {
+    await deleteDocument();
+  },
+);
+
+// Async 버전 (결과 반환)
+final confirmed = await ConfirmDialog.showAsync(
+  context: context,
+  title: 'Discard Changes?',
+  message: 'Your changes will not be saved.',
+  confirmText: 'Discard',
+  isDestructive: true,
+);
+if (confirmed) { /* ... */ }
+
+// 이름 변경 다이얼로그
+import '../widgets/common/rename_dialog.dart';
+
+RenameDialog.show(
+  context: context,
+  currentName: document.name,
+  onSave: (newName) async {
+    await renameDocument(newName);
+  },
+);
+
+// 텍스트 입력 다이얼로그
+import '../widgets/common/text_input_dialog.dart';
+
+TextInputDialog.show(
+  context: context,
+  title: 'Save Scan',
+  description: 'Enter a name for this scan',
+  initialValue: 'Scan 2024-01-01',
+  onSave: (name) async {
+    await saveDocument(name);
+  },
+);
 ```
+
+### 파일명 유효성 검사 (자동 적용)
+
+`RenameDialog`와 `TextInputDialog`에는 파일명 유효성 검사가 내장되어 있습니다:
+
+- **최대 길이**: 100자
+- **금지 문자**: `/ \ : * ? " < > |`
+- **빈 이름 불가**
+- **실시간 글자 수 표시**: `현재글자수 / 100`
 
 ### 버튼 스타일 가이드
 
@@ -212,8 +203,13 @@ showDialog(
   builder: (context) => AlertDialog(...),
 );
 
-// ✅ CORRECT - DialogBackground 사용
-DialogBackground(...).show(context, transitionType: DialogTransitionType.Shrink);
+// ❌ WRONG - 중복 다이얼로그 구현
+DialogBackground(...).show(context); // 공통 위젯이 있는 경우
+
+// ✅ CORRECT - 공통 위젯 사용
+ConfirmDialog.show(...);
+RenameDialog.show(...);
+TextInputDialog.show(...);
 ```
 
 ## Flutter API 주의사항
@@ -355,7 +351,10 @@ lib/
 │   ├── document_info_header.dart   # 문서 정보 헤더
 │   ├── document_search_delegate.dart # 문서 검색 기능
 │   ├── empty_state.dart            # 빈 상태 표시 위젯
-│   └── full_screen_image_viewer.dart # 이미지 뷰어 + 필터 + 저장
+│   ├── full_screen_image_viewer.dart # 이미지 뷰어 + 필터 + 저장
+│   ├── confirm_dialog.dart         # 공통 확인 다이얼로그
+│   ├── rename_dialog.dart          # 이름 변경 다이얼로그
+│   └── text_input_dialog.dart      # 텍스트 입력 다이얼로그
 ├── services/         # 비즈니스 로직
 │   ├── document_storage.dart         # 문서 영구 저장/로드
 │   └── pdf_cache_service.dart        # PDF 생성 캐싱 (SHA256 기반)
@@ -363,6 +362,8 @@ lib/
 │   ├── app_theme.dart        # M3 ThemeData 구성
 │   ├── app_colors.dart       # 색상 팔레트
 │   └── app_text_styles.dart  # 타이포그래피
+├── utils/            # 유틸리티
+│   └── app_toast.dart        # 토스트 알림 유틸리티
 └── models/
     └── scan_document.dart    # ScanDocument + PdfQuality enum
 ```
@@ -379,6 +380,9 @@ lib/
 | `edit_bottom_actions.dart` | 저장/추가 버튼 그룹 | EditScreen |
 | `document_search_delegate.dart` | 검색 기능 구현 | GalleryScreen |
 | `empty_state.dart` | 빈 문서 목록 상태 표시 | GalleryScreen |
+| `confirm_dialog.dart` | 확인/삭제/폐기 다이얼로그 | 전체 화면 |
+| `rename_dialog.dart` | 문서 이름 변경 | GalleryScreen, DocumentViewer |
+| `text_input_dialog.dart` | 텍스트 입력 (새 문서 등) | GalleryScreen, EditScreen |
 
 ### 테마 시스템 (필수)
 

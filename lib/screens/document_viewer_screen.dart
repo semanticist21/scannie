@@ -18,6 +18,7 @@ import 'package:flutter_pdfview/flutter_pdfview.dart';
 import '../services/pdf_generator.dart';
 import '../services/document_storage.dart';
 import '../widgets/common/full_screen_image_viewer.dart';
+import '../models/context_menu_item.dart';
 import '../widgets/common/context_menu_sheet.dart';
 import '../widgets/common/document_info_header.dart';
 import '../utils/app_toast.dart';

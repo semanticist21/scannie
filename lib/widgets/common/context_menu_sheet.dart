@@ -1,22 +1,8 @@
 import 'package:flutter/material.dart';
+import '../../models/context_menu_item.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/app_text_styles.dart';
-
-/// Menu item configuration for ContextMenuSheet
-class ContextMenuItem {
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-  final Color? color;
-
-  const ContextMenuItem({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-    this.color,
-  });
-}
 
 /// Reusable bottom sheet context menu with consistent styling
 class ContextMenuSheet extends StatelessWidget {

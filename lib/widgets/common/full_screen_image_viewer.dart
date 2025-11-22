@@ -4,23 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import 'package:share_plus/share_plus.dart';
+import '../../models/image_filter_type.dart';
 import '../../utils/app_toast.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/app_text_styles.dart';
-
-/// Filter type for document enhancement
-enum ImageFilterType {
-  original,
-  grayscale,
-  highContrast,
-  brighten,
-  document,
-  sepia,
-  invert,
-  warm,
-  cool,
-}
 
 /// Full screen image viewer with zoom, filters, download and share
 class FullScreenImageViewer extends StatefulWidget {
