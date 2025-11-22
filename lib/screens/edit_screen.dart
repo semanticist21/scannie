@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:cunning_document_scanner_plus/cunning_document_scanner_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
-import 'package:ndialog/ndialog.dart';
 import 'package:reorderable_grid_view/reorderable_grid_view.dart';
 import 'package:image_picker/image_picker.dart';
 import '../utils/app_toast.dart';
@@ -15,6 +14,8 @@ import '../widgets/common/custom_app_bar.dart';
 import '../widgets/common/full_screen_image_viewer.dart';
 import '../widgets/common/image_tile.dart';
 import '../widgets/common/edit_bottom_actions.dart';
+import '../widgets/common/confirm_dialog.dart';
+import '../widgets/common/text_input_dialog.dart';
 
 /// Edit screen for managing scanned images
 /// Features: Reorder, Delete, Add more images
@@ -168,216 +169,82 @@ class _EditScreenState extends State<EditScreen> {
     final navigator = Navigator.of(context);
     final bool isEditingExisting = _existingDocumentId != null;
 
-    // Determine default name based on context
-    final String defaultName = isEditingExisting
-        ? _existingDocumentName!
-        : 'Scan ${DateTime.now().toString().substring(0, 10)}';
+    // For existing documents, save directly without dialog
+    if (isEditingExisting) {
+      final updatedDocument = ScanDocument(
+        id: _existingDocumentId!,
+        name: _existingDocumentName!,
+        createdAt: DateTime.now(),
+        imagePaths: _imagePaths,
+        isProcessed: true,
+      );
 
-    final TextEditingController nameController =
-        TextEditingController(text: defaultName);
+      // Update in storage
+      final documents = await DocumentStorage.loadDocuments();
+      final index = documents.indexWhere((d) => d.id == _existingDocumentId);
+      if (index != -1) {
+        documents[index] = updatedDocument;
+        await DocumentStorage.saveDocuments(documents);
+      }
 
-    DialogBackground(
-      blur: 6,
-      dismissable: true,
-      barrierColor: Colors.black.withValues(alpha: 0.4),
-      dialog: Material(
-        color: Colors.transparent,
-        child: Center(
-          child: Container(
-            width: 320,
-            margin: const EdgeInsets.all(AppSpacing.lg),
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              borderRadius: BorderRadius.circular(AppRadius.lg),
-              border: Border.all(color: AppColors.border),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.08),
-                  blurRadius: 24,
-                  offset: const Offset(0, 12),
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Save Scan',
-                  style: AppTextStyles.h3,
-                ),
-                const SizedBox(height: AppSpacing.xs),
-                Text(
-                  'Enter a name for this scan',
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    color: AppColors.textSecondary,
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.md),
-                ShadInput(
-                  controller: nameController,
-                  placeholder: const Text('Document name'),
-                  autofocus: true,
-                ),
-                const SizedBox(height: AppSpacing.lg),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    ShadButton.outline(
-                      child: const Text('Cancel'),
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                    const SizedBox(width: AppSpacing.sm),
-                    ShadButton(
-                      child: const Text('Save'),
-                      onPressed: () async {
-                        final documentName = nameController.text.trim();
-                        if (documentName.isEmpty) {
-                          AppToast.show(context,'Name cannot be empty', isError: true);
-                          return;
-                        }
+      if (mounted) {
+        AppToast.show(context, 'Scan saved');
+      }
 
-                        Navigator.of(context).pop();
+      navigator.pop(updatedDocument);
+      return;
+    }
 
-                        if (isEditingExisting) {
-                          // Update existing document
-                          final updatedDocument = ScanDocument(
-                            id: _existingDocumentId!,
-                            name: documentName,
-                            createdAt: DateTime.now(),
-                            imagePaths: _imagePaths,
-                            isProcessed: true,
-                          );
+    // For new scans, show name input dialog
+    final String defaultName = 'Scan ${DateTime.now().toString().substring(0, 10)}';
 
-                          if (!mounted) return;
+    TextInputDialog.show(
+      context: context,
+      title: 'Save Scan',
+      description: 'Enter a name for this scan',
+      initialValue: defaultName,
+      placeholder: 'Document name',
+      onSave: (documentName) async {
+        // Create new scan document
+        final newDocument = ScanDocument(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          name: documentName,
+          createdAt: DateTime.now(),
+          imagePaths: _imagePaths,
+          isProcessed: true,
+        );
 
-                          // Update in storage
-                          final documents =
-                              await DocumentStorage.loadDocuments();
-                          final index = documents
-                              .indexWhere((d) => d.id == _existingDocumentId);
-                          if (index != -1) {
-                            documents[index] = updatedDocument;
-                            await DocumentStorage.saveDocuments(documents);
-                          }
+        // Save to storage and navigate to viewer
+        final documents = await DocumentStorage.loadDocuments();
+        documents.insert(0, newDocument);
+        await DocumentStorage.saveDocuments(documents);
 
-                          navigator.pop(updatedDocument);
-                        } else {
-                          // Create new scan document
-                          final newDocument = ScanDocument(
-                            id: DateTime.now()
-                                .millisecondsSinceEpoch
-                                .toString(),
-                            name: documentName,
-                            createdAt: DateTime.now(),
-                            imagePaths: _imagePaths,
-                            isProcessed: true,
-                          );
-
-                          if (!mounted) return;
-
-                          // Save to storage and navigate to viewer
-                          final documents =
-                              await DocumentStorage.loadDocuments();
-                          documents.insert(0, newDocument);
-                          await DocumentStorage.saveDocuments(documents);
-
-                          navigator.pushReplacementNamed(
-                            '/viewer',
-                            arguments: newDocument,
-                          );
-                        }
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    ).show(context, transitionType: DialogTransitionType.Shrink);
+        navigator.pushReplacementNamed(
+          '/viewer',
+          arguments: newDocument,
+        );
+      },
+    );
   }
 
   /// Show confirmation dialog before discarding changes
   Future<bool> _confirmDiscard() async {
     debugPrint('🚨 _confirmDiscard called - showing dialog');
 
-    final completer = Completer<bool>();
     final bool isNewScan = _existingDocumentId == null;
+    final message = isNewScan
+        ? 'Are you sure you want to discard this scan? All images will be lost.'
+        : 'Are you sure you want to discard changes? Your changes will not be saved.';
 
-    DialogBackground(
-      blur: 6,
+    final result = await ConfirmDialog.showAsync(
+      context: context,
+      title: 'Discard Changes?',
+      message: message,
+      confirmText: 'Discard',
+      isDestructive: true,
       dismissable: false,
-      barrierColor: Colors.black.withValues(alpha: 0.4),
-      dialog: Material(
-        color: Colors.transparent,
-        child: Center(
-          child: Container(
-            width: 320,
-            margin: const EdgeInsets.all(AppSpacing.lg),
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              borderRadius: BorderRadius.circular(AppRadius.lg),
-              border: Border.all(color: AppColors.border),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.08),
-                  blurRadius: 24,
-                  offset: const Offset(0, 12),
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Discard Changes?',
-                  style: AppTextStyles.h3,
-                ),
-                const SizedBox(height: AppSpacing.xs),
-                Text(
-                  isNewScan
-                      ? 'Are you sure you want to discard this scan? All images will be lost.'
-                      : 'Are you sure you want to discard changes? Your changes will not be saved.',
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    color: AppColors.textSecondary,
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.lg),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    ShadButton.outline(
-                      child: const Text('Cancel'),
-                      onPressed: () {
-                        debugPrint('🚨 User clicked Cancel');
-                        Navigator.of(context).pop();
-                        completer.complete(false);
-                      },
-                    ),
-                    const SizedBox(width: AppSpacing.sm),
-                    ShadButton.destructive(
-                      child: const Text('Discard'),
-                      onPressed: () {
-                        debugPrint('🚨 User clicked Discard');
-                        Navigator.of(context).pop();
-                        completer.complete(true);
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    ).show(context, transitionType: DialogTransitionType.Shrink);
+    );
 
-    final result = await completer.future;
     debugPrint('🚨 Dialog result: $result');
     return result;
   }

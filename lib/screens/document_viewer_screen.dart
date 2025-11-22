@@ -1,8 +1,7 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
-import 'package:ndialog/ndialog.dart';
 import 'package:archive/archive.dart';
 import '../models/scan_document.dart';
 import '../theme/app_colors.dart';
@@ -24,6 +23,8 @@ import '../widgets/common/document_info_header.dart';
 import '../utils/app_toast.dart';
 import '../widgets/common/page_card.dart';
 import '../widgets/common/quality_selector_sheet.dart';
+import '../widgets/common/rename_dialog.dart';
+import '../widgets/common/confirm_dialog.dart';
 
 /// Creates ZIP archive from image paths in a separate isolate
 Future<List<int>?> _createZipArchive(List<String> imagePaths) async {
@@ -160,7 +161,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: const Color(0xFFE0E5EC),
       appBar: CustomAppBar(
         title: '',
         actions: [
@@ -407,11 +408,6 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
                             thumbColor: Colors.white,
                             overlayColor: Colors.white.withValues(alpha: 0.2),
                             trackHeight: 6,
-                            thumbShape: _ShadcnSliderThumbShape(
-                              thumbRadius: 10,
-                              borderColor: Colors.white,
-                              borderWidth: 2,
-                            ),
                           ),
                           child: Slider(
                             value: _currentPdfPage.toDouble(),
@@ -658,106 +654,29 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
           _loadPdfPreview();
         }
       });
-
-      AppToast.show(context,'Scan updated successfully');
     }
   }
 
   /// Rename document
   void _renameDocument() {
-    final TextEditingController controller =
-        TextEditingController(text: _document.name);
+    RenameDialog.show(
+      context: context,
+      currentName: _document.name,
+      onSave: (newName) async {
+        // Update local state
+        setState(() {
+          _document = _document.copyWith(name: newName);
+        });
 
-    DialogBackground(
-      blur: 6,
-      dismissable: true,
-      barrierColor: Colors.black.withValues(alpha: 0.4),
-      dialog: Material(
-        color: Colors.transparent,
-        child: Center(
-          child: Container(
-            width: 320,
-            margin: const EdgeInsets.all(AppSpacing.lg),
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              borderRadius: BorderRadius.circular(AppRadius.lg),
-              border: Border.all(color: AppColors.border),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.08),
-                  blurRadius: 24,
-                  offset: const Offset(0, 12),
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Rename Scan',
-                  style: AppTextStyles.h3,
-                ),
-                const SizedBox(height: AppSpacing.xs),
-                Text(
-                  'Enter a new name for this document',
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    color: AppColors.textSecondary,
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.md),
-                ShadInput(
-                  controller: controller,
-                  placeholder: const Text('Document name'),
-                  autofocus: true,
-                ),
-                const SizedBox(height: AppSpacing.lg),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    ShadButton.outline(
-                      child: const Text('Cancel'),
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                    const SizedBox(width: AppSpacing.sm),
-                    ShadButton(
-                      child: const Text('Save'),
-                      onPressed: () async {
-                        final newName = controller.text.trim();
-                        if (newName.isEmpty) {
-                          AppToast.show(context,'Name cannot be empty', isError: true);
-                          return;
-                        }
-
-                        Navigator.of(context).pop();
-
-                        // Update local state
-                        setState(() {
-                          _document = _document.copyWith(name: newName);
-                        });
-
-                        // Save to storage
-                        final documents = await DocumentStorage.loadDocuments();
-                        final index = documents
-                            .indexWhere((doc) => doc.id == _document.id);
-                        if (index != -1) {
-                          documents[index] = _document;
-                          await DocumentStorage.saveDocuments(documents);
-                        }
-
-                        if (!mounted) return;
-                        AppToast.show(context,'Document renamed');
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    ).show(context, transitionType: DialogTransitionType.Shrink);
+        // Save to storage
+        final documents = await DocumentStorage.loadDocuments();
+        final index = documents.indexWhere((doc) => doc.id == _document.id);
+        if (index != -1) {
+          documents[index] = _document;
+          await DocumentStorage.saveDocuments(documents);
+        }
+      },
+    );
   }
 
   void _showQualitySelector() {
@@ -789,69 +708,17 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
   }
 
   /// Show delete confirmation dialog
-  Future<void> _confirmDelete() async {
-    DialogBackground(
-      blur: 6,
-      dismissable: true,
-      barrierColor: Colors.black.withValues(alpha: 0.4),
-      dialog: Material(
-        color: Colors.transparent,
-        child: Center(
-          child: Container(
-            width: 320,
-            margin: const EdgeInsets.all(AppSpacing.lg),
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              borderRadius: BorderRadius.circular(AppRadius.lg),
-              border: Border.all(color: AppColors.border),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.08),
-                  blurRadius: 24,
-                  offset: const Offset(0, 12),
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Delete Document?',
-                  style: AppTextStyles.h3,
-                ),
-                const SizedBox(height: AppSpacing.xs),
-                Text(
-                  'This will permanently delete "${_document.name}" and all its pages. This action cannot be undone.',
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    color: AppColors.textSecondary,
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.lg),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    ShadButton.outline(
-                      child: const Text('Cancel'),
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                    const SizedBox(width: AppSpacing.sm),
-                    ShadButton.destructive(
-                      child: const Text('Delete'),
-                      onPressed: () async {
-                        Navigator.of(context).pop();
-                        await _deleteDocument();
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    ).show(context, transitionType: DialogTransitionType.Shrink);
+  void _confirmDelete() {
+    ConfirmDialog.show(
+      context: context,
+      title: 'Delete Document?',
+      message: 'This will permanently delete "${_document.name}" and all its pages. This action cannot be undone.',
+      confirmText: 'Delete',
+      isDestructive: true,
+      onConfirm: () async {
+        await _deleteDocument();
+      },
+    );
   }
 
   /// Delete the document and return to gallery
@@ -1006,139 +873,35 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
   void _saveImages() {
     final imageCount = _imagePaths.length;
 
-    DialogBackground(
-      blur: 6,
-      dismissable: true,
-      barrierColor: Colors.black.withValues(alpha: 0.4),
-      dialog: Material(
-        color: Colors.transparent,
-        child: Center(
-          child: Container(
-            width: 320,
-            margin: const EdgeInsets.all(AppSpacing.lg),
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              borderRadius: BorderRadius.circular(AppRadius.lg),
-              border: Border.all(color: AppColors.border),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.08),
-                  blurRadius: 24,
-                  offset: const Offset(0, 12),
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Download Images',
-                  style: AppTextStyles.h3,
-                ),
-                const SizedBox(height: AppSpacing.xs),
-                Text(
-                  'Download $imageCount ${imageCount == 1 ? 'image' : 'images'} to gallery?',
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    color: AppColors.textSecondary,
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.lg),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    ShadButton.outline(
-                      child: const Text('Cancel'),
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                    const SizedBox(width: AppSpacing.sm),
-                    ShadButton(
-                      child: const Text('Download'),
-                      onPressed: () async {
-                        Navigator.of(context).pop();
+    ConfirmDialog.show(
+      context: context,
+      title: 'Download Images',
+      message: 'Download $imageCount ${imageCount == 1 ? 'image' : 'images'} to gallery?',
+      confirmText: 'Download',
+      onConfirm: () async {
+        try {
+          int savedCount = 0;
 
-                        try {
-                          int savedCount = 0;
+          for (int i = 0; i < _imagePaths.length; i++) {
+            final imageFile = File(_imagePaths[i]);
+            if (!await imageFile.exists()) continue;
 
-                          for (int i = 0; i < _imagePaths.length; i++) {
-                            final imageFile = File(_imagePaths[i]);
-                            if (!await imageFile.exists()) continue;
+            final result = await ImageGallerySaverPlus.saveFile(imageFile.path);
+            if (result['isSuccess'] == true) {
+              savedCount++;
+            }
+          }
 
-                            final result = await ImageGallerySaverPlus.saveFile(imageFile.path);
-                            if (result['isSuccess'] == true) {
-                              savedCount++;
-                            }
-                          }
-
-                          if (!mounted) return;
-                          if (savedCount == 0) {
-                            AppToast.show(context, 'Failed to save images', isError: true);
-                          }
-                        } catch (e) {
-                          debugPrint('Error saving images: $e');
-                          if (!mounted) return;
-                          AppToast.show(context, 'Failed to save images', isError: true);
-                        }
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    ).show(context, transitionType: DialogTransitionType.Shrink);
-  }
-}
-
-/// Custom slider thumb shape matching shadcn style
-class _ShadcnSliderThumbShape extends SliderComponentShape {
-  final double thumbRadius;
-  final Color borderColor;
-  final double borderWidth;
-
-  const _ShadcnSliderThumbShape({
-    this.thumbRadius = 10,
-    this.borderColor = Colors.black,
-    this.borderWidth = 2,
-  });
-
-  @override
-  Size getPreferredSize(bool isEnabled, bool isDiscrete) {
-    return Size.fromRadius(thumbRadius);
-  }
-
-  @override
-  void paint(
-    PaintingContext context,
-    Offset center, {
-    required Animation<double> activationAnimation,
-    required Animation<double> enableAnimation,
-    required bool isDiscrete,
-    required TextPainter labelPainter,
-    required RenderBox parentBox,
-    required SliderThemeData sliderTheme,
-    required TextDirection textDirection,
-    required double value,
-    required double textScaleFactor,
-    required Size sizeWithOverflow,
-  }) {
-    final canvas = context.canvas;
-
-    // Draw white/surface fill
-    final fillPaint = Paint()
-      ..color = sliderTheme.thumbColor ?? AppColors.surface
-      ..style = PaintingStyle.fill;
-
-    // Draw border
-    final borderPaint = Paint()
-      ..color = borderColor
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = borderWidth;
-
-    canvas.drawCircle(center, thumbRadius, fillPaint);
-    canvas.drawCircle(center, thumbRadius - borderWidth / 2, borderPaint);
+          if (!mounted) return;
+          if (savedCount == 0) {
+            AppToast.show(context, 'Failed to save images', isError: true);
+          }
+        } catch (e) {
+          debugPrint('Error saving images: $e');
+          if (!mounted) return;
+          AppToast.show(context, 'Failed to save images', isError: true);
+        }
+      },
+    );
   }
 }

@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
+import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import '../../models/scan_document.dart';
 import '../../theme/app_colors.dart';
@@ -118,22 +118,23 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
             ),
           ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
+        child: Container(
+          margin: const EdgeInsets.symmetric(
             horizontal: AppSpacing.md,
             vertical: AppSpacing.sm,
           ),
-          child: Neumorphic(
-            style: NeumorphicStyle(
-              depth: 3,
-              intensity: 0.5,
-              surfaceIntensity: 0.1,
-              color: AppColors.surface,
-              boxShape: NeumorphicBoxShape.roundRect(
-                BorderRadius.circular(AppRadius.lg),
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(AppRadius.lg),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.08),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
               ),
-            ),
-            child: InkWell(
+            ],
+          ),
+          child: InkWell(
             onTap: widget.onTap,
             onTapDown: _onTapDown,
             onTapUp: _onTapUp,
@@ -216,7 +217,6 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
             ),
           ),
         ),
-      ),
       ),
     );
   }
@@ -329,19 +329,12 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
           fit: BoxFit.cover,
           cacheWidth: 250,
           errorBuilder: (context, error, stackTrace) {
-            return Neumorphic(
-              style: NeumorphicStyle(
-                depth: 2,
-                intensity: 0.6,
-                color: const Color(0xFFE0E5EC),
-                boxShape: NeumorphicBoxShape.roundRect(
-                  BorderRadius.circular(AppRadius.sm),
-                ),
-              ),
+            return Container(
+              color: AppColors.background,
               child: const Center(
                 child: Icon(
                   LucideIcons.fileText,
-                  color: Color(0xFF8E9AAF),
+                  color: AppColors.textHint,
                   size: 28,
                 ),
               ),
@@ -352,19 +345,12 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
     }
 
     // Fallback to icon if no images or file doesn't exist
-    return Neumorphic(
-      style: NeumorphicStyle(
-        depth: 2,
-        intensity: 0.6,
-        color: const Color(0xFFE0E5EC),
-        boxShape: NeumorphicBoxShape.roundRect(
-          BorderRadius.circular(AppRadius.sm),
-        ),
-      ),
+    return Container(
+      color: AppColors.background,
       child: const Center(
         child: Icon(
           LucideIcons.fileText,
-          color: Color(0xFF8E9AAF),
+          color: AppColors.textHint,
           size: 28,
         ),
       ),
