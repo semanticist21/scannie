@@ -69,6 +69,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
   bool _isInitialLoading = true;
   int _currentPdfPage = 0;
   int _totalPdfPages = 0;
+  PDFViewController? _pdfController;
 
   @override
   void initState() {
@@ -91,30 +92,20 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
   }
 
   Future<void> _loadInitialData() async {
-    // Run both operations in parallel
-    await Future.wait([
-      _calculateTotalSize(),
-      _loadPdfPreviewInitial(),
-    ]);
+    // Calculate size first (fast operation)
+    await _calculateTotalSize();
 
-    // Mark initial loading as complete
+    // Mark initial loading as complete immediately
     if (mounted) {
       setState(() {
         _isInitialLoading = false;
       });
     }
-  }
 
-  Future<void> _loadPdfPreviewInitial() async {
-    if (_imagePaths.isEmpty) {
-      return;
+    // Load PDF in background (doesn't block UI)
+    if (_imagePaths.isNotEmpty) {
+      _loadPdfPreview();
     }
-
-    // Small delay for smooth transition
-    await Future.delayed(const Duration(milliseconds: 300));
-
-    if (!mounted) return;
-    await _loadPdfPreview();
   }
 
   Future<void> _calculateTotalSize() async {
@@ -365,6 +356,9 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
               pageFling: true,
               pageSnap: true,
               fitPolicy: FitPolicy.BOTH,
+              onViewCreated: (controller) {
+                _pdfController = controller;
+              },
               onRender: (pages) {
                 setState(() {
                   _totalPdfPages = pages ?? 0;
@@ -377,29 +371,71 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
                 });
               },
             ),
-            // Page indicator overlay
-            if (_totalPdfPages > 0)
+            // Page navigation overlay
+            if (_totalPdfPages > 1)
               Positioned(
                 bottom: AppSpacing.md,
-                left: 0,
-                right: 0,
-                child: Center(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.md,
-                      vertical: AppSpacing.xs,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.6),
-                      borderRadius: BorderRadius.circular(AppRadius.round),
-                    ),
-                    child: Text(
-                      '${_currentPdfPage + 1} / $_totalPdfPages',
-                      style: AppTextStyles.caption.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
+                left: AppSpacing.md,
+                right: AppSpacing.md,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.md,
+                    vertical: AppSpacing.sm,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.7),
+                    borderRadius: BorderRadius.circular(AppRadius.lg),
+                  ),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 32,
+                        child: Text(
+                          '${_currentPdfPage + 1}',
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
-                    ),
+                      Expanded(
+                        child: SliderTheme(
+                          data: SliderTheme.of(context).copyWith(
+                            activeTrackColor: Colors.white,
+                            inactiveTrackColor: Colors.white.withValues(alpha: 0.3),
+                            thumbColor: Colors.white,
+                            overlayColor: Colors.white.withValues(alpha: 0.2),
+                            trackHeight: 6,
+                            thumbShape: _ShadcnSliderThumbShape(
+                              thumbRadius: 10,
+                              borderColor: Colors.white,
+                              borderWidth: 2,
+                            ),
+                          ),
+                          child: Slider(
+                            value: _currentPdfPage.toDouble(),
+                            min: 0,
+                            max: (_totalPdfPages - 1).toDouble(),
+                            onChanged: (value) {
+                              final page = value.round();
+                              _pdfController?.setPage(page);
+                            },
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 32,
+                        child: Text(
+                          '$_totalPdfPages',
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -1054,5 +1090,55 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
         ),
       ),
     ).show(context, transitionType: DialogTransitionType.Shrink);
+  }
+}
+
+/// Custom slider thumb shape matching shadcn style
+class _ShadcnSliderThumbShape extends SliderComponentShape {
+  final double thumbRadius;
+  final Color borderColor;
+  final double borderWidth;
+
+  const _ShadcnSliderThumbShape({
+    this.thumbRadius = 10,
+    this.borderColor = Colors.black,
+    this.borderWidth = 2,
+  });
+
+  @override
+  Size getPreferredSize(bool isEnabled, bool isDiscrete) {
+    return Size.fromRadius(thumbRadius);
+  }
+
+  @override
+  void paint(
+    PaintingContext context,
+    Offset center, {
+    required Animation<double> activationAnimation,
+    required Animation<double> enableAnimation,
+    required bool isDiscrete,
+    required TextPainter labelPainter,
+    required RenderBox parentBox,
+    required SliderThemeData sliderTheme,
+    required TextDirection textDirection,
+    required double value,
+    required double textScaleFactor,
+    required Size sizeWithOverflow,
+  }) {
+    final canvas = context.canvas;
+
+    // Draw white/surface fill
+    final fillPaint = Paint()
+      ..color = sliderTheme.thumbColor ?? AppColors.surface
+      ..style = PaintingStyle.fill;
+
+    // Draw border
+    final borderPaint = Paint()
+      ..color = borderColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = borderWidth;
+
+    canvas.drawCircle(center, thumbRadius, fillPaint);
+    canvas.drawCircle(center, thumbRadius - borderWidth / 2, borderPaint);
   }
 }

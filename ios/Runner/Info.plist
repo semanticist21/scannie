@@ -46,10 +46,10 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>이 앱은 문서를 스캔하기 위해 카메라 접근이 필요합니다.</string>
+	<string>Scannie needs camera access to scan documents</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>이 앱은 스캔한 문서를 저장하기 위해 사진 라이브러리 접근이 필요합니다.</string>
+	<string>Scannie needs photo library access to import images for scanning</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>이 앱은 스캔한 문서를 사진 라이브러리에 저장하기 위해 접근이 필요합니다.</string>
+	<string>Scannie needs permission to save scanned documents to your photo library</string>
 </dict>
 </plist>

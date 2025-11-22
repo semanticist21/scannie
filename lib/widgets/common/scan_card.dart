@@ -309,7 +309,7 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
         return Image.file(
           imageFile,
           fit: BoxFit.cover,
-          cacheWidth: 300,
+          cacheWidth: 250,
           errorBuilder: (context, error, stackTrace) {
             return Container(
               color: AppColors.primaryLight.withValues(alpha: 0.15),
