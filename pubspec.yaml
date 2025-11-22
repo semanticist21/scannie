@@ -27,6 +27,7 @@ dependencies:
   ndialog: ^4.5.0+1
   google_fonts: ^6.2.1
   flutter_image_compress: ^2.4.0
+  archive: ^3.6.1
 
 dev_dependencies:
   flutter_test:

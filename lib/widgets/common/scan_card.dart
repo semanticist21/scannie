@@ -16,6 +16,8 @@ class ScanCard extends StatefulWidget {
   final VoidCallback? onDelete;
   final VoidCallback? onSavePdf;
   final VoidCallback? onShare;
+  final VoidCallback? onSaveZip;
+  final VoidCallback? onSaveImages;
 
   const ScanCard({
     super.key,
@@ -26,6 +28,8 @@ class ScanCard extends StatefulWidget {
     this.onDelete,
     this.onSavePdf,
     this.onShare,
+    this.onSaveZip,
+    this.onSaveImages,
   });
 
   @override
@@ -212,7 +216,7 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
       if (widget.onSavePdf != null)
         ContextMenuItem(
           icon: LucideIcons.download,
-          label: 'Save PDF',
+          label: 'Download PDF',
           onTap: () {
             Navigator.pop(context);
             widget.onSavePdf?.call();
@@ -225,6 +229,24 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
           onTap: () {
             Navigator.pop(context);
             widget.onShare?.call();
+          },
+        ),
+      if (widget.onSaveZip != null)
+        ContextMenuItem(
+          icon: LucideIcons.folderArchive,
+          label: 'Download as ZIP',
+          onTap: () {
+            Navigator.pop(context);
+            widget.onSaveZip?.call();
+          },
+        ),
+      if (widget.onSaveImages != null)
+        ContextMenuItem(
+          icon: LucideIcons.images,
+          label: 'Download Images',
+          onTap: () {
+            Navigator.pop(context);
+            widget.onSaveImages?.call();
           },
         ),
     ];

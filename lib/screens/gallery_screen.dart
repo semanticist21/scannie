@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -20,7 +21,27 @@ import 'package:path/path.dart' as path;
 import 'package:open_file_manager/open_file_manager.dart';
 import 'package:media_store_plus/media_store_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:archive/archive.dart';
+import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import '../utils/app_toast.dart';
+
+/// Creates ZIP archive from image paths in a separate isolate
+Future<List<int>?> _createZipArchiveGallery(List<String> imagePaths) async {
+  final archive = Archive();
+
+  for (int i = 0; i < imagePaths.length; i++) {
+    final imageFile = File(imagePaths[i]);
+    if (!imageFile.existsSync()) continue;
+
+    final bytes = imageFile.readAsBytesSync();
+    final extension = imagePaths[i].split('.').last.toLowerCase();
+    final fileName = 'page_${(i + 1).toString().padLeft(2, '0')}.$extension';
+
+    archive.addFile(ArchiveFile(fileName, bytes.length, bytes));
+  }
+
+  return ZipEncoder().encode(archive);
+}
 
 /// Gallery screen displaying scanned documents
 class GalleryScreen extends StatefulWidget {
@@ -181,6 +202,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
           onDelete: () => _deleteDocument(document),
           onSavePdf: () => _savePdfDocument(document),
           onShare: () => _sharePdfDocument(document),
+          onSaveZip: () => _saveZipDocument(document),
+          onSaveImages: () => _saveImagesDocument(document),
         );
       },
     );
@@ -653,6 +676,87 @@ class _GalleryScreenState extends State<GalleryScreen> {
       debugPrint('Error saving PDF: $e');
       if (!mounted) return;
       AppToast.show(context,'Failed to save PDF', isError: true);
+    }
+  }
+
+  /// Save images as ZIP to Downloads folder
+  Future<void> _saveZipDocument(ScanDocument document) async {
+    if (!mounted) return;
+    AppToast.info(context, 'Preparing ZIP...');
+
+    try {
+      // Create archive in separate isolate
+      final zipData = await compute(_createZipArchiveGallery, document.imagePaths);
+      if (zipData == null) {
+        if (!mounted) return;
+        AppToast.show(context, 'Failed to create ZIP', isError: true);
+        return;
+      }
+
+      // Generate filename with timestamp
+      final timestamp =
+          DateTime.now().toString().substring(0, 19).replaceAll(':', '-');
+      final fileName = '${document.name}_$timestamp.zip';
+
+      // Save to temp file
+      final tempDir = await getTemporaryDirectory();
+      final tempFile = File(path.join(tempDir.path, fileName));
+      await tempFile.writeAsBytes(zipData);
+
+      // Initialize MediaStore
+      await MediaStore.ensureInitialized();
+      MediaStore.appFolder = 'Scannie';
+
+      // Save to Downloads folder using MediaStore
+      final mediaStore = MediaStore();
+      final saveInfo = await mediaStore.saveFile(
+        tempFilePath: tempFile.path,
+        dirType: DirType.download,
+        dirName: DirName.download,
+        relativePath: FilePath.root,
+      );
+
+      debugPrint('ZIP saved to MediaStore: ${saveInfo?.uri}');
+
+      // Open file manager to show the downloaded file
+      await openFileManager();
+    } catch (e) {
+      debugPrint('Error saving ZIP: $e');
+      if (!mounted) return;
+      AppToast.show(context, 'Failed to save ZIP', isError: true);
+    }
+  }
+
+  /// Save individual images to gallery
+  Future<void> _saveImagesDocument(ScanDocument document) async {
+    if (!mounted) return;
+    AppToast.info(context, 'Saving images...');
+
+    try {
+      int savedCount = 0;
+
+      for (int i = 0; i < document.imagePaths.length; i++) {
+        final imageFile = File(document.imagePaths[i]);
+        if (!await imageFile.exists()) continue;
+
+        final result = await ImageGallerySaverPlus.saveFile(imageFile.path);
+        if (result['isSuccess'] == true) {
+          savedCount++;
+        }
+      }
+
+      if (!mounted) return;
+      if (savedCount == document.imagePaths.length) {
+        AppToast.show(context, '$savedCount images saved to gallery');
+      } else if (savedCount > 0) {
+        AppToast.show(context, '$savedCount of ${document.imagePaths.length} images saved');
+      } else {
+        AppToast.show(context, 'Failed to save images', isError: true);
+      }
+    } catch (e) {
+      debugPrint('Error saving images: $e');
+      if (!mounted) return;
+      AppToast.show(context, 'Failed to save images', isError: true);
     }
   }
 

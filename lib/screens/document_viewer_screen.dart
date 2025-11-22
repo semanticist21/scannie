@@ -1,7 +1,9 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:ndialog/ndialog.dart';
+import 'package:archive/archive.dart';
 import '../models/scan_document.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
@@ -12,6 +14,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:open_file_manager/open_file_manager.dart';
 import 'package:media_store_plus/media_store_plus.dart';
+import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import '../services/pdf_generator.dart';
 import '../services/document_storage.dart';
@@ -21,6 +24,24 @@ import '../widgets/common/document_info_header.dart';
 import '../utils/app_toast.dart';
 import '../widgets/common/page_card.dart';
 import '../widgets/common/quality_selector_sheet.dart';
+
+/// Creates ZIP archive from image paths in a separate isolate
+Future<List<int>?> _createZipArchive(List<String> imagePaths) async {
+  final archive = Archive();
+
+  for (int i = 0; i < imagePaths.length; i++) {
+    final imageFile = File(imagePaths[i]);
+    if (!imageFile.existsSync()) continue;
+
+    final bytes = imageFile.readAsBytesSync();
+    final extension = imagePaths[i].split('.').last.toLowerCase();
+    final fileName = 'page_${(i + 1).toString().padLeft(2, '0')}.$extension';
+
+    archive.addFile(ArchiveFile(fileName, bytes.length, bytes));
+  }
+
+  return ZipEncoder().encode(archive);
+}
 
 /// Document viewer screen showing all pages in a gallery
 class DocumentViewerScreen extends StatefulWidget {
@@ -491,7 +512,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
     final items = <ContextMenuItem>[
       ContextMenuItem(
         icon: LucideIcons.download,
-        label: 'Save PDF',
+        label: 'Download PDF',
         onTap: () {
           Navigator.pop(context);
           _savePdfLocally();
@@ -503,6 +524,22 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
         onTap: () {
           Navigator.pop(context);
           _exportToPdf();
+        },
+      ),
+      ContextMenuItem(
+        icon: LucideIcons.folderArchive,
+        label: 'Download as ZIP',
+        onTap: () {
+          Navigator.pop(context);
+          _saveAsZip();
+        },
+      ),
+      ContextMenuItem(
+        icon: LucideIcons.images,
+        label: 'Download Images',
+        onTap: () {
+          Navigator.pop(context);
+          _saveImages();
         },
       ),
     ];
@@ -881,4 +918,84 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
     }
   }
 
+  /// Save images as ZIP to Downloads folder
+  Future<void> _saveAsZip() async {
+    if (!mounted) return;
+    AppToast.info(context, 'Preparing ZIP...');
+
+    try {
+      // Create archive in separate isolate
+      final zipData = await compute(_createZipArchive, _imagePaths);
+      if (zipData == null) {
+        if (!mounted) return;
+        AppToast.show(context, 'Failed to create ZIP', isError: true);
+        return;
+      }
+
+      // Generate filename with timestamp
+      final timestamp =
+          DateTime.now().toString().substring(0, 19).replaceAll(':', '-');
+      final fileName = '${_document.name}_$timestamp.zip';
+
+      // Save to temp file
+      final tempDir = await getTemporaryDirectory();
+      final tempFile = File(path.join(tempDir.path, fileName));
+      await tempFile.writeAsBytes(zipData);
+
+      // Initialize MediaStore
+      await MediaStore.ensureInitialized();
+      MediaStore.appFolder = 'Scannie';
+
+      // Save to Downloads folder using MediaStore
+      final mediaStore = MediaStore();
+      final saveInfo = await mediaStore.saveFile(
+        tempFilePath: tempFile.path,
+        dirType: DirType.download,
+        dirName: DirName.download,
+        relativePath: FilePath.root,
+      );
+
+      debugPrint('ZIP saved to MediaStore: ${saveInfo?.uri}');
+
+      // Open file manager to show the downloaded file
+      await openFileManager();
+    } catch (e) {
+      debugPrint('Error saving ZIP: $e');
+      if (!mounted) return;
+      AppToast.show(context, 'Failed to save ZIP', isError: true);
+    }
+  }
+
+  /// Save individual images to gallery
+  Future<void> _saveImages() async {
+    if (!mounted) return;
+    AppToast.info(context, 'Saving images...');
+
+    try {
+      int savedCount = 0;
+
+      for (int i = 0; i < _imagePaths.length; i++) {
+        final imageFile = File(_imagePaths[i]);
+        if (!await imageFile.exists()) continue;
+
+        final result = await ImageGallerySaverPlus.saveFile(imageFile.path);
+        if (result['isSuccess'] == true) {
+          savedCount++;
+        }
+      }
+
+      if (!mounted) return;
+      if (savedCount == _imagePaths.length) {
+        AppToast.show(context, '$savedCount images saved to gallery');
+      } else if (savedCount > 0) {
+        AppToast.show(context, '$savedCount of ${_imagePaths.length} images saved');
+      } else {
+        AppToast.show(context, 'Failed to save images', isError: true);
+      }
+    } catch (e) {
+      debugPrint('Error saving images: $e');
+      if (!mounted) return;
+      AppToast.show(context, 'Failed to save images', isError: true);
+    }
+  }
 }
