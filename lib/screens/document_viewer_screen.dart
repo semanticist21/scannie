@@ -1022,9 +1022,6 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
                       onPressed: () async {
                         Navigator.of(context).pop();
 
-                        if (!mounted) return;
-                        AppToast.info(context, 'Saving images...');
-
                         try {
                           int savedCount = 0;
 

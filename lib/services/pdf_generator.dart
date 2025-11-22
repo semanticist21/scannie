@@ -1,11 +1,54 @@
 import 'dart:io';
-import 'dart:typed_data';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import '../models/scan_document.dart';
+
+/// Data class for passing to isolate
+class _PdfGenerationData {
+  final List<Uint8List> imageBytesList;
+  final String documentName;
+  final String tempDirPath;
+
+  _PdfGenerationData({
+    required this.imageBytesList,
+    required this.documentName,
+    required this.tempDirPath,
+  });
+}
+
+/// Top-level function for isolate execution
+Future<String> _generatePdfInIsolate(_PdfGenerationData data) async {
+  final pdf = pw.Document();
+
+  // Add each image as a separate page
+  for (final imageBytes in data.imageBytesList) {
+    final image = pw.MemoryImage(imageBytes);
+
+    pdf.addPage(
+      pw.Page(
+        pageFormat: PdfPageFormat.a4,
+        build: (pw.Context context) {
+          return pw.Center(
+            child: pw.Image(image, fit: pw.BoxFit.contain),
+          );
+        },
+      ),
+    );
+  }
+
+  // Save to temporary directory
+  final timestamp = DateTime.now().millisecondsSinceEpoch;
+  final fileName = '${data.documentName}_$timestamp.pdf';
+  final filePath = path.join(data.tempDirPath, fileName);
+  final file = File(filePath);
+  await file.writeAsBytes(await pdf.save());
+
+  return filePath;
+}
 
 /// Simple PDF generator without caching
 class PdfGenerator {
@@ -15,37 +58,28 @@ class PdfGenerator {
     required String documentName,
     PdfQuality quality = PdfQuality.high,
   }) async {
-    final pdf = pw.Document();
-
-    // Add each image as a separate page
+    // Compress images on main thread (platform channel)
+    final imageBytesList = <Uint8List>[];
     for (final imagePath in imagePaths) {
       final imageFile = File(imagePath);
       if (!imageFile.existsSync()) continue;
 
-      // Compress image based on quality setting
       final imageBytes = await _compressImage(imagePath, quality);
-      final image = pw.MemoryImage(imageBytes);
-
-      pdf.addPage(
-        pw.Page(
-          pageFormat: PdfPageFormat.a4,
-          build: (pw.Context context) {
-            return pw.Center(
-              child: pw.Image(image, fit: pw.BoxFit.contain),
-            );
-          },
-        ),
-      );
+      imageBytesList.add(imageBytes);
     }
 
-    // Save to temporary directory
+    // Get temp directory on main thread (platform channel)
     final tempDir = await getTemporaryDirectory();
-    final timestamp = DateTime.now().millisecondsSinceEpoch;
-    final fileName = '${documentName}_$timestamp.pdf';
-    final file = File(path.join(tempDir.path, fileName));
-    await file.writeAsBytes(await pdf.save());
 
-    return file;
+    // Generate PDF in separate isolate
+    final data = _PdfGenerationData(
+      imageBytesList: imageBytesList,
+      documentName: documentName,
+      tempDirPath: tempDir.path,
+    );
+
+    final filePath = await compute(_generatePdfInIsolate, data);
+    return File(filePath);
   }
 
   /// Compress image based on quality setting
