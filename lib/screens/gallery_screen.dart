@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,6 @@ import '../theme/app_colors.dart';
 import '../widgets/common/scan_card.dart';
 import '../widgets/common/empty_state.dart';
 import '../widgets/common/document_grid_card.dart';
-import '../widgets/common/document_search_delegate.dart';
 import 'package:printing/printing.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
@@ -61,12 +61,66 @@ class _GalleryScreenState extends State<GalleryScreen> {
   bool _isLoading = true;
   bool _isPremium = false;
 
+  // Search state
+  bool _isSearching = false;
+  String _searchQuery = '';
+  final TextEditingController _searchController = TextEditingController();
+  final FocusNode _searchFocusNode = FocusNode();
+  Timer? _debounceTimer;
+
+  // Filtered documents for search
+  List<ScanDocument> get _filteredDocuments {
+    if (_searchQuery.isEmpty) return _documents;
+    final query = _searchQuery.toLowerCase();
+    return _documents
+        .where((doc) => doc.name.toLowerCase().contains(query))
+        .toList();
+  }
+
   @override
   void initState() {
     super.initState();
     _loadViewMode();
     _loadDocuments();
     _loadPremiumStatus();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _searchFocusNode.dispose();
+    _debounceTimer?.cancel();
+    super.dispose();
+  }
+
+  /// Handle search input with debounce for performance
+  void _onSearchChanged(String value) {
+    _debounceTimer?.cancel();
+    _debounceTimer = Timer(const Duration(milliseconds: 300), () {
+      if (mounted) {
+        setState(() {
+          _searchQuery = value;
+        });
+      }
+    });
+  }
+
+  /// Toggle search mode
+  void _toggleSearch() {
+    setState(() {
+      _isSearching = !_isSearching;
+      if (_isSearching) {
+        // Focus after build
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _searchFocusNode.requestFocus();
+        });
+      } else {
+        _searchController.clear();
+        _searchQuery = '';
+        _debounceTimer?.cancel();
+        _searchFocusNode.unfocus();
+      }
+    });
   }
 
   /// Load premium status from persistent storage
@@ -164,32 +218,98 @@ class _GalleryScreenState extends State<GalleryScreen> {
       appBar: AppBar(
         scrolledUnderElevation: 0,
         title: const Text('My Scans'),
-        actions: [
-          IconButton(
-            icon: const Icon(LucideIcons.sparkles),
-            onPressed: () => PremiumDialog.show(context),
-            tooltip: 'Premium',
-          ),
-          IconButton(
-            icon: const Icon(LucideIcons.plus),
-            onPressed: _createEmptyDocument,
-            tooltip: 'Create Empty Document',
-          ),
-          IconButton(
-            icon: Icon(_isGridView ? LucideIcons.list : LucideIcons.layoutGrid),
-            onPressed: () {
-              final newViewMode = !_isGridView;
-              setState(() => _isGridView = newViewMode);
-              _saveViewMode(newViewMode);
-            },
-            tooltip: _isGridView ? 'List View' : 'Grid View',
-          ),
-          IconButton(
-            icon: const Icon(LucideIcons.search),
-            onPressed: _showSearch,
-            tooltip: 'Search',
-          ),
-        ],
+        actions: _isSearching
+            ? [
+                TweenAnimationBuilder<double>(
+                  tween: Tween(begin: 0.0, end: 1.0),
+                  duration: const Duration(milliseconds: 250),
+                  curve: Curves.easeOutCubic,
+                  builder: (context, value, child) {
+                    return Opacity(
+                      opacity: value,
+                      child: Transform.translate(
+                        offset: Offset(20 * (1 - value), 0),
+                        child: UnconstrainedBox(
+                          constrainedAxis: Axis.horizontal,
+                          child: Container(
+                            width: 200,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: AppColors.neumorphicBase,
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                // Inner shadow (top-left light)
+                                BoxShadow(
+                                  color: Colors.white.withValues(alpha: 0.8),
+                                  offset: const Offset(-2, -2),
+                                  blurRadius: 4,
+                                ),
+                                // Inner shadow (bottom-right dark)
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.08),
+                                  offset: const Offset(2, 2),
+                                  blurRadius: 4,
+                                ),
+                              ],
+                            ),
+                            child: TextField(
+                              controller: _searchController,
+                              focusNode: _searchFocusNode,
+                              onChanged: _onSearchChanged,
+                              style: const TextStyle(fontSize: 13),
+                              decoration: InputDecoration(
+                                hintText: 'Search documents',
+                                hintStyle: TextStyle(
+                                  fontSize: 13,
+                                  color: AppColors.textHint,
+                                ),
+                                border: InputBorder.none,
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 10,
+                                ),
+                                isDense: true,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(LucideIcons.x, size: 20),
+                  onPressed: _toggleSearch,
+                  tooltip: 'Close',
+                ),
+              ]
+            : [
+                IconButton(
+                  icon: const Icon(LucideIcons.sparkles),
+                  onPressed: () => PremiumDialog.show(context),
+                  tooltip: 'Premium',
+                ),
+                IconButton(
+                  icon: const Icon(LucideIcons.plus),
+                  onPressed: _createEmptyDocument,
+                  tooltip: 'Create Empty Document',
+                ),
+                IconButton(
+                  icon: Icon(
+                      _isGridView ? LucideIcons.list : LucideIcons.layoutGrid),
+                  onPressed: () {
+                    final newViewMode = !_isGridView;
+                    setState(() => _isGridView = newViewMode);
+                    _saveViewMode(newViewMode);
+                  },
+                  tooltip: _isGridView ? 'List View' : 'Grid View',
+                ),
+                IconButton(
+                  icon: const Icon(LucideIcons.search),
+                  onPressed: _toggleSearch,
+                  tooltip: 'Search',
+                ),
+              ],
       ),
       backgroundColor: AppColors.neumorphicBase,
       body: SizedBox.expand(
@@ -197,7 +317,9 @@ class _GalleryScreenState extends State<GalleryScreen> {
             ? const Center(child: CircularProgressIndicator())
             : _documents.isEmpty
                 ? _buildEmptyState()
-                : _buildDocumentList(),
+                : _isSearching && _filteredDocuments.isEmpty
+                    ? _buildNoSearchResults()
+                    : _buildDocumentList(),
       ),
       floatingActionButton: ShadButton(
         onPressed: _openCamera,
@@ -216,19 +338,30 @@ class _GalleryScreenState extends State<GalleryScreen> {
     );
   }
 
+  Widget _buildNoSearchResults() {
+    return EmptyState(
+      icon: LucideIcons.searchX,
+      title: 'No results found',
+      subtitle: 'Try a different search term',
+      verticalOffset: -40,
+    );
+  }
+
   Widget _buildDocumentList() {
     if (_isGridView) {
       return _buildGridView();
     }
+
+    final documents = _isSearching ? _filteredDocuments : _documents;
 
     return ListView.builder(
       padding: const EdgeInsets.only(
         top: AppSpacing.sm,
         bottom: AppSpacing.xxl * 2,
       ),
-      itemCount: _documents.length,
+      itemCount: documents.length,
       itemBuilder: (context, index) {
-        final document = _documents[index];
+        final document = documents[index];
         return ScanCard(
           document: document,
           onTap: () => _openDocument(document),
@@ -246,6 +379,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
   }
 
   Widget _buildGridView() {
+    final documents = _isSearching ? _filteredDocuments : _documents;
+
     return GridView.builder(
       padding: const EdgeInsets.all(AppSpacing.sm),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -254,9 +389,9 @@ class _GalleryScreenState extends State<GalleryScreen> {
         mainAxisSpacing: AppSpacing.sm,
         childAspectRatio: 0.75,
       ),
-      itemCount: _documents.length,
+      itemCount: documents.length,
       itemBuilder: (context, index) {
-        final document = _documents[index];
+        final document = documents[index];
         return DocumentGridCard(
           document: document,
           onTap: () => _openDocument(document),
@@ -654,13 +789,6 @@ class _GalleryScreenState extends State<GalleryScreen> {
           AppToast.show(context, 'Failed to save images', isError: true);
         }
       },
-    );
-  }
-
-  void _showSearch() {
-    showSearch(
-      context: context,
-      delegate: DocumentSearchDelegate(_documents),
     );
   }
 }
