@@ -116,6 +116,7 @@ class DocumentGridCard extends StatelessWidget {
         return Image.file(
           imageFile,
           fit: BoxFit.cover,
+          cacheWidth: 600,
           errorBuilder: (context, error, stackTrace) {
             return _buildPlaceholder();
           },

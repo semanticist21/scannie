@@ -33,6 +33,7 @@ class PageCard extends StatelessWidget {
         ? Image.file(
             imageFile,
             fit: BoxFit.cover,
+            cacheWidth: isListView ? 400 : 600,
             errorBuilder: (context, error, stackTrace) {
               return Container(
                 color: AppColors.background,
