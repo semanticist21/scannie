@@ -17,6 +17,9 @@ import '../services/pdf_cache_service.dart';
 import '../services/document_storage.dart';
 import '../widgets/common/full_screen_image_viewer.dart';
 import '../widgets/common/context_menu_sheet.dart';
+import '../widgets/common/document_info_header.dart';
+import '../widgets/common/page_card.dart';
+import '../widgets/common/quality_selector_sheet.dart';
 
 /// Document viewer screen showing all pages in a gallery
 class DocumentViewerScreen extends StatefulWidget {
@@ -72,16 +75,6 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
       }
     }
     _totalFileSize = total;
-  }
-
-  String _formatFileSize(int bytes) {
-    if (bytes < 1024) {
-      return '$bytes B';
-    } else if (bytes < 1024 * 1024) {
-      return '${(bytes / 1024).toStringAsFixed(1)} KB';
-    } else {
-      return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
-    }
   }
 
   @override
@@ -141,7 +134,10 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
       body: Column(
         children: [
           // Document info card with gradient
-          _buildDocumentInfoHeader(),
+          DocumentInfoHeader(
+            document: _document,
+            cachedPdfFile: _cachedPdfFile,
+          ),
 
           // Tab bar for Pages/PDF toggle
           if (_imagePaths.isNotEmpty) _buildTabBar(),
@@ -163,84 +159,6 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
         ],
       ),
     );
-  }
-
-  Widget _buildDocumentInfoHeader() {
-    return Padding(
-      padding: const EdgeInsets.all(AppSpacing.md),
-      child: Container(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(AppRadius.md),
-          border: Border.all(color: AppColors.border),
-        ),
-        child: Row(
-          children: [
-            // Document icon
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(AppRadius.sm),
-              ),
-              child: const Icon(
-                LucideIcons.fileText,
-                color: AppColors.primary,
-                size: 20,
-              ),
-            ),
-            const SizedBox(width: AppSpacing.md),
-            // Document info
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    _document.name,
-                    style: AppTextStyles.bodyMedium.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: AppSpacing.xs),
-                  Text(
-                    _buildInfoText(),
-                    style: AppTextStyles.caption.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  String _buildInfoText() {
-    final pageText =
-        '${_imagePaths.length} ${_imagePaths.length == 1 ? 'page' : 'pages'}';
-    final dateText = _formatDateShort(_document.createdAt);
-
-    // Only show actual PDF size when available
-    if (_cachedPdfFile != null && _cachedPdfFile!.existsSync()) {
-      final sizeText = _formatFileSize(_cachedPdfFile!.lengthSync());
-      return '$pageText · $dateText · $sizeText';
-    }
-
-    return '$pageText · $dateText';
-  }
-
-  String _formatDateShort(DateTime date) {
-    final year = date.year.toString();
-    final month = date.month.toString().padLeft(2, '0');
-    final day = date.day.toString().padLeft(2, '0');
-    return '$year.$month.$day';
   }
 
   Widget _buildTabBar() {
@@ -424,10 +342,12 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
           final imagePath = _imagePaths[index];
           final imageFile = File(imagePath);
 
-          return GestureDetector(
+          return PageCard(
             key: ValueKey(imagePath),
+            index: index,
+            imageFile: imageFile,
             onTap: () => _viewFullScreen(index),
-            child: _buildCardContent(index, imageFile, isListView: false),
+            isListView: false,
           );
         },
       ),
@@ -448,92 +368,19 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
         });
       },
       itemBuilder: (context, index) {
+        final imagePath = _imagePaths[index];
+        final imageFile = File(imagePath);
         return Padding(
-          key: ValueKey(_imagePaths[index]),
+          key: ValueKey(imagePath),
           padding: const EdgeInsets.only(bottom: AppSpacing.md),
-          child: _buildPageCard(index, isListView: true),
+          child: PageCard(
+            index: index,
+            imageFile: imageFile,
+            onTap: () => _viewFullScreen(index),
+            isListView: true,
+          ),
         );
       },
-    );
-  }
-
-  Widget _buildPageCard(int index, {bool isListView = false}) {
-    final imagePath = _imagePaths[index];
-    final imageFile = File(imagePath);
-
-    return GestureDetector(
-      onTap: () => _viewFullScreen(index),
-      child: _buildCardContent(index, imageFile, isListView: isListView),
-    );
-  }
-
-  Widget _buildCardContent(int index, File imageFile,
-      {bool isListView = false}) {
-    final imageWidget = imageFile.existsSync()
-        ? Image.file(
-            imageFile,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
-              return Container(
-                color: AppColors.background,
-                child: Center(
-                  child: Icon(
-                    LucideIcons.imageOff,
-                    size: isListView ? 80 : 48,
-                    color: AppColors.textHint,
-                  ),
-                ),
-              );
-            },
-          )
-        : Container(
-            color: AppColors.background,
-            child: Center(
-              child: Icon(
-                LucideIcons.image,
-                size: isListView ? 80 : 48,
-                color: AppColors.textHint,
-              ),
-            ),
-          );
-
-    return Container(
-      height: isListView ? 280 : null,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(AppRadius.sm),
-        border: Border.all(color: AppColors.border.withValues(alpha: 0.5)),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(AppRadius.sm - 1),
-        child: Stack(
-          children: [
-            // Image fills the card
-            Positioned.fill(child: imageWidget),
-            // Page number badge at top left
-            Positioned(
-              top: AppSpacing.sm,
-              left: AppSpacing.sm,
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.sm,
-                  vertical: AppSpacing.xs,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.6),
-                  borderRadius: BorderRadius.circular(AppRadius.sm),
-                ),
-                child: Text(
-                  '${index + 1}',
-                  style: AppTextStyles.caption.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -594,104 +441,11 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
   }
 
   void _showQualitySelector() {
-    showModalBottomSheet(
+    QualitySelectorSheet.show(
       context: context,
-      backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
-      ),
-      builder: (sheetContext) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Handle bar
-            Center(
-              child: Container(
-                margin: const EdgeInsets.only(top: AppSpacing.sm),
-                width: 32,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: AppColors.border,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-            ),
-            // Header
-            Padding(
-              padding: const EdgeInsets.fromLTRB(
-                AppSpacing.lg,
-                AppSpacing.md,
-                AppSpacing.lg,
-                AppSpacing.sm,
-              ),
-              child: Text(
-                'PDF Quality',
-                style: AppTextStyles.bodyMedium.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            const Divider(height: 1, color: AppColors.border),
-
-            // Quality options
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
-              child: Column(
-                children: PdfQuality.values.map((quality) {
-                  final isSelected = quality == _document.pdfQuality;
-                  final estimatedSize =
-                      (_totalFileSize * quality.compressionRatio).round();
-
-                  return InkWell(
-                    onTap: () {
-                      Navigator.pop(sheetContext);
-                      _updateQuality(quality);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.lg,
-                        vertical: AppSpacing.md,
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            isSelected
-                                ? LucideIcons.circleCheck
-                                : LucideIcons.circle,
-                            size: 22,
-                            color: isSelected
-                                ? AppColors.primary
-                                : AppColors.textSecondary,
-                          ),
-                          const SizedBox(width: AppSpacing.md),
-                          Expanded(
-                            child: Text(
-                              quality.displayName,
-                              style: AppTextStyles.bodyMedium.copyWith(
-                                fontWeight: isSelected
-                                    ? FontWeight.w600
-                                    : FontWeight.normal,
-                              ),
-                            ),
-                          ),
-                          Text(
-                            '~${_formatFileSize(estimatedSize)}',
-                            style: AppTextStyles.caption.copyWith(
-                              color: AppColors.textSecondary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
-            const SizedBox(height: AppSpacing.sm),
-          ],
-        ),
-      ),
+      currentQuality: _document.pdfQuality,
+      totalFileSize: _totalFileSize,
+      onQualitySelected: _updateQuality,
     );
   }
 

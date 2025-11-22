@@ -11,6 +11,9 @@ import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
 import '../theme/app_text_styles.dart';
 import '../widgets/common/scan_card.dart';
+import '../widgets/common/empty_state.dart';
+import '../widgets/common/document_grid_card.dart';
+import '../widgets/common/document_search_delegate.dart';
 import 'package:printing/printing.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
@@ -149,32 +152,10 @@ class _GalleryScreenState extends State<GalleryScreen> {
   }
 
   Widget _buildEmptyState() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 80), // 시각적 중앙 보정
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(
-              LucideIcons.fileText,
-              size: 100,
-              color: AppColors.textHint,
-            ),
-            const SizedBox(height: AppSpacing.lg),
-            const Text(
-              'No scans yet',
-              style: AppTextStyles.h2,
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            Text(
-              'Tap the button below to start scanning',
-              style: AppTextStyles.bodyMedium.copyWith(
-                color: AppColors.textSecondary,
-              ),
-            ),
-          ],
-        ),
-      ),
+    return const EmptyState(
+      icon: LucideIcons.fileText,
+      title: 'No scans yet',
+      subtitle: 'Tap the button below to start scanning',
     );
   }
 
@@ -216,135 +197,11 @@ class _GalleryScreenState extends State<GalleryScreen> {
       itemCount: _documents.length,
       itemBuilder: (context, index) {
         final document = _documents[index];
-        return _buildGridCard(document);
-      },
-    );
-  }
-
-  Widget _buildGridCard(ScanDocument document) {
-    return TweenAnimationBuilder<double>(
-      duration: const Duration(milliseconds: 200),
-      tween: Tween(begin: 0.95, end: 1.0),
-      curve: Curves.easeOut,
-      builder: (context, scale, child) {
-        return Transform.scale(
-          scale: scale,
-          child: child,
-        );
-      },
-      child: Card.filled(
-        child: InkWell(
+        return DocumentGridCard(
+          document: document,
           onTap: () => _openDocument(document),
-          borderRadius: BorderRadius.circular(AppRadius.lg),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Thumbnail with subtle elevation
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.all(AppSpacing.sm),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(AppRadius.md),
-                    color: AppColors.surface,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.08),
-                        blurRadius: 6,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(AppRadius.md),
-                    child: _buildGridThumbnail(document),
-                  ),
-                ),
-              ),
-
-              // Info section
-              Padding(
-                padding: const EdgeInsets.fromLTRB(
-                  AppSpacing.md,
-                  AppSpacing.xs,
-                  AppSpacing.md,
-                  AppSpacing.md,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      document.name,
-                      style: AppTextStyles.bodyMedium.copyWith(
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: -0.2,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: AppSpacing.xs),
-                    Row(
-                      children: [
-                        Icon(
-                          LucideIcons.file,
-                          size: 14,
-                          color: AppColors.textSecondary.withValues(alpha: 0.7),
-                        ),
-                        const SizedBox(width: AppSpacing.xs),
-                        Text(
-                          '${document.imagePaths.length} ${document.imagePaths.length == 1 ? 'page' : 'pages'}',
-                          style: AppTextStyles.caption.copyWith(
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildGridThumbnail(ScanDocument document) {
-    // If document has images, show the first image as thumbnail
-    if (document.imagePaths.isNotEmpty) {
-      final firstImagePath = document.imagePaths.first;
-      final imageFile = File(firstImagePath);
-
-      // Check if file exists
-      if (imageFile.existsSync()) {
-        return Image.file(
-          imageFile,
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
-            return Container(
-              color: AppColors.primaryLight.withValues(alpha: 0.15),
-              child: const Center(
-                child: Icon(
-                  LucideIcons.fileText,
-                  size: 48,
-                  color: AppColors.primary,
-                ),
-              ),
-            );
-          },
         );
-      }
-    }
-
-    // Fallback to icon if no images or file doesn't exist
-    return Container(
-      color: AppColors.primaryLight.withValues(alpha: 0.15),
-      child: const Center(
-        child: Icon(
-          LucideIcons.fileText,
-          size: 48,
-          color: AppColors.primary,
-        ),
-      ),
+      },
     );
   }
 
@@ -801,82 +658,6 @@ class _GalleryScreenState extends State<GalleryScreen> {
       ShadToast(
         title: Text(message),
       ),
-    );
-  }
-}
-
-/// Search delegate for documents
-class DocumentSearchDelegate extends SearchDelegate<ScanDocument?> {
-  final List<ScanDocument> documents;
-
-  DocumentSearchDelegate(this.documents);
-
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    return [
-      IconButton(
-        icon: const Icon(LucideIcons.x),
-        onPressed: () => query = '',
-      ),
-    ];
-  }
-
-  @override
-  Widget buildLeading(BuildContext context) {
-    return IconButton(
-      icon: const Icon(LucideIcons.arrowLeft),
-      onPressed: () => close(context, null),
-    );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    return _buildSearchResults();
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    return _buildSearchResults();
-  }
-
-  Widget _buildSearchResults() {
-    final results = documents.where((doc) {
-      return doc.name.toLowerCase().contains(query.toLowerCase());
-    }).toList();
-
-    if (results.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              LucideIcons.searchX,
-              size: 64,
-              color: AppColors.textHint,
-            ),
-            const SizedBox(height: AppSpacing.md),
-            Text(
-              'No results found',
-              style: AppTextStyles.bodyLarge.copyWith(
-                color: AppColors.textSecondary,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
-    return ListView.builder(
-      itemCount: results.length,
-      itemBuilder: (context, index) {
-        final document = results[index];
-        return ListTile(
-          leading: const Icon(LucideIcons.fileText),
-          title: Text(document.name),
-          subtitle: Text('${document.imagePaths.length} pages'),
-          onTap: () => close(context, document),
-        );
-      },
     );
   }
 }

@@ -11,6 +11,8 @@ import '../theme/app_theme.dart';
 import '../theme/app_text_styles.dart';
 import '../widgets/common/custom_app_bar.dart';
 import '../widgets/common/full_screen_image_viewer.dart';
+import '../widgets/common/image_tile.dart';
+import '../widgets/common/edit_bottom_actions.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -509,7 +511,12 @@ class _EditScreenState extends State<EditScreen> {
                   ),
 
                   // Bottom Actions
-                  _buildBottomActions(),
+                  EditBottomActions(
+                    onAddMore: _addMoreImages,
+                    onSavePdf: _savePdfLocally,
+                    onShare: _exportToPdf,
+                    onSave: _saveScan,
+                  ),
                 ],
               ),
       ),
@@ -557,198 +564,14 @@ class _EditScreenState extends State<EditScreen> {
       children: _imagePaths.asMap().entries.map((entry) {
         final index = entry.key;
         final imagePath = entry.value;
-        return _buildImageTile(index, imagePath);
+        return ImageTile(
+          key: ValueKey(imagePath),
+          index: index,
+          imagePath: imagePath,
+          onTap: () => _viewImage(imagePath, index),
+          onDelete: () => _deleteImage(index),
+        );
       }).toList(),
-    );
-  }
-
-  Widget _buildImageTile(int index, String imagePath) {
-    return Container(
-      key: ValueKey(imagePath),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Stack(
-        clipBehavior: Clip.none,
-        fit: StackFit.expand,
-        children: [
-          // Image (tappable)
-          GestureDetector(
-            onTap: () => _viewImage(imagePath, index),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(AppRadius.md - 1),
-              child: Image.file(
-                File(imagePath),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-
-          // Page number badge
-          Positioned(
-            top: AppSpacing.sm,
-            left: AppSpacing.sm,
-            child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.sm,
-                vertical: AppSpacing.xs,
-              ),
-              decoration: BoxDecoration(
-                color: Colors.black.withValues(alpha: 0.6),
-                borderRadius: BorderRadius.circular(AppRadius.sm),
-              ),
-              child: Text(
-                '${index + 1}',
-                style: AppTextStyles.caption.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          ),
-
-          // Delete button
-          Positioned(
-            top: -8,
-            right: -8,
-            child: GestureDetector(
-              onTap: () => _deleteImage(index),
-              child: Container(
-                width: 24,
-                height: 24,
-                decoration: BoxDecoration(
-                  color: AppColors.surface,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: AppColors.border),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.1),
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: const Icon(
-                  LucideIcons.x,
-                  color: AppColors.textSecondary,
-                  size: 14,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBottomActions() {
-    // Get safe area bottom padding for iOS/Android home indicator
-    final bottomPadding = MediaQuery.of(context).padding.bottom;
-
-    return Container(
-      padding: EdgeInsets.only(
-        left: AppSpacing.md,
-        right: AppSpacing.md,
-        top: AppSpacing.lg,
-        bottom: AppSpacing.md + bottomPadding, // Add safe area padding
-      ),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        border: Border(
-          top: BorderSide(
-            color: AppColors.textSecondary.withValues(alpha: 0.1),
-            width: 1,
-          ),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
-            blurRadius: 16,
-            offset: const Offset(0, -4),
-          ),
-        ],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Row 1: Icon buttons for quick actions
-          Row(
-            children: [
-              // Add More Images
-              Expanded(
-                child: _buildIconButton(
-                  icon: LucideIcons.imagePlus,
-                  label: 'Add More',
-                  onPressed: _addMoreImages,
-                ),
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              // Save PDF
-              Expanded(
-                child: _buildIconButton(
-                  icon: LucideIcons.fileText,
-                  label: 'Save PDF',
-                  onPressed: _savePdfLocally,
-                ),
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              // Share PDF
-              Expanded(
-                child: _buildIconButton(
-                  icon: LucideIcons.share2,
-                  label: 'Share',
-                  onPressed: _exportToPdf,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.md),
-          // Row 2: Primary action - Save to Gallery
-          SizedBox(
-            width: double.infinity,
-            child: ShadButton(
-              onPressed: _saveScan,
-              leading: const Icon(LucideIcons.save, size: 18),
-              child: const Text('Save to Gallery'),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Build icon button for footer actions
-  Widget _buildIconButton({
-    required IconData icon,
-    required String label,
-    required VoidCallback onPressed,
-  }) {
-    return ShadButton.outline(
-      onPressed: onPressed,
-      height: 64,
-      width: double.infinity, // Constrain width to parent
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            size: 22,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w500,
-            ),
-            textAlign: TextAlign.center,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
-      ),
     );
   }
 }
