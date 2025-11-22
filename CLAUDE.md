@@ -13,6 +13,7 @@ Scannie는 문서 스캔 Flutter 모바일 애플리케이션입니다. 네이�
 - `reorderable_grid_view` v2.2.8 (드래그 앤 드롭 순서 변경)
 - `pdf` + `printing` (PDF 생성/공유)
 - `syncfusion_flutter_pdfviewer` (PDF 미리보기)
+- `flutter_image_compress` (PDF 품질별 이미지 압축)
 - `elegant_notification` (토스트 알림)
 
 **현재 상태**:
@@ -23,6 +24,7 @@ Scannie는 문서 스캔 Flutter 모바일 애플리케이션입니다. 네이�
 - ✅ **PDF 다운로드** (MediaStore API - 권한 불필요)
 - ✅ DocumentViewerScreen (페이지 갤러리, 전체 화면 뷰어)
 - ✅ **FullScreenImageViewer 필터** (Original, B&W, Contrast, Brighten, Document)
+- ✅ **PDF 품질 설정** (Low, Medium, High, Original - 문서별 저장)
 
 ## Quick Reference
 
@@ -192,6 +194,7 @@ lib/
 │   ├── scan_card.dart
 │   ├── custom_app_bar.dart
 │   ├── custom_button.dart
+│   ├── context_menu_sheet.dart        # 공통 컨텍스트 메뉴 (bottom sheet)
 │   └── full_screen_image_viewer.dart  # 이미지 뷰어 + 필터 + 저장
 ├── services/         # 비즈니스 로직
 │   ├── document_storage.dart         # 문서 영구 저장/로드
@@ -201,7 +204,7 @@ lib/
 │   ├── app_colors.dart       # 색상 팔레트
 │   └── app_text_styles.dart  # 타이포그래피
 └── models/
-    └── scan_document.dart    # ScanDocument(id, name, createdAt, imagePaths, isProcessed)
+    └── scan_document.dart    # ScanDocument + PdfQuality enum
 ```
 
 ### 테마 시스템 (필수)
@@ -461,10 +464,32 @@ final result = await navigator.pushNamed('/edit', arguments: scannedImages);
 
 ### 개요
 
-**모든 PDF는 A4 사이즈, 고품질로 고정**됩니다. 앱은 두 가지 내보내기 방식을 제공합니다:
+앱은 두 가지 내보내기 방식과 4단계 품질 설정을 제공합니다:
 
 1. **Share** (공유): `Printing.sharePdf()` - 시스템 공유 시트
 2. **Download** (다운로드): MediaStore API - Downloads/Scannie/ 폴더
+
+### PDF 품질 설정
+
+`PdfQuality` enum으로 문서별 품질 저장 (영구 저장):
+
+| 품질 | JPEG Quality | Max Dimension | 압축률 |
+|------|-------------|---------------|--------|
+| Low | 60 | 1024px | ~20% |
+| Medium | 75 | 1536px | ~50% |
+| High | 85 | 2048px | ~95% |
+| Original | 100 | 원본 | 100% |
+
+```dart
+// 문서별 품질 설정
+final document = ScanDocument(
+  // ...
+  pdfQuality: PdfQuality.high, // 기본값
+);
+
+// 압축률로 예상 크기 계산
+final estimatedSize = totalFileSize * quality.compressionRatio;
+```
 
 ### PDF 캐싱 시스템
 
@@ -477,10 +502,13 @@ import 'services/pdf_cache_service.dart';
 final pdfFile = await PdfCacheService().getOrGeneratePdf(
   imagePaths: document.imagePaths,
   documentName: document.name,
+  quality: document.pdfQuality, // 품질별 캐싱
 );
 ```
 
-**캐시 키**: 이미지 경로 리스트의 SHA256 해시 → 동일 이미지 조합은 항상 같은 캐시 키
+**캐시 키**: `SHA256(imagePaths + quality)` → 같은 이미지+품질 = 같은 캐시 키
+
+**이미지 압축**: `flutter_image_compress` 패키지로 품질별 JPEG 압축
 
 ### Android MediaStore API 사용
 

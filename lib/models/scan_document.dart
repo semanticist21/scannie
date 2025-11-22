@@ -81,7 +81,7 @@ class ScanDocument {
     required this.createdAt,
     required this.imagePaths,
     this.isProcessed = false,
-    this.pdfQuality = PdfQuality.high,
+    this.pdfQuality = PdfQuality.medium,
   });
 
   ScanDocument copyWith({
@@ -124,7 +124,7 @@ class ScanDocument {
       isProcessed: json['isProcessed'] as bool? ?? false,
       pdfQuality: PdfQuality.values.firstWhere(
         (e) => e.name == json['pdfQuality'],
-        orElse: () => PdfQuality.high,
+        orElse: () => PdfQuality.medium,
       ),
     );
   }

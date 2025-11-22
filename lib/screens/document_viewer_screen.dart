@@ -56,12 +56,11 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
         });
       }
     });
-    // Calculate total file size
-    _calculateTotalSize();
-    // Only load PDF preview if there are images
-    if (_imagePaths.isNotEmpty) {
-      _loadPdfPreview();
-    }
+
+    // Defer size calculation to after first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _calculateTotalSize();
+    });
   }
 
   void _calculateTotalSize() {
@@ -102,6 +101,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
       final pdfFile = await _pdfCacheService.getOrGeneratePdf(
         imagePaths: _imagePaths,
         documentName: _document.name,
+        quality: _document.pdfQuality,
       );
 
       if (mounted) {
@@ -146,20 +146,18 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
           // Tab bar for Pages/PDF toggle
           if (_imagePaths.isNotEmpty) _buildTabBar(),
 
-          // Content area with animation
+          // Content area - IndexedStack keeps PDF in memory
           Expanded(
             child: _imagePaths.isEmpty
                 ? _buildEmptyState()
-                : AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 200),
-                    switchInCurve: Curves.easeInOut,
-                    switchOutCurve: Curves.easeInOut,
-                    child: KeyedSubtree(
-                      key: ValueKey(_showPdfPreview ? 'pdf' : 'pages'),
-                      child: _showPdfPreview
-                          ? _buildPdfPreview()
-                          : (_isGridView ? _buildGridView() : _buildListView()),
-                    ),
+                : IndexedStack(
+                    index: _showPdfPreview ? 1 : 0,
+                    children: [
+                      // Pages view
+                      _isGridView ? _buildGridView() : _buildListView(),
+                      // PDF view (kept in memory)
+                      _buildPdfPreview(),
+                    ],
                   ),
           ),
         ],
@@ -210,7 +208,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
                   ),
                   const SizedBox(height: AppSpacing.xs),
                   Text(
-                    '${_imagePaths.length} ${_imagePaths.length == 1 ? 'page' : 'pages'} · ${_formatDateShort(_document.createdAt)} · ~${_formatFileSize((_totalFileSize * _document.pdfQuality.compressionRatio).round())}',
+                    _buildInfoText(),
                     style: AppTextStyles.caption.copyWith(
                       color: AppColors.textSecondary,
                     ),
@@ -222,6 +220,20 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
         ),
       ),
     );
+  }
+
+  String _buildInfoText() {
+    final pageText =
+        '${_imagePaths.length} ${_imagePaths.length == 1 ? 'page' : 'pages'}';
+    final dateText = _formatDateShort(_document.createdAt);
+
+    // Only show actual PDF size when available
+    if (_cachedPdfFile != null && _cachedPdfFile!.existsSync()) {
+      final sizeText = _formatFileSize(_cachedPdfFile!.lengthSync());
+      return '$pageText · $dateText · $sizeText';
+    }
+
+    return '$pageText · $dateText';
   }
 
   String _formatDateShort(DateTime date) {
@@ -299,43 +311,31 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
     }
 
     if (_cachedPdfFile == null || !_cachedPdfFile!.existsSync()) {
+      // Trigger PDF loading on first view
+      if (!_isLoadingPdf && _imagePaths.isNotEmpty) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _loadPdfPreview();
+        });
+      }
+      // Show loading state while waiting
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                color: AppColors.error.withValues(alpha: 0.1),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                LucideIcons.circleAlert,
-                size: 40,
-                color: AppColors.error,
+            SizedBox(
+              width: 48,
+              height: 48,
+              child: CircularProgressIndicator(
+                strokeWidth: 3,
+                color: AppColors.primary,
               ),
             ),
             const SizedBox(height: AppSpacing.lg),
             Text(
-              'PDF preview not available',
-              style: AppTextStyles.bodyLarge.copyWith(
-                fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
-              ),
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            Text(
-              'There was an error generating the preview',
-              style: AppTextStyles.bodySmall.copyWith(
+              'Preparing PDF...',
+              style: AppTextStyles.bodyMedium.copyWith(
                 color: AppColors.textSecondary,
               ),
-            ),
-            const SizedBox(height: AppSpacing.lg),
-            ShadButton.outline(
-              onPressed: _loadPdfPreview,
-              leading: const Icon(LucideIcons.refreshCw, size: 16),
-              child: const Text('Retry'),
             ),
           ],
         ),
@@ -358,7 +358,6 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
           enableDoubleTapZooming: true,
           enableTextSelection: false,
           canShowScrollHead: true,
-          canShowScrollStatus: true,
         ),
       ),
     );
@@ -641,7 +640,8 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
               child: Column(
                 children: PdfQuality.values.map((quality) {
                   final isSelected = quality == _document.pdfQuality;
-                  final estimatedSize = (_totalFileSize * quality.compressionRatio).round();
+                  final estimatedSize =
+                      (_totalFileSize * quality.compressionRatio).round();
 
                   return InkWell(
                     onTap: () {
@@ -709,6 +709,9 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
       documents[index] = _document;
       await DocumentStorage.saveDocuments(documents);
     }
+
+    // Reload PDF with new quality
+    _loadPdfPreview();
   }
 
   /// Show delete confirmation dialog
