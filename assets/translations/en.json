@@ -93,7 +93,7 @@
     "title": "Get Premium",
     "titleActive": "Premium Active",
     "descriptionActive": "You have unlimited access to all features.\nThank you for your support!",
-    "description": "Free version saves 1 document only.\nUpgrade for unlimited storage, or delete existing to add new.",
+    "description": "Free version allows saving only 1 document.\nUpgrade to Premium for unlimited storage.\nOr delete your existing document to add a new one.",
     "unlocked": "Premium Unlocked",
     "unlock": "Unlock ($1)",
     "maybeLater": "Maybe Later"

@@ -129,6 +129,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
         pageSize: _document.pdfPageSize,
         orientation: _document.pdfOrientation,
         imageFit: _document.pdfImageFit,
+        margin: _document.pdfMargin,
       );
 
       if (mounted) {
@@ -638,6 +639,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
       pageSize: _document.pdfPageSize,
       orientation: _document.pdfOrientation,
       imageFit: _document.pdfImageFit,
+      margin: _document.pdfMargin,
       onSave: _updatePdfOptions,
     );
   }
@@ -647,12 +649,14 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
     PdfPageSize pageSize,
     PdfOrientation orientation,
     PdfImageFit imageFit,
+    PdfMargin margin,
   ) async {
     // Check if any option changed
     if (quality == _document.pdfQuality &&
         pageSize == _document.pdfPageSize &&
         orientation == _document.pdfOrientation &&
-        imageFit == _document.pdfImageFit) {
+        imageFit == _document.pdfImageFit &&
+        margin == _document.pdfMargin) {
       return;
     }
 
@@ -662,6 +666,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
         pdfPageSize: pageSize,
         pdfOrientation: orientation,
         pdfImageFit: imageFit,
+        pdfMargin: margin,
       );
     });
 
@@ -724,6 +729,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
         pageSize: _document.pdfPageSize,
         orientation: _document.pdfOrientation,
         imageFit: _document.pdfImageFit,
+        margin: _document.pdfMargin,
       );
 
       notification.dismiss();
@@ -763,6 +769,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
         pageSize: _document.pdfPageSize,
         orientation: _document.pdfOrientation,
         imageFit: _document.pdfImageFit,
+        margin: _document.pdfMargin,
       );
 
       // Generate filename with timestamp
