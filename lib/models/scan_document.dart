@@ -79,6 +79,44 @@ extension PdfImageFitExtension on PdfImageFit {
   }
 }
 
+/// PDF margin options
+enum PdfMargin {
+  none,
+  small,
+  medium,
+  large,
+}
+
+/// Extension for PdfMargin display names and values
+extension PdfMarginExtension on PdfMargin {
+  String get displayName {
+    switch (this) {
+      case PdfMargin.none:
+        return 'None';
+      case PdfMargin.small:
+        return 'Small';
+      case PdfMargin.medium:
+        return 'Medium';
+      case PdfMargin.large:
+        return 'Large';
+    }
+  }
+
+  /// Margin value in points
+  double get points {
+    switch (this) {
+      case PdfMargin.none:
+        return 0;
+      case PdfMargin.small:
+        return 12;
+      case PdfMargin.medium:
+        return 24;
+      case PdfMargin.large:
+        return 36;
+    }
+  }
+}
+
 /// Extension for PdfQuality display and compression values
 extension PdfQualityExtension on PdfQuality {
   String get displayName {
@@ -148,6 +186,7 @@ class ScanDocument {
   final PdfPageSize pdfPageSize;
   final PdfOrientation pdfOrientation;
   final PdfImageFit pdfImageFit;
+  final PdfMargin pdfMargin;
 
   const ScanDocument({
     required this.id,
@@ -159,6 +198,7 @@ class ScanDocument {
     this.pdfPageSize = PdfPageSize.a4,
     this.pdfOrientation = PdfOrientation.portrait,
     this.pdfImageFit = PdfImageFit.contain,
+    this.pdfMargin = PdfMargin.none,
   });
 
   ScanDocument copyWith({
@@ -171,6 +211,7 @@ class ScanDocument {
     PdfPageSize? pdfPageSize,
     PdfOrientation? pdfOrientation,
     PdfImageFit? pdfImageFit,
+    PdfMargin? pdfMargin,
   }) {
     return ScanDocument(
       id: id ?? this.id,
@@ -182,6 +223,7 @@ class ScanDocument {
       pdfPageSize: pdfPageSize ?? this.pdfPageSize,
       pdfOrientation: pdfOrientation ?? this.pdfOrientation,
       pdfImageFit: pdfImageFit ?? this.pdfImageFit,
+      pdfMargin: pdfMargin ?? this.pdfMargin,
     );
   }
 
@@ -197,6 +239,7 @@ class ScanDocument {
       'pdfPageSize': pdfPageSize.name,
       'pdfOrientation': pdfOrientation.name,
       'pdfImageFit': pdfImageFit.name,
+      'pdfMargin': pdfMargin.name,
     };
   }
 
@@ -223,6 +266,10 @@ class ScanDocument {
       pdfImageFit: PdfImageFit.values.firstWhere(
         (e) => e.name == json['pdfImageFit'],
         orElse: () => PdfImageFit.contain,
+      ),
+      pdfMargin: PdfMargin.values.firstWhere(
+        (e) => e.name == json['pdfMargin'],
+        orElse: () => PdfMargin.none,
       ),
     );
   }

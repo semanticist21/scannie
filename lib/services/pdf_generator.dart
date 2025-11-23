@@ -15,6 +15,7 @@ class _PdfGenerationData {
   final PdfPageSize pageSize;
   final PdfOrientation orientation;
   final PdfImageFit imageFit;
+  final PdfMargin margin;
 
   _PdfGenerationData({
     required this.imageBytesList,
@@ -23,6 +24,7 @@ class _PdfGenerationData {
     required this.pageSize,
     required this.orientation,
     required this.imageFit,
+    required this.margin,
   });
 }
 
@@ -63,6 +65,9 @@ Future<String> _generatePdfInIsolate(_PdfGenerationData data) async {
       break;
   }
 
+  // Get margin value
+  final marginValue = data.margin.points;
+
   // Add each image as a separate page
   for (final imageBytes in data.imageBytesList) {
     final image = pw.MemoryImage(imageBytes);
@@ -70,7 +75,7 @@ Future<String> _generatePdfInIsolate(_PdfGenerationData data) async {
     pdf.addPage(
       pw.Page(
         pageFormat: pageFormat,
-        margin: pw.EdgeInsets.zero,
+        margin: pw.EdgeInsets.all(marginValue),
         build: (pw.Context context) {
           return pw.Center(
             child: pw.Image(image, fit: boxFit),
@@ -100,6 +105,7 @@ class PdfGenerator {
     PdfPageSize pageSize = PdfPageSize.a4,
     PdfOrientation orientation = PdfOrientation.portrait,
     PdfImageFit imageFit = PdfImageFit.contain,
+    PdfMargin margin = PdfMargin.none,
   }) async {
     // Compress images on main thread (platform channel)
     final imageBytesList = <Uint8List>[];
@@ -122,6 +128,7 @@ class PdfGenerator {
       pageSize: pageSize,
       orientation: orientation,
       imageFit: imageFit,
+      margin: margin,
     );
 
     final filePath = await compute(_generatePdfInIsolate, data);

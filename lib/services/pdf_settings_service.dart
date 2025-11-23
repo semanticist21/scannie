@@ -7,6 +7,7 @@ class PdfSettingsService {
   static const String _keyPageSize = 'pdf_default_page_size';
   static const String _keyOrientation = 'pdf_default_orientation';
   static const String _keyImageFit = 'pdf_default_image_fit';
+  static const String _keyMargin = 'pdf_default_margin';
 
   static PdfSettingsService? _instance;
   late SharedPreferences _prefs;
@@ -78,6 +79,20 @@ class PdfSettingsService {
     await _prefs.setString(_keyImageFit, fit.name);
   }
 
+  /// Get default margin
+  PdfMargin get defaultMargin {
+    final value = _prefs.getString(_keyMargin);
+    return PdfMargin.values.firstWhere(
+      (e) => e.name == value,
+      orElse: () => PdfMargin.none,
+    );
+  }
+
+  /// Set default margin
+  Future<void> setDefaultMargin(PdfMargin margin) async {
+    await _prefs.setString(_keyMargin, margin.name);
+  }
+
   /// Create a ScanDocument with current default settings applied
   ScanDocument applyDefaultsToDocument(ScanDocument document) {
     return document.copyWith(
@@ -85,6 +100,7 @@ class PdfSettingsService {
       pdfPageSize: defaultPageSize,
       pdfOrientation: defaultOrientation,
       pdfImageFit: defaultImageFit,
+      pdfMargin: defaultMargin,
     );
   }
 }

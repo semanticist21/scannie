@@ -12,7 +12,8 @@ class PdfOptionsSheet extends StatefulWidget {
   final PdfPageSize pageSize;
   final PdfOrientation orientation;
   final PdfImageFit imageFit;
-  final Function(PdfQuality, PdfPageSize, PdfOrientation, PdfImageFit) onSave;
+  final PdfMargin margin;
+  final Function(PdfQuality, PdfPageSize, PdfOrientation, PdfImageFit, PdfMargin) onSave;
 
   const PdfOptionsSheet({
     super.key,
@@ -20,6 +21,7 @@ class PdfOptionsSheet extends StatefulWidget {
     required this.pageSize,
     required this.orientation,
     required this.imageFit,
+    required this.margin,
     required this.onSave,
   });
 
@@ -29,7 +31,8 @@ class PdfOptionsSheet extends StatefulWidget {
     required PdfPageSize pageSize,
     required PdfOrientation orientation,
     required PdfImageFit imageFit,
-    required Function(PdfQuality, PdfPageSize, PdfOrientation, PdfImageFit) onSave,
+    required PdfMargin margin,
+    required Function(PdfQuality, PdfPageSize, PdfOrientation, PdfImageFit, PdfMargin) onSave,
   }) {
     showModalBottomSheet(
       context: context,
@@ -43,9 +46,10 @@ class PdfOptionsSheet extends StatefulWidget {
         pageSize: pageSize,
         orientation: orientation,
         imageFit: imageFit,
-        onSave: (q, ps, o, fit) {
+        margin: margin,
+        onSave: (q, ps, o, fit, m) {
           Navigator.pop(sheetContext);
-          onSave(q, ps, o, fit);
+          onSave(q, ps, o, fit, m);
         },
       ),
     );
@@ -60,6 +64,7 @@ class _PdfOptionsSheetState extends State<PdfOptionsSheet> {
   late PdfPageSize _pageSize;
   late PdfOrientation _orientation;
   late PdfImageFit _imageFit;
+  late PdfMargin _margin;
 
   @override
   void initState() {
@@ -68,6 +73,7 @@ class _PdfOptionsSheetState extends State<PdfOptionsSheet> {
     _pageSize = widget.pageSize;
     _orientation = widget.orientation;
     _imageFit = widget.imageFit;
+    _margin = widget.margin;
   }
 
   @override
@@ -203,6 +209,32 @@ class _PdfOptionsSheetState extends State<PdfOptionsSheet> {
                 ),
               ),
             ),
+            const SizedBox(height: AppSpacing.sm),
+
+            // Margin
+            _buildOptionRow(
+              icon: LucideIcons.square,
+              label: 'settings.pdfMargin'.tr(),
+              child: SizedBox(
+                width: 120,
+                child: ShadSelect<PdfMargin>(
+                  initialValue: _margin,
+                  onChanged: (value) {
+                    if (value != null) setState(() => _margin = value);
+                  },
+                  selectedOptionBuilder: (context, value) => Text(
+                    value.displayName,
+                    style: AppTextStyles.bodySmall,
+                  ),
+                  options: PdfMargin.values
+                      .map((m) => ShadOption(
+                            value: m,
+                            child: Text(m.displayName),
+                          ))
+                      .toList(),
+                ),
+              ),
+            ),
             const SizedBox(height: AppSpacing.lg),
 
             // Save button
@@ -210,7 +242,7 @@ class _PdfOptionsSheetState extends State<PdfOptionsSheet> {
               width: double.infinity,
               child: ShadButton(
                 onPressed: () {
-                  widget.onSave(_quality, _pageSize, _orientation, _imageFit);
+                  widget.onSave(_quality, _pageSize, _orientation, _imageFit, _margin);
                 },
                 child: Text('common.save'.tr()),
               ),
