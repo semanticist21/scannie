@@ -772,9 +772,9 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
 
   /// Export document to PDF
   Future<void> _exportToPdf(ScanDocument document) async {
-    try {
-      AppToast.info(context, 'gallery.generatingPdf'.tr());
+    final notification = AppToast.info(context, 'gallery.generatingPdf'.tr());
 
+    try {
       // Generate PDF with quality setting
       final pdfFile = await PdfGenerator.generatePdf(
         imagePaths: document.imagePaths,
@@ -782,6 +782,7 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
         quality: document.pdfQuality,
       );
 
+      notification.dismiss();
       if (!mounted) return;
 
       // Generate filename for sharing
@@ -797,6 +798,7 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
 
       // No snackbar for share - dialog is self-explanatory
     } catch (e) {
+      notification.dismiss();
       debugPrint('Error exporting PDF: $e');
       if (!mounted) return;
       AppToast.show(context, 'toast.failedToExportPdf'.tr(), isError: true);
@@ -805,9 +807,9 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
 
   /// Save PDF to Downloads folder using MediaStore (no permission required)
   Future<void> _savePdfLocally(ScanDocument document) async {
-    try {
-      AppToast.info(context, 'gallery.generatingPdf'.tr());
+    final notification = AppToast.info(context, 'gallery.generatingPdf'.tr());
 
+    try {
       // Generate PDF with quality setting
       final pdfFile = await PdfGenerator.generatePdf(
         imagePaths: document.imagePaths,
@@ -840,10 +842,12 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
 
       debugPrint('PDF saved to MediaStore: ${saveInfo?.uri}');
 
+      notification.dismiss();
       // Open file manager to show the downloaded file
       if (!mounted) return;
       await openFileManager();
     } catch (e) {
+      notification.dismiss();
       debugPrint('Error saving PDF: $e');
       if (!mounted) return;
       AppToast.show(context, 'toast.failedToSavePdf'.tr(), isError: true);
@@ -853,13 +857,14 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
   /// Save images as ZIP to Downloads folder
   Future<void> _saveZipDocument(ScanDocument document) async {
     if (!mounted) return;
-    AppToast.info(context, 'gallery.preparingZip'.tr());
+    final notification = AppToast.info(context, 'gallery.preparingZip'.tr());
 
     try {
       // Create archive in separate isolate
       final zipData =
           await compute(_createZipArchiveGallery, document.imagePaths);
       if (zipData == null) {
+        notification.dismiss();
         if (!mounted) return;
         AppToast.show(context, 'toast.failedToCreateZip'.tr(), isError: true);
         return;
@@ -890,9 +895,11 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
 
       debugPrint('ZIP saved to MediaStore: ${saveInfo?.uri}');
 
+      notification.dismiss();
       // Open file manager to show the downloaded file
       await openFileManager();
     } catch (e) {
+      notification.dismiss();
       debugPrint('Error saving ZIP: $e');
       if (!mounted) return;
       AppToast.show(context, 'toast.failedToSaveZip'.tr(), isError: true);

@@ -712,9 +712,9 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
 
   /// Export document to PDF and share
   Future<void> _exportToPdf() async {
-    try {
-      AppToast.info(context, 'viewer.preparingPdf'.tr());
+    final notification = AppToast.info(context, 'viewer.preparingPdf'.tr());
 
+    try {
       // Generate PDF with quality setting
       final pdfFile = await PdfGenerator.generatePdf(
         imagePaths: _document.imagePaths,
@@ -722,6 +722,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
         quality: _document.pdfQuality,
       );
 
+      notification.dismiss();
       if (!mounted) return;
 
       // Generate filename with timestamp
@@ -737,6 +738,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
 
       // No snackbar for share - dialog is self-explanatory
     } catch (e) {
+      notification.dismiss();
       debugPrint('Error exporting PDF: $e');
       if (!mounted) return;
       AppToast.show(context, 'toast.failedToExportPdf'.tr(), isError: true);
@@ -746,7 +748,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
   /// Save PDF to Downloads folder using MediaStore
   Future<void> _savePdfLocally() async {
     if (!mounted) return;
-    AppToast.info(context, 'viewer.preparingPdf'.tr());
+    final notification = AppToast.info(context, 'viewer.preparingPdf'.tr());
 
     try {
       // Generate PDF with quality setting
@@ -781,10 +783,12 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
 
       debugPrint('PDF saved to MediaStore: ${saveInfo?.uri}');
 
+      notification.dismiss();
       // Open file manager to show the downloaded file
       if (!mounted) return;
       await openFileManager();
     } catch (e) {
+      notification.dismiss();
       debugPrint('Error saving PDF: $e');
       if (!mounted) return;
       AppToast.show(context, 'toast.failedToSavePdf'.tr(), isError: true);
@@ -794,12 +798,13 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
   /// Save images as ZIP to Downloads folder
   Future<void> _saveAsZip() async {
     if (!mounted) return;
-    AppToast.info(context, 'gallery.preparingZip'.tr());
+    final notification = AppToast.info(context, 'gallery.preparingZip'.tr());
 
     try {
       // Create archive in separate isolate
       final zipData = await compute(_createZipArchive, _imagePaths);
       if (zipData == null) {
+        notification.dismiss();
         if (!mounted) return;
         AppToast.show(context, 'toast.failedToCreateZip'.tr(), isError: true);
         return;
@@ -830,9 +835,11 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
 
       debugPrint('ZIP saved to MediaStore: ${saveInfo?.uri}');
 
+      notification.dismiss();
       // Open file manager to show the downloaded file
       await openFileManager();
     } catch (e) {
+      notification.dismiss();
       debugPrint('Error saving ZIP: $e');
       if (!mounted) return;
       AppToast.show(context, 'toast.failedToSaveZip'.tr(), isError: true);

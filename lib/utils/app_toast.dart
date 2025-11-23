@@ -26,13 +26,16 @@ class AppToast {
   }
 
   /// Show info notification (for processing/loading states)
-  static void info(BuildContext context, String message) {
-    ElegantNotification.info(
+  /// Returns the notification instance for manual dismissal
+  static ElegantNotification info(BuildContext context, String message) {
+    final notification = ElegantNotification.info(
       title: Text('toast.processing'.tr()),
       description: Text(message),
-      toastDuration: const Duration(seconds: 5),
+      toastDuration: const Duration(seconds: 30), // Long duration, will be dismissed manually
       showProgressIndicator: true,
-    ).show(context);
+    );
+    notification.show(context);
+    return notification;
   }
 
   /// Convenience method that shows success or error based on isError flag
