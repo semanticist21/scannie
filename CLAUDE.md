@@ -412,7 +412,8 @@ GalleryScreen (홈)
           ├─ 드래그앤드롭으로 순서 변경 (PDF 페이지 순서)
           ├─ 삭제 (X 버튼, 최소 1개 유지)
           ├─ "Add More" → 스캐너 재호출 → 세션에 추가
-          └─ Save → Navigator.pop(ScanDocument) → GalleryScreen
+          └─ Save → pushReplacementNamed('/viewer') → DocumentViewerScreen
+              (GalleryScreen은 RouteAware.didPopNext()로 문서 리로드)
 
   → 문서 카드 탭 → '/viewer' → DocumentViewerScreen
       ├─ 그리드/리스트 뷰 전환
@@ -423,6 +424,41 @@ GalleryScreen (홈)
       ├─ Share → _exportToPdf() → 시스템 공유 시트 (A4 PDF)
       └─ Download → _savePdfLocally() → MediaStore API (Downloads/Scannie/)
 ```
+
+### RouteAware 패턴 (화면 복귀 시 데이터 리로드)
+
+GalleryScreen은 `RouteAware`를 사용하여 다른 화면에서 돌아올 때 문서 목록을 자동으로 리로드합니다:
+
+```dart
+// main.dart
+final RouteObserver<ModalRoute<void>> routeObserver = RouteObserver<ModalRoute<void>>();
+
+// GalleryScreen
+class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didPopNext() {
+    // 다른 화면에서 돌아올 때 호출
+    _loadDocuments();
+  }
+}
+```
+
+**사용 사례**:
+- EditScreen에서 저장 후 DocumentViewerScreen으로 직접 이동 (`pushReplacementNamed`)
+- DocumentViewerScreen에서 뒤로가면 GalleryScreen이 `didPopNext()`로 문서 리로드
+- 화면 전환 시 깜빡임 없이 부드러운 UX 제공
 
 **라우트 설정 필수 패턴**:
 ```dart
@@ -467,7 +503,9 @@ EditScreen은 스캔된 이미지를 관리하는 화면입니다. **필터/크�
 
 5. **저장**
    - Save 버튼으로 `ScanDocument` 생성
-   - `Navigator.pop(newDocument)`로 GalleryScreen에 반환
+   - `DocumentStorage.saveDocuments()`로 영구 저장
+   - `pushReplacementNamed('/viewer')`로 DocumentViewerScreen으로 직접 이동
+   - GalleryScreen은 `didPopNext()`로 자동 리로드
 
 ### 제거된 기능 (네이티브 스캐너로 이동)
 
@@ -567,20 +605,12 @@ final byteData = await filteredImage.toByteData(format: ui.ImageByteFormat.png);
 await ImageGallerySaverPlus.saveFile(tempFile.path);
 ```
 
-### Toast 알림 (elegant_notification)
+### 필터 저장 시 토스트
+
+필터 적용 후 저장 시 `AppToast` 유틸리티를 사용합니다 (ElegantNotification 직접 사용 금지):
 
 ```dart
-// shadcn 스타일에 맞춘 커스터마이징
-ElegantNotification.success(
-  title: Text('Saved', style: AppTextStyles.bodyMedium.copyWith(...)),
-  description: Text(message, style: AppTextStyles.caption.copyWith(...)),
-  width: 280,
-  height: 60,
-  showProgressIndicator: true,
-  displayCloseButton: false,
-  borderRadius: BorderRadius.circular(AppRadius.md),
-  background: AppColors.surface,
-).show(context);
+AppToast.success(context, 'Image saved to gallery');
 ```
 
 ## 문서 스캔 (cunning_document_scanner_plus)

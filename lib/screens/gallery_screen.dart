@@ -30,6 +30,7 @@ import '../widgets/common/confirm_dialog.dart';
 import '../widgets/common/text_input_dialog.dart';
 import '../widgets/common/premium_dialog.dart';
 import '../widgets/common/settings_sheet.dart';
+import '../main.dart' show routeObserver;
 
 /// Creates ZIP archive from image paths in a separate isolate
 Future<List<int>?> _createZipArchiveGallery(List<String> imagePaths) async {
@@ -57,7 +58,7 @@ class GalleryScreen extends StatefulWidget {
   State<GalleryScreen> createState() => _GalleryScreenState();
 }
 
-class _GalleryScreenState extends State<GalleryScreen> {
+class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
   List<ScanDocument> _documents = [];
   bool _isGridView = false;
   bool _isLoading = true;
@@ -92,11 +93,26 @@ class _GalleryScreenState extends State<GalleryScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Subscribe to route observer
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
+  }
+
+  @override
   void dispose() {
+    routeObserver.unsubscribe(this);
     _searchController.dispose();
     _searchFocusNode.dispose();
     _debounceTimer?.cancel();
     super.dispose();
+  }
+
+  @override
+  void didPopNext() {
+    // Called when returning to this screen from another route
+    // Reload documents to reflect any changes
+    _loadDocuments();
   }
 
   /// Handle search input with debounce for performance
@@ -604,13 +620,14 @@ class _GalleryScreenState extends State<GalleryScreen> {
         arguments: imagePaths,
       );
 
-      // If a new document was created, add it to the list and save
+      // If a document was returned (e.g., editing existing), update the list
+      // For new scans, EditScreen uses pushReplacementNamed to viewer,
+      // so result will be null and documents are reloaded via didPopNext
       if (result != null && result is ScanDocument && mounted) {
         setState(() {
           _documents.insert(0, result);
         });
         await _saveDocuments();
-        // No toast for successful save - user clicked Save button intentionally
       }
     } on PlatformException catch (e) {
       if (!mounted) return;

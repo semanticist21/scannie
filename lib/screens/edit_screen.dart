@@ -217,11 +217,12 @@ class _EditScreenState extends State<EditScreen> {
           isProcessed: true,
         );
 
-        // Save to storage and navigate to viewer
+        // Save to storage
         final documents = await DocumentStorage.loadDocuments();
         documents.insert(0, newDocument);
         await DocumentStorage.saveDocuments(documents);
 
+        // Navigate directly to viewer (GalleryScreen will reload via RouteAware)
         navigator.pushReplacementNamed(
           '/viewer',
           arguments: newDocument,

@@ -8,6 +8,10 @@ import 'screens/edit_screen.dart';
 import 'screens/document_viewer_screen.dart';
 import 'models/scan_document.dart';
 
+// Global RouteObserver for detecting route changes
+final RouteObserver<ModalRoute<void>> routeObserver =
+    RouteObserver<ModalRoute<void>>();
+
 void main() async {
   // Ensure Flutter bindings are initialized
   WidgetsFlutterBinding.ensureInitialized();
@@ -63,6 +67,9 @@ class ScannierApp extends StatelessWidget {
 
       // Initial route
       home: const GalleryScreen(),
+
+      // Navigator observers for route awareness
+      navigatorObservers: [routeObserver],
 
       // Route configuration
       onGenerateRoute: (settings) {
