@@ -10,7 +10,7 @@ import '../../theme/app_text_styles.dart';
 /// Premium one-time purchase dialog
 class PremiumDialog {
   /// Show premium dialog
-  static void show(BuildContext context, {VoidCallback? onPurchase}) {
+  static void show(BuildContext context, {VoidCallback? onPurchase, bool isPremium = false}) {
     DialogBackground(
       blur: 6,
       dismissable: true,
@@ -39,41 +39,89 @@ class PremiumDialog {
                   children: [
                     // Title
                     Text(
-                      'Get Premium',
+                      isPremium ? 'Premium Active' : 'Get Premium',
                       style: AppTextStyles.h3,
                     ),
                     const SizedBox(height: AppSpacing.md),
 
-                    // Benefit
+                    // Description
                     Text(
-                      'Scan and create PDFs without limits.\nUnlimited access for just one purchase.',
+                      isPremium
+                          ? 'You have unlimited access to all features.\nThank you for your support!'
+                          : 'Scan and create PDFs without limits.\nUnlimited access for just one purchase.',
                       style: AppTextStyles.bodyMedium.copyWith(
                         color: AppColors.textSecondary,
                       ),
                     ),
                     const SizedBox(height: AppSpacing.xl),
 
-                    // Purchase button
-                    SizedBox(
-                      width: double.infinity,
-                      child: ShadButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          onPurchase?.call();
-                        },
-                        child: const Text('Unlock - \$1'),
+                    if (isPremium) ...[
+                      // Premium active indicator
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(
+                          vertical: AppSpacing.md,
+                          horizontal: AppSpacing.lg,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.primary.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(AppRadius.md),
+                          border: Border.all(
+                            color: AppColors.primary.withValues(alpha: 0.3),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              LucideIcons.circleCheck,
+                              size: 20,
+                              color: AppColors.primary,
+                            ),
+                            const SizedBox(width: AppSpacing.sm),
+                            Text(
+                              'Premium Unlocked',
+                              style: AppTextStyles.bodyMedium.copyWith(
+                                color: AppColors.primary,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
+                      const SizedBox(height: AppSpacing.sm),
 
-                    // Cancel button
-                    SizedBox(
-                      width: double.infinity,
-                      child: ShadButton.outline(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: const Text('Maybe Later'),
+                      // Close button
+                      SizedBox(
+                        width: double.infinity,
+                        child: ShadButton.outline(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text('Close'),
+                        ),
                       ),
-                    ),
+                    ] else ...[
+                      // Purchase button
+                      SizedBox(
+                        width: double.infinity,
+                        child: ShadButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            onPurchase?.call();
+                          },
+                          child: const Text('Unlock - \$1'),
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+
+                      // Cancel button
+                      SizedBox(
+                        width: double.infinity,
+                        child: ShadButton.outline(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text('Maybe Later'),
+                        ),
+                      ),
+                    ],
 
                     // Debug: Reset premium button (only in debug mode)
                     if (kDebugMode) ...[
@@ -86,6 +134,12 @@ class PremiumDialog {
                             await prefs.setBool('isPremium', false);
                             if (context.mounted) {
                               Navigator.of(context).pop();
+                              // Reopen dialog with updated state
+                              PremiumDialog.show(
+                                context,
+                                onPurchase: onPurchase,
+                                isPremium: false,
+                              );
                             }
                           },
                           child: Text(

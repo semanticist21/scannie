@@ -28,6 +28,7 @@ import '../widgets/common/rename_dialog.dart';
 import '../widgets/common/confirm_dialog.dart';
 import '../widgets/common/text_input_dialog.dart';
 import '../widgets/common/premium_dialog.dart';
+import '../widgets/common/settings_sheet.dart';
 
 /// Creates ZIP archive from image paths in a separate isolate
 Future<List<int>?> _createZipArchiveGallery(List<String> imagePaths) async {
@@ -183,6 +184,24 @@ class _GalleryScreenState extends State<GalleryScreen> {
     }
   }
 
+  /// Show settings sheet
+  void _showSettingsSheet() {
+    SettingsSheet.show(
+      context: context,
+      isGridView: _isGridView,
+      onViewModeChanged: (isGridView) {
+        setState(() => _isGridView = isGridView);
+        _saveViewMode(isGridView);
+      },
+      isPremium: _isPremium,
+      onPremiumTap: () => PremiumDialog.show(
+        context,
+        isPremium: _isPremium,
+        onPurchase: () => _savePremiumStatus(true),
+      ),
+    );
+  }
+
   /// Load documents from persistent storage
   Future<void> _loadDocuments() async {
     setState(() => _isLoading = true);
@@ -278,6 +297,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                   },
                 ),
                 IconButton(
+                  key: const ValueKey('close_search'),
                   icon: const Icon(LucideIcons.x, size: 20),
                   onPressed: _toggleSearch,
                   tooltip: 'Close',
@@ -285,29 +305,20 @@ class _GalleryScreenState extends State<GalleryScreen> {
               ]
             : [
                 IconButton(
-                  icon: const Icon(LucideIcons.sparkles),
-                  onPressed: () => PremiumDialog.show(context),
-                  tooltip: 'Premium',
-                ),
-                IconButton(
                   icon: const Icon(LucideIcons.plus),
                   onPressed: _createEmptyDocument,
                   tooltip: 'Create Empty Document',
                 ),
                 IconButton(
-                  icon: Icon(
-                      _isGridView ? LucideIcons.list : LucideIcons.layoutGrid),
-                  onPressed: () {
-                    final newViewMode = !_isGridView;
-                    setState(() => _isGridView = newViewMode);
-                    _saveViewMode(newViewMode);
-                  },
-                  tooltip: _isGridView ? 'List View' : 'Grid View',
-                ),
-                IconButton(
                   icon: const Icon(LucideIcons.search),
                   onPressed: _toggleSearch,
                   tooltip: 'Search',
+                ),
+                IconButton(
+                  key: const ValueKey('settings'),
+                  icon: const Icon(LucideIcons.settings),
+                  onPressed: _showSettingsSheet,
+                  tooltip: 'Settings',
                 ),
               ],
       ),
@@ -321,11 +332,13 @@ class _GalleryScreenState extends State<GalleryScreen> {
                     ? _buildNoSearchResults()
                     : _buildDocumentList(),
       ),
-      floatingActionButton: ShadButton(
-        onPressed: _openCamera,
-        leading: const Icon(LucideIcons.camera, size: 18),
-        child: const Text('Scan'),
-      ),
+      floatingActionButton: _isSearching
+          ? null
+          : ShadButton(
+              onPressed: _openCamera,
+              leading: const Icon(LucideIcons.camera, size: 18),
+              child: const Text('Scan'),
+            ),
     );
   }
 
