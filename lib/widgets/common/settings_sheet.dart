@@ -4,6 +4,30 @@ import '../../theme/app_colors.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/app_text_styles.dart';
 
+/// App language options
+enum AppLanguage {
+  english,
+  korean;
+
+  String get displayName {
+    switch (this) {
+      case AppLanguage.english:
+        return 'English';
+      case AppLanguage.korean:
+        return '한국어';
+    }
+  }
+
+  String get code {
+    switch (this) {
+      case AppLanguage.english:
+        return 'en';
+      case AppLanguage.korean:
+        return 'ko';
+    }
+  }
+}
+
 /// View mode options for document list
 enum ViewMode {
   list,
@@ -34,6 +58,8 @@ class SettingsSheet extends StatelessWidget {
   final ValueChanged<bool> onViewModeChanged;
   final bool isPremium;
   final VoidCallback onPremiumTap;
+  final AppLanguage currentLanguage;
+  final ValueChanged<AppLanguage> onLanguageChanged;
 
   const SettingsSheet({
     super.key,
@@ -41,6 +67,8 @@ class SettingsSheet extends StatelessWidget {
     required this.onViewModeChanged,
     required this.isPremium,
     required this.onPremiumTap,
+    required this.currentLanguage,
+    required this.onLanguageChanged,
   });
 
   /// Show the settings bottom sheet
@@ -50,6 +78,8 @@ class SettingsSheet extends StatelessWidget {
     required ValueChanged<bool> onViewModeChanged,
     required bool isPremium,
     required VoidCallback onPremiumTap,
+    required AppLanguage currentLanguage,
+    required ValueChanged<AppLanguage> onLanguageChanged,
   }) {
     showModalBottomSheet(
       context: context,
@@ -68,6 +98,11 @@ class SettingsSheet extends StatelessWidget {
           Navigator.pop(sheetContext);
           onPremiumTap();
         },
+        currentLanguage: currentLanguage,
+        onLanguageChanged: (language) {
+          Navigator.pop(sheetContext);
+          onLanguageChanged(language);
+        },
       ),
     );
   }
@@ -77,38 +112,39 @@ class SettingsSheet extends StatelessWidget {
     final currentMode = isGridView ? ViewMode.grid : ViewMode.list;
 
     return SafeArea(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Handle bar
-          Center(
-            child: Container(
-              margin: const EdgeInsets.only(top: AppSpacing.sm),
-              width: 32,
-              height: 4,
-              decoration: BoxDecoration(
-                color: AppColors.border,
-                borderRadius: BorderRadius.circular(AppRadius.xs),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Handle bar
+            Center(
+              child: Container(
+                margin: const EdgeInsets.only(top: AppSpacing.sm),
+                width: 32,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: AppColors.border,
+                  borderRadius: BorderRadius.circular(AppRadius.xs),
+                ),
               ),
             ),
-          ),
-          // Header
-          Padding(
-            padding: const EdgeInsets.fromLTRB(
-              AppSpacing.lg,
-              AppSpacing.md,
-              AppSpacing.lg,
-              AppSpacing.sm,
-            ),
-            child: Text(
-              'Settings',
-              style: AppTextStyles.bodyMedium.copyWith(
-                fontWeight: FontWeight.w600,
+            // Header
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.lg,
+                AppSpacing.md,
+                AppSpacing.lg,
+                AppSpacing.sm,
+              ),
+              child: Text(
+                'Settings',
+                style: AppTextStyles.bodyMedium.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
-          ),
-          const Divider(height: 1, color: AppColors.border),
+            const Divider(height: 1, color: AppColors.border),
 
           // Premium section
           Padding(
@@ -156,6 +192,65 @@ class SettingsSheet extends StatelessWidget {
                         ),
                       ],
                     ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Divider(height: 1, color: AppColors.border),
+
+          // Language section
+          Padding(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Language',
+                  style: AppTextStyles.caption.copyWith(
+                    color: AppColors.textSecondary,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                // Language select
+                SizedBox(
+                  width: 160,
+                  child: ShadSelect<AppLanguage>(
+                    initialValue: currentLanguage,
+                    onChanged: (value) {
+                      if (value != null) {
+                        onLanguageChanged(value);
+                      }
+                    },
+                    selectedOptionBuilder: (context, value) => Row(
+                      children: [
+                        const Icon(
+                          LucideIcons.globe,
+                          size: 16,
+                          color: AppColors.textSecondary,
+                        ),
+                        const SizedBox(width: AppSpacing.sm),
+                        Expanded(
+                          child: Text(
+                            value.displayName,
+                            style: AppTextStyles.bodyMedium,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                    options: AppLanguage.values
+                        .map(
+                          (language) => ShadOption(
+                            value: language,
+                            child: Text(
+                              language.displayName,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        )
+                        .toList(),
                   ),
                 ),
               ],
@@ -226,7 +321,8 @@ class SettingsSheet extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.sm),
-        ],
+          ],
+        ),
       ),
     );
   }

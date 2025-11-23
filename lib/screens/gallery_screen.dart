@@ -61,6 +61,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
   bool _isGridView = false;
   bool _isLoading = true;
   bool _isPremium = false;
+  AppLanguage _currentLanguage = AppLanguage.english;
 
   // Selection mode state
   bool _isSelectionMode = false;
@@ -250,6 +251,11 @@ class _GalleryScreenState extends State<GalleryScreen> {
         isPremium: _isPremium,
         onPurchase: () => _savePremiumStatus(true),
       ),
+      currentLanguage: _currentLanguage,
+      onLanguageChanged: (language) {
+        setState(() => _currentLanguage = language);
+        // TODO: Implement actual language change when localization is added
+      },
     );
   }
 
