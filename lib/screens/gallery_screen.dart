@@ -62,6 +62,10 @@ class _GalleryScreenState extends State<GalleryScreen> {
   bool _isLoading = true;
   bool _isPremium = false;
 
+  // Selection mode state
+  bool _isSelectionMode = false;
+  final Set<String> _selectedDocumentIds = {};
+
   // Search state
   bool _isSearching = false;
   String _searchQuery = '';
@@ -184,6 +188,53 @@ class _GalleryScreenState extends State<GalleryScreen> {
     }
   }
 
+  /// Toggle selection mode
+  void _toggleSelectionMode() {
+    setState(() {
+      _isSelectionMode = !_isSelectionMode;
+      if (!_isSelectionMode) {
+        _selectedDocumentIds.clear();
+      }
+    });
+  }
+
+  /// Toggle document selection
+  void _toggleDocumentSelection(String documentId) {
+    setState(() {
+      if (_selectedDocumentIds.contains(documentId)) {
+        _selectedDocumentIds.remove(documentId);
+      } else {
+        _selectedDocumentIds.add(documentId);
+      }
+    });
+  }
+
+  /// Delete selected documents
+  Future<void> _deleteSelectedDocuments() async {
+    if (_selectedDocumentIds.isEmpty) return;
+
+    final count = _selectedDocumentIds.length;
+    final confirmed = await ConfirmDialog.showAsync(
+      context: context,
+      title: 'Delete $count ${count == 1 ? 'Scan' : 'Scans'}',
+      message: 'This action cannot be undone.',
+      confirmText: 'Delete',
+      isDestructive: true,
+    );
+
+    if (confirmed && mounted) {
+      setState(() {
+        _documents.removeWhere((doc) => _selectedDocumentIds.contains(doc.id));
+        _selectedDocumentIds.clear();
+        _isSelectionMode = false;
+      });
+      await _saveDocuments();
+      if (mounted) {
+        AppToast.show(context, 'Deleted $count ${count == 1 ? 'scan' : 'scans'}');
+      }
+    }
+  }
+
   /// Show settings sheet
   void _showSettingsSheet() {
     SettingsSheet.show(
@@ -236,8 +287,29 @@ class _GalleryScreenState extends State<GalleryScreen> {
     return Scaffold(
       appBar: AppBar(
         scrolledUnderElevation: 0,
-        title: const Text('My Scans'),
-        actions: _isSearching
+        title: _isSelectionMode
+            ? Text(
+                _selectedDocumentIds.isEmpty
+                    ? 'Select Items'
+                    : '${_selectedDocumentIds.length} selected',
+              )
+            : const Text('My Scans'),
+        actions: _isSelectionMode
+            ? [
+                IconButton(
+                  icon: const Icon(LucideIcons.x),
+                  onPressed: _toggleSelectionMode,
+                  tooltip: 'Cancel',
+                ),
+                IconButton(
+                  icon: const Icon(LucideIcons.trash2),
+                  onPressed: _selectedDocumentIds.isEmpty
+                      ? null
+                      : _deleteSelectedDocuments,
+                  tooltip: 'Delete',
+                ),
+              ]
+            : _isSearching
             ? [
                 TweenAnimationBuilder<double>(
                   tween: Tween(begin: 0.0, end: 1.0),
@@ -305,14 +377,19 @@ class _GalleryScreenState extends State<GalleryScreen> {
               ]
             : [
                 IconButton(
-                  icon: const Icon(LucideIcons.plus),
-                  onPressed: _createEmptyDocument,
-                  tooltip: 'Create Empty Document',
+                  icon: const Icon(LucideIcons.listChecks),
+                  onPressed: _toggleSelectionMode,
+                  tooltip: 'Select',
                 ),
                 IconButton(
                   icon: const Icon(LucideIcons.search),
                   onPressed: _toggleSearch,
                   tooltip: 'Search',
+                ),
+                IconButton(
+                  icon: const Icon(LucideIcons.plus),
+                  onPressed: _createEmptyDocument,
+                  tooltip: 'Create Empty Document',
                 ),
                 IconButton(
                   key: const ValueKey('settings'),
@@ -386,6 +463,9 @@ class _GalleryScreenState extends State<GalleryScreen> {
           onSaveZip: () => _saveZipDocument(document),
           onSaveImages: () => _saveImagesDocument(document),
           onQualityChange: () => _showQualitySelector(document),
+          isSelectionMode: _isSelectionMode,
+          isSelected: _selectedDocumentIds.contains(document.id),
+          onSelect: () => _toggleDocumentSelection(document.id),
         );
       },
     );
@@ -416,6 +496,9 @@ class _GalleryScreenState extends State<GalleryScreen> {
           onSaveZip: () => _saveZipDocument(document),
           onSaveImages: () => _saveImagesDocument(document),
           onQualityChange: () => _showQualitySelector(document),
+          isSelectionMode: _isSelectionMode,
+          isSelected: _selectedDocumentIds.contains(document.id),
+          onSelect: () => _toggleDocumentSelection(document.id),
         );
       },
     );

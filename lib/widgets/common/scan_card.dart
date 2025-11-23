@@ -20,6 +20,9 @@ class ScanCard extends StatefulWidget {
   final VoidCallback? onSaveZip;
   final VoidCallback? onSaveImages;
   final VoidCallback? onQualityChange;
+  final bool isSelectionMode;
+  final bool isSelected;
+  final VoidCallback? onSelect;
 
   const ScanCard({
     super.key,
@@ -33,6 +36,9 @@ class ScanCard extends StatefulWidget {
     this.onSaveZip,
     this.onSaveImages,
     this.onQualityChange,
+    this.isSelectionMode = false,
+    this.isSelected = false,
+    this.onSelect,
   });
 
   @override
@@ -130,16 +136,48 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
             boxShadow: AppShadows.card,
           ),
           child: InkWell(
-            onTap: widget.onTap,
+            onTap: widget.isSelectionMode ? widget.onSelect : widget.onTap,
             onTapDown: _onTapDown,
             onTapUp: _onTapUp,
             onTapCancel: _onTapCancel,
-            onLongPress: () => _showContextMenu(context),
+            onLongPress: widget.isSelectionMode ? null : () => _showContextMenu(context),
             borderRadius: BorderRadius.circular(AppRadius.lg),
             child: Padding(
               padding: const EdgeInsets.all(AppSpacing.md),
               child: Row(
                 children: [
+                  // Selection checkbox with animation
+                  AnimatedSize(
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.easeInOut,
+                    child: widget.isSelectionMode
+                        ? Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 200),
+                                transitionBuilder: (child, animation) {
+                                  return ScaleTransition(
+                                    scale: animation,
+                                    child: child,
+                                  );
+                                },
+                                child: Icon(
+                                  widget.isSelected
+                                      ? LucideIcons.circleCheck
+                                      : LucideIcons.circle,
+                                  key: ValueKey(widget.isSelected),
+                                  size: 24,
+                                  color: widget.isSelected
+                                      ? AppColors.primary
+                                      : AppColors.textSecondary,
+                                ),
+                              ),
+                              const SizedBox(width: AppSpacing.sm),
+                            ],
+                          )
+                        : const SizedBox.shrink(),
+                  ),
                   // Thumbnail
                   Container(
                     width: 56,

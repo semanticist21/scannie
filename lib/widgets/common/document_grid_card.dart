@@ -20,6 +20,9 @@ class DocumentGridCard extends StatelessWidget {
   final VoidCallback? onSaveZip;
   final VoidCallback? onSaveImages;
   final VoidCallback? onQualityChange;
+  final bool isSelectionMode;
+  final bool isSelected;
+  final VoidCallback? onSelect;
 
   const DocumentGridCard({
     super.key,
@@ -33,6 +36,9 @@ class DocumentGridCard extends StatelessWidget {
     this.onSaveZip,
     this.onSaveImages,
     this.onQualityChange,
+    this.isSelectionMode = false,
+    this.isSelected = false,
+    this.onSelect,
   });
 
   @override
@@ -54,11 +60,50 @@ class DocumentGridCard extends StatelessWidget {
           boxShadow: AppShadows.card,
         ),
         child: InkWell(
-          onTap: onTap,
-          onLongPress: () => _showContextMenu(context),
+          onTap: isSelectionMode ? onSelect : onTap,
+          onLongPress: isSelectionMode ? null : () => _showContextMenu(context),
           borderRadius: BorderRadius.circular(AppRadius.lg),
           child: Stack(
             children: [
+              // Selection indicator with animation
+              Positioned(
+                top: AppSpacing.sm,
+                left: AppSpacing.sm,
+                child: AnimatedOpacity(
+                  duration: const Duration(milliseconds: 200),
+                  opacity: isSelectionMode ? 1.0 : 0.0,
+                  child: AnimatedScale(
+                    duration: const Duration(milliseconds: 200),
+                    scale: isSelectionMode ? 1.0 : 0.5,
+                    child: Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: AppColors.surface,
+                        shape: BoxShape.circle,
+                      ),
+                      child: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 200),
+                        transitionBuilder: (child, animation) {
+                          return ScaleTransition(
+                            scale: animation,
+                            child: child,
+                          );
+                        },
+                        child: Icon(
+                          isSelected
+                              ? LucideIcons.circleCheck
+                              : LucideIcons.circle,
+                          key: ValueKey(isSelected),
+                          size: 22,
+                          color: isSelected
+                              ? AppColors.primary
+                              : AppColors.textSecondary,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
