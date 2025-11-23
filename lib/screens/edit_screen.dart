@@ -8,6 +8,7 @@ import 'package:easy_localization/easy_localization.dart';
 import '../utils/app_toast.dart';
 import '../models/scan_document.dart';
 import '../services/document_storage.dart';
+import '../services/pdf_settings_service.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
 import '../theme/app_text_styles.dart';
@@ -208,13 +209,20 @@ class _EditScreenState extends State<EditScreen> {
       initialValue: defaultName,
       placeholder: 'gallery.documentNamePlaceholder'.tr(),
       onSave: (documentName) async {
-        // Create new scan document
+        // Get default PDF settings
+        final pdfSettings = await PdfSettingsService.getInstance();
+
+        // Create new scan document with default PDF settings
         final newDocument = ScanDocument(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
           name: documentName,
           createdAt: DateTime.now(),
           imagePaths: _imagePaths,
           isProcessed: true,
+          pdfQuality: pdfSettings.defaultQuality,
+          pdfPageSize: pdfSettings.defaultPageSize,
+          pdfOrientation: pdfSettings.defaultOrientation,
+          pdfImageFit: pdfSettings.defaultImageFit,
         );
 
         // Save to storage

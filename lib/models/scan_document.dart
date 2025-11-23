@@ -8,6 +8,77 @@ enum PdfQuality {
   original, // 100% original quality
 }
 
+/// PDF page size options
+enum PdfPageSize {
+  a4,
+  letter,
+  legal,
+}
+
+/// Extension for PdfPageSize display names
+extension PdfPageSizeExtension on PdfPageSize {
+  String get displayName {
+    switch (this) {
+      case PdfPageSize.a4:
+        return 'A4';
+      case PdfPageSize.letter:
+        return 'Letter';
+      case PdfPageSize.legal:
+        return 'Legal';
+    }
+  }
+}
+
+/// PDF orientation options
+enum PdfOrientation {
+  portrait,
+  landscape,
+}
+
+/// Extension for PdfOrientation display names
+extension PdfOrientationExtension on PdfOrientation {
+  String get displayName {
+    switch (this) {
+      case PdfOrientation.portrait:
+        return 'Portrait';
+      case PdfOrientation.landscape:
+        return 'Landscape';
+    }
+  }
+}
+
+/// PDF image fit options
+enum PdfImageFit {
+  contain,  // Show full image with margins
+  cover,    // Fill page, may crop
+  fill,     // Stretch to fill (may distort)
+}
+
+/// Extension for PdfImageFit display names
+extension PdfImageFitExtension on PdfImageFit {
+  String get displayName {
+    switch (this) {
+      case PdfImageFit.contain:
+        return 'Fit';
+      case PdfImageFit.cover:
+        return 'Fill';
+      case PdfImageFit.fill:
+        return 'Stretch';
+    }
+  }
+
+  String get description {
+    switch (this) {
+      case PdfImageFit.contain:
+        return 'Show full image';
+      case PdfImageFit.cover:
+        return 'Fill page, may crop';
+      case PdfImageFit.fill:
+        return 'Stretch to fill';
+    }
+  }
+}
+
 /// Extension for PdfQuality display and compression values
 extension PdfQualityExtension on PdfQuality {
   String get displayName {
@@ -74,6 +145,9 @@ class ScanDocument {
   final List<String> imagePaths;
   final bool isProcessed;
   final PdfQuality pdfQuality;
+  final PdfPageSize pdfPageSize;
+  final PdfOrientation pdfOrientation;
+  final PdfImageFit pdfImageFit;
 
   const ScanDocument({
     required this.id,
@@ -82,6 +156,9 @@ class ScanDocument {
     required this.imagePaths,
     this.isProcessed = false,
     this.pdfQuality = PdfQuality.medium,
+    this.pdfPageSize = PdfPageSize.a4,
+    this.pdfOrientation = PdfOrientation.portrait,
+    this.pdfImageFit = PdfImageFit.contain,
   });
 
   ScanDocument copyWith({
@@ -91,6 +168,9 @@ class ScanDocument {
     List<String>? imagePaths,
     bool? isProcessed,
     PdfQuality? pdfQuality,
+    PdfPageSize? pdfPageSize,
+    PdfOrientation? pdfOrientation,
+    PdfImageFit? pdfImageFit,
   }) {
     return ScanDocument(
       id: id ?? this.id,
@@ -99,6 +179,9 @@ class ScanDocument {
       imagePaths: imagePaths ?? this.imagePaths,
       isProcessed: isProcessed ?? this.isProcessed,
       pdfQuality: pdfQuality ?? this.pdfQuality,
+      pdfPageSize: pdfPageSize ?? this.pdfPageSize,
+      pdfOrientation: pdfOrientation ?? this.pdfOrientation,
+      pdfImageFit: pdfImageFit ?? this.pdfImageFit,
     );
   }
 
@@ -111,6 +194,9 @@ class ScanDocument {
       'imagePaths': imagePaths,
       'isProcessed': isProcessed,
       'pdfQuality': pdfQuality.name,
+      'pdfPageSize': pdfPageSize.name,
+      'pdfOrientation': pdfOrientation.name,
+      'pdfImageFit': pdfImageFit.name,
     };
   }
 
@@ -125,6 +211,18 @@ class ScanDocument {
       pdfQuality: PdfQuality.values.firstWhere(
         (e) => e.name == json['pdfQuality'],
         orElse: () => PdfQuality.medium,
+      ),
+      pdfPageSize: PdfPageSize.values.firstWhere(
+        (e) => e.name == json['pdfPageSize'],
+        orElse: () => PdfPageSize.a4,
+      ),
+      pdfOrientation: PdfOrientation.values.firstWhere(
+        (e) => e.name == json['pdfOrientation'],
+        orElse: () => PdfOrientation.portrait,
+      ),
+      pdfImageFit: PdfImageFit.values.firstWhere(
+        (e) => e.name == json['pdfImageFit'],
+        orElse: () => PdfImageFit.contain,
       ),
     );
   }

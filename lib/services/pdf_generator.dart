@@ -12,11 +12,17 @@ class _PdfGenerationData {
   final List<Uint8List> imageBytesList;
   final String documentName;
   final String tempDirPath;
+  final PdfPageSize pageSize;
+  final PdfOrientation orientation;
+  final PdfImageFit imageFit;
 
   _PdfGenerationData({
     required this.imageBytesList,
     required this.documentName,
     required this.tempDirPath,
+    required this.pageSize,
+    required this.orientation,
+    required this.imageFit,
   });
 }
 
@@ -24,17 +30,50 @@ class _PdfGenerationData {
 Future<String> _generatePdfInIsolate(_PdfGenerationData data) async {
   final pdf = pw.Document();
 
+  // Determine page format
+  PdfPageFormat baseFormat;
+  switch (data.pageSize) {
+    case PdfPageSize.a4:
+      baseFormat = PdfPageFormat.a4;
+      break;
+    case PdfPageSize.letter:
+      baseFormat = PdfPageFormat.letter;
+      break;
+    case PdfPageSize.legal:
+      baseFormat = PdfPageFormat.legal;
+      break;
+  }
+
+  // Apply orientation
+  final pageFormat = data.orientation == PdfOrientation.landscape
+      ? baseFormat.landscape
+      : baseFormat;
+
+  // Determine box fit
+  pw.BoxFit boxFit;
+  switch (data.imageFit) {
+    case PdfImageFit.contain:
+      boxFit = pw.BoxFit.contain;
+      break;
+    case PdfImageFit.cover:
+      boxFit = pw.BoxFit.cover;
+      break;
+    case PdfImageFit.fill:
+      boxFit = pw.BoxFit.fill;
+      break;
+  }
+
   // Add each image as a separate page
   for (final imageBytes in data.imageBytesList) {
     final image = pw.MemoryImage(imageBytes);
 
     pdf.addPage(
       pw.Page(
-        pageFormat: PdfPageFormat.a4,
+        pageFormat: pageFormat,
         margin: pw.EdgeInsets.zero,
         build: (pw.Context context) {
           return pw.Center(
-            child: pw.Image(image, fit: pw.BoxFit.contain),
+            child: pw.Image(image, fit: boxFit),
           );
         },
       ),
@@ -58,6 +97,9 @@ class PdfGenerator {
     required List<String> imagePaths,
     required String documentName,
     PdfQuality quality = PdfQuality.high,
+    PdfPageSize pageSize = PdfPageSize.a4,
+    PdfOrientation orientation = PdfOrientation.portrait,
+    PdfImageFit imageFit = PdfImageFit.contain,
   }) async {
     // Compress images on main thread (platform channel)
     final imageBytesList = <Uint8List>[];
@@ -77,6 +119,9 @@ class PdfGenerator {
       imageBytesList: imageBytesList,
       documentName: documentName,
       tempDirPath: tempDir.path,
+      pageSize: pageSize,
+      orientation: orientation,
+      imageFit: imageFit,
     );
 
     final filePath = await compute(_generatePdfInIsolate, data);

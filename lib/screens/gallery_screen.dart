@@ -10,6 +10,7 @@ import 'package:easy_localization/easy_localization.dart';
 import '../models/scan_document.dart';
 import '../services/document_storage.dart';
 import '../services/pdf_generator.dart';
+import '../services/pdf_settings_service.dart';
 import '../theme/app_theme.dart';
 import '../theme/app_colors.dart';
 import '../widgets/common/scan_card.dart';
@@ -75,6 +76,13 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
   final FocusNode _searchFocusNode = FocusNode();
   Timer? _debounceTimer;
 
+  // PDF settings
+  PdfSettingsService? _pdfSettings;
+  PdfQuality _defaultPdfQuality = PdfQuality.medium;
+  PdfPageSize _defaultPdfPageSize = PdfPageSize.a4;
+  PdfOrientation _defaultPdfOrientation = PdfOrientation.portrait;
+  PdfImageFit _defaultPdfImageFit = PdfImageFit.contain;
+
   // Filtered documents for search
   List<ScanDocument> get _filteredDocuments {
     if (_searchQuery.isEmpty) return _documents;
@@ -90,6 +98,19 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
     _loadViewMode();
     _loadDocuments();
     _loadPremiumStatus();
+    _loadPdfSettings();
+  }
+
+  Future<void> _loadPdfSettings() async {
+    _pdfSettings = await PdfSettingsService.getInstance();
+    if (mounted) {
+      setState(() {
+        _defaultPdfQuality = _pdfSettings!.defaultQuality;
+        _defaultPdfPageSize = _pdfSettings!.defaultPageSize;
+        _defaultPdfOrientation = _pdfSettings!.defaultOrientation;
+        _defaultPdfImageFit = _pdfSettings!.defaultImageFit;
+      });
+    }
   }
 
   @override
@@ -282,6 +303,27 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
             ? const Locale('ko')
             : const Locale('en');
         context.setLocale(newLocale);
+      },
+      // PDF settings
+      pdfQuality: _defaultPdfQuality,
+      onPdfQualityChanged: (quality) async {
+        setState(() => _defaultPdfQuality = quality);
+        await _pdfSettings?.setDefaultQuality(quality);
+      },
+      pdfPageSize: _defaultPdfPageSize,
+      onPdfPageSizeChanged: (size) async {
+        setState(() => _defaultPdfPageSize = size);
+        await _pdfSettings?.setDefaultPageSize(size);
+      },
+      pdfOrientation: _defaultPdfOrientation,
+      onPdfOrientationChanged: (orientation) async {
+        setState(() => _defaultPdfOrientation = orientation);
+        await _pdfSettings?.setDefaultOrientation(orientation);
+      },
+      pdfImageFit: _defaultPdfImageFit,
+      onPdfImageFitChanged: (fit) async {
+        setState(() => _defaultPdfImageFit = fit);
+        await _pdfSettings?.setDefaultImageFit(fit);
       },
     );
   }
@@ -567,6 +609,10 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
           createdAt: DateTime.now(),
           imagePaths: [],
           isProcessed: true,
+          pdfQuality: _defaultPdfQuality,
+          pdfPageSize: _defaultPdfPageSize,
+          pdfOrientation: _defaultPdfOrientation,
+          pdfImageFit: _defaultPdfImageFit,
         );
 
         setState(() {
@@ -775,11 +821,14 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
     final notification = AppToast.info(context, 'gallery.generatingPdf'.tr());
 
     try {
-      // Generate PDF with quality setting
+      // Generate PDF with document settings
       final pdfFile = await PdfGenerator.generatePdf(
         imagePaths: document.imagePaths,
         documentName: document.name,
         quality: document.pdfQuality,
+        pageSize: document.pdfPageSize,
+        orientation: document.pdfOrientation,
+        imageFit: document.pdfImageFit,
       );
 
       notification.dismiss();
@@ -810,11 +859,14 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
     final notification = AppToast.info(context, 'gallery.generatingPdf'.tr());
 
     try {
-      // Generate PDF with quality setting
+      // Generate PDF with document settings
       final pdfFile = await PdfGenerator.generatePdf(
         imagePaths: document.imagePaths,
         documentName: document.name,
         quality: document.pdfQuality,
+        pageSize: document.pdfPageSize,
+        orientation: document.pdfOrientation,
+        imageFit: document.pdfImageFit,
       );
 
       // Generate filename

@@ -24,7 +24,7 @@ import '../widgets/common/context_menu_sheet.dart';
 import '../widgets/common/document_info_header.dart';
 import '../utils/app_toast.dart';
 import '../widgets/common/page_card.dart';
-import '../widgets/common/quality_selector_sheet.dart';
+import '../widgets/common/pdf_options_sheet.dart';
 import '../widgets/common/rename_dialog.dart';
 import '../widgets/common/confirm_dialog.dart';
 import '../widgets/common/empty_state.dart';
@@ -69,7 +69,6 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
   bool _isLoadingPdf = false;
   bool _showPdfPreview = false;
   late TabController _tabController;
-  int _totalFileSize = 0;
   bool _isInitialLoading = true;
   int _currentPdfPage = 0;
   int _totalPdfPages = 0;
@@ -96,9 +95,6 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
   }
 
   Future<void> _loadInitialData() async {
-    // Calculate size first (fast operation)
-    await _calculateTotalSize();
-
     // Mark initial loading as complete immediately
     if (mounted) {
       setState(() {
@@ -109,21 +105,6 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
     // Load PDF in background (doesn't block UI)
     if (_imagePaths.isNotEmpty) {
       _loadPdfPreview();
-    }
-  }
-
-  Future<void> _calculateTotalSize() async {
-    int total = 0;
-    for (final imagePath in _imagePaths) {
-      final file = File(imagePath);
-      if (await file.exists()) {
-        total += await file.length();
-      }
-    }
-    if (mounted) {
-      setState(() {
-        _totalFileSize = total;
-      });
     }
   }
 
@@ -145,6 +126,9 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
         imagePaths: _imagePaths,
         documentName: _document.name,
         quality: _document.pdfQuality,
+        pageSize: _document.pdfPageSize,
+        orientation: _document.pdfOrientation,
+        imageFit: _document.pdfImageFit,
       );
 
       if (mounted) {
@@ -574,10 +558,10 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
       ),
       ContextMenuItem(
         icon: LucideIcons.settings2,
-        label: 'viewer.pdfQuality'.tr(namedArgs: {'quality': 'pdfQuality.${_document.pdfQuality.name}'.tr()}),
+        label: 'viewer.pdfOptions'.tr(),
         onTap: () {
           Navigator.pop(context);
-          _showQualitySelector();
+          _showPdfOptions();
         },
       ),
       ContextMenuItem(
@@ -616,8 +600,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
         _cachedPdfFile = null; // Invalidate PDF cache
       });
 
-      // Recalculate size and reload PDF
-      _calculateTotalSize();
+      // Reload PDF
       Future.delayed(const Duration(milliseconds: 350), () {
         if (mounted && _imagePaths.isNotEmpty) {
           _loadPdfPreview();
@@ -648,20 +631,38 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
     );
   }
 
-  void _showQualitySelector() {
-    QualitySelectorSheet.show(
+  void _showPdfOptions() {
+    PdfOptionsSheet.show(
       context: context,
-      currentQuality: _document.pdfQuality,
-      totalFileSize: _totalFileSize,
-      onQualitySelected: _updateQuality,
+      quality: _document.pdfQuality,
+      pageSize: _document.pdfPageSize,
+      orientation: _document.pdfOrientation,
+      imageFit: _document.pdfImageFit,
+      onSave: _updatePdfOptions,
     );
   }
 
-  void _updateQuality(PdfQuality quality) async {
-    if (quality == _document.pdfQuality) return;
+  void _updatePdfOptions(
+    PdfQuality quality,
+    PdfPageSize pageSize,
+    PdfOrientation orientation,
+    PdfImageFit imageFit,
+  ) async {
+    // Check if any option changed
+    if (quality == _document.pdfQuality &&
+        pageSize == _document.pdfPageSize &&
+        orientation == _document.pdfOrientation &&
+        imageFit == _document.pdfImageFit) {
+      return;
+    }
 
     setState(() {
-      _document = _document.copyWith(pdfQuality: quality);
+      _document = _document.copyWith(
+        pdfQuality: quality,
+        pdfPageSize: pageSize,
+        pdfOrientation: orientation,
+        pdfImageFit: imageFit,
+      );
     });
 
     // Save to storage
@@ -672,7 +673,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
       await DocumentStorage.saveDocuments(documents);
     }
 
-    // Reload PDF with new quality
+    // Reload PDF with new options
     _loadPdfPreview();
   }
 
@@ -715,11 +716,14 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
     final notification = AppToast.info(context, 'viewer.preparingPdf'.tr());
 
     try {
-      // Generate PDF with quality setting
+      // Generate PDF with document settings
       final pdfFile = await PdfGenerator.generatePdf(
         imagePaths: _document.imagePaths,
         documentName: _document.name,
         quality: _document.pdfQuality,
+        pageSize: _document.pdfPageSize,
+        orientation: _document.pdfOrientation,
+        imageFit: _document.pdfImageFit,
       );
 
       notification.dismiss();
@@ -751,11 +755,14 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
     final notification = AppToast.info(context, 'viewer.preparingPdf'.tr());
 
     try {
-      // Generate PDF with quality setting
+      // Generate PDF with document settings
       final pdfFile = await PdfGenerator.generatePdf(
         imagePaths: _document.imagePaths,
         documentName: _document.name,
         quality: _document.pdfQuality,
+        pageSize: _document.pdfPageSize,
+        orientation: _document.pdfOrientation,
+        imageFit: _document.pdfImageFit,
       );
 
       // Generate filename with timestamp

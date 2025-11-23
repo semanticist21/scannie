@@ -67,6 +67,7 @@
     "downloadImages": "Download Images",
     "editScan": "Edit Scan",
     "pdfQuality": "PDF Quality ({quality})",
+    "pdfOptions": "PDF Options",
     "deleteDocument": "Delete Document?",
     "deleteDocumentMessage": "This will permanently delete \"{name}\" and all its pages. This action cannot be undone.",
     "downloadImagesTitle": "Download Images",
@@ -81,7 +82,12 @@
     "language": "Language",
     "viewMode": "View Mode",
     "list": "List",
-    "grid": "Grid"
+    "grid": "Grid",
+    "pdfDefaults": "PDF Export Defaults",
+    "pdfQuality": "Quality",
+    "pdfPageSize": "Page Size",
+    "pdfOrientation": "Orientation",
+    "pdfImageFit": "Image Fit"
   },
   "premium": {
     "title": "Get Premium",
