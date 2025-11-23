@@ -33,6 +33,7 @@ class _EditScreenState extends State<EditScreen> {
   String? _existingDocumentId; // null = new scan, non-null = editing existing
   String? _existingDocumentName; // Preserve name when editing
   bool _isLoading = false;
+  bool _hasInteracted = false; // Track if user made any changes
 
   @override
   void didChangeDependencies() {
@@ -75,6 +76,7 @@ class _EditScreenState extends State<EditScreen> {
       if (newImages.isNotEmpty) {
         setState(() {
           _imagePaths.addAll(newImages);
+          _hasInteracted = true;
         });
         // Success toast removed - visual feedback is the grid update itself
       }
@@ -105,6 +107,7 @@ class _EditScreenState extends State<EditScreen> {
         debugPrint('📷 Photo paths: $newPaths');
         setState(() {
           _imagePaths.addAll(newPaths);
+          _hasInteracted = true;
         });
         // Success toast removed - visual feedback is the grid update itself
       }
@@ -128,6 +131,7 @@ class _EditScreenState extends State<EditScreen> {
 
     setState(() {
       _imagePaths.removeAt(index);
+      _hasInteracted = true;
     });
     // No toast for successful deletion
   }
@@ -147,7 +151,9 @@ class _EditScreenState extends State<EditScreen> {
 
     // If image was modified, rebuild to show updated image
     if (result == true && mounted) {
-      setState(() {});
+      setState(() {
+        _hasInteracted = true;
+      });
       debugPrint('🔄 Image modified, refreshing grid');
     }
   }
@@ -157,6 +163,7 @@ class _EditScreenState extends State<EditScreen> {
     setState(() {
       final item = _imagePaths.removeAt(oldIndex);
       _imagePaths.insert(newIndex, item);
+      _hasInteracted = true;
     });
   }
 
@@ -269,6 +276,15 @@ class _EditScreenState extends State<EditScreen> {
   Future<void> _handleBackPress() async {
     debugPrint('🔙 _handleBackPress called');
     final navigator = Navigator.of(context);
+
+    // For existing documents with no changes, pop immediately
+    if (_existingDocumentId != null && !_hasInteracted) {
+      debugPrint('🔙 No changes detected, popping immediately');
+      navigator.pop();
+      return;
+    }
+
+    // Show confirmation dialog for new scans or modified existing documents
     final shouldPop = await _confirmDiscard();
 
     if (shouldPop && mounted) {
