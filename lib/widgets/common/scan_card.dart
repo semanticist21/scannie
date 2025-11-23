@@ -325,7 +325,7 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
       if (widget.onQualityChange != null)
         ContextMenuItem(
           icon: LucideIcons.settings2,
-          label: 'viewer.pdfQuality'.tr(namedArgs: {'quality': 'pdfQuality.${widget.document.pdfQuality.name}'.tr()}),
+          label: 'viewer.pdfOptions'.tr(),
           onTap: () {
             Navigator.pop(context);
             widget.onQualityChange?.call();

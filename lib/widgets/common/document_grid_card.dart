@@ -280,7 +280,7 @@ class DocumentGridCard extends StatelessWidget {
       if (onQualityChange != null)
         ContextMenuItem(
           icon: LucideIcons.settings2,
-          label: 'viewer.pdfQuality'.tr(namedArgs: {'quality': 'pdfQuality.${document.pdfQuality.name}'.tr()}),
+          label: 'viewer.pdfOptions'.tr(),
           onTap: () {
             Navigator.pop(context);
             onQualityChange?.call();

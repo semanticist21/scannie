@@ -155,11 +155,13 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
         actions: [
           if (_imagePaths.isNotEmpty)
             IconButton(
-              icon: Icon(_isGridView ? LucideIcons.list : LucideIcons.layoutGrid),
+              icon:
+                  Icon(_isGridView ? LucideIcons.list : LucideIcons.layoutGrid),
               onPressed: () {
                 setState(() => _isGridView = !_isGridView);
               },
-              tooltip: _isGridView ? 'viewer.listView'.tr() : 'viewer.gridView'.tr(),
+              tooltip:
+                  _isGridView ? 'viewer.listView'.tr() : 'viewer.gridView'.tr(),
             ),
           if (_imagePaths.isNotEmpty)
             IconButton(
@@ -324,106 +326,128 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
       );
     }
 
+    // Calculate aspect ratio based on page size and orientation
+    final pageSize = _document.pdfPageSize;
+    final isLandscape = _document.pdfOrientation == PdfOrientation.landscape;
+
+    double aspectRatio;
+    switch (pageSize) {
+      case PdfPageSize.a4:
+        aspectRatio = isLandscape ? 297 / 210 : 210 / 297;
+        break;
+      case PdfPageSize.letter:
+        aspectRatio = isLandscape ? 11 / 8.5 : 8.5 / 11;
+        break;
+      case PdfPageSize.legal:
+        aspectRatio = isLandscape ? 14 / 8.5 : 8.5 / 14;
+        break;
+    }
+
     return Container(
       margin: const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        border: Border.all(
-          color: AppColors.border,
-          width: 1,
-        ),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        child: Stack(
-          children: [
-            PDFView(
-              filePath: _cachedPdfFile!.path,
-              enableSwipe: true,
-              swipeHorizontal: false,
-              autoSpacing: true,
-              pageFling: true,
-              pageSnap: true,
-              fitPolicy: FitPolicy.BOTH,
-              onViewCreated: (controller) {
-                _pdfController = controller;
-              },
-              onRender: (pages) {
-                setState(() {
-                  _totalPdfPages = pages ?? 0;
-                });
-              },
-              onPageChanged: (page, total) {
-                setState(() {
-                  _currentPdfPage = page ?? 0;
-                  if (total != null) _totalPdfPages = total;
-                });
-              },
+      child: AspectRatio(
+        aspectRatio: aspectRatio,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(AppRadius.md),
+            border: Border.all(
+              color: AppColors.border,
+              width: 1,
             ),
-            // Page navigation overlay
-            if (_totalPdfPages > 1)
-              Positioned(
-                bottom: AppSpacing.md,
-                left: AppSpacing.md,
-                right: AppSpacing.md,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.md,
-                    vertical: AppSpacing.sm,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.shadowDarker,
-                    borderRadius: BorderRadius.circular(AppRadius.lg),
-                  ),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 32,
-                        child: Text(
-                          '${_currentPdfPage + 1}',
-                          style: AppTextStyles.bodyMedium.copyWith(
-                            color: AppColors.darkTextPrimary,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                      Expanded(
-                        child: SliderTheme(
-                          data: SliderTheme.of(context).copyWith(
-                            activeTrackColor: AppColors.darkTextPrimary,
-                            inactiveTrackColor: AppColors.darkTextSecondary,
-                            thumbColor: AppColors.darkTextPrimary,
-                            overlayColor: AppColors.darkOverlay,
-                            trackHeight: 6,
-                          ),
-                          child: Slider(
-                            value: _currentPdfPage.toDouble(),
-                            min: 0,
-                            max: (_totalPdfPages - 1).toDouble(),
-                            onChanged: (value) {
-                              final page = value.round();
-                              _pdfController?.setPage(page);
-                            },
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 32,
-                        child: Text(
-                          '$_totalPdfPages',
-                          style: AppTextStyles.bodyMedium.copyWith(
-                            color: AppColors.darkTextPrimary,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ],
-                  ),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(AppRadius.md),
+            child: Stack(
+              children: [
+                PDFView(
+                  filePath: _cachedPdfFile!.path,
+                  enableSwipe: true,
+                  swipeHorizontal: false,
+                  autoSpacing: false,
+                  pageFling: true,
+                  pageSnap: true,
+                  fitPolicy: FitPolicy.BOTH,
+                  onViewCreated: (controller) {
+                    _pdfController = controller;
+                  },
+                  onRender: (pages) {
+                    setState(() {
+                      _totalPdfPages = pages ?? 0;
+                    });
+                  },
+                  onPageChanged: (page, total) {
+                    setState(() {
+                      _currentPdfPage = page ?? 0;
+                      if (total != null) _totalPdfPages = total;
+                    });
+                  },
                 ),
-              ),
-          ],
+                // Page navigation overlay
+                if (_totalPdfPages > 1)
+                  Positioned(
+                    bottom: AppSpacing.md,
+                    left: AppSpacing.md,
+                    right: AppSpacing.md,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.md,
+                        vertical: AppSpacing.sm,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.shadowDarker,
+                        borderRadius: BorderRadius.circular(AppRadius.lg),
+                      ),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 32,
+                            child: Text(
+                              '${_currentPdfPage + 1}',
+                              style: AppTextStyles.bodyMedium.copyWith(
+                                color: AppColors.darkTextPrimary,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          Expanded(
+                            child: SliderTheme(
+                              data: SliderTheme.of(context).copyWith(
+                                activeTrackColor: AppColors.darkTextPrimary,
+                                inactiveTrackColor: AppColors.darkTextSecondary,
+                                thumbColor: AppColors.darkTextPrimary,
+                                overlayColor: AppColors.darkOverlay,
+                                trackHeight: 6,
+                              ),
+                              child: Slider(
+                                value: _currentPdfPage.toDouble(),
+                                min: 0,
+                                max: (_totalPdfPages - 1).toDouble(),
+                                onChanged: (value) {
+                                  final page = value.round();
+                                  _pdfController?.setPage(page);
+                                },
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 32,
+                            child: Text(
+                              '$_totalPdfPages',
+                              style: AppTextStyles.bodyMedium.copyWith(
+                                color: AppColors.darkTextPrimary,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -651,14 +675,35 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
     PdfImageFit imageFit,
     PdfMargin margin,
   ) async {
+    debugPrint('📥 _updatePdfOptions received:');
+    debugPrint('  - quality: $quality (${quality.name})');
+    debugPrint('  - pageSize: $pageSize (${pageSize.name})');
+    debugPrint('  - orientation: $orientation (${orientation.name})');
+    debugPrint('  - imageFit: $imageFit (${imageFit.name})');
+    debugPrint('  - margin: $margin (${margin.name})');
+    debugPrint('📄 Current _document values:');
+    debugPrint(
+        '  - quality: ${_document.pdfQuality} (${_document.pdfQuality.name})');
+    debugPrint(
+        '  - pageSize: ${_document.pdfPageSize} (${_document.pdfPageSize.name})');
+    debugPrint(
+        '  - orientation: ${_document.pdfOrientation} (${_document.pdfOrientation.name})');
+    debugPrint(
+        '  - imageFit: ${_document.pdfImageFit} (${_document.pdfImageFit.name})');
+    debugPrint(
+        '  - margin: ${_document.pdfMargin} (${_document.pdfMargin.name})');
+
     // Check if any option changed
     if (quality == _document.pdfQuality &&
         pageSize == _document.pdfPageSize &&
         orientation == _document.pdfOrientation &&
         imageFit == _document.pdfImageFit &&
         margin == _document.pdfMargin) {
+      debugPrint('  → No changes, returning');
       return;
     }
+
+    debugPrint('  → Saving changes...');
 
     setState(() {
       _document = _document.copyWith(
@@ -687,7 +732,8 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
     ConfirmDialog.show(
       context: context,
       title: 'dialogs.deleteScan'.tr(),
-      message: 'dialogs.deleteScanMessage'.tr(namedArgs: {'name': _document.name}),
+      message:
+          'dialogs.deleteScanMessage'.tr(namedArgs: {'name': _document.name}),
       cancelText: 'common.cancel'.tr(),
       confirmText: 'common.delete'.tr(),
       isDestructive: true,
@@ -712,7 +758,8 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
       navigator.pop({'deleted': true, 'documentId': _document.id});
     } catch (e) {
       debugPrint('Error deleting document: $e');
-      AppToast.show(context, 'toast.failedToDeleteDocument'.tr(), isError: true);
+      AppToast.show(context, 'toast.failedToDeleteDocument'.tr(),
+          isError: true);
     }
   }
 
@@ -867,7 +914,8 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
     ConfirmDialog.show(
       context: context,
       title: 'viewer.downloadImagesTitle'.tr(),
-      message: 'viewer.downloadImagesMessage'.tr(namedArgs: {'count': imageCount.toString()}),
+      message: 'viewer.downloadImagesMessage'
+          .tr(namedArgs: {'count': imageCount.toString()}),
       cancelText: 'common.cancel'.tr(),
       confirmText: 'common.download'.tr(),
       onConfirm: () async {
@@ -886,12 +934,14 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
 
           if (!mounted) return;
           if (savedCount == 0) {
-            AppToast.show(context, 'toast.failedToSaveImages'.tr(), isError: true);
+            AppToast.show(context, 'toast.failedToSaveImages'.tr(),
+                isError: true);
           }
         } catch (e) {
           debugPrint('Error saving images: $e');
           if (!mounted) return;
-          AppToast.show(context, 'toast.failedToSaveImages'.tr(), isError: true);
+          AppToast.show(context, 'toast.failedToSaveImages'.tr(),
+              isError: true);
         }
       },
     );

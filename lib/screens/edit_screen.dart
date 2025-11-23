@@ -223,6 +223,7 @@ class _EditScreenState extends State<EditScreen> {
           pdfPageSize: pdfSettings.defaultPageSize,
           pdfOrientation: pdfSettings.defaultOrientation,
           pdfImageFit: pdfSettings.defaultImageFit,
+          pdfMargin: pdfSettings.defaultMargin,
         );
 
         // Save to storage
@@ -230,10 +231,11 @@ class _EditScreenState extends State<EditScreen> {
         documents.insert(0, newDocument);
         await DocumentStorage.saveDocuments(documents);
 
-        // Navigate directly to viewer (GalleryScreen will reload via RouteAware)
-        // Use await to ensure navigation completes before dialog tries to pop
-        await navigator.pushReplacementNamed(
+        // Navigate directly to viewer, removing EditScreen from stack
+        // This ensures back button from viewer goes to GalleryScreen, not EditScreen
+        navigator.pushNamedAndRemoveUntil(
           '/viewer',
+          ModalRoute.withName('/'),
           arguments: newDocument,
         );
       },

@@ -245,6 +245,12 @@ class _PdfOptionsSheetState extends State<PdfOptionsSheet> {
               width: double.infinity,
               child: ShadButton(
                 onPressed: () {
+                  debugPrint('📋 PdfOptionsSheet.onSave called:');
+                  debugPrint('  - quality: $_quality (${_quality.name})');
+                  debugPrint('  - pageSize: $_pageSize (${_pageSize.name})');
+                  debugPrint('  - orientation: $_orientation (${_orientation.name})');
+                  debugPrint('  - imageFit: $_imageFit (${_imageFit.name})');
+                  debugPrint('  - margin: $_margin (${_margin.name})');
                   widget.onSave(_quality, _pageSize, _orientation, _imageFit, _margin);
                 },
                 child: Text('common.save'.tr()),

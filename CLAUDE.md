@@ -11,25 +11,24 @@ Scannie는 문서 스캔 Flutter 모바일 애플리케이션입니다. 네이�
 - `cunning_document_scanner_plus` v1.0.3 (네이티브 iOS/Android 스캐너 + 필터/크롭)
 - `shadcn_ui` (UI 컴포넌트 - ShadButton, ShadBadge, LucideIcons)
 - `reorderable_grid_view` v2.2.8 (드래그 앤 드롭 순서 변경)
-- `pdf` + `printing` (PDF 생성/공유)
+- `pdf` + `printing` (PDF 생성/공유 - Isolate 지원)
 - `flutter_pdfview` v1.3.2 (PDF 미리보기)
 - `flutter_image_compress` (PDF 품질별 이미지 압축)
 - `image_picker` (앨범에서 이미지 가져오기)
 - `elegant_notification` (토스트 알림)
 - `share_plus` (파일 공유)
 - `google_fonts` (커스텀 폰트)
-- `crypto` (SHA256 해싱 - PDF 캐시 키)
 - `easy_localization` v3.0.7 (다국어 지원)
 
 **현재 상태**:
 - ✅ 문서 스캔 (네이티브 필터/크롭/회전 포함)
 - ✅ **EditScreen 이미지 관리** (드래그앤드롭 순서 변경, 삭제, 추가)
 - ✅ 세션 유지 (스캔 후 이미지 추가 가능)
-- ✅ PDF 내보내기 - A4 사이즈 고정 (공유 + 다운로드)
+- ✅ PDF 내보내기 (공유 + 다운로드)
+- ✅ **PDF 옵션** (품질, 페이지 크기, 방향, 이미지 맞춤, 여백 - 문서별 저장)
 - ✅ **PDF 다운로드** (MediaStore API - 권한 불필요)
 - ✅ DocumentViewerScreen (페이지 갤러리, 전체 화면 뷰어)
 - ✅ **FullScreenImageViewer 필터** (Original, B&W, Contrast, Brighten, Document)
-- ✅ **PDF 품질 설정** (Low, Medium, High, Original - 문서별 저장)
 
 ## Quick Reference
 
@@ -345,20 +344,23 @@ lib/
 │   ├── page_card.dart              # 개별 페이지 카드 (DocumentViewer)
 │   ├── image_tile.dart             # EditScreen 이미지 타일
 │   ├── custom_app_bar.dart         # 커스텀 AppBar
-│   ├── custom_button.dart          # 커스텀 버튼
+│   ├── custom_fab.dart             # 커스텀 FAB 컴포넌트
+│   ├── custom_icon_button.dart     # 커스텀 아이콘 버튼
 │   ├── context_menu_sheet.dart     # 공통 컨텍스트 메뉴 (bottom sheet)
-│   ├── quality_selector_sheet.dart # PDF 품질 선택 시트
+│   ├── pdf_options_sheet.dart      # PDF 옵션 설정 시트
+│   ├── settings_sheet.dart         # 앱 설정 시트
 │   ├── edit_bottom_actions.dart    # EditScreen 하단 액션 버튼
 │   ├── document_info_header.dart   # 문서 정보 헤더
-│   ├── document_search_delegate.dart # 문서 검색 기능
 │   ├── empty_state.dart            # 빈 상태 표시 위젯
 │   ├── full_screen_image_viewer.dart # 이미지 뷰어 + 필터 + 저장
 │   ├── confirm_dialog.dart         # 공통 확인 다이얼로그
 │   ├── rename_dialog.dart          # 이름 변경 다이얼로그
-│   └── text_input_dialog.dart      # 텍스트 입력 다이얼로그
+│   ├── text_input_dialog.dart      # 텍스트 입력 다이얼로그
+│   └── premium_dialog.dart         # 프리미엄 기능 다이얼로그
 ├── services/         # 비즈니스 로직
 │   ├── document_storage.dart         # 문서 영구 저장/로드
-│   └── pdf_cache_service.dart        # PDF 생성 캐싱 (SHA256 기반)
+│   ├── pdf_generator.dart            # PDF 생성 (Isolate 지원)
+│   └── pdf_settings_service.dart     # PDF 기본 설정 관리
 ├── theme/            # 디자인 시스템
 │   ├── app_theme.dart        # M3 ThemeData 구성
 │   ├── app_colors.dart       # 색상 팔레트
@@ -366,7 +368,9 @@ lib/
 ├── utils/            # 유틸리티
 │   └── app_toast.dart        # 토스트 알림 유틸리티
 └── models/
-    └── scan_document.dart    # ScanDocument + PdfQuality enum
+    ├── scan_document.dart    # ScanDocument + PDF 옵션 enums
+    ├── context_menu_item.dart # 컨텍스트 메뉴 아이템 모델
+    └── image_filter_type.dart # 이미지 필터 타입 enum
 ```
 
 ### 위젯 책임 분리
@@ -377,13 +381,14 @@ lib/
 | `document_grid_card.dart` | 대체 그리드 카드 레이아웃 | GalleryScreen |
 | `page_card.dart` | 단일 페이지 썸네일 카드 | DocumentViewerScreen |
 | `image_tile.dart` | 드래그 가능한 이미지 타일 | EditScreen |
-| `quality_selector_sheet.dart` | PDF 품질 선택 바텀 시트 | GalleryScreen |
+| `pdf_options_sheet.dart` | PDF 옵션 설정 바텀 시트 | GalleryScreen, DocumentViewer |
+| `settings_sheet.dart` | 앱 설정 (기본 PDF 옵션) | GalleryScreen |
 | `edit_bottom_actions.dart` | 저장/추가 버튼 그룹 | EditScreen |
-| `document_search_delegate.dart` | 검색 기능 구현 | GalleryScreen |
 | `empty_state.dart` | 빈 문서 목록 상태 표시 | GalleryScreen |
 | `confirm_dialog.dart` | 확인/삭제/폐기 다이얼로그 | 전체 화면 |
 | `rename_dialog.dart` | 문서 이름 변경 | GalleryScreen, DocumentViewer |
 | `text_input_dialog.dart` | 텍스트 입력 (새 문서 등) | GalleryScreen, EditScreen |
+| `premium_dialog.dart` | 프리미엄 기능 안내 | 전체 화면 |
 
 ### 테마 시스템 (필수)
 
@@ -425,7 +430,48 @@ GalleryScreen (홈)
       └─ Download → _savePdfLocally() → MediaStore API (Downloads/Scannie/)
 ```
 
-### RouteAware 패턴 (화면 복귀 시 데이터 리로드)
+### 라우트 패턴 및 주의사항
+
+#### 🚨 핵심 주의사항: Race Condition 방지
+
+**다이얼로그/시트에서 async 작업 후 pop() 할 때 반드시 이 순서를 따르세요:**
+
+```dart
+// ✅ CORRECT - onSave를 pop BEFORE에 호출
+onSave: (value) async {
+  await saveData(value);  // 1. 먼저 저장
+  Navigator.pop(context);  // 2. 그 다음 pop
+},
+
+// ❌ WRONG - pop 후 저장하면 didPopNext와 race condition 발생
+onSave: (value) {
+  Navigator.pop(context);  // pop이 먼저 되면
+  saveData(value);         // GalleryScreen.didPopNext()와 경쟁
+},
+```
+
+**이유**: `pop()`이 먼저 실행되면 GalleryScreen의 `didPopNext()`가 즉시 호출되어 아직 저장되지 않은 데이터를 로드할 수 있음.
+
+#### 네비게이션 메서드 선택 가이드
+
+| 상황 | 메서드 | 예시 |
+|------|--------|------|
+| 화면 이동 (뒤로가기 가능) | `pushNamed` | Gallery → Viewer |
+| 화면 교체 (스택에서 제거) | `pushNamedAndRemoveUntil` | Edit → Viewer (Edit 제거) |
+| 이전 화면으로 복귀 | `pop` | Viewer → Gallery |
+| 결과 반환하며 복귀 | `pop(result)` | Edit → Gallery with document |
+
+```dart
+// EditScreen에서 저장 후 DocumentViewerScreen으로 이동
+// EditScreen은 스택에서 제거되어 Viewer에서 뒤로가면 Gallery로 감
+navigator.pushNamedAndRemoveUntil(
+  '/viewer',
+  ModalRoute.withName('/'),  // '/'까지만 남김 (GalleryScreen)
+  arguments: newDocument,
+);
+```
+
+#### RouteAware 패턴 (화면 복귀 시 데이터 리로드)
 
 GalleryScreen은 `RouteAware`를 사용하여 다른 화면에서 돌아올 때 문서 목록을 자동으로 리로드합니다:
 
@@ -434,6 +480,8 @@ GalleryScreen은 `RouteAware`를 사용하여 다른 화면에서 돌아올 때 
 final RouteObserver<ModalRoute<void>> routeObserver = RouteObserver<ModalRoute<void>>();
 
 // GalleryScreen
+import '../main.dart' show routeObserver;
+
 class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
   @override
   void didChangeDependencies() {
@@ -455,22 +503,83 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
 }
 ```
 
-**사용 사례**:
-- EditScreen에서 저장 후 DocumentViewerScreen으로 직접 이동 (`pushReplacementNamed`)
-- DocumentViewerScreen에서 뒤로가면 GalleryScreen이 `didPopNext()`로 문서 리로드
-- 화면 전환 시 깜빡임 없이 부드러운 UX 제공
+#### PopScope로 뒤로가기 제어 (확인 다이얼로그)
 
-**라우트 설정 필수 패턴**:
+EditScreen은 사용자가 실수로 나가는 것을 방지합니다:
+
+```dart
+@override
+Widget build(BuildContext context) {
+  return PopScope(
+    canPop: false,  // 시스템 뒤로가기 차단
+    onPopInvokedWithResult: (bool didPop, dynamic result) async {
+      if (didPop) return;  // 이미 pop 되었으면 무시
+
+      // 확인 다이얼로그 표시
+      final shouldPop = await _confirmDiscard();
+      if (shouldPop && mounted) {
+        Navigator.of(context).pop();
+      }
+    },
+    child: Scaffold(...),
+  );
+}
+```
+
+#### 라우트 설정 필수 패턴
+
 ```dart
 // main.dart의 onGenerateRoute
 case '/edit':
   return MaterialPageRoute(
     builder: (context) => const EditScreen(),
-    settings: settings, // arguments 전달을 위해 필수!
+    settings: settings, // ⚠️ arguments 전달을 위해 필수!
+  );
+
+case '/viewer':
+  final document = settings.arguments as ScanDocument?;
+  if (document == null) {
+    return MaterialPageRoute(
+      builder: (context) => const GalleryScreen(),
+    );
+  }
+  return MaterialPageRoute(
+    builder: (context) => DocumentViewerScreen(document: document),
   );
 ```
 
-`settings` 없이는 `ModalRoute.of(context)?.settings.arguments`가 null 반환!
+**`settings` 없이는 `ModalRoute.of(context)?.settings.arguments`가 null 반환!**
+
+#### 일반적인 라우트 실수들
+
+```dart
+// ❌ WRONG - context 캡처 후 async gap에서 사용
+onPressed: () async {
+  await saveData();
+  Navigator.pop(context);  // context가 유효하지 않을 수 있음
+}
+
+// ✅ CORRECT - Navigator 인스턴스 먼저 저장
+onPressed: () async {
+  final navigator = Navigator.of(context);
+  await saveData();
+  if (mounted) navigator.pop();
+}
+
+// ❌ WRONG - pushReplacementNamed 사용 (RouteAware 동작 안 함)
+navigator.pushReplacementNamed('/viewer', arguments: doc);
+
+// ✅ CORRECT - pushNamedAndRemoveUntil 사용
+navigator.pushNamedAndRemoveUntil(
+  '/viewer',
+  ModalRoute.withName('/'),
+  arguments: doc,
+);
+```
+
+**`pushReplacementNamed` vs `pushNamedAndRemoveUntil`**:
+- `pushReplacementNamed`: 현재 라우트만 교체, `didPopNext()` 호출 안 됨
+- `pushNamedAndRemoveUntil`: 여러 라우트 제거 가능, 남은 라우트의 `didPopNext()` 정상 동작
 
 ## EditScreen 기능
 
@@ -668,18 +777,40 @@ final result = await navigator.pushNamed('/edit', arguments: scannedImages);
 - 세션 재개 불가 (한 번 호출 → 완료 → 결과 반환으로 끝)
 - `noOfPages`, `isGalleryImportAllowed` 파라미터는 Android에서만 동작
 
-## PDF 내보내기 (A4 고정)
+## PDF 내보내기
 
 ### 개요
 
-앱은 두 가지 내보내기 방식과 4단계 품질 설정을 제공합니다:
+앱은 두 가지 내보내기 방식과 문서별 PDF 옵션을 제공합니다:
 
 1. **Share** (공유): `Printing.sharePdf()` - 시스템 공유 시트
 2. **Download** (다운로드): MediaStore API - Downloads/Scannie/ 폴더
 
-### PDF 품질 설정
+### PDF 옵션 시스템
 
-`PdfQuality` enum으로 문서별 품질 저장 (영구 저장):
+`ScanDocument`에 5가지 PDF 옵션이 저장됩니다 (문서별 영구 저장):
+
+| 옵션 | enum | 값 | 기본값 |
+|------|------|-----|--------|
+| 품질 | `PdfQuality` | low, medium, high, original | medium |
+| 페이지 크기 | `PdfPageSize` | a4, letter, legal | a4 |
+| 방향 | `PdfOrientation` | portrait, landscape | portrait |
+| 이미지 맞춤 | `PdfImageFit` | contain, cover, fill | contain |
+| 여백 | `PdfMargin` | none, small, medium, large | none |
+
+```dart
+// 문서별 PDF 옵션
+final document = ScanDocument(
+  // ...
+  pdfQuality: PdfQuality.medium,
+  pdfPageSize: PdfPageSize.a4,
+  pdfOrientation: PdfOrientation.portrait,
+  pdfImageFit: PdfImageFit.contain,
+  pdfMargin: PdfMargin.none,
+);
+```
+
+### PDF 품질 설정
 
 | 품질 | JPEG Quality | Max Dimension | 압축률 |
 |------|-------------|---------------|--------|
@@ -688,35 +819,73 @@ final result = await navigator.pushNamed('/edit', arguments: scannedImages);
 | High | 85 | 2048px | ~95% |
 | Original | 100 | 원본 | 100% |
 
-```dart
-// 문서별 품질 설정
-final document = ScanDocument(
-  // ...
-  pdfQuality: PdfQuality.high, // 기본값
-);
+### PDF Generator 서비스
 
-// 압축률로 예상 크기 계산
-final estimatedSize = totalFileSize * quality.compressionRatio;
-```
-
-### PDF 캐싱 시스템
-
-`PdfCacheService`는 싱글톤 패턴으로 PDF 생성을 캐싱합니다:
+`PdfGenerator`는 Isolate를 사용하여 백그라운드에서 PDF를 생성합니다:
 
 ```dart
-import 'services/pdf_cache_service.dart';
+import 'services/pdf_generator.dart';
 
-// PDF 가져오기 (캐시 히트 시 즉시 반환)
-final pdfFile = await PdfCacheService().getOrGeneratePdf(
+// PDF 생성 (Isolate에서 실행)
+final pdfFile = await PdfGenerator.generatePdf(
   imagePaths: document.imagePaths,
   documentName: document.name,
-  quality: document.pdfQuality, // 품질별 캐싱
+  quality: document.pdfQuality,
+  pageSize: document.pdfPageSize,
+  orientation: document.pdfOrientation,
+  imageFit: document.pdfImageFit,
+  margin: document.pdfMargin,
 );
 ```
 
-**캐시 키**: `SHA256(imagePaths + quality)` → 같은 이미지+품질 = 같은 캐시 키
+**Isolate 사용 이유**: PDF 생성은 CPU 집약적 작업이므로 메인 스레드 블로킹 방지
 
 **이미지 압축**: `flutter_image_compress` 패키지로 품질별 JPEG 압축
+
+### PDF 기본 설정 서비스
+
+`PdfSettingsService`는 앱 전역 기본 PDF 설정을 관리합니다:
+
+```dart
+import 'services/pdf_settings_service.dart';
+
+// 싱글톤 인스턴스 가져오기
+final settings = await PdfSettingsService.getInstance();
+
+// 기본값 읽기
+final defaultQuality = settings.defaultQuality;
+final defaultPageSize = settings.defaultPageSize;
+
+// 기본값 설정
+await settings.setDefaultQuality(PdfQuality.high);
+await settings.setDefaultPageSize(PdfPageSize.letter);
+```
+
+### PDF 옵션 시트 사용
+
+```dart
+import '../widgets/common/pdf_options_sheet.dart';
+
+PdfOptionsSheet.show(
+  context: context,
+  quality: document.pdfQuality,
+  pageSize: document.pdfPageSize,
+  orientation: document.pdfOrientation,
+  imageFit: document.pdfImageFit,
+  margin: document.pdfMargin,
+  onSave: (quality, pageSize, orientation, imageFit, margin) async {
+    // 문서 업데이트 및 저장
+    final updated = document.copyWith(
+      pdfQuality: quality,
+      pdfPageSize: pageSize,
+      pdfOrientation: orientation,
+      pdfImageFit: imageFit,
+      pdfMargin: margin,
+    );
+    await DocumentStorage.updateDocument(updated);
+  },
+);
+```
 
 ### Android MediaStore API 사용
 

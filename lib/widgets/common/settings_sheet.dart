@@ -118,6 +118,7 @@ class SettingsSheet extends StatelessWidget {
       context: context,
       backgroundColor: AppColors.surface,
       isScrollControlled: true,
+      clipBehavior: Clip.antiAlias,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
       ),

@@ -106,8 +106,9 @@ class PremiumDialog {
                         width: double.infinity,
                         child: ShadButton(
                           onPressed: () {
-                            Navigator.of(context).pop();
+                            // Call onPurchase BEFORE pop to ensure state is saved
                             onPurchase?.call();
+                            Navigator.of(context).pop();
                           },
                           child: Text('premium.unlock'.tr()),
                         ),
