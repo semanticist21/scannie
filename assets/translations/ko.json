@@ -21,7 +21,7 @@
     "pdf": "PDF"
   },
   "gallery": {
-    "title": "내 스캔",
+    "title": "내 스캔함",
     "selectItems": "항목 선택",
     "selectedCount": "{count}개 선택됨",
     "searchPlaceholder": "문서 검색",

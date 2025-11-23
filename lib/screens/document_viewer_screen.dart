@@ -680,8 +680,8 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
   void _confirmDelete() {
     ConfirmDialog.show(
       context: context,
-      title: 'viewer.deleteDocument'.tr(),
-      message: 'viewer.deleteDocumentMessage'.tr(namedArgs: {'name': _document.name}),
+      title: 'dialogs.deleteScan'.tr(),
+      message: 'dialogs.deleteScanMessage'.tr(namedArgs: {'name': _document.name}),
       cancelText: 'common.cancel'.tr(),
       confirmText: 'common.delete'.tr(),
       isDestructive: true,

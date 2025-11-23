@@ -217,7 +217,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
     final count = _selectedDocumentIds.length;
     final confirmed = await ConfirmDialog.showAsync(
       context: context,
-      title: 'gallery.deleteScans'.tr(args: [count.toString()]),
+      title: 'gallery.deleteScans'.tr(namedArgs: {'count': count.toString()}),
       message: 'gallery.actionCannotBeUndone'.tr(),
       cancelText: 'common.cancel'.tr(),
       confirmText: 'common.delete'.tr(),
@@ -232,7 +232,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
       });
       await _saveDocuments();
       if (mounted) {
-        AppToast.show(context, 'gallery.deletedScans'.tr(args: [count.toString()]));
+        AppToast.show(context,
+            'gallery.deletedScans'.tr(namedArgs: {'count': count.toString()}));
       }
     }
   }
@@ -284,7 +285,11 @@ class _GalleryScreenState extends State<GalleryScreen> {
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
-        AppToast.show(context, 'toast.failedToLoadDocuments'.tr(namedArgs: {'error': e.toString()}), isError: true);
+        AppToast.show(
+            context,
+            'toast.failedToLoadDocuments'
+                .tr(namedArgs: {'error': e.toString()}),
+            isError: true);
       }
     }
   }
@@ -307,7 +312,9 @@ class _GalleryScreenState extends State<GalleryScreen> {
             ? Text(
                 _selectedDocumentIds.isEmpty
                     ? 'gallery.selectItems'.tr()
-                    : 'gallery.selectedCount'.tr(namedArgs: {'count': _selectedDocumentIds.length.toString()}),
+                    : 'gallery.selectedCount'.tr(namedArgs: {
+                        'count': _selectedDocumentIds.length.toString()
+                      }),
               )
             : Text('gallery.title'.tr()),
         actions: _isSelectionMode
@@ -326,94 +333,96 @@ class _GalleryScreenState extends State<GalleryScreen> {
                 ),
               ]
             : _isSearching
-            ? [
-                TweenAnimationBuilder<double>(
-                  tween: Tween(begin: 0.0, end: 1.0),
-                  duration: const Duration(milliseconds: 250),
-                  curve: Curves.easeOutCubic,
-                  builder: (context, value, child) {
-                    return Opacity(
-                      opacity: value,
-                      child: Transform.translate(
-                        offset: Offset(20 * (1 - value), 0),
-                        child: UnconstrainedBox(
-                          constrainedAxis: Axis.horizontal,
-                          child: Container(
-                            width: 200,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              color: AppColors.neumorphicBase,
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: [
-                                // Inner shadow (top-left light)
-                                BoxShadow(
-                                  color: Colors.white.withValues(alpha: 0.8),
-                                  offset: const Offset(-2, -2),
-                                  blurRadius: 4,
+                ? [
+                    TweenAnimationBuilder<double>(
+                      tween: Tween(begin: 0.0, end: 1.0),
+                      duration: const Duration(milliseconds: 250),
+                      curve: Curves.easeOutCubic,
+                      builder: (context, value, child) {
+                        return Opacity(
+                          opacity: value,
+                          child: Transform.translate(
+                            offset: Offset(20 * (1 - value), 0),
+                            child: UnconstrainedBox(
+                              constrainedAxis: Axis.horizontal,
+                              child: Container(
+                                width: 200,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  color: AppColors.neumorphicBase,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    // Inner shadow (top-left light)
+                                    BoxShadow(
+                                      color:
+                                          Colors.white.withValues(alpha: 0.8),
+                                      offset: const Offset(-2, -2),
+                                      blurRadius: 4,
+                                    ),
+                                    // Inner shadow (bottom-right dark)
+                                    BoxShadow(
+                                      color:
+                                          Colors.black.withValues(alpha: 0.08),
+                                      offset: const Offset(2, 2),
+                                      blurRadius: 4,
+                                    ),
+                                  ],
                                 ),
-                                // Inner shadow (bottom-right dark)
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.08),
-                                  offset: const Offset(2, 2),
-                                  blurRadius: 4,
+                                child: TextField(
+                                  controller: _searchController,
+                                  focusNode: _searchFocusNode,
+                                  onChanged: _onSearchChanged,
+                                  style: const TextStyle(fontSize: 13),
+                                  decoration: InputDecoration(
+                                    hintText: 'gallery.searchPlaceholder'.tr(),
+                                    hintStyle: TextStyle(
+                                      fontSize: 13,
+                                      color: AppColors.textHint,
+                                    ),
+                                    border: InputBorder.none,
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 10,
+                                    ),
+                                    isDense: true,
+                                  ),
                                 ),
-                              ],
-                            ),
-                            child: TextField(
-                              controller: _searchController,
-                              focusNode: _searchFocusNode,
-                              onChanged: _onSearchChanged,
-                              style: const TextStyle(fontSize: 13),
-                              decoration: InputDecoration(
-                                hintText: 'gallery.searchPlaceholder'.tr(),
-                                hintStyle: TextStyle(
-                                  fontSize: 13,
-                                  color: AppColors.textHint,
-                                ),
-                                border: InputBorder.none,
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 10,
-                                ),
-                                isDense: true,
                               ),
                             ),
                           ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-                IconButton(
-                  key: const ValueKey('close_search'),
-                  icon: const Icon(LucideIcons.x, size: 20),
-                  onPressed: _toggleSearch,
-                  tooltip: 'tooltips.close'.tr(),
-                ),
-              ]
-            : [
-                IconButton(
-                  icon: const Icon(LucideIcons.listChecks),
-                  onPressed: _toggleSelectionMode,
-                  tooltip: 'tooltips.select'.tr(),
-                ),
-                IconButton(
-                  icon: const Icon(LucideIcons.search),
-                  onPressed: _toggleSearch,
-                  tooltip: 'tooltips.search'.tr(),
-                ),
-                IconButton(
-                  icon: const Icon(LucideIcons.plus),
-                  onPressed: _createEmptyDocument,
-                  tooltip: 'tooltips.createEmptyDocument'.tr(),
-                ),
-                IconButton(
-                  key: const ValueKey('settings'),
-                  icon: const Icon(LucideIcons.settings),
-                  onPressed: _showSettingsSheet,
-                  tooltip: 'tooltips.settings'.tr(),
-                ),
-              ],
+                        );
+                      },
+                    ),
+                    IconButton(
+                      key: const ValueKey('close_search'),
+                      icon: const Icon(LucideIcons.x, size: 20),
+                      onPressed: _toggleSearch,
+                      tooltip: 'tooltips.close'.tr(),
+                    ),
+                  ]
+                : [
+                    IconButton(
+                      icon: const Icon(LucideIcons.listChecks),
+                      onPressed: _toggleSelectionMode,
+                      tooltip: 'tooltips.select'.tr(),
+                    ),
+                    IconButton(
+                      icon: const Icon(LucideIcons.search),
+                      onPressed: _toggleSearch,
+                      tooltip: 'tooltips.search'.tr(),
+                    ),
+                    IconButton(
+                      icon: const Icon(LucideIcons.plus),
+                      onPressed: _createEmptyDocument,
+                      tooltip: 'tooltips.createEmptyDocument'.tr(),
+                    ),
+                    IconButton(
+                      key: const ValueKey('settings'),
+                      icon: const Icon(LucideIcons.settings),
+                      onPressed: _showSettingsSheet,
+                      tooltip: 'tooltips.settings'.tr(),
+                    ),
+                  ],
       ),
       backgroundColor: AppColors.neumorphicBase,
       body: SizedBox.expand(
@@ -605,10 +614,14 @@ class _GalleryScreenState extends State<GalleryScreen> {
       }
     } on PlatformException catch (e) {
       if (!mounted) return;
-      AppToast.show(context, 'toast.scanFailed'.tr(args: [e.message ?? '']), isError: true);
+      AppToast.show(
+          context, 'toast.scanFailed'.tr(namedArgs: {'error': e.message ?? ''}),
+          isError: true);
     } catch (e) {
       if (!mounted) return;
-      AppToast.show(context, 'toast.scanFailed'.tr(args: [e.toString()]), isError: true);
+      AppToast.show(
+          context, 'toast.scanFailed'.tr(namedArgs: {'error': e.toString()}),
+          isError: true);
     }
   }
 
@@ -656,7 +669,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
     ConfirmDialog.show(
       context: context,
       title: 'dialogs.deleteScan'.tr(),
-      message: 'dialogs.deleteScanMessage'.tr(args: [document.name]),
+      message:
+          'dialogs.deleteScanMessage'.tr(namedArgs: {'name': document.name}),
       cancelText: 'common.cancel'.tr(),
       confirmText: 'common.delete'.tr(),
       isDestructive: true,
@@ -875,7 +889,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
     ConfirmDialog.show(
       context: context,
       title: 'viewer.downloadImagesTitle'.tr(),
-      message: 'viewer.downloadImagesMessage'.tr(args: [imageCount.toString()]),
+      message: 'viewer.downloadImagesMessage'
+          .tr(namedArgs: {'count': imageCount.toString()}),
       cancelText: 'common.cancel'.tr(),
       confirmText: 'common.download'.tr(),
       onConfirm: () async {
@@ -894,12 +909,14 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
           if (!mounted) return;
           if (savedCount == 0) {
-            AppToast.show(context, 'toast.failedToSaveImages'.tr(), isError: true);
+            AppToast.show(context, 'toast.failedToSaveImages'.tr(),
+                isError: true);
           }
         } catch (e) {
           debugPrint('Error saving images: $e');
           if (!mounted) return;
-          AppToast.show(context, 'toast.failedToSaveImages'.tr(), isError: true);
+          AppToast.show(context, 'toast.failedToSaveImages'.tr(),
+              isError: true);
         }
       },
     );
