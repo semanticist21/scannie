@@ -121,8 +121,15 @@ class RenameDialog {
                               return;
                             }
 
-                            Navigator.of(context).pop();
+                            // Call onSave BEFORE pop to avoid race with didPopNext
                             await onSave(newName);
+                            // Only pop if dialog route is still current (not replaced by navigation)
+                            if (context.mounted) {
+                              final route = ModalRoute.of(context);
+                              if (route != null && route.isCurrent) {
+                                Navigator.of(context).pop();
+                              }
+                            }
                           },
                         ),
                       ],

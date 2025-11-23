@@ -87,7 +87,8 @@
     "pdfQuality": "Quality",
     "pdfPageSize": "Page Size",
     "pdfOrientation": "Orientation",
-    "pdfImageFit": "Image Fit"
+    "pdfImageFit": "Image Fit",
+    "pdfMargin": "Margin"
   },
   "premium": {
     "title": "Get Premium",

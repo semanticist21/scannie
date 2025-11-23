@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:ndialog/ndialog.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -16,7 +17,7 @@ class ConfirmDialog {
     String cancelText = 'Cancel',
     String confirmText = 'Confirm',
     bool isDestructive = false,
-    required VoidCallback onConfirm,
+    required AsyncCallback onConfirm,
   }) {
     DialogBackground(
       blur: 6,
@@ -62,17 +63,25 @@ class ConfirmDialog {
                     if (isDestructive)
                       ShadButton.destructive(
                         child: Text(confirmText),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          onConfirm();
+                        onPressed: () async {
+                          // Call onConfirm BEFORE pop to avoid race with didPopNext
+                          // which would reload documents before they're saved
+                          await onConfirm();
+                          if (context.mounted) {
+                            Navigator.of(context).pop();
+                          }
                         },
                       )
                     else
                       ShadButton(
                         child: Text(confirmText),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          onConfirm();
+                        onPressed: () async {
+                          // Call onConfirm BEFORE pop to avoid race with didPopNext
+                          // which would reload documents before they're saved
+                          await onConfirm();
+                          if (context.mounted) {
+                            Navigator.of(context).pop();
+                          }
                         },
                       ),
                   ],

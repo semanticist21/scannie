@@ -231,7 +231,8 @@ class _EditScreenState extends State<EditScreen> {
         await DocumentStorage.saveDocuments(documents);
 
         // Navigate directly to viewer (GalleryScreen will reload via RouteAware)
-        navigator.pushReplacementNamed(
+        // Use await to ensure navigation completes before dialog tries to pop
+        await navigator.pushReplacementNamed(
           '/viewer',
           arguments: newDocument,
         );

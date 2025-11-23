@@ -25,7 +25,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:archive/archive.dart';
 import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import '../utils/app_toast.dart';
-import '../widgets/common/quality_selector_sheet.dart';
+import '../widgets/common/pdf_options_sheet.dart';
 import '../widgets/common/rename_dialog.dart';
 import '../widgets/common/confirm_dialog.dart';
 import '../widgets/common/text_input_dialog.dart';
@@ -82,6 +82,7 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
   PdfPageSize _defaultPdfPageSize = PdfPageSize.a4;
   PdfOrientation _defaultPdfOrientation = PdfOrientation.portrait;
   PdfImageFit _defaultPdfImageFit = PdfImageFit.contain;
+  PdfMargin _defaultPdfMargin = PdfMargin.none;
 
   // Filtered documents for search
   List<ScanDocument> get _filteredDocuments {
@@ -109,6 +110,7 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
         _defaultPdfPageSize = _pdfSettings!.defaultPageSize;
         _defaultPdfOrientation = _pdfSettings!.defaultOrientation;
         _defaultPdfImageFit = _pdfSettings!.defaultImageFit;
+        _defaultPdfMargin = _pdfSettings!.defaultMargin;
       });
     }
   }
@@ -132,8 +134,9 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
   @override
   void didPopNext() {
     // Called when returning to this screen from another route
-    // Reload documents to reflect any changes
+    // Reload documents and premium status to reflect any changes
     _loadDocuments();
+    _loadPremiumStatus();
   }
 
   /// Handle search input with debounce for performance
@@ -325,15 +328,22 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
         setState(() => _defaultPdfImageFit = fit);
         await _pdfSettings?.setDefaultImageFit(fit);
       },
+      pdfMargin: _defaultPdfMargin,
+      onPdfMarginChanged: (margin) async {
+        setState(() => _defaultPdfMargin = margin);
+        await _pdfSettings?.setDefaultMargin(margin);
+      },
     );
   }
 
   /// Load documents from persistent storage
   Future<void> _loadDocuments() async {
+    debugPrint('📥 _loadDocuments called');
     setState(() => _isLoading = true);
 
     try {
       final documents = await DocumentStorage.loadDocuments();
+      debugPrint('📥 Loaded ${documents.length} documents from storage');
       if (mounted) {
         setState(() {
           _documents = documents;
@@ -363,6 +373,7 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('🔄 build() called, documents: ${_documents.length}, isLoading: $_isLoading');
     return Scaffold(
       appBar: AppBar(
         scrolledUnderElevation: 0,
@@ -521,6 +532,7 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
   }
 
   Widget _buildDocumentList() {
+    debugPrint('📋 _buildDocumentList called, count: ${_documents.length}, isGrid: $_isGridView');
     if (_isGridView) {
       return _buildGridView();
     }
@@ -536,6 +548,7 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
       itemBuilder: (context, index) {
         final document = documents[index];
         return ScanCard(
+          key: ValueKey(document.id),
           document: document,
           onTap: () => _openDocument(document),
           onEdit: () => _editDocumentName(document),
@@ -569,6 +582,7 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
       itemBuilder: (context, index) {
         final document = documents[index];
         return DocumentGridCard(
+          key: ValueKey(document.id),
           document: document,
           onTap: () => _openDocument(document),
           onEdit: () => _editDocumentName(document),
@@ -603,6 +617,7 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
       placeholder: 'gallery.documentNamePlaceholder'.tr(),
       confirmText: 'common.create'.tr(),
       onSave: (documentName) async {
+        debugPrint('➕ Creating document: $documentName, current count: ${_documents.length}');
         final newDocument = ScanDocument(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
           name: documentName,
@@ -613,11 +628,13 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
           pdfPageSize: _defaultPdfPageSize,
           pdfOrientation: _defaultPdfOrientation,
           pdfImageFit: _defaultPdfImageFit,
+          pdfMargin: _defaultPdfMargin,
         );
 
         setState(() {
           _documents.insert(0, newDocument);
         });
+        debugPrint('➕ After insert, count: ${_documents.length}');
         await _saveDocuments();
 
         if (!mounted) return;
@@ -738,9 +755,11 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
       confirmText: 'common.delete'.tr(),
       isDestructive: true,
       onConfirm: () async {
+        debugPrint('🗑️ Deleting document: ${document.name}, current count: ${_documents.length}');
         setState(() {
           _documents.removeWhere((d) => d.id == document.id);
         });
+        debugPrint('🗑️ After delete, count: ${_documents.length}');
         await _saveDocuments();
         if (!mounted) return;
         AppToast.show(context, 'gallery.documentDeleted'.tr());
@@ -756,28 +775,33 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
     _exportToPdf(document);
   }
 
-  /// Show quality selector for document
-  void _showQualitySelector(ScanDocument document) async {
-    // Calculate total file size for the quality selector
-    int totalSize = 0;
-    for (final imagePath in document.imagePaths) {
-      final file = File(imagePath);
-      if (await file.exists()) {
-        totalSize += await file.length();
-      }
-    }
-
-    if (!mounted) return;
-
-    QualitySelectorSheet.show(
+  /// Show PDF options for document
+  void _showQualitySelector(ScanDocument document) {
+    PdfOptionsSheet.show(
       context: context,
-      currentQuality: document.pdfQuality,
-      totalFileSize: totalSize,
-      onQualitySelected: (quality) async {
-        if (quality == document.pdfQuality) return;
+      quality: document.pdfQuality,
+      pageSize: document.pdfPageSize,
+      orientation: document.pdfOrientation,
+      imageFit: document.pdfImageFit,
+      margin: document.pdfMargin,
+      onSave: (quality, pageSize, orientation, imageFit, margin) async {
+        // Check if any option changed
+        if (quality == document.pdfQuality &&
+            pageSize == document.pdfPageSize &&
+            orientation == document.pdfOrientation &&
+            imageFit == document.pdfImageFit &&
+            margin == document.pdfMargin) {
+          return;
+        }
 
-        // Update document with new quality
-        final updatedDoc = document.copyWith(pdfQuality: quality);
+        // Update document with new options
+        final updatedDoc = document.copyWith(
+          pdfQuality: quality,
+          pdfPageSize: pageSize,
+          pdfOrientation: orientation,
+          pdfImageFit: imageFit,
+          pdfMargin: margin,
+        );
 
         setState(() {
           final index = _documents.indexWhere((d) => d.id == document.id);

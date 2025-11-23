@@ -47,9 +47,12 @@ class PdfOptionsSheet extends StatefulWidget {
         orientation: orientation,
         imageFit: imageFit,
         margin: margin,
-        onSave: (q, ps, o, fit, m) {
-          Navigator.pop(sheetContext);
-          onSave(q, ps, o, fit, m);
+        onSave: (q, ps, o, fit, m) async {
+          // Call onSave BEFORE pop to avoid race with didPopNext
+          await onSave(q, ps, o, fit, m);
+          if (sheetContext.mounted) {
+            Navigator.pop(sheetContext);
+          }
         },
       ),
     );

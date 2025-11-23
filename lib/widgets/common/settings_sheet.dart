@@ -71,6 +71,8 @@ class SettingsSheet extends StatelessWidget {
   final ValueChanged<PdfOrientation> onPdfOrientationChanged;
   final PdfImageFit pdfImageFit;
   final ValueChanged<PdfImageFit> onPdfImageFitChanged;
+  final PdfMargin pdfMargin;
+  final ValueChanged<PdfMargin> onPdfMarginChanged;
 
   const SettingsSheet({
     super.key,
@@ -88,6 +90,8 @@ class SettingsSheet extends StatelessWidget {
     required this.onPdfOrientationChanged,
     required this.pdfImageFit,
     required this.onPdfImageFitChanged,
+    required this.pdfMargin,
+    required this.onPdfMarginChanged,
   });
 
   /// Show the settings bottom sheet
@@ -107,6 +111,8 @@ class SettingsSheet extends StatelessWidget {
     required ValueChanged<PdfOrientation> onPdfOrientationChanged,
     required PdfImageFit pdfImageFit,
     required ValueChanged<PdfImageFit> onPdfImageFitChanged,
+    required PdfMargin pdfMargin,
+    required ValueChanged<PdfMargin> onPdfMarginChanged,
   }) {
     showModalBottomSheet(
       context: context,
@@ -144,6 +150,8 @@ class SettingsSheet extends StatelessWidget {
           onPdfOrientationChanged: onPdfOrientationChanged,
           pdfImageFit: pdfImageFit,
           onPdfImageFitChanged: onPdfImageFitChanged,
+          pdfMargin: pdfMargin,
+          onPdfMarginChanged: onPdfMarginChanged,
         ),
       ),
     );
@@ -480,6 +488,33 @@ class SettingsSheet extends StatelessWidget {
                           .map((f) => ShadOption(
                                 value: f,
                                 child: Text(f.displayName),
+                              ))
+                          .toList(),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+
+                // Margin
+                _buildPdfOptionRow(
+                  context,
+                  icon: LucideIcons.square,
+                  label: 'settings.pdfMargin'.tr(),
+                  child: SizedBox(
+                    width: 120,
+                    child: ShadSelect<PdfMargin>(
+                      initialValue: pdfMargin,
+                      onChanged: (value) {
+                        if (value != null) onPdfMarginChanged(value);
+                      },
+                      selectedOptionBuilder: (context, value) => Text(
+                        value.displayName,
+                        style: AppTextStyles.bodySmall,
+                      ),
+                      options: PdfMargin.values
+                          .map((m) => ShadOption(
+                                value: m,
+                                child: Text(m.displayName),
                               ))
                           .toList(),
                     ),
