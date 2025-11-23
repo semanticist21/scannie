@@ -31,6 +31,7 @@ Future<String> _generatePdfInIsolate(_PdfGenerationData data) async {
     pdf.addPage(
       pw.Page(
         pageFormat: PdfPageFormat.a4,
+        margin: pw.EdgeInsets.zero,
         build: (pw.Context context) {
           return pw.Center(
             child: pw.Image(image, fit: pw.BoxFit.contain),
