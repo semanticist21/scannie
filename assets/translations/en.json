@@ -89,7 +89,7 @@
     "descriptionActive": "You have unlimited access to all features.\nThank you for your support!",
     "description": "Scan and create PDFs without limits.\nUnlimited access for just one purchase.",
     "unlocked": "Premium Unlocked",
-    "unlock": "Unlock - $1",
+    "unlock": "Unlock ($1)",
     "maybeLater": "Maybe Later"
   },
   "dialogs": {

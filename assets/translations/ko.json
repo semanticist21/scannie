@@ -89,7 +89,7 @@
     "descriptionActive": "모든 기능을 무제한으로 사용할 수 있어요.\n구매해주셔서 감사해요!",
     "description": "스캔과 PDF 생성을 무제한으로 사용해요.\n단 한 번의 구매로 영구 이용 가능해요.",
     "unlocked": "프리미엄 잠금 해제",
-    "unlock": "구매하기 - $1",
+    "unlock": "구매하기 ($1)",
     "maybeLater": "나중에"
   },
   "dialogs": {
