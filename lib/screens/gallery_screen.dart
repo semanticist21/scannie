@@ -533,13 +533,31 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
 
   Widget _buildDocumentList() {
     debugPrint('📋 _buildDocumentList called, count: ${_documents.length}, isGrid: $_isGridView');
-    if (_isGridView) {
-      return _buildGridView();
-    }
 
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 300),
+      switchInCurve: Curves.easeOutCubic,
+      switchOutCurve: Curves.easeInCubic,
+      transitionBuilder: (Widget child, Animation<double> animation) {
+        return FadeTransition(
+          opacity: animation,
+          child: ScaleTransition(
+            scale: Tween<double>(begin: 0.95, end: 1.0).animate(animation),
+            child: child,
+          ),
+        );
+      },
+      child: _isGridView
+          ? _buildGridView()
+          : _buildListView(),
+    );
+  }
+
+  Widget _buildListView() {
     final documents = _isSearching ? _filteredDocuments : _documents;
 
     return ListView.builder(
+      key: const ValueKey('list_view'),
       padding: const EdgeInsets.only(
         top: AppSpacing.sm,
         bottom: AppSpacing.xxl * 2,
@@ -571,6 +589,7 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
     final documents = _isSearching ? _filteredDocuments : _documents;
 
     return GridView.builder(
+      key: const ValueKey('grid_view'),
       padding: const EdgeInsets.all(AppSpacing.sm),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,

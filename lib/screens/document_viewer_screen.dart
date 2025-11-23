@@ -200,9 +200,23 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
                               duration: const Duration(milliseconds: 200),
                               child: IgnorePointer(
                                 ignoring: _showPdfPreview,
-                                child: _isGridView
-                                    ? _buildGridView()
-                                    : _buildListView(),
+                                child: AnimatedSwitcher(
+                                  duration: const Duration(milliseconds: 300),
+                                  switchInCurve: Curves.easeOutCubic,
+                                  switchOutCurve: Curves.easeInCubic,
+                                  transitionBuilder: (Widget child, Animation<double> animation) {
+                                    return FadeTransition(
+                                      opacity: animation,
+                                      child: ScaleTransition(
+                                        scale: Tween<double>(begin: 0.95, end: 1.0).animate(animation),
+                                        child: child,
+                                      ),
+                                    );
+                                  },
+                                  child: _isGridView
+                                      ? _buildGridView()
+                                      : _buildListView(),
+                                ),
                               ),
                             ),
                             // PDF view - fades in when selected (stays in memory)
@@ -463,6 +477,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
 
   Widget _buildGridView() {
     return GridView.builder(
+      key: const ValueKey('grid_view'),
       padding: const EdgeInsets.all(AppSpacing.md),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
@@ -488,6 +503,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
 
   Widget _buildListView() {
     return ListView.builder(
+      key: const ValueKey('list_view'),
       padding: const EdgeInsets.all(AppSpacing.md),
       itemCount: _imagePaths.length,
       itemBuilder: (context, index) {
