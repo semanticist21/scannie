@@ -145,6 +145,7 @@
   "imageViewer": {
     "saveToPhotos": "Save to Photos",
     "shareImage": "Share Image",
+    "rotateImage": "Rotate",
     "imageNotFound": "Image not found",
     "failedToLoadImage": "Failed to load image"
   },

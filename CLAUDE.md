@@ -14,6 +14,7 @@ Scannie는 문서 스캔 Flutter 모바일 애플리케이션입니다. 네이�
 - `pdf` + `printing` (PDF 생성/공유 - Isolate 지원)
 - `flutter_pdfview` v1.3.2 (PDF 미리보기)
 - `flutter_image_compress` (PDF 품질별 이미지 압축)
+- `image_cropper` v8.0.2 (이미지 크롭/회전 - uCrop + TOCropViewController)
 - `image_picker` (앨범에서 이미지 가져오기)
 - `elegant_notification` (토스트 알림)
 - `share_plus` (파일 공유)
@@ -28,7 +29,8 @@ Scannie는 문서 스캔 Flutter 모바일 애플리케이션입니다. 네이�
 - ✅ **PDF 옵션** (품질, 페이지 크기, 방향, 이미지 맞춤, 여백 - 문서별 저장)
 - ✅ **PDF 다운로드** (MediaStore API - 권한 불필요)
 - ✅ DocumentViewerScreen (페이지 갤러리, 전체 화면 뷰어)
-- ✅ **FullScreenImageViewer 필터** (Original, B&W, Contrast, Brighten, Document)
+- ✅ **FullScreenImageViewer 필터** (Original, B&W, Contrast, Brighten, Document, Sepia, Invert, Warm, Cool)
+- ✅ **이미지 크롭/회전** (image_cropper - 네이티브 UI)
 
 ## Quick Reference
 
@@ -721,6 +723,90 @@ await ImageGallerySaverPlus.saveFile(tempFile.path);
 ```dart
 AppToast.success(context, 'Image saved to gallery');
 ```
+
+### 이미지 크롭/회전 (image_cropper)
+
+FullScreenImageViewer에서 `image_cropper` 패키지를 사용하여 네이티브 크롭/회전 UI를 제공합니다.
+
+**주요 특징**:
+- 임시 파일 방식: 크롭 결과는 Save 버튼 누를 때까지 임시 파일로 저장
+- Android: uCrop 라이브러리 사용 (FlutterFragmentActivity 필수)
+- iOS: TOCropViewController 사용
+
+**구현 패턴**:
+
+```dart
+import 'package:image_cropper/image_cropper.dart';
+
+Future<void> _cropAndRotateImage() async {
+  final sourcePath = _tempRotatedImagePath ?? widget.imagePaths[_currentPage];
+
+  final croppedFile = await ImageCropper().cropImage(
+    sourcePath: sourcePath,
+    uiSettings: [
+      AndroidUiSettings(
+        toolbarTitle: 'Rotate',
+        toolbarColor: AppColors.darkBackground,
+        toolbarWidgetColor: Colors.white,
+        statusBarLight: false,
+        backgroundColor: AppColors.darkBackground,
+        dimmedLayerColor: Colors.black.withValues(alpha: 0.7),
+        activeControlsWidgetColor: AppColors.primary,
+        initAspectRatio: CropAspectRatioPreset.original,
+        lockAspectRatio: false,
+        hideBottomControls: false,
+        showCropGrid: true,
+        cropFrameStrokeWidth: 2,
+        aspectRatioPresets: [CropAspectRatioPreset.original],
+      ),
+      IOSUiSettings(
+        title: 'Rotate',
+        doneButtonTitle: 'Save',
+        cancelButtonTitle: 'Cancel',
+        aspectRatioLockEnabled: false,
+        resetAspectRatioEnabled: false,
+        rotateButtonsHidden: false,
+        rotateClockwiseButtonHidden: false,
+        aspectRatioPickerButtonHidden: true,
+        hidesNavigationBar: false,
+        showCancelConfirmationDialog: false,
+        aspectRatioLockDimensionSwapEnabled: false,
+      ),
+    ],
+  );
+
+  if (croppedFile != null) {
+    _tempRotatedImagePath = croppedFile.path;
+    imageCache.clear();
+    imageCache.clearLiveImages();
+    setState(() {});
+  }
+}
+```
+
+**Android 설정 필수사항**:
+
+1. `MainActivity.kt`를 `FlutterFragmentActivity`로 변경:
+```kotlin
+// android/app/src/main/kotlin/.../MainActivity.kt
+import io.flutter.embedding.android.FlutterFragmentActivity
+
+class MainActivity: FlutterFragmentActivity()
+```
+
+2. `AndroidManifest.xml`에 UCropActivity 추가:
+```xml
+<!-- UCrop Activity for image_cropper -->
+<activity
+    android:name="com.yalantis.ucrop.UCropActivity"
+    android:screenOrientation="portrait"
+    android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+```
+
+**주의사항**:
+- `aspectRatioPresets`는 최소 1개 필요 (빈 배열 시 crash)
+- `statusBarColor`는 deprecated → `statusBarLight` 사용
+- iOS는 시스템 색상 사용 (색상 커스터마이징 불가)
 
 ## 문서 스캔 (cunning_document_scanner_plus)
 

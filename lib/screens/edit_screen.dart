@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:cunning_document_scanner_plus/cunning_document_scanner_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -30,6 +31,7 @@ class EditScreen extends StatefulWidget {
 
 class _EditScreenState extends State<EditScreen> {
   List<String> _imagePaths = [];
+  final Set<String> _tempFilePaths = {}; // Track temp files for cleanup
   String? _existingDocumentId; // null = new scan, non-null = editing existing
   String? _existingDocumentName; // Preserve name when editing
   bool _isLoading = false;
@@ -139,7 +141,7 @@ class _EditScreenState extends State<EditScreen> {
   /// View image in full screen
   Future<void> _viewImage(String imagePath, int index) async {
     final navigator = Navigator.of(context);
-    final result = await navigator.push<bool>(
+    final result = await navigator.push<String?>(
       MaterialPageRoute(
         builder: (context) => FullScreenImageViewer(
           imagePaths: _imagePaths,
@@ -149,13 +151,33 @@ class _EditScreenState extends State<EditScreen> {
       ),
     );
 
-    // If image was modified, rebuild to show updated image
-    if (result == true && mounted) {
+    // If image was modified, result contains the new temp file path
+    if (result != null && result.isNotEmpty && mounted) {
       setState(() {
+        // Track the temp file for cleanup on discard
+        _tempFilePaths.add(result);
+        // Update the image path to use the temp file
+        _imagePaths[index] = result;
         _hasInteracted = true;
       });
-      debugPrint('🔄 Image modified, refreshing grid');
+      debugPrint('🔄 Image modified, using temp file: $result');
     }
+  }
+
+  /// Clean up all temp files created during editing
+  Future<void> _cleanupTempFiles() async {
+    for (final tempPath in _tempFilePaths) {
+      try {
+        final file = File(tempPath);
+        if (await file.exists()) {
+          await file.delete();
+          debugPrint('🗑️ Cleaned up temp file: $tempPath');
+        }
+      } catch (e) {
+        debugPrint('⚠️ Failed to delete temp file: $tempPath - $e');
+      }
+    }
+    _tempFilePaths.clear();
   }
 
   /// Reorder images
@@ -288,7 +310,9 @@ class _EditScreenState extends State<EditScreen> {
     final shouldPop = await _confirmDiscard();
 
     if (shouldPop && mounted) {
-      debugPrint('🔙 User confirmed discard, popping');
+      debugPrint('🔙 User confirmed discard, cleaning up temp files');
+      // Clean up all temp files before discarding
+      await _cleanupTempFiles();
       navigator.pop();
     } else {
       debugPrint('🔙 User cancelled discard');

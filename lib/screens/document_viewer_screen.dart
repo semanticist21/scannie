@@ -400,18 +400,21 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
                 if (_totalPdfPages > 1)
                   Positioned(
                     bottom: AppSpacing.md,
-                    left: AppSpacing.md,
-                    right: AppSpacing.md,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.md,
-                        vertical: AppSpacing.sm,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.shadowDarker,
-                        borderRadius: BorderRadius.circular(AppRadius.lg),
-                      ),
-                      child: Row(
+                    left: 0,
+                    right: 0,
+                    child: Center(
+                      child: FractionallySizedBox(
+                        widthFactor: 0.75,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.md,
+                            vertical: AppSpacing.sm,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.shadowDarker,
+                            borderRadius: BorderRadius.circular(AppRadius.lg),
+                          ),
+                          child: Row(
                         children: [
                           SizedBox(
                             width: 32,
@@ -425,22 +428,33 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
                             ),
                           ),
                           Expanded(
-                            child: SliderTheme(
-                              data: SliderTheme.of(context).copyWith(
-                                activeTrackColor: AppColors.darkTextPrimary,
-                                inactiveTrackColor: AppColors.darkTextSecondary,
-                                thumbColor: AppColors.darkTextPrimary,
-                                overlayColor: AppColors.darkOverlay,
-                                trackHeight: 6,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: AppSpacing.sm,
                               ),
-                              child: Slider(
-                                value: _currentPdfPage.toDouble(),
-                                min: 0,
-                                max: (_totalPdfPages - 1).toDouble(),
-                                onChanged: (value) {
-                                  final page = value.round();
-                                  _pdfController?.setPage(page);
-                                },
+                              child: SliderTheme(
+                                data: SliderTheme.of(context).copyWith(
+                                  activeTrackColor: AppColors.darkTextPrimary,
+                                  inactiveTrackColor: AppColors.darkTextSecondary,
+                                  thumbColor: AppColors.darkTextPrimary,
+                                  overlayColor: AppColors.darkOverlay,
+                                  trackHeight: 4,
+                                  thumbShape: const RoundSliderThumbShape(
+                                    enabledThumbRadius: 6,
+                                  ),
+                                  overlayShape: const RoundSliderOverlayShape(
+                                    overlayRadius: 14,
+                                  ),
+                                ),
+                                child: Slider(
+                                  value: _currentPdfPage.toDouble(),
+                                  min: 0,
+                                  max: (_totalPdfPages - 1).toDouble(),
+                                  onChanged: (value) {
+                                    final page = value.round();
+                                    _pdfController?.setPage(page);
+                                  },
+                                ),
                               ),
                             ),
                           ),
@@ -455,10 +469,12 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
                               textAlign: TextAlign.center,
                             ),
                           ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
+                ),
               ],
             ),
           ),

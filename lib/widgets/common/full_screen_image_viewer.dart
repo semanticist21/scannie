@@ -5,6 +5,9 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
 import '../../models/image_filter_type.dart';
 import '../../utils/app_toast.dart';
 import '../../theme/app_colors.dart';
@@ -33,6 +36,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
   late int _currentPage;
   bool _showControls = true;
   ImageFilterType _currentFilter = ImageFilterType.original;
+  String? _tempRotatedImagePath; // Temporary rotated image (not yet saved)
 
   @override
   void initState() {
@@ -45,6 +49,78 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
   void dispose() {
     _pageController.dispose();
     super.dispose();
+  }
+
+  /// Open image cropper for rotation and cropping
+  Future<void> _cropAndRotateImage() async {
+    // Use temp image if exists, otherwise use original
+    final sourcePath = _tempRotatedImagePath ?? widget.imagePaths[_currentPage];
+
+    final croppedFile = await ImageCropper().cropImage(
+      sourcePath: sourcePath,
+      uiSettings: [
+        AndroidUiSettings(
+          toolbarTitle: 'imageViewer.rotateImage'.tr(),
+          toolbarColor: AppColors.darkBackground,
+          toolbarWidgetColor: Colors.white,
+          statusBarLight: false,
+          backgroundColor: AppColors.darkBackground,
+          dimmedLayerColor: Colors.black.withValues(alpha: 0.7),
+          activeControlsWidgetColor: AppColors.primary,
+          initAspectRatio: CropAspectRatioPreset.original,
+          lockAspectRatio: false,
+          hideBottomControls: false,
+          showCropGrid: true,
+          cropFrameStrokeWidth: 2,
+        ),
+        IOSUiSettings(
+          title: 'imageViewer.rotateImage'.tr(),
+          doneButtonTitle: 'common.save'.tr(),
+          cancelButtonTitle: 'common.cancel'.tr(),
+          aspectRatioLockEnabled: false,
+          resetAspectRatioEnabled: false,
+          rotateButtonsHidden: false,
+          rotateClockwiseButtonHidden: false,
+          aspectRatioPickerButtonHidden: true,
+          hidesNavigationBar: false,
+          showCancelConfirmationDialog: false,
+          aspectRatioLockDimensionSwapEnabled: false,
+        ),
+      ],
+    );
+
+    if (croppedFile != null) {
+      // Delete previous temp file if exists
+      if (_tempRotatedImagePath != null) {
+        try {
+          await File(_tempRotatedImagePath!).delete();
+        } catch (_) {}
+      }
+
+      // Save to temp location (not original yet)
+      _tempRotatedImagePath = croppedFile.path;
+
+      // Clear image cache to show updated temp image
+      imageCache.clear();
+      imageCache.clearLiveImages();
+
+      // Refresh the view
+      if (mounted) {
+        setState(() {});
+      }
+
+      debugPrint('✅ Image cropped/rotated to temp: $_tempRotatedImagePath');
+    }
+  }
+
+  /// Clean up temp file
+  Future<void> _cleanupTempFile() async {
+    if (_tempRotatedImagePath != null) {
+      try {
+        await File(_tempRotatedImagePath!).delete();
+      } catch (_) {}
+      _tempRotatedImagePath = null;
+    }
   }
 
   /// Get color matrix for filter
@@ -244,65 +320,85 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
     }
   }
 
-  /// Save filtered image back to original file
+  /// Save filtered/rotated image to temp file and return path
+  /// Does NOT modify original - EditScreen will handle final save
   Future<void> _saveFilteredImage() async {
     final navigator = Navigator.of(context);
 
     try {
-      final imagePath = widget.imagePaths[_currentPage];
+      final originalPath = widget.imagePaths[_currentPage];
+      final hasRotation = _tempRotatedImagePath != null;
+      final hasFilter = _currentFilter != ImageFilterType.original;
 
-      if (_currentFilter == ImageFilterType.original) {
-        // No filter applied, just pop back
+      if (!hasRotation && !hasFilter) {
+        // No modifications, just pop back
+        await _cleanupTempFile();
         navigator.pop();
         return;
       }
 
-      // Apply filter and save back to original file
-      final imageFile = File(imagePath);
-      final imageBytes = await imageFile.readAsBytes();
-      final codec = await ui.instantiateImageCodec(imageBytes);
-      final frame = await codec.getNextFrame();
-      final image = frame.image;
+      // Start with rotated image if exists, otherwise original
+      final sourceFile =
+          File(hasRotation ? _tempRotatedImagePath! : originalPath);
+      var imageBytes = await sourceFile.readAsBytes();
 
-      // Create filtered image
-      final recorder = ui.PictureRecorder();
-      final canvas = Canvas(recorder);
-      final paint = Paint();
+      // Apply filter if needed
+      if (hasFilter) {
+        final codec = await ui.instantiateImageCodec(imageBytes);
+        final frame = await codec.getNextFrame();
+        final image = frame.image;
 
-      final colorFilter = _getColorFilter();
-      if (colorFilter != null) {
-        paint.colorFilter = colorFilter;
-      }
+        // Create filtered image
+        final recorder = ui.PictureRecorder();
+        final canvas = Canvas(recorder);
+        final paint = Paint();
 
-      canvas.drawImage(image, Offset.zero, paint);
-      final picture = recorder.endRecording();
-      final filteredImage = await picture.toImage(image.width, image.height);
-
-      // Convert to bytes
-      final byteData =
-          await filteredImage.toByteData(format: ui.ImageByteFormat.png);
-      if (byteData == null) {
-        if (mounted) {
-          AppToast.show(context, 'toast.failedToProcessImage'.tr(), isError: true);
+        final colorFilter = _getColorFilter();
+        if (colorFilter != null) {
+          paint.colorFilter = colorFilter;
         }
-        return;
+
+        canvas.drawImage(image, Offset.zero, paint);
+        final picture = recorder.endRecording();
+        final filteredImage = await picture.toImage(image.width, image.height);
+
+        // Convert to bytes
+        final byteData =
+            await filteredImage.toByteData(format: ui.ImageByteFormat.png);
+        if (byteData == null) {
+          if (mounted) {
+            AppToast.show(context, 'toast.failedToProcessImage'.tr(),
+                isError: true);
+          }
+          return;
+        }
+
+        imageBytes = byteData.buffer.asUint8List();
       }
 
-      final pngBytes = byteData.buffer.asUint8List();
+      // Save to temp file instead of overwriting original
+      final tempDir = await getTemporaryDirectory();
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      final extension = path.extension(originalPath);
+      final tempFilePath = path.join(tempDir.path, 'edited_$timestamp$extension');
+      await File(tempFilePath).writeAsBytes(imageBytes);
 
-      // Save back to original file path (overwrite)
-      await imageFile.writeAsBytes(pngBytes);
+      // Clean up intermediate temp file (from cropper)
+      await _cleanupTempFile();
 
       // Clear image cache so the updated image shows in EditScreen
       imageCache.clear();
       imageCache.clearLiveImages();
 
-      debugPrint('✅ Filter saved to original file: $imagePath');
-      navigator.pop(true); // Return true to indicate image was modified
+      debugPrint('✅ Image saved to temp file: $tempFilePath');
+      // Return the temp file path so EditScreen can track it
+      navigator.pop(tempFilePath);
     } catch (e) {
-      debugPrint('Error saving filtered image: $e');
+      debugPrint('Error saving image: $e');
       if (mounted) {
-        AppToast.show(context, 'toast.failedToSaveImage'.tr(namedArgs: {'error': e.toString()}), isError: true);
+        AppToast.show(context,
+            'toast.failedToSaveImage'.tr(namedArgs: {'error': e.toString()}),
+            isError: true);
       }
     }
   }
@@ -329,7 +425,8 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
         if (success) {
           AppToast.show(context, 'toast.imageSavedToPhotos'.tr());
         } else {
-          AppToast.show(context, 'toast.failedToSaveImages'.tr(), isError: true);
+          AppToast.show(context, 'toast.failedToSaveImages'.tr(),
+              isError: true);
         }
       }
 
@@ -337,7 +434,9 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
     } catch (e) {
       debugPrint('Error saving image: $e');
       if (mounted) {
-        AppToast.show(context, 'toast.failedToSaveImage'.tr(namedArgs: {'error': e.toString()}), isError: true);
+        AppToast.show(context,
+            'toast.failedToSaveImage'.tr(namedArgs: {'error': e.toString()}),
+            isError: true);
       }
     }
   }
@@ -361,13 +460,18 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
     } catch (e) {
       debugPrint('Error sharing image: $e');
       if (mounted) {
-        AppToast.show(context, 'toast.failedToShareImage'.tr(namedArgs: {'error': e.toString()}), isError: true);
+        AppToast.show(context,
+            'toast.failedToShareImage'.tr(namedArgs: {'error': e.toString()}),
+            isError: true);
       }
     }
   }
 
   Widget _buildFullScreenImage(int index) {
-    final imagePath = widget.imagePaths[index];
+    // Use temp image if exists and it's the current page, otherwise use original
+    final imagePath = (index == _currentPage && _tempRotatedImagePath != null)
+        ? _tempRotatedImagePath!
+        : widget.imagePaths[index];
     final imageFile = File(imagePath);
 
     if (!imageFile.existsSync()) {
@@ -458,14 +562,10 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
           vertical: AppSpacing.xs,
         ),
         decoration: BoxDecoration(
-          color: isSelected
-              ? AppColors.darkOverlay
-              : Colors.transparent,
+          color: isSelected ? AppColors.darkOverlay : Colors.transparent,
           borderRadius: BorderRadius.circular(AppRadius.sm),
           border: Border.all(
-            color: isSelected
-                ? AppColors.darkOverlayLight
-                : Colors.transparent,
+            color: isSelected ? AppColors.darkOverlayLight : Colors.transparent,
           ),
         ),
         child: Column(
@@ -473,14 +573,18 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
           children: [
             Icon(
               icon,
-              color: isSelected ? AppColors.darkTextPrimary : AppColors.darkTextSecondary,
+              color: isSelected
+                  ? AppColors.darkTextPrimary
+                  : AppColors.darkTextSecondary,
               size: 20,
             ),
             const SizedBox(height: 4),
             Text(
               label,
               style: AppTextStyles.overline.copyWith(
-                color: isSelected ? AppColors.darkTextPrimary : AppColors.darkTextSecondary,
+                color: isSelected
+                    ? AppColors.darkTextPrimary
+                    : AppColors.darkTextSecondary,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
               ),
             ),
@@ -547,12 +651,16 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                   child: Row(
                     children: [
                       IconButton(
-                        icon: const Icon(LucideIcons.x, color: AppColors.darkTextPrimary),
+                        icon: const Icon(LucideIcons.x,
+                            color: AppColors.darkTextPrimary),
                         onPressed: () => Navigator.pop(context),
                       ),
                       Expanded(
                         child: Text(
-                          'viewer.pageOf'.tr(namedArgs: {'current': (_currentPage + 1).toString(), 'total': widget.imagePaths.length.toString()}),
+                          'viewer.pageOf'.tr(namedArgs: {
+                            'current': (_currentPage + 1).toString(),
+                            'total': widget.imagePaths.length.toString()
+                          }),
                           style: AppTextStyles.bodyLarge.copyWith(
                             color: AppColors.darkTextPrimary,
                             fontWeight: FontWeight.w600,
@@ -560,6 +668,13 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                           textAlign: TextAlign.center,
                         ),
                       ),
+                      if (widget.showFilters)
+                        IconButton(
+                          icon: const Icon(LucideIcons.crop,
+                              color: AppColors.darkTextPrimary),
+                          onPressed: _cropAndRotateImage,
+                          tooltip: 'imageViewer.rotateImage'.tr(),
+                        ),
                       IconButton(
                         icon: const Icon(LucideIcons.download,
                             color: AppColors.darkTextPrimary),
@@ -567,8 +682,8 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                         tooltip: 'imageViewer.saveToPhotos'.tr(),
                       ),
                       IconButton(
-                        icon:
-                            const Icon(LucideIcons.share2, color: AppColors.darkTextPrimary),
+                        icon: const Icon(LucideIcons.share2,
+                            color: AppColors.darkTextPrimary),
                         onPressed: _shareCurrentImage,
                         tooltip: 'imageViewer.shareImage'.tr(),
                       ),
