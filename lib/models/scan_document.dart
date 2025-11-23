@@ -85,6 +85,7 @@ enum PdfMargin {
   small,
   medium,
   large,
+  xl,
 }
 
 /// Extension for PdfMargin display names and values
@@ -99,6 +100,8 @@ extension PdfMarginExtension on PdfMargin {
         return 'Medium';
       case PdfMargin.large:
         return 'Large';
+      case PdfMargin.xl:
+        return 'Extra Large';
     }
   }
 
@@ -113,6 +116,8 @@ extension PdfMarginExtension on PdfMargin {
         return 24;
       case PdfMargin.large:
         return 36;
+      case PdfMargin.xl:
+        return 48;
     }
   }
 }
@@ -198,7 +203,7 @@ class ScanDocument {
     this.pdfPageSize = PdfPageSize.a4,
     this.pdfOrientation = PdfOrientation.portrait,
     this.pdfImageFit = PdfImageFit.contain,
-    this.pdfMargin = PdfMargin.none,
+    this.pdfMargin = PdfMargin.medium,
   });
 
   ScanDocument copyWith({
@@ -269,7 +274,7 @@ class ScanDocument {
       ),
       pdfMargin: PdfMargin.values.firstWhere(
         (e) => e.name == json['pdfMargin'],
-        orElse: () => PdfMargin.none,
+        orElse: () => PdfMargin.medium,
       ),
     );
   }

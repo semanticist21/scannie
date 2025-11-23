@@ -84,7 +84,7 @@ class PdfSettingsService {
     final value = _prefs.getString(_keyMargin);
     return PdfMargin.values.firstWhere(
       (e) => e.name == value,
-      orElse: () => PdfMargin.none,
+      orElse: () => PdfMargin.medium,
     );
   }
 
