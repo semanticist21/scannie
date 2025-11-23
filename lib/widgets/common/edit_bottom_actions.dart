@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_theme.dart';
 
@@ -46,7 +47,7 @@ class EditBottomActions extends StatelessWidget {
               onPressed: onAddScan,
               height: 48,
               leading: const Icon(LucideIcons.scan, size: 18),
-              child: const Text('Scan'),
+              child: Text('common.scan'.tr()),
             ),
           ),
           const SizedBox(width: AppSpacing.sm),
@@ -56,7 +57,7 @@ class EditBottomActions extends StatelessWidget {
               onPressed: onAddPhoto,
               height: 48,
               leading: const Icon(LucideIcons.image, size: 18),
-              child: const Text('Photo'),
+              child: Text('common.photo'.tr()),
             ),
           ),
           const SizedBox(width: AppSpacing.sm),
@@ -66,7 +67,7 @@ class EditBottomActions extends StatelessWidget {
               onPressed: onSave,
               height: 48,
               leading: const Icon(LucideIcons.check, size: 18),
-              child: const Text('Save'),
+              child: Text('common.save'.tr()),
             ),
           ),
         ],

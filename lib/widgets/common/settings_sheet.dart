@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/app_text_styles.dart';
@@ -138,7 +139,7 @@ class SettingsSheet extends StatelessWidget {
                 AppSpacing.sm,
               ),
               child: Text(
-                'Settings',
+                'settings.title'.tr(),
                 style: AppTextStyles.bodyMedium.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
@@ -153,7 +154,7 @@ class SettingsSheet extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Premium',
+                  'settings.premium'.tr(),
                   style: AppTextStyles.caption.copyWith(
                     color: AppColors.textSecondary,
                     fontWeight: FontWeight.w500,
@@ -179,7 +180,7 @@ class SettingsSheet extends StatelessWidget {
                         const SizedBox(width: AppSpacing.md),
                         Expanded(
                           child: Text(
-                            isPremium ? 'Premium Active' : 'Get Premium',
+                            isPremium ? 'settings.premiumActive'.tr() : 'settings.getPremium'.tr(),
                             style: AppTextStyles.bodyMedium.copyWith(
                               fontWeight: FontWeight.w500,
                             ),
@@ -206,7 +207,7 @@ class SettingsSheet extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Language',
+                  'settings.language'.tr(),
                   style: AppTextStyles.caption.copyWith(
                     color: AppColors.textSecondary,
                     fontWeight: FontWeight.w500,
@@ -265,7 +266,7 @@ class SettingsSheet extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'View Mode',
+                  'settings.viewMode'.tr(),
                   style: AppTextStyles.caption.copyWith(
                     color: AppColors.textSecondary,
                     fontWeight: FontWeight.w500,
@@ -304,7 +305,7 @@ class SettingsSheet extends StatelessWidget {
                           const SizedBox(width: AppSpacing.sm),
                           Expanded(
                             child: Text(
-                              mode.displayName,
+                              'settings.${mode.name}'.tr(),
                               style: AppTextStyles.bodyMedium.copyWith(
                                 fontWeight: isSelected
                                     ? FontWeight.w600

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../models/scan_document.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_theme.dart';
@@ -170,7 +171,7 @@ class DocumentGridCard extends StatelessWidget {
                             ),
                             const SizedBox(width: AppSpacing.xs),
                             Text(
-                              '${document.imagePaths.length} ${document.imagePaths.length == 1 ? 'page' : 'pages'}',
+                              '${document.imagePaths.length} ${document.imagePaths.length == 1 ? 'common.page'.tr() : 'common.pagesLower'.tr()}',
                               style: AppTextStyles.caption.copyWith(
                                 color: AppColors.textSecondary,
                               ),
@@ -214,7 +215,7 @@ class DocumentGridCard extends StatelessWidget {
       if (onSavePdf != null)
         ContextMenuItem(
           icon: LucideIcons.download,
-          label: 'Download PDF',
+          label: 'viewer.downloadPdf'.tr(),
           onTap: () {
             Navigator.pop(context);
             onSavePdf?.call();
@@ -223,7 +224,7 @@ class DocumentGridCard extends StatelessWidget {
       if (onShare != null)
         ContextMenuItem(
           icon: LucideIcons.share2,
-          label: 'Share PDF',
+          label: 'viewer.sharePdf'.tr(),
           onTap: () {
             Navigator.pop(context);
             onShare?.call();
@@ -232,7 +233,7 @@ class DocumentGridCard extends StatelessWidget {
       if (onSaveZip != null)
         ContextMenuItem(
           icon: LucideIcons.folderArchive,
-          label: 'Download as ZIP',
+          label: 'viewer.downloadAsZip'.tr(),
           onTap: () {
             Navigator.pop(context);
             onSaveZip?.call();
@@ -241,7 +242,7 @@ class DocumentGridCard extends StatelessWidget {
       if (onSaveImages != null)
         ContextMenuItem(
           icon: LucideIcons.images,
-          label: 'Download Images',
+          label: 'viewer.downloadImages'.tr(),
           onTap: () {
             Navigator.pop(context);
             onSaveImages?.call();
@@ -251,7 +252,7 @@ class DocumentGridCard extends StatelessWidget {
 
     ContextMenuSheet.show(
       context: context,
-      title: 'Export',
+      title: 'common.export'.tr(),
       items: items,
     );
   }
@@ -261,7 +262,7 @@ class DocumentGridCard extends StatelessWidget {
       if (onEditScan != null)
         ContextMenuItem(
           icon: LucideIcons.filePen,
-          label: 'Edit Scan',
+          label: 'viewer.editScan'.tr(),
           onTap: () {
             Navigator.pop(context);
             onEditScan?.call();
@@ -270,7 +271,7 @@ class DocumentGridCard extends StatelessWidget {
       if (onEdit != null)
         ContextMenuItem(
           icon: LucideIcons.pencil,
-          label: 'Rename',
+          label: 'common.rename'.tr(),
           onTap: () {
             Navigator.pop(context);
             onEdit?.call();
@@ -279,7 +280,7 @@ class DocumentGridCard extends StatelessWidget {
       if (onQualityChange != null)
         ContextMenuItem(
           icon: LucideIcons.settings2,
-          label: 'PDF Quality (${document.pdfQuality.displayName})',
+          label: 'viewer.pdfQuality'.tr(namedArgs: {'quality': 'pdfQuality.${document.pdfQuality.name}'.tr()}),
           onTap: () {
             Navigator.pop(context);
             onQualityChange?.call();
@@ -288,7 +289,7 @@ class DocumentGridCard extends StatelessWidget {
       if (onDelete != null)
         ContextMenuItem(
           icon: LucideIcons.trash2,
-          label: 'Delete',
+          label: 'common.delete'.tr(),
           color: AppColors.error,
           onTap: () {
             Navigator.pop(context);

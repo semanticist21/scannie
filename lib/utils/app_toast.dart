@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:elegant_notification/elegant_notification.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 /// Centralized toast notification utility for consistent app-wide messaging
 class AppToast {
   /// Show success notification
   static void success(BuildContext context, String message) {
     ElegantNotification.success(
-      title: const Text('Success'),
+      title: Text('toast.success'.tr()),
       description: Text(message),
       toastDuration: const Duration(seconds: 3),
       showProgressIndicator: true,
@@ -17,7 +18,7 @@ class AppToast {
   /// Show error notification
   static void error(BuildContext context, String message) {
     ElegantNotification.error(
-      title: const Text('Error'),
+      title: Text('toast.error'.tr()),
       description: Text(message),
       toastDuration: const Duration(seconds: 3),
       showProgressIndicator: true,
@@ -27,7 +28,7 @@ class AppToast {
   /// Show info notification (for processing/loading states)
   static void info(BuildContext context, String message) {
     ElegantNotification.info(
-      title: const Text('Processing'),
+      title: Text('toast.processing'.tr()),
       description: Text(message),
       toastDuration: const Duration(seconds: 5),
       showProgressIndicator: true,

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../models/scan_document.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_theme.dart';
@@ -210,7 +211,7 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
                         ),
                         const SizedBox(height: AppSpacing.xs),
                         Text(
-                          '$pageCount ${pageCount == 1 ? 'page' : 'pages'} · $formattedDate',
+                          '$pageCount ${pageCount == 1 ? 'common.page'.tr() : 'common.pagesLower'.tr()} · $formattedDate',
                           style: AppTextStyles.caption.copyWith(
                             color: AppColors.textSecondary,
                           ),
@@ -259,7 +260,7 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
       if (widget.onSavePdf != null)
         ContextMenuItem(
           icon: LucideIcons.download,
-          label: 'Download PDF',
+          label: 'viewer.downloadPdf'.tr(),
           onTap: () {
             Navigator.pop(context);
             widget.onSavePdf?.call();
@@ -268,7 +269,7 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
       if (widget.onShare != null)
         ContextMenuItem(
           icon: LucideIcons.share2,
-          label: 'Share PDF',
+          label: 'viewer.sharePdf'.tr(),
           onTap: () {
             Navigator.pop(context);
             widget.onShare?.call();
@@ -277,7 +278,7 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
       if (widget.onSaveZip != null)
         ContextMenuItem(
           icon: LucideIcons.folderArchive,
-          label: 'Download as ZIP',
+          label: 'viewer.downloadAsZip'.tr(),
           onTap: () {
             Navigator.pop(context);
             widget.onSaveZip?.call();
@@ -286,7 +287,7 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
       if (widget.onSaveImages != null)
         ContextMenuItem(
           icon: LucideIcons.images,
-          label: 'Download Images',
+          label: 'viewer.downloadImages'.tr(),
           onTap: () {
             Navigator.pop(context);
             widget.onSaveImages?.call();
@@ -296,7 +297,7 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
 
     ContextMenuSheet.show(
       context: context,
-      title: 'Export',
+      title: 'common.export'.tr(),
       items: items,
     );
   }
@@ -306,7 +307,7 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
       if (widget.onEditScan != null)
         ContextMenuItem(
           icon: LucideIcons.filePen,
-          label: 'Edit Scan',
+          label: 'viewer.editScan'.tr(),
           onTap: () {
             Navigator.pop(context);
             widget.onEditScan?.call();
@@ -315,7 +316,7 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
       if (widget.onEdit != null)
         ContextMenuItem(
           icon: LucideIcons.pencil,
-          label: 'Rename',
+          label: 'common.rename'.tr(),
           onTap: () {
             Navigator.pop(context);
             widget.onEdit?.call();
@@ -324,7 +325,7 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
       if (widget.onQualityChange != null)
         ContextMenuItem(
           icon: LucideIcons.settings2,
-          label: 'PDF Quality (${widget.document.pdfQuality.displayName})',
+          label: 'viewer.pdfQuality'.tr(namedArgs: {'quality': 'pdfQuality.${widget.document.pdfQuality.name}'.tr()}),
           onTap: () {
             Navigator.pop(context);
             widget.onQualityChange?.call();
@@ -333,7 +334,7 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
       if (widget.onDelete != null)
         ContextMenuItem(
           icon: LucideIcons.trash2,
-          label: 'Delete',
+          label: 'common.delete'.tr(),
           color: AppColors.error,
           onTap: () {
             Navigator.pop(context);

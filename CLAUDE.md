@@ -12,13 +12,14 @@ Scannie는 문서 스캔 Flutter 모바일 애플리케이션입니다. 네이�
 - `shadcn_ui` (UI 컴포넌트 - ShadButton, ShadBadge, LucideIcons)
 - `reorderable_grid_view` v2.2.8 (드래그 앤 드롭 순서 변경)
 - `pdf` + `printing` (PDF 생성/공유)
-- `syncfusion_flutter_pdfviewer` (PDF 미리보기)
+- `flutter_pdfview` v1.3.2 (PDF 미리보기)
 - `flutter_image_compress` (PDF 품질별 이미지 압축)
 - `image_picker` (앨범에서 이미지 가져오기)
 - `elegant_notification` (토스트 알림)
 - `share_plus` (파일 공유)
 - `google_fonts` (커스텀 폰트)
 - `crypto` (SHA256 해싱 - PDF 캐시 키)
+- `easy_localization` v3.0.7 (다국어 지원)
 
 **현재 상태**:
 - ✅ 문서 스캔 (네이티브 필터/크롭/회전 포함)
@@ -913,3 +914,15 @@ git push
 - `refactor:` 리팩토링
 - `docs:` 문서 수정
 - `style:` 코드 포맷팅
+
+## 앱 아이콘 생성
+
+```bash
+# SVG → PNG 변환 (rsvg-convert 필요: brew install librsvg)
+rsvg-convert -w 1024 -h 1024 assets/app_icon.svg -o assets/app_icon.png
+
+# Flutter 앱 아이콘 적용
+dart run flutter_launcher_icons
+```
+
+**Android Adaptive Icon Safe Zone**: 콘텐츠는 중앙 66dp (전체의 61%) 내에 배치. 현재 55%로 설정하여 여유 공간 확보.

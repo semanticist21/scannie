@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:cunning_document_scanner_plus/cunning_document_scanner_plus.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../models/scan_document.dart';
 import '../services/document_storage.dart';
 import '../services/pdf_generator.dart';
@@ -61,7 +62,6 @@ class _GalleryScreenState extends State<GalleryScreen> {
   bool _isGridView = false;
   bool _isLoading = true;
   bool _isPremium = false;
-  AppLanguage _currentLanguage = AppLanguage.english;
 
   // Selection mode state
   bool _isSelectionMode = false;
@@ -217,9 +217,10 @@ class _GalleryScreenState extends State<GalleryScreen> {
     final count = _selectedDocumentIds.length;
     final confirmed = await ConfirmDialog.showAsync(
       context: context,
-      title: 'Delete $count ${count == 1 ? 'Scan' : 'Scans'}',
-      message: 'This action cannot be undone.',
-      confirmText: 'Delete',
+      title: 'gallery.deleteScans'.tr(args: [count.toString()]),
+      message: 'gallery.actionCannotBeUndone'.tr(),
+      cancelText: 'common.cancel'.tr(),
+      confirmText: 'common.delete'.tr(),
       isDestructive: true,
     );
 
@@ -231,13 +232,19 @@ class _GalleryScreenState extends State<GalleryScreen> {
       });
       await _saveDocuments();
       if (mounted) {
-        AppToast.show(context, 'Deleted $count ${count == 1 ? 'scan' : 'scans'}');
+        AppToast.show(context, 'gallery.deletedScans'.tr(args: [count.toString()]));
       }
     }
   }
 
   /// Show settings sheet
   void _showSettingsSheet() {
+    // Map current locale to AppLanguage
+    final currentLocale = context.locale;
+    final currentLanguage = currentLocale.languageCode == 'ko'
+        ? AppLanguage.korean
+        : AppLanguage.english;
+
     SettingsSheet.show(
       context: context,
       isGridView: _isGridView,
@@ -251,10 +258,13 @@ class _GalleryScreenState extends State<GalleryScreen> {
         isPremium: _isPremium,
         onPurchase: () => _savePremiumStatus(true),
       ),
-      currentLanguage: _currentLanguage,
+      currentLanguage: currentLanguage,
       onLanguageChanged: (language) {
-        setState(() => _currentLanguage = language);
-        // TODO: Implement actual language change when localization is added
+        // Change app locale
+        final newLocale = language == AppLanguage.korean
+            ? const Locale('ko')
+            : const Locale('en');
+        context.setLocale(newLocale);
       },
     );
   }
@@ -274,7 +284,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
-        AppToast.show(context, 'Failed to load documents: $e', isError: true);
+        AppToast.show(context, 'toast.failedToLoadDocuments'.tr(namedArgs: {'error': e.toString()}), isError: true);
       }
     }
   }
@@ -296,23 +306,23 @@ class _GalleryScreenState extends State<GalleryScreen> {
         title: _isSelectionMode
             ? Text(
                 _selectedDocumentIds.isEmpty
-                    ? 'Select Items'
-                    : '${_selectedDocumentIds.length} selected',
+                    ? 'gallery.selectItems'.tr()
+                    : 'gallery.selectedCount'.tr(namedArgs: {'count': _selectedDocumentIds.length.toString()}),
               )
-            : const Text('My Scans'),
+            : Text('gallery.title'.tr()),
         actions: _isSelectionMode
             ? [
                 IconButton(
                   icon: const Icon(LucideIcons.x),
                   onPressed: _toggleSelectionMode,
-                  tooltip: 'Cancel',
+                  tooltip: 'tooltips.cancel'.tr(),
                 ),
                 IconButton(
                   icon: const Icon(LucideIcons.trash2),
                   onPressed: _selectedDocumentIds.isEmpty
                       ? null
                       : _deleteSelectedDocuments,
-                  tooltip: 'Delete',
+                  tooltip: 'tooltips.delete'.tr(),
                 ),
               ]
             : _isSearching
@@ -355,7 +365,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                               onChanged: _onSearchChanged,
                               style: const TextStyle(fontSize: 13),
                               decoration: InputDecoration(
-                                hintText: 'Search documents',
+                                hintText: 'gallery.searchPlaceholder'.tr(),
                                 hintStyle: TextStyle(
                                   fontSize: 13,
                                   color: AppColors.textHint,
@@ -378,30 +388,30 @@ class _GalleryScreenState extends State<GalleryScreen> {
                   key: const ValueKey('close_search'),
                   icon: const Icon(LucideIcons.x, size: 20),
                   onPressed: _toggleSearch,
-                  tooltip: 'Close',
+                  tooltip: 'tooltips.close'.tr(),
                 ),
               ]
             : [
                 IconButton(
                   icon: const Icon(LucideIcons.listChecks),
                   onPressed: _toggleSelectionMode,
-                  tooltip: 'Select',
+                  tooltip: 'tooltips.select'.tr(),
                 ),
                 IconButton(
                   icon: const Icon(LucideIcons.search),
                   onPressed: _toggleSearch,
-                  tooltip: 'Search',
+                  tooltip: 'tooltips.search'.tr(),
                 ),
                 IconButton(
                   icon: const Icon(LucideIcons.plus),
                   onPressed: _createEmptyDocument,
-                  tooltip: 'Create Empty Document',
+                  tooltip: 'tooltips.createEmptyDocument'.tr(),
                 ),
                 IconButton(
                   key: const ValueKey('settings'),
                   icon: const Icon(LucideIcons.settings),
                   onPressed: _showSettingsSheet,
-                  tooltip: 'Settings',
+                  tooltip: 'tooltips.settings'.tr(),
                 ),
               ],
       ),
@@ -420,16 +430,16 @@ class _GalleryScreenState extends State<GalleryScreen> {
           : ShadButton(
               onPressed: _openCamera,
               leading: const Icon(LucideIcons.camera, size: 18),
-              child: const Text('Scan'),
+              child: Text('common.scan'.tr()),
             ),
     );
   }
 
   Widget _buildEmptyState() {
-    return const EmptyState(
+    return EmptyState(
       icon: LucideIcons.sparkles,
-      title: 'No scans yet',
-      subtitle: 'Tap the button below to start scanning',
+      title: 'gallery.noScansTitle'.tr(),
+      subtitle: 'gallery.noScansSubtitle'.tr(),
       verticalOffset: -40,
     );
   }
@@ -437,8 +447,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
   Widget _buildNoSearchResults() {
     return EmptyState(
       icon: LucideIcons.searchX,
-      title: 'No results found',
-      subtitle: 'Try a different search term',
+      title: 'gallery.noResultsTitle'.tr(),
+      subtitle: 'gallery.noResultsSubtitle'.tr(),
       verticalOffset: -40,
     );
   }
@@ -520,11 +530,11 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
     TextInputDialog.show(
       context: context,
-      title: 'Create New Document',
-      description: 'Enter a name for the new document',
+      title: 'gallery.createNewDocument'.tr(),
+      description: 'gallery.createNewDocumentDesc'.tr(),
       initialValue: 'Scan ${DateTime.now().toString().substring(0, 10)}',
-      placeholder: 'Document name',
-      confirmText: 'Create',
+      placeholder: 'gallery.documentNamePlaceholder'.tr(),
+      confirmText: 'common.create'.tr(),
       onSave: (documentName) async {
         final newDocument = ScanDocument(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -540,7 +550,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
         await _saveDocuments();
 
         if (!mounted) return;
-        AppToast.show(context, 'Empty document created');
+        AppToast.show(context, 'gallery.emptyDocumentCreated'.tr());
       },
     );
   }
@@ -595,10 +605,10 @@ class _GalleryScreenState extends State<GalleryScreen> {
       }
     } on PlatformException catch (e) {
       if (!mounted) return;
-      AppToast.show(context, 'Scan failed: ${e.message}', isError: true);
+      AppToast.show(context, 'toast.scanFailed'.tr(args: [e.message ?? '']), isError: true);
     } catch (e) {
       if (!mounted) return;
-      AppToast.show(context, 'Scan failed: $e', isError: true);
+      AppToast.show(context, 'toast.scanFailed'.tr(args: [e.toString()]), isError: true);
     }
   }
 
@@ -645,9 +655,10 @@ class _GalleryScreenState extends State<GalleryScreen> {
   void _deleteDocument(ScanDocument document) {
     ConfirmDialog.show(
       context: context,
-      title: 'Delete Scan',
-      message: 'Delete "${document.name}"?',
-      confirmText: 'Delete',
+      title: 'dialogs.deleteScan'.tr(),
+      message: 'dialogs.deleteScanMessage'.tr(args: [document.name]),
+      cancelText: 'common.cancel'.tr(),
+      confirmText: 'common.delete'.tr(),
       isDestructive: true,
       onConfirm: () async {
         setState(() {
@@ -655,7 +666,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
         });
         await _saveDocuments();
         if (!mounted) return;
-        AppToast.show(context, 'Document deleted');
+        AppToast.show(context, 'gallery.documentDeleted'.tr());
       },
     );
   }
@@ -724,14 +735,14 @@ class _GalleryScreenState extends State<GalleryScreen> {
       });
       await _saveDocuments();
       if (!mounted) return;
-      AppToast.show(context, 'Scan updated successfully');
+      AppToast.show(context, 'gallery.scanUpdated'.tr());
     }
   }
 
   /// Export document to PDF
   Future<void> _exportToPdf(ScanDocument document) async {
     try {
-      AppToast.info(context, 'Generating PDF...');
+      AppToast.info(context, 'gallery.generatingPdf'.tr());
 
       // Generate PDF with quality setting
       final pdfFile = await PdfGenerator.generatePdf(
@@ -757,14 +768,14 @@ class _GalleryScreenState extends State<GalleryScreen> {
     } catch (e) {
       debugPrint('Error exporting PDF: $e');
       if (!mounted) return;
-      AppToast.show(context, 'Failed to export PDF', isError: true);
+      AppToast.show(context, 'toast.failedToExportPdf'.tr(), isError: true);
     }
   }
 
   /// Save PDF to Downloads folder using MediaStore (no permission required)
   Future<void> _savePdfLocally(ScanDocument document) async {
     try {
-      AppToast.info(context, 'Generating PDF...');
+      AppToast.info(context, 'gallery.generatingPdf'.tr());
 
       // Generate PDF with quality setting
       final pdfFile = await PdfGenerator.generatePdf(
@@ -804,14 +815,14 @@ class _GalleryScreenState extends State<GalleryScreen> {
     } catch (e) {
       debugPrint('Error saving PDF: $e');
       if (!mounted) return;
-      AppToast.show(context, 'Failed to save PDF', isError: true);
+      AppToast.show(context, 'toast.failedToSavePdf'.tr(), isError: true);
     }
   }
 
   /// Save images as ZIP to Downloads folder
   Future<void> _saveZipDocument(ScanDocument document) async {
     if (!mounted) return;
-    AppToast.info(context, 'Preparing ZIP...');
+    AppToast.info(context, 'gallery.preparingZip'.tr());
 
     try {
       // Create archive in separate isolate
@@ -819,7 +830,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
           await compute(_createZipArchiveGallery, document.imagePaths);
       if (zipData == null) {
         if (!mounted) return;
-        AppToast.show(context, 'Failed to create ZIP', isError: true);
+        AppToast.show(context, 'toast.failedToCreateZip'.tr(), isError: true);
         return;
       }
 
@@ -853,7 +864,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
     } catch (e) {
       debugPrint('Error saving ZIP: $e');
       if (!mounted) return;
-      AppToast.show(context, 'Failed to save ZIP', isError: true);
+      AppToast.show(context, 'toast.failedToSaveZip'.tr(), isError: true);
     }
   }
 
@@ -863,10 +874,10 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
     ConfirmDialog.show(
       context: context,
-      title: 'Download Images',
-      message:
-          'Download $imageCount ${imageCount == 1 ? 'image' : 'images'} to gallery?',
-      confirmText: 'Download',
+      title: 'viewer.downloadImagesTitle'.tr(),
+      message: 'viewer.downloadImagesMessage'.tr(args: [imageCount.toString()]),
+      cancelText: 'common.cancel'.tr(),
+      confirmText: 'common.download'.tr(),
       onConfirm: () async {
         try {
           int savedCount = 0;
@@ -883,12 +894,12 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
           if (!mounted) return;
           if (savedCount == 0) {
-            AppToast.show(context, 'Failed to save images', isError: true);
+            AppToast.show(context, 'toast.failedToSaveImages'.tr(), isError: true);
           }
         } catch (e) {
           debugPrint('Error saving images: $e');
           if (!mounted) return;
-          AppToast.show(context, 'Failed to save images', isError: true);
+          AppToast.show(context, 'toast.failedToSaveImages'.tr(), isError: true);
         }
       },
     );

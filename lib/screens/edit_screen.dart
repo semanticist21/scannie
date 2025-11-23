@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:reorderable_grid_view/reorderable_grid_view.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../utils/app_toast.dart';
 import '../models/scan_document.dart';
 import '../services/document_storage.dart';
@@ -79,7 +80,7 @@ class _EditScreenState extends State<EditScreen> {
     } catch (e) {
       debugPrint('Error adding scans: $e');
       if (mounted) {
-        AppToast.show(context, 'Failed to add scans', isError: true);
+        AppToast.show(context, 'toast.failedToAddScans'.tr(), isError: true);
       }
     } finally {
       if (mounted) {
@@ -109,7 +110,7 @@ class _EditScreenState extends State<EditScreen> {
     } catch (e) {
       debugPrint('❌ Error adding photos: $e');
       if (mounted) {
-        AppToast.show(context, 'Failed to add photos', isError: true);
+        AppToast.show(context, 'toast.failedToAddPhotos'.tr(), isError: true);
       }
     } finally {
       if (mounted) {
@@ -162,7 +163,7 @@ class _EditScreenState extends State<EditScreen> {
   void _saveScan() async {
     // Check if there are any images
     if (_imagePaths.isEmpty) {
-      AppToast.show(context, 'Please add at least one image to save',
+      AppToast.show(context, 'edit.addAtLeastOneImage'.tr(),
           isError: true);
       return;
     }
@@ -189,7 +190,7 @@ class _EditScreenState extends State<EditScreen> {
       }
 
       if (mounted) {
-        AppToast.show(context, 'Scan saved');
+        AppToast.show(context, 'edit.scanSaved'.tr());
       }
 
       navigator.pop(updatedDocument);
@@ -202,10 +203,10 @@ class _EditScreenState extends State<EditScreen> {
 
     TextInputDialog.show(
       context: context,
-      title: 'Save Scan',
-      description: 'Enter a name for this scan',
+      title: 'edit.saveScan'.tr(),
+      description: 'edit.saveScanDesc'.tr(),
       initialValue: defaultName,
-      placeholder: 'Document name',
+      placeholder: 'gallery.documentNamePlaceholder'.tr(),
       onSave: (documentName) async {
         // Create new scan document
         final newDocument = ScanDocument(
@@ -235,14 +236,15 @@ class _EditScreenState extends State<EditScreen> {
 
     final bool isNewScan = _existingDocumentId == null;
     final message = isNewScan
-        ? 'Are you sure you want to discard this scan? All images will be lost.'
-        : 'Are you sure you want to discard changes? Your changes will not be saved.';
+        ? 'edit.discardNewScan'.tr()
+        : 'edit.discardEditScan'.tr();
 
     final result = await ConfirmDialog.showAsync(
       context: context,
-      title: 'Discard Changes?',
+      title: 'edit.discardChangesTitle'.tr(),
       message: message,
-      confirmText: 'Discard',
+      cancelText: 'common.cancel'.tr(),
+      confirmText: 'common.discard'.tr(),
       isDestructive: true,
       dismissable: false,
     );
@@ -284,7 +286,7 @@ class _EditScreenState extends State<EditScreen> {
       },
       child: Scaffold(
         appBar: CustomAppBar(
-          title: 'Edit Scan (${_imagePaths.length})',
+          title: 'edit.title'.tr(namedArgs: {'count': _imagePaths.length.toString()}),
           leading: IconButton(
             icon: const Icon(LucideIcons.arrowLeft),
             onPressed: _handleBackPress, // Custom back handler
@@ -325,14 +327,14 @@ class _EditScreenState extends State<EditScreen> {
             ),
             const SizedBox(height: AppSpacing.md),
             Text(
-              'No images added yet',
+              'edit.noImagesTitle'.tr(),
               style: AppTextStyles.bodyMedium.copyWith(
                 color: AppColors.textSecondary,
               ),
             ),
             const SizedBox(height: AppSpacing.xs),
             Text(
-              'Tap "Add More" to start',
+              'edit.noImagesSubtitle'.tr(),
               style: AppTextStyles.caption.copyWith(
                 color: AppColors.textHint,
               ),

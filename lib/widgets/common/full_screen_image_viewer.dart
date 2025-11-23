@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../models/image_filter_type.dart';
 import '../../utils/app_toast.dart';
 import '../../theme/app_colors.dart';
@@ -282,7 +283,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
           await filteredImage.toByteData(format: ui.ImageByteFormat.png);
       if (byteData == null) {
         if (mounted) {
-          AppToast.show(context,'Failed to process image', isError: true);
+          AppToast.show(context, 'toast.failedToProcessImage'.tr(), isError: true);
         }
         return;
       }
@@ -301,7 +302,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
     } catch (e) {
       debugPrint('Error saving filtered image: $e');
       if (mounted) {
-        AppToast.show(context,'Failed to save image: $e', isError: true);
+        AppToast.show(context, 'toast.failedToSaveImage'.tr(namedArgs: {'error': e.toString()}), isError: true);
       }
     }
   }
@@ -313,7 +314,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
       final imageFile = File(imagePath);
 
       if (!imageFile.existsSync()) {
-        AppToast.show(context,'Image file not found', isError: true);
+        AppToast.show(context, 'toast.imageNotFound'.tr(), isError: true);
         return;
       }
 
@@ -326,9 +327,9 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
       final success = result['isSuccess'] == true;
       if (mounted) {
         if (success) {
-          AppToast.show(context,'Image saved to Photos');
+          AppToast.show(context, 'toast.imageSavedToPhotos'.tr());
         } else {
-          AppToast.show(context,'Failed to save image', isError: true);
+          AppToast.show(context, 'toast.failedToSaveImages'.tr(), isError: true);
         }
       }
 
@@ -336,7 +337,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
     } catch (e) {
       debugPrint('Error saving image: $e');
       if (mounted) {
-        AppToast.show(context,'Failed to save image: $e', isError: true);
+        AppToast.show(context, 'toast.failedToSaveImage'.tr(namedArgs: {'error': e.toString()}), isError: true);
       }
     }
   }
@@ -348,20 +349,19 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
       final imageFile = File(imagePath);
 
       if (!imageFile.existsSync()) {
-        AppToast.show(context,'Image file not found', isError: true);
+        AppToast.show(context, 'toast.imageNotFound'.tr(), isError: true);
         return;
       }
 
       await SharePlus.instance.share(
         ShareParams(
           files: [XFile(imagePath)],
-          text: 'Scanned image from Scannie',
         ),
       );
     } catch (e) {
       debugPrint('Error sharing image: $e');
       if (mounted) {
-        AppToast.show(context,'Failed to share image: $e', isError: true);
+        AppToast.show(context, 'toast.failedToShareImage'.tr(namedArgs: {'error': e.toString()}), isError: true);
       }
     }
   }
@@ -388,7 +388,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
               ),
               const SizedBox(height: AppSpacing.lg),
               Text(
-                'Image not found',
+                'imageViewer.imageNotFound'.tr(),
                 style: AppTextStyles.h2.copyWith(
                   color: AppColors.textSecondary,
                 ),
@@ -414,7 +414,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
               ),
               const SizedBox(height: AppSpacing.lg),
               Text(
-                'Failed to load image',
+                'imageViewer.failedToLoadImage'.tr(),
                 style: AppTextStyles.h2.copyWith(
                   color: AppColors.darkTextTertiary,
                 ),
@@ -552,7 +552,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                       ),
                       Expanded(
                         child: Text(
-                          'Page ${_currentPage + 1} of ${widget.imagePaths.length}',
+                          'viewer.pageOf'.tr(namedArgs: {'current': (_currentPage + 1).toString(), 'total': widget.imagePaths.length.toString()}),
                           style: AppTextStyles.bodyLarge.copyWith(
                             color: AppColors.darkTextPrimary,
                             fontWeight: FontWeight.w600,
@@ -564,13 +564,13 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                         icon: const Icon(LucideIcons.download,
                             color: AppColors.darkTextPrimary),
                         onPressed: _downloadCurrentImage,
-                        tooltip: 'Save to Photos',
+                        tooltip: 'imageViewer.saveToPhotos'.tr(),
                       ),
                       IconButton(
                         icon:
                             const Icon(LucideIcons.share2, color: AppColors.darkTextPrimary),
                         onPressed: _shareCurrentImage,
-                        tooltip: 'Share Image',
+                        tooltip: 'imageViewer.shareImage'.tr(),
                       ),
                     ],
                   ),
@@ -609,55 +609,55 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                             children: [
                               _buildFilterButton(
                                 ImageFilterType.original,
-                                'Original',
+                                'filters.original'.tr(),
                                 LucideIcons.image,
                               ),
                               const SizedBox(width: AppSpacing.sm),
                               _buildFilterButton(
                                 ImageFilterType.grayscale,
-                                'B&W',
+                                'filters.bw'.tr(),
                                 LucideIcons.contrast,
                               ),
                               const SizedBox(width: AppSpacing.sm),
                               _buildFilterButton(
                                 ImageFilterType.highContrast,
-                                'Contrast',
+                                'filters.contrast'.tr(),
                                 LucideIcons.sunDim,
                               ),
                               const SizedBox(width: AppSpacing.sm),
                               _buildFilterButton(
                                 ImageFilterType.brighten,
-                                'Brighten',
+                                'filters.brighten'.tr(),
                                 LucideIcons.sun,
                               ),
                               const SizedBox(width: AppSpacing.sm),
                               _buildFilterButton(
                                 ImageFilterType.document,
-                                'Document',
+                                'filters.document'.tr(),
                                 LucideIcons.fileText,
                               ),
                               const SizedBox(width: AppSpacing.sm),
                               _buildFilterButton(
                                 ImageFilterType.sepia,
-                                'Sepia',
+                                'filters.sepia'.tr(),
                                 LucideIcons.palette,
                               ),
                               const SizedBox(width: AppSpacing.sm),
                               _buildFilterButton(
                                 ImageFilterType.invert,
-                                'Invert',
+                                'filters.invert'.tr(),
                                 LucideIcons.flipVertical,
                               ),
                               const SizedBox(width: AppSpacing.sm),
                               _buildFilterButton(
                                 ImageFilterType.warm,
-                                'Warm',
+                                'filters.warm'.tr(),
                                 LucideIcons.flame,
                               ),
                               const SizedBox(width: AppSpacing.sm),
                               _buildFilterButton(
                                 ImageFilterType.cool,
-                                'Cool',
+                                'filters.cool'.tr(),
                                 LucideIcons.snowflake,
                               ),
                             ],
@@ -675,7 +675,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                             hoverBackgroundColor: Colors.grey.shade200,
                             pressedBackgroundColor: Colors.grey.shade300,
                             leading: const Icon(LucideIcons.check, size: 18),
-                            child: const Text('Save'),
+                            child: Text('common.save'.tr()),
                           ),
                         ),
                       ],

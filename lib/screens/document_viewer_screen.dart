@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:archive/archive.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../models/scan_document.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
@@ -173,13 +174,13 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
               onPressed: () {
                 setState(() => _isGridView = !_isGridView);
               },
-              tooltip: _isGridView ? 'List View' : 'Grid View',
+              tooltip: _isGridView ? 'viewer.listView'.tr() : 'viewer.gridView'.tr(),
             ),
           if (_imagePaths.isNotEmpty)
             IconButton(
               icon: const Icon(LucideIcons.download),
               onPressed: _showExportOptions,
-              tooltip: 'Export PDF',
+              tooltip: 'viewer.exportPdf'.tr(),
             ),
           IconButton(
             icon: const Icon(LucideIcons.ellipsisVertical),
@@ -237,7 +238,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
   Widget _buildLoadingState() {
     return Center(
       child: Text(
-        'Loading...',
+        'common.loading'.tr(),
         style: AppTextStyles.bodyMedium.copyWith(
           color: AppColors.textSecondary,
         ),
@@ -265,7 +266,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
               children: [
                 Icon(LucideIcons.images, size: 16),
                 const SizedBox(width: 8),
-                const Text('Pages'),
+                Text('common.pages'.tr()),
               ],
             ),
           ),
@@ -277,7 +278,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
               children: [
                 Icon(LucideIcons.fileText, size: 16),
                 const SizedBox(width: 8),
-                const Text('PDF'),
+                Text('common.pdf'.tr()),
               ],
             ),
           ),
@@ -302,7 +303,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
             ),
             const SizedBox(height: AppSpacing.lg),
             Text(
-              'Generating PDF preview...',
+              'viewer.generatingPdfPreview'.tr(),
               style: AppTextStyles.bodyMedium.copyWith(
                 color: AppColors.textSecondary,
               ),
@@ -328,7 +329,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
             ),
             const SizedBox(height: AppSpacing.lg),
             Text(
-              'Preparing PDF...',
+              'viewer.preparingPdf'.tr(),
               style: AppTextStyles.bodyMedium.copyWith(
                 color: AppColors.textSecondary,
               ),
@@ -444,10 +445,10 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
   }
 
   Widget _buildEmptyState() {
-    return const EmptyState(
+    return EmptyState(
       icon: LucideIcons.sparkles,
-      title: 'No pages',
-      subtitle: 'This document is empty.\nTry editing to add new scans.',
+      title: 'viewer.noPagesTitle'.tr(),
+      subtitle: 'viewer.noPagesSubtitle'.tr(),
     );
   }
 
@@ -514,7 +515,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
     final items = <ContextMenuItem>[
       ContextMenuItem(
         icon: LucideIcons.download,
-        label: 'Download PDF',
+        label: 'viewer.downloadPdf'.tr(),
         onTap: () {
           Navigator.pop(context);
           _savePdfLocally();
@@ -522,7 +523,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
       ),
       ContextMenuItem(
         icon: LucideIcons.share2,
-        label: 'Share PDF',
+        label: 'viewer.sharePdf'.tr(),
         onTap: () {
           Navigator.pop(context);
           _exportToPdf();
@@ -530,7 +531,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
       ),
       ContextMenuItem(
         icon: LucideIcons.folderArchive,
-        label: 'Download as ZIP',
+        label: 'viewer.downloadAsZip'.tr(),
         onTap: () {
           Navigator.pop(context);
           _saveAsZip();
@@ -538,7 +539,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
       ),
       ContextMenuItem(
         icon: LucideIcons.images,
-        label: 'Download Images',
+        label: 'viewer.downloadImages'.tr(),
         onTap: () {
           Navigator.pop(context);
           _saveImages();
@@ -548,7 +549,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
 
     ContextMenuSheet.show(
       context: context,
-      title: 'Export',
+      title: 'common.export'.tr(),
       items: items,
     );
   }
@@ -557,7 +558,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
     final items = <ContextMenuItem>[
       ContextMenuItem(
         icon: LucideIcons.filePen,
-        label: 'Edit Scan',
+        label: 'viewer.editScan'.tr(),
         onTap: () {
           Navigator.pop(context);
           _editScan();
@@ -565,7 +566,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
       ),
       ContextMenuItem(
         icon: LucideIcons.pencil,
-        label: 'Rename',
+        label: 'common.rename'.tr(),
         onTap: () {
           Navigator.pop(context);
           _renameDocument();
@@ -573,7 +574,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
       ),
       ContextMenuItem(
         icon: LucideIcons.settings2,
-        label: 'PDF Quality (${_document.pdfQuality.displayName})',
+        label: 'viewer.pdfQuality'.tr(namedArgs: {'quality': 'pdfQuality.${_document.pdfQuality.name}'.tr()}),
         onTap: () {
           Navigator.pop(context);
           _showQualitySelector();
@@ -581,7 +582,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
       ),
       ContextMenuItem(
         icon: LucideIcons.trash2,
-        label: 'Delete',
+        label: 'common.delete'.tr(),
         color: AppColors.error,
         onTap: () {
           Navigator.pop(context);
@@ -679,9 +680,10 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
   void _confirmDelete() {
     ConfirmDialog.show(
       context: context,
-      title: 'Delete Document?',
-      message: 'This will permanently delete "${_document.name}" and all its pages. This action cannot be undone.',
-      confirmText: 'Delete',
+      title: 'viewer.deleteDocument'.tr(),
+      message: 'viewer.deleteDocumentMessage'.tr(namedArgs: {'name': _document.name}),
+      cancelText: 'common.cancel'.tr(),
+      confirmText: 'common.delete'.tr(),
       isDestructive: true,
       onConfirm: () async {
         await _deleteDocument();
@@ -697,21 +699,21 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
 
       if (!mounted) return;
 
-      AppToast.show(context,'Document deleted');
+      AppToast.show(context, 'gallery.documentDeleted'.tr());
 
       // Return to gallery with delete flag
       final navigator = Navigator.of(context);
       navigator.pop({'deleted': true, 'documentId': _document.id});
     } catch (e) {
       debugPrint('Error deleting document: $e');
-      AppToast.show(context,'Failed to delete document', isError: true);
+      AppToast.show(context, 'toast.failedToDeleteDocument'.tr(), isError: true);
     }
   }
 
   /// Export document to PDF and share
   Future<void> _exportToPdf() async {
     try {
-      AppToast.info(context, 'Preparing PDF...');
+      AppToast.info(context, 'viewer.preparingPdf'.tr());
 
       // Generate PDF with quality setting
       final pdfFile = await PdfGenerator.generatePdf(
@@ -737,14 +739,14 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
     } catch (e) {
       debugPrint('Error exporting PDF: $e');
       if (!mounted) return;
-      AppToast.show(context,'Failed to export PDF', isError: true);
+      AppToast.show(context, 'toast.failedToExportPdf'.tr(), isError: true);
     }
   }
 
   /// Save PDF to Downloads folder using MediaStore
   Future<void> _savePdfLocally() async {
     if (!mounted) return;
-    AppToast.info(context, 'Preparing PDF...');
+    AppToast.info(context, 'viewer.preparingPdf'.tr());
 
     try {
       // Generate PDF with quality setting
@@ -785,21 +787,21 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
     } catch (e) {
       debugPrint('Error saving PDF: $e');
       if (!mounted) return;
-      AppToast.show(context,'Failed to save PDF', isError: true);
+      AppToast.show(context, 'toast.failedToSavePdf'.tr(), isError: true);
     }
   }
 
   /// Save images as ZIP to Downloads folder
   Future<void> _saveAsZip() async {
     if (!mounted) return;
-    AppToast.info(context, 'Preparing ZIP...');
+    AppToast.info(context, 'gallery.preparingZip'.tr());
 
     try {
       // Create archive in separate isolate
       final zipData = await compute(_createZipArchive, _imagePaths);
       if (zipData == null) {
         if (!mounted) return;
-        AppToast.show(context, 'Failed to create ZIP', isError: true);
+        AppToast.show(context, 'toast.failedToCreateZip'.tr(), isError: true);
         return;
       }
 
@@ -833,7 +835,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
     } catch (e) {
       debugPrint('Error saving ZIP: $e');
       if (!mounted) return;
-      AppToast.show(context, 'Failed to save ZIP', isError: true);
+      AppToast.show(context, 'toast.failedToSaveZip'.tr(), isError: true);
     }
   }
 
@@ -843,9 +845,10 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
 
     ConfirmDialog.show(
       context: context,
-      title: 'Download Images',
-      message: 'Download $imageCount ${imageCount == 1 ? 'image' : 'images'} to gallery?',
-      confirmText: 'Download',
+      title: 'viewer.downloadImagesTitle'.tr(),
+      message: 'viewer.downloadImagesMessage'.tr(namedArgs: {'count': imageCount.toString()}),
+      cancelText: 'common.cancel'.tr(),
+      confirmText: 'common.download'.tr(),
       onConfirm: () async {
         try {
           int savedCount = 0;
@@ -862,12 +865,12 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
 
           if (!mounted) return;
           if (savedCount == 0) {
-            AppToast.show(context, 'Failed to save images', isError: true);
+            AppToast.show(context, 'toast.failedToSaveImages'.tr(), isError: true);
           }
         } catch (e) {
           debugPrint('Error saving images: $e');
           if (!mounted) return;
-          AppToast.show(context, 'Failed to save images', isError: true);
+          AppToast.show(context, 'toast.failedToSaveImages'.tr(), isError: true);
         }
       },
     );

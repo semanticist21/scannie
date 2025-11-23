@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ndialog/ndialog.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
@@ -39,7 +40,7 @@ class PremiumDialog {
                   children: [
                     // Title
                     Text(
-                      isPremium ? 'Premium Active' : 'Get Premium',
+                      isPremium ? 'premium.titleActive'.tr() : 'premium.title'.tr(),
                       style: AppTextStyles.h3,
                     ),
                     const SizedBox(height: AppSpacing.md),
@@ -47,8 +48,8 @@ class PremiumDialog {
                     // Description
                     Text(
                       isPremium
-                          ? 'You have unlimited access to all features.\nThank you for your support!'
-                          : 'Scan and create PDFs without limits.\nUnlimited access for just one purchase.',
+                          ? 'premium.descriptionActive'.tr()
+                          : 'premium.description'.tr(),
                       style: AppTextStyles.bodyMedium.copyWith(
                         color: AppColors.textSecondary,
                       ),
@@ -80,7 +81,7 @@ class PremiumDialog {
                             ),
                             const SizedBox(width: AppSpacing.sm),
                             Text(
-                              'Premium Unlocked',
+                              'premium.unlocked'.tr(),
                               style: AppTextStyles.bodyMedium.copyWith(
                                 color: AppColors.primary,
                                 fontWeight: FontWeight.w600,
@@ -96,7 +97,7 @@ class PremiumDialog {
                         width: double.infinity,
                         child: ShadButton.outline(
                           onPressed: () => Navigator.of(context).pop(),
-                          child: const Text('Close'),
+                          child: Text('common.close'.tr()),
                         ),
                       ),
                     ] else ...[
@@ -108,7 +109,7 @@ class PremiumDialog {
                             Navigator.of(context).pop();
                             onPurchase?.call();
                           },
-                          child: const Text('Unlock - \$1'),
+                          child: Text('premium.unlock'.tr()),
                         ),
                       ),
                       const SizedBox(height: AppSpacing.sm),
@@ -118,7 +119,7 @@ class PremiumDialog {
                         width: double.infinity,
                         child: ShadButton.outline(
                           onPressed: () => Navigator.of(context).pop(),
-                          child: const Text('Maybe Later'),
+                          child: Text('premium.maybeLater'.tr()),
                         ),
                       ),
                     ],

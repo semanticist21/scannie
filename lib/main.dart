@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'theme/app_theme.dart';
 import 'screens/gallery_screen.dart';
 import 'screens/edit_screen.dart';
 import 'screens/document_viewer_screen.dart';
 import 'models/scan_document.dart';
 
-void main() {
+void main() async {
   // Ensure Flutter bindings are initialized
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize easy_localization
+  await EasyLocalization.ensureInitialized();
 
   // Set system UI overlay style
   SystemChrome.setSystemUIOverlayStyle(
@@ -19,7 +23,17 @@ void main() {
     ),
   );
 
-  runApp(const ScannierApp());
+  runApp(
+    EasyLocalization(
+      supportedLocales: const [
+        Locale('en'),
+        Locale('ko'),
+      ],
+      path: 'assets/translations',
+      fallbackLocale: const Locale('en'),
+      child: const ScannierApp(),
+    ),
+  );
 }
 
 class ScannierApp extends StatelessWidget {
@@ -30,6 +44,11 @@ class ScannierApp extends StatelessWidget {
     return ShadApp(
       title: 'Scannie',
       debugShowCheckedModeBanner: false,
+
+      // Localization
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
 
       // Shadcn theme configuration
       theme: ShadThemeData(

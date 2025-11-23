@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ndialog/ndialog.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../utils/app_toast.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_theme.dart';
@@ -15,24 +16,24 @@ class RenameDialog {
   static const String forbiddenChars = r'/\:*?"<>|';
 
   /// Validate filename and return error message if invalid
-  static String? _validateName(String name) {
+  static String? _validateName(String name, BuildContext context) {
     if (name.isEmpty) {
-      return 'Name cannot be empty';
+      return 'validation.nameEmpty'.tr();
     }
 
     if (name.length > maxLength) {
-      return 'Name must be $maxLength characters or less';
+      return 'validation.nameTooLong'.tr(namedArgs: {'max': maxLength.toString()});
     }
 
     for (int i = 0; i < forbiddenChars.length; i++) {
       if (name.contains(forbiddenChars[i])) {
-        return 'Name cannot contain: $forbiddenChars';
+        return 'validation.nameForbiddenChars'.tr(namedArgs: {'chars': forbiddenChars});
       }
     }
 
     // Check for names that are just dots
     if (name == '.' || name == '..') {
-      return 'Invalid name';
+      return 'validation.nameInvalid'.tr();
     }
 
     return null; // Valid
@@ -71,12 +72,12 @@ class RenameDialog {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Rename Scan',
+                      'dialogs.renameScan'.tr(),
                       style: AppTextStyles.h3,
                     ),
                     const SizedBox(height: AppSpacing.xs),
                     Text(
-                      'Enter a new name for this document',
+                      'dialogs.renameScanDesc'.tr(),
                       style: AppTextStyles.bodyMedium.copyWith(
                         color: AppColors.textSecondary,
                       ),
@@ -84,7 +85,7 @@ class RenameDialog {
                     const SizedBox(height: AppSpacing.md),
                     ShadInput(
                       controller: controller,
-                      placeholder: const Text('Document name'),
+                      placeholder: Text('gallery.documentNamePlaceholder'.tr()),
                       autofocus: true,
                       maxLength: maxLength,
                       onChanged: (_) => setState(() {}),
@@ -106,15 +107,15 @@ class RenameDialog {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         ShadButton.outline(
-                          child: const Text('Cancel'),
+                          child: Text('common.cancel'.tr()),
                           onPressed: () => Navigator.of(context).pop(),
                         ),
                         const SizedBox(width: AppSpacing.sm),
                         ShadButton(
-                          child: const Text('Save'),
+                          child: Text('common.save'.tr()),
                           onPressed: () async {
                             final newName = controller.text.trim();
-                            final error = _validateName(newName);
+                            final error = _validateName(newName, context);
                             if (error != null) {
                               AppToast.show(context, error, isError: true);
                               return;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ndialog/ndialog.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../utils/app_toast.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_theme.dart';
@@ -15,24 +16,24 @@ class TextInputDialog {
   static const String forbiddenChars = r'/\:*?"<>|';
 
   /// Validate filename and return error message if invalid
-  static String? _validateName(String name) {
+  static String? _validateName(String name, BuildContext context) {
     if (name.isEmpty) {
-      return 'Name cannot be empty';
+      return 'validation.nameEmpty'.tr();
     }
 
     if (name.length > maxLength) {
-      return 'Name must be $maxLength characters or less';
+      return 'validation.nameTooLong'.tr(namedArgs: {'max': maxLength.toString()});
     }
 
     for (int i = 0; i < forbiddenChars.length; i++) {
       if (name.contains(forbiddenChars[i])) {
-        return 'Name cannot contain: $forbiddenChars';
+        return 'validation.nameForbiddenChars'.tr(namedArgs: {'chars': forbiddenChars});
       }
     }
 
     // Check for names that are just dots
     if (name == '.' || name == '..') {
-      return 'Invalid name';
+      return 'validation.nameInvalid'.tr();
     }
 
     return null; // Valid
@@ -119,7 +120,7 @@ class TextInputDialog {
                           child: Text(confirmText),
                           onPressed: () async {
                             final value = controller.text.trim();
-                            final error = _validateName(value);
+                            final error = _validateName(value, context);
                             if (error != null) {
                               AppToast.show(context, error, isError: true);
                               return;

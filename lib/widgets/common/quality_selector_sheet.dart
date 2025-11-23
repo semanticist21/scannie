@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../models/scan_document.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_theme.dart';
@@ -70,7 +71,7 @@ class QualitySelectorSheet extends StatelessWidget {
               AppSpacing.sm,
             ),
             child: Text(
-              'PDF Quality',
+              'pdfQuality.title'.tr(),
               style: AppTextStyles.bodyMedium.copyWith(
                 fontWeight: FontWeight.w600,
               ),
@@ -108,7 +109,7 @@ class QualitySelectorSheet extends StatelessWidget {
                         const SizedBox(width: AppSpacing.md),
                         Expanded(
                           child: Text(
-                            quality.displayName,
+                            'pdfQuality.${quality.name}'.tr(),
                             style: AppTextStyles.bodyMedium.copyWith(
                               fontWeight: isSelected
                                   ? FontWeight.w600
