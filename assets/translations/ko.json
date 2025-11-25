@@ -76,9 +76,9 @@
   },
   "settings": {
     "title": "설정",
-    "premium": "프리미엄",
-    "premiumActive": "프리미엄 사용 중",
-    "getPremium": "프리미엄 구매",
+    "premium": "광고 제거",
+    "premiumActive": "광고 제거됨",
+    "getPremium": "광고 제거",
     "language": "언어",
     "viewMode": "보기 방식",
     "list": "리스트",
@@ -91,12 +91,12 @@
     "pdfMargin": "여백"
   },
   "premium": {
-    "title": "프리미엄 구매",
-    "titleActive": "프리미엄 사용 중",
-    "descriptionActive": "모든 기능을 무제한으로 사용할 수 있어요.\n구매해주셔서 감사해요!",
-    "description": "무료 버전은 문서 1개까지만 저장돼요.\n더 많이 저장하려면 프리미엄을 이용해보세요.\n무료 버전으로 계속 하길 원하는 경우 기존 문서를 삭제해주세요.",
-    "unlocked": "프리미엄 잠금 해제",
-    "unlock": "구매하기 ($1)",
+    "title": "광고 제거",
+    "titleActive": "광고 제거됨",
+    "descriptionActive": "광고 없이 Scannie를 즐기고 계세요.\n구매해주셔서 감사해요!",
+    "description": "광고 없이 Scannie를 이용해보세요.\n한 번 구매로 모든 광고가 사라져요.",
+    "unlocked": "광고 제거됨",
+    "unlock": "광고 제거 ($1)",
     "maybeLater": "나중에"
   },
   "dialogs": {

@@ -76,9 +76,9 @@
   },
   "settings": {
     "title": "Settings",
-    "premium": "Premium",
-    "premiumActive": "Premium Active",
-    "getPremium": "Get Premium",
+    "premium": "Remove Ads",
+    "premiumActive": "Ads Removed",
+    "getPremium": "Remove Ads",
     "language": "Language",
     "viewMode": "View Mode",
     "list": "List",
@@ -91,12 +91,12 @@
     "pdfMargin": "Margin"
   },
   "premium": {
-    "title": "Get Premium",
-    "titleActive": "Premium Active",
-    "descriptionActive": "You have unlimited access to all features.\nThank you for your support!",
-    "description": "Free version allows saving only 1 document.\nUpgrade to Premium for unlimited storage.\nOr delete your existing document to add a new one.",
-    "unlocked": "Premium Unlocked",
-    "unlock": "Unlock ($1)",
+    "title": "Remove Ads",
+    "titleActive": "Ads Removed",
+    "descriptionActive": "You have an ad-free experience.\nThank you for your support!",
+    "description": "Enjoy Scannie without interruptions.\nRemove all ads with a one-time purchase.",
+    "unlocked": "Ads Removed",
+    "unlock": "Remove Ads ($1)",
     "maybeLater": "Maybe Later"
   },
   "dialogs": {

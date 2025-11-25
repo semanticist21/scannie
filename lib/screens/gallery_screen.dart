@@ -199,9 +199,10 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
     }
   }
 
-  /// Check if user can add more documents (premium or no documents yet)
+  /// Check if user can add more documents
+  /// Note: Document limit removed - ads shown instead for non-premium users
   bool _canAddDocument() {
-    return _isPremium || _documents.isEmpty;
+    return true; // No document limit - ads monetization instead
   }
 
   /// Load view mode preference from persistent storage

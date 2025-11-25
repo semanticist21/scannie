@@ -19,6 +19,7 @@ import '../widgets/common/image_tile.dart';
 import '../widgets/common/edit_bottom_actions.dart';
 import '../widgets/common/confirm_dialog.dart';
 import '../widgets/common/text_input_dialog.dart';
+import '../services/ad_service.dart';
 
 /// Edit screen for managing scanned images
 /// Features: Reorder, Delete, Add more images
@@ -36,6 +37,7 @@ class _EditScreenState extends State<EditScreen> {
   String? _existingDocumentName; // Preserve name when editing
   bool _isLoading = false;
   bool _hasInteracted = false; // Track if user made any changes
+  bool _wasEmptyOnStart = false; // Track if document was empty when editing started (for ad logic)
 
   @override
   void didChangeDependencies() {
@@ -55,6 +57,8 @@ class _EditScreenState extends State<EditScreen> {
         _imagePaths = List<String>.from(arguments.imagePaths);
         _existingDocumentId = arguments.id;
         _existingDocumentName = arguments.name;
+        // Track if document was empty (for showing ad when first images are added)
+        _wasEmptyOnStart = arguments.imagePaths.isEmpty;
       }
       debugPrint('📸 EditScreen loaded ${_imagePaths.length} images');
       if (_existingDocumentId != null) {
@@ -189,6 +193,22 @@ class _EditScreenState extends State<EditScreen> {
     });
   }
 
+  /// Check if ad should be shown on save
+  /// Ad is shown when:
+  /// 1. Saving a NEW scan (from Scan button)
+  /// 2. Saving an existing EMPTY document that now has images (from + button)
+  bool _shouldShowAdOnSave() {
+    // New scan from Scan button
+    if (_existingDocumentId == null) {
+      return true;
+    }
+    // Existing document that was empty and now has images
+    if (_wasEmptyOnStart && _imagePaths.isNotEmpty) {
+      return true;
+    }
+    return false;
+  }
+
   /// Save and return
   void _saveScan() async {
     // Check if there are any images
@@ -198,8 +218,16 @@ class _EditScreenState extends State<EditScreen> {
       return;
     }
 
+    // Capture navigator before async operations
     final navigator = Navigator.of(context);
     final bool isEditingExisting = _existingDocumentId != null;
+
+    // Show interstitial ad if applicable (before navigating away)
+    if (_shouldShowAdOnSave()) {
+      await AdService.instance.showInterstitialAd();
+    }
+
+    if (!mounted) return;
 
     // For existing documents, save directly without dialog
     if (isEditingExisting) {

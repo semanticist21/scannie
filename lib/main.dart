@@ -7,6 +7,7 @@ import 'screens/gallery_screen.dart';
 import 'screens/edit_screen.dart';
 import 'screens/document_viewer_screen.dart';
 import 'models/scan_document.dart';
+import 'services/ad_service.dart';
 
 // Global RouteObserver for detecting route changes
 final RouteObserver<ModalRoute<void>> routeObserver =
@@ -18,6 +19,9 @@ void main() async {
 
   // Initialize easy_localization
   await EasyLocalization.ensureInitialized();
+
+  // Initialize AdMob
+  await AdService.instance.initialize();
 
   // Set system UI overlay style
   SystemChrome.setSystemUIOverlayStyle(

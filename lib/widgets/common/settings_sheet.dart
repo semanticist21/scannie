@@ -221,7 +221,7 @@ class SettingsSheet extends StatelessWidget {
                     child: Row(
                       children: [
                         Icon(
-                          LucideIcons.sparkles,
+                          isPremium ? LucideIcons.circleOff : LucideIcons.tv,
                           size: 22,
                           color: isPremium
                               ? AppColors.primary

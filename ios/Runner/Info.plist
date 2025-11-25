@@ -53,5 +53,15 @@
 		<string>Scannie needs permission to save scanned documents to your photo library</string>
 		<key>UIStatusBarHidden</key>
 		<false/>
+		<!-- AdMob App ID (iOS) -->
+		<key>GADApplicationIdentifier</key>
+		<string>ca-app-pub-6737616702687889~9190996284</string>
+		<key>SKAdNetworkItems</key>
+		<array>
+			<dict>
+				<key>SKAdNetworkIdentifier</key>
+				<string>cstr6suwn9.skadnetwork</string>
+			</dict>
+		</array>
 	</dict>
 </plist>
