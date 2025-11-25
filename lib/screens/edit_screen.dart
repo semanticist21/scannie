@@ -221,16 +221,18 @@ class _EditScreenState extends State<EditScreen> {
     // Capture navigator before async operations
     final navigator = Navigator.of(context);
     final bool isEditingExisting = _existingDocumentId != null;
-
-    // Show interstitial ad if applicable (before navigating away)
-    if (_shouldShowAdOnSave()) {
-      await AdService.instance.showInterstitialAd();
-    }
+    final bool shouldShowAd = _shouldShowAdOnSave();
 
     if (!mounted) return;
 
     // For existing documents, save directly without dialog
     if (isEditingExisting) {
+      // Show ad for empty documents that now have images
+      if (shouldShowAd) {
+        await AdService.instance.showInterstitialAd();
+      }
+      if (!mounted) return;
+
       final updatedDocument = ScanDocument(
         id: _existingDocumentId!,
         name: _existingDocumentName!,
@@ -255,7 +257,7 @@ class _EditScreenState extends State<EditScreen> {
       return;
     }
 
-    // For new scans, show name input dialog
+    // For new scans, show name input dialog first
     final String defaultName =
         'Scan ${DateTime.now().toString().substring(0, 10)}';
 
@@ -266,6 +268,11 @@ class _EditScreenState extends State<EditScreen> {
       initialValue: defaultName,
       placeholder: 'gallery.documentNamePlaceholder'.tr(),
       onSave: (documentName) async {
+        // Show ad AFTER user confirms save with name
+        if (shouldShowAd) {
+          await AdService.instance.showInterstitialAd();
+        }
+
         // Get default PDF settings
         final pdfSettings = await PdfSettingsService.getInstance();
 

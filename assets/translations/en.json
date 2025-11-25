@@ -96,7 +96,7 @@
     "descriptionActive": "You have an ad-free experience.\nThank you for your support!",
     "description": "Enjoy Scannie without interruptions.\nRemove all ads with a one-time purchase.",
     "unlocked": "Ads Removed",
-    "unlock": "Remove Ads ($1)",
+    "unlock": "Remove Ads ($2)",
     "maybeLater": "Maybe Later"
   },
   "dialogs": {

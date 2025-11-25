@@ -197,7 +197,7 @@ class SettingsSheet extends StatelessWidget {
             ),
             const Divider(height: 1, color: AppColors.border),
 
-          // Premium section
+          // Premium section (광고제거)
           Padding(
             padding: const EdgeInsets.all(AppSpacing.lg),
             child: Column(
@@ -221,7 +221,7 @@ class SettingsSheet extends StatelessWidget {
                     child: Row(
                       children: [
                         Icon(
-                          isPremium ? LucideIcons.circleOff : LucideIcons.tv,
+                          LucideIcons.sparkles,
                           size: 22,
                           color: isPremium
                               ? AppColors.primary
@@ -250,66 +250,7 @@ class SettingsSheet extends StatelessWidget {
           ),
           const Divider(height: 1, color: AppColors.border),
 
-          // Language section
-          Padding(
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'settings.language'.tr(),
-                  style: AppTextStyles.caption.copyWith(
-                    color: AppColors.textSecondary,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.sm),
-                // Language select
-                SizedBox(
-                  width: 160,
-                  child: ShadSelect<AppLanguage>(
-                    initialValue: currentLanguage,
-                    onChanged: (value) {
-                      if (value != null) {
-                        onLanguageChanged(value);
-                      }
-                    },
-                    selectedOptionBuilder: (context, value) => Row(
-                      children: [
-                        const Icon(
-                          LucideIcons.globe,
-                          size: 16,
-                          color: AppColors.textSecondary,
-                        ),
-                        const SizedBox(width: AppSpacing.sm),
-                        Expanded(
-                          child: Text(
-                            value.displayName,
-                            style: AppTextStyles.bodyMedium,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-                    options: AppLanguage.values
-                        .map(
-                          (language) => ShadOption(
-                            value: language,
-                            child: Text(
-                              language.displayName,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        )
-                        .toList(),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const Divider(height: 1, color: AppColors.border),
-
-          // View Mode section
+          // View Mode section (보기방식)
           Padding(
             padding: const EdgeInsets.all(AppSpacing.lg),
             child: Column(
@@ -519,6 +460,65 @@ class SettingsSheet extends StatelessWidget {
                               ))
                           .toList(),
                     ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Divider(height: 1, color: AppColors.border),
+
+          // Language section (언어 설정)
+          Padding(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'settings.language'.tr(),
+                  style: AppTextStyles.caption.copyWith(
+                    color: AppColors.textSecondary,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                // Language select
+                SizedBox(
+                  width: 160,
+                  child: ShadSelect<AppLanguage>(
+                    initialValue: currentLanguage,
+                    onChanged: (value) {
+                      if (value != null) {
+                        onLanguageChanged(value);
+                      }
+                    },
+                    selectedOptionBuilder: (context, value) => Row(
+                      children: [
+                        const Icon(
+                          LucideIcons.globe,
+                          size: 16,
+                          color: AppColors.textSecondary,
+                        ),
+                        const SizedBox(width: AppSpacing.sm),
+                        Expanded(
+                          child: Text(
+                            value.displayName,
+                            style: AppTextStyles.bodyMedium,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                    options: AppLanguage.values
+                        .map(
+                          (language) => ShadOption(
+                            value: language,
+                            child: Text(
+                              language.displayName,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        )
+                        .toList(),
                   ),
                 ),
               ],

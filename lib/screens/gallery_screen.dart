@@ -846,6 +846,7 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
     );
 
     // If user saved changes, update the document
+    // Note: Toast is already shown by EditScreen, no need to show here
     if (result != null && result is ScanDocument && mounted) {
       setState(() {
         final index = _documents.indexWhere((d) => d.id == document.id);
@@ -855,8 +856,6 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
         }
       });
       await _saveDocuments();
-      if (!mounted) return;
-      AppToast.show(context, 'gallery.scanUpdated'.tr());
     }
   }
 

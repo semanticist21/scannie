@@ -96,7 +96,7 @@
     "descriptionActive": "광고 없이 Scannie를 즐기고 계세요.\n구매해주셔서 감사해요!",
     "description": "광고 없이 Scannie를 이용해보세요.\n한 번 구매로 모든 광고가 사라져요.",
     "unlocked": "광고 제거됨",
-    "unlock": "광고 제거 ($1)",
+    "unlock": "광고 제거 ($2)",
     "maybeLater": "나중에"
   },
   "dialogs": {

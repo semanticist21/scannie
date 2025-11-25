@@ -20,6 +20,7 @@ Scannie는 문서 스캔 Flutter 모바일 애플리케이션입니다. 네이�
 - `share_plus` (파일 공유)
 - `google_fonts` (커스텀 폰트)
 - `easy_localization` v3.0.7 (다국어 지원)
+- `google_mobile_ads` v6.0.0 (AdMob 전면 광고)
 
 **현재 상태**:
 - ✅ 문서 스캔 (네이티브 필터/크롭/회전 포함)
@@ -31,6 +32,8 @@ Scannie는 문서 스캔 Flutter 모바일 애플리케이션입니다. 네이�
 - ✅ DocumentViewerScreen (페이지 갤러리, 전체 화면 뷰어)
 - ✅ **FullScreenImageViewer 필터** (Original, B&W, Contrast, Brighten, Document, Sepia, Invert, Warm, Cool)
 - ✅ **이미지 크롭/회전** (image_cropper - 네이티브 UI)
+- ✅ **광고 수익화** (AdMob 전면 광고 - 새 스캔 저장 시 표시)
+- ✅ **광고 제거 기능** ($2 일회성 구매)
 
 ## Quick Reference
 
@@ -363,7 +366,8 @@ lib/
 ├── services/         # 비즈니스 로직
 │   ├── document_storage.dart         # 문서 영구 저장/로드
 │   ├── pdf_generator.dart            # PDF 생성 (Isolate 지원)
-│   └── pdf_settings_service.dart     # PDF 기본 설정 관리
+│   ├── pdf_settings_service.dart     # PDF 기본 설정 관리
+│   └── ad_service.dart               # AdMob 광고 관리 (싱글톤)
 ├── theme/            # 디자인 시스템
 │   ├── app_theme.dart        # M3 ThemeData 구성
 │   ├── app_colors.dart       # 색상 팔레트
@@ -1200,6 +1204,77 @@ git push
 - `refactor:` 리팩토링
 - `docs:` 문서 수정
 - `style:` 코드 포맷팅
+
+## AdMob 광고 통합
+
+### 개요
+
+앱은 AdMob 전면 광고를 사용하여 수익화합니다. 사용자는 $2 일회성 구매로 광고를 제거할 수 있습니다.
+
+### 광고 표시 조건
+
+전면 광고는 다음 경우에만 표시됩니다:
+1. **새 스캔 저장 시**: 이름 입력 다이얼로그에서 Save 버튼 누른 후 광고 표시
+2. **빈 문서에 이미지 추가 후 저장 시**: 저장 버튼 누른 후 광고 표시
+
+**중요**: 광고는 반드시 사용자가 저장 확정한 후에 표시해야 함 (이름 입력 전 X)
+
+**광고가 표시되지 않는 경우**:
+- 광고 제거 구매한 프리미엄 사용자
+- 기존 문서 편집 (이미지가 있던 문서 수정)
+- PDF 내보내기/공유
+
+### AdService 싱글톤
+
+```dart
+import 'services/ad_service.dart';
+
+// 앱 시작 시 초기화 (main.dart)
+await AdService.instance.initialize();
+
+// 광고 표시 (프리미엄 상태 자동 확인)
+await AdService.instance.showInterstitialAd();
+```
+
+### 광고 단위 ID
+
+| 플랫폼 | 앱 ID | 광고 단위 ID |
+|--------|-------|-------------|
+| Android | `ca-app-pub-6737616702687889~6959584615` | `ca-app-pub-6737616702687889/4385392169` |
+| iOS | `ca-app-pub-6737616702687889~9190996284` | `ca-app-pub-6737616702687889/3204882872` |
+
+**테스트 광고**: 디버그 빌드에서는 자동으로 테스트 광고 ID 사용
+
+### 플랫폼 설정
+
+**Android** (`android/app/src/main/AndroidManifest.xml`):
+```xml
+<meta-data
+    android:name="com.google.android.gms.ads.APPLICATION_ID"
+    android:value="ca-app-pub-6737616702687889~6959584615"/>
+```
+
+**iOS** (`ios/Runner/Info.plist`):
+```xml
+<key>GADApplicationIdentifier</key>
+<string>ca-app-pub-6737616702687889~9190996284</string>
+<key>SKAdNetworkItems</key>
+<array>
+    <dict>
+        <key>SKAdNetworkIdentifier</key>
+        <string>cstr6suwn9.skadnetwork</string>
+    </dict>
+</array>
+```
+
+### 프리미엄 상태
+
+`SharedPreferences`의 `isPremium` 키로 광고 제거 상태 관리:
+
+```dart
+final prefs = await SharedPreferences.getInstance();
+final isPremium = prefs.getBool('isPremium') ?? false;
+```
 
 ## 앱 아이콘 생성
 
