@@ -10,15 +10,14 @@ import '../utils/app_toast.dart';
 import '../models/scan_document.dart';
 import '../services/document_storage.dart';
 import '../services/pdf_settings_service.dart';
-import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
-import '../theme/app_text_styles.dart';
 import '../widgets/common/custom_app_bar.dart';
 import '../widgets/common/full_screen_image_viewer.dart';
 import '../widgets/common/image_tile.dart';
 import '../widgets/common/edit_bottom_actions.dart';
 import '../widgets/common/confirm_dialog.dart';
 import '../widgets/common/text_input_dialog.dart';
+import '../widgets/common/empty_state.dart';
 import '../services/ad_service.dart';
 
 /// Edit screen for managing scanned images
@@ -404,31 +403,10 @@ class _EditScreenState extends State<EditScreen> {
   Widget _buildReorderableGrid() {
     // Show empty state if no images
     if (_imagePaths.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              LucideIcons.imageOff,
-              size: 64,
-              color: AppColors.textHint.withValues(alpha: 0.5),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            Text(
-              'edit.noImagesTitle'.tr(),
-              style: AppTextStyles.bodyMedium.copyWith(
-                color: AppColors.textSecondary,
-              ),
-            ),
-            const SizedBox(height: AppSpacing.xs),
-            Text(
-              'edit.noImagesSubtitle'.tr(),
-              style: AppTextStyles.caption.copyWith(
-                color: AppColors.textHint,
-              ),
-            ),
-          ],
-        ),
+      return EmptyState(
+        icon: LucideIcons.sparkles,
+        title: 'edit.noImagesTitle'.tr(),
+        subtitle: 'edit.noImagesSubtitle'.tr(),
       );
     }
 
