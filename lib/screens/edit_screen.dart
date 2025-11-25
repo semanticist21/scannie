@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:cunning_document_scanner_plus/cunning_document_scanner_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
-import 'package:reorderable_grid_view/reorderable_grid_view.dart';
+import 'package:flutter_reorderable_grid_view/widgets/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../utils/app_toast.dart';
@@ -39,6 +39,10 @@ class _EditScreenState extends State<EditScreen> {
   bool _hasInteracted = false; // Track if user made any changes
   bool _wasEmptyOnStart = false; // Track if document was empty when editing started (for ad logic)
 
+  // For ReorderableBuilder
+  final _scrollController = ScrollController();
+  final _gridViewKey = GlobalKey();
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -65,6 +69,12 @@ class _EditScreenState extends State<EditScreen> {
         debugPrint('✏️ Editing existing scan: $_existingDocumentName');
       }
     }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   /// Add more scans using document scanner
@@ -182,15 +192,6 @@ class _EditScreenState extends State<EditScreen> {
       }
     }
     _tempFilePaths.clear();
-  }
-
-  /// Reorder images
-  void _onReorder(int oldIndex, int newIndex) {
-    setState(() {
-      final item = _imagePaths.removeAt(oldIndex);
-      _imagePaths.insert(newIndex, item);
-      _hasInteracted = true;
-    });
   }
 
   /// Check if ad should be shown on save
@@ -431,24 +432,41 @@ class _EditScreenState extends State<EditScreen> {
       );
     }
 
-    return ReorderableGridView.count(
-      crossAxisCount: 2,
-      crossAxisSpacing: AppSpacing.md,
-      mainAxisSpacing: AppSpacing.md,
-      childAspectRatio: 210 / 297, // A4 ratio
-      padding: const EdgeInsets.all(AppSpacing.md),
-      onReorder: _onReorder,
-      children: _imagePaths.asMap().entries.map((entry) {
-        final index = entry.key;
-        final imagePath = entry.value;
-        return ImageTile(
-          key: ValueKey(imagePath),
-          index: index,
-          imagePath: imagePath,
-          onTap: () => _viewImage(imagePath, index),
-          onDelete: () => _deleteImage(index),
+    final generatedChildren = _imagePaths.asMap().entries.map((entry) {
+      final index = entry.key;
+      final imagePath = entry.value;
+      return ImageTile(
+        key: ValueKey(imagePath),
+        index: index,
+        imagePath: imagePath,
+        onTap: () => _viewImage(imagePath, index),
+        onDelete: () => _deleteImage(index),
+      );
+    }).toList();
+
+    return ReorderableBuilder(
+      scrollController: _scrollController,
+      onReorder: (ReorderedListFunction reorderedListFunction) {
+        setState(() {
+          _imagePaths = reorderedListFunction(_imagePaths) as List<String>;
+          _hasInteracted = true;
+        });
+      },
+      children: generatedChildren,
+      builder: (children) {
+        return GridView(
+          key: _gridViewKey,
+          controller: _scrollController,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: AppSpacing.md,
+            mainAxisSpacing: AppSpacing.md,
+            childAspectRatio: 210 / 297, // A4 ratio
+          ),
+          padding: const EdgeInsets.all(AppSpacing.md),
+          children: children,
         );
-      }).toList(),
+      },
     );
   }
 }
