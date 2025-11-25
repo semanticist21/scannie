@@ -10,7 +10,7 @@ Scannie는 문서 스캔 Flutter 모바일 애플리케이션입니다. 네이�
 - Flutter 3.39.0-0.1.pre (beta), Dart 3.11.0, Material Design 3
 - `cunning_document_scanner_plus` v1.0.3 (네이티브 iOS/Android 스캐너 + 필터/크롭)
 - `shadcn_ui` (UI 컴포넌트 - ShadButton, ShadBadge, LucideIcons)
-- `reorderable_grid_view` v2.2.8 (드래그 앤 드롭 순서 변경)
+- `flutter_reorderable_grid_view` v5.4.0 (드래그 앤 드롭 순서 변경 + 가상화)
 - `pdf` + `printing` (PDF 생성/공유 - Isolate 지원)
 - `flutter_pdfview` v1.3.2 (PDF 미리보기)
 - `flutter_image_compress` (PDF 품질별 이미지 압축)
@@ -602,10 +602,11 @@ EditScreen은 스캔된 이미지를 관리하는 화면입니다. **필터/크�
    - 팬/드래그로 확대된 이미지 이동
    - AppBar에 페이지 번호 표시 (Page 2 / 5)
 
-2. **드래그 앤 드롭 순서 변경** (`reorderable_grid_view`)
+2. **드래그 앤 드롭 순서 변경** (`flutter_reorderable_grid_view`)
    - 2열 그리드 레이아웃 (A4 비율 210:297)
    - 드래그하여 이미지 순서 변경 (PDF 페이지 순서)
    - 각 카드에 페이지 번호 표시
+   - **가상화 지원**: 화면에 보이는 이미지만 렌더링 (메모리 효율적)
 
 3. **이미지 삭제**
    - 각 카드 우측 상단에 X 버튼
@@ -636,32 +637,53 @@ EditScreen은 스캔된 이미지를 관리하는 화면입니다. **필터/크�
 ### 코드 예시
 
 ```dart
-import 'package:reorderable_grid_view/reorderable_grid_view.dart';
+import 'package:flutter_reorderable_grid_view/widgets/widgets.dart';
+
+// State에 추가
+final _scrollController = ScrollController();
+final _gridViewKey = GlobalKey();
+
+@override
+void dispose() {
+  _scrollController.dispose();
+  super.dispose();
+}
 
 Widget _buildReorderableGrid() {
-  return ReorderableGridView.count(
-    crossAxisCount: 2,
-    crossAxisSpacing: AppSpacing.md,
-    mainAxisSpacing: AppSpacing.md,
-    childAspectRatio: 210 / 297, // A4 ratio
-    padding: const EdgeInsets.all(AppSpacing.md),
-    onReorder: (oldIndex, newIndex) {
+  final generatedChildren = _imagePaths.asMap().entries.map((entry) {
+    final index = entry.key;
+    final imagePath = entry.value;
+    return ImageTile(
+      key: ValueKey(imagePath),
+      index: index,
+      imagePath: imagePath,
+      onTap: () => _viewImage(imagePath, index),
+      onDelete: () => _deleteImage(index),
+    );
+  }).toList();
+
+  return ReorderableBuilder(
+    scrollController: _scrollController,
+    onReorder: (ReorderedListFunction reorderedListFunction) {
       setState(() {
-        final item = _imagePaths.removeAt(oldIndex);
-        _imagePaths.insert(newIndex, item);
+        _imagePaths = reorderedListFunction(_imagePaths) as List<String>;
       });
     },
-    children: _imagePaths.map((path) {
-      return Card(
-        key: ValueKey(path),
-        child: Stack(
-          children: [
-            Image.file(File(path)),
-            // 페이지 번호, 삭제 버튼 등
-          ],
+    children: generatedChildren,
+    builder: (children) {
+      return GridView(
+        key: _gridViewKey,
+        controller: _scrollController,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: AppSpacing.md,
+          mainAxisSpacing: AppSpacing.md,
+          childAspectRatio: 210 / 297, // A4 ratio
         ),
+        padding: const EdgeInsets.all(AppSpacing.md),
+        children: children,
       );
-    }).toList(),
+    },
   );
 }
 ```
