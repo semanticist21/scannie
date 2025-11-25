@@ -1,0 +1,143 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <defs>
+    <!-- Dark elegant gradient background -->
+    <linearGradient id="bgDark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1f1f1f"/>
+      <stop offset="50%" stop-color="#171717"/>
+      <stop offset="100%" stop-color="#0f0f0f"/>
+    </linearGradient>
+
+    <!-- Top highlight shine -->
+    <linearGradient id="topShine" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fff" stop-opacity="0.12"/>
+      <stop offset="30%" stop-color="#fff" stop-opacity="0.04"/>
+      <stop offset="60%" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- Paper highlight - clean white -->
+    <linearGradient id="paperHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="5%" stop-color="#fafafa"/>
+      <stop offset="100%" stop-color="#f5f5f5"/>
+    </linearGradient>
+
+    <!-- PDF badge - shadcn destructive red -->
+    <linearGradient id="pdfGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f87171"/>
+      <stop offset="50%" stop-color="#ef4444"/>
+      <stop offset="100%" stop-color="#dc2626"/>
+    </linearGradient>
+
+    <!-- PDF badge shine overlay -->
+    <linearGradient id="pdfShine" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fff" stop-opacity="0.35"/>
+      <stop offset="40%" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- Frame gradient - glass effect on dark -->
+    <linearGradient id="frameGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff" stop-opacity="0.9"/>
+      <stop offset="50%" stop-color="#e5e5e5" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#d4d4d4" stop-opacity="0.8"/>
+    </linearGradient>
+
+    <!-- Glass highlight for frame -->
+    <linearGradient id="glassShine" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff" stop-opacity="0.8"/>
+      <stop offset="30%" stop-color="#fff" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- Document shadow - darker for contrast -->
+    <filter id="docShadow" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+
+    <!-- Frame glass effect - blur + shadow -->
+    <filter id="frame3D" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1" result="blur"/>
+      <feOffset in="blur" dx="1" dy="2" result="offsetBlur"/>
+      <feFlood flood-color="#000000" flood-opacity="0.3" result="color"/>
+      <feComposite in="color" in2="offsetBlur" operator="in" result="shadow"/>
+      <feMerge>
+        <feMergeNode in="shadow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="256" height="256" rx="56" fill="url(#bgDark)"/>
+
+  <!-- Top shine overlay -->
+  <rect width="256" height="256" rx="56" fill="url(#topShine)"/>
+
+  <!-- Main content -->
+  <g transform="translate(128 128)">
+
+    <!-- Document stack -->
+    <g filter="url(#docShadow)" transform="scale(0.95)">
+      <!-- Back paper -->
+      <rect x="-38" y="-42" width="82" height="88" rx="5" fill="#e5e5e5" opacity="0.6" transform="rotate(-8)"/>
+
+      <!-- Middle paper -->
+      <rect x="-40" y="-46" width="84" height="92" rx="5" fill="#f0f0f0" opacity="0.8" transform="rotate(-4)"/>
+
+      <!-- Front paper with highlight -->
+      <g transform="translate(-42 -48)">
+        <!-- Main paper -->
+        <rect width="88" height="96" rx="5" fill="url(#paperHighlight)"/>
+
+        <!-- Subtle top edge highlight -->
+        <rect x="1" y="1" width="86" height="20" rx="4" fill="#fff" opacity="0.6"/>
+
+        <!-- Folded corner - neutral tones -->
+        <path d="M68 0 L88 0 L88 16 Q88 5 76 5 L68 5 Z" fill="#e5e5e5"/>
+        <path d="M68 0 L68 5 Q68 16 80 16 L88 16 Z" fill="#d4d4d4"/>
+        <!-- Corner shadow line -->
+        <path d="M68 5 Q68 16 80 16" stroke="#a3a3a3" stroke-width="0.5" fill="none"/>
+
+        <!-- Document lines - neutral gray tones -->
+        <rect x="10" y="22" width="48" height="4" rx="2" fill="#a3a3a3"/>
+        <rect x="10" y="32" width="62" height="4" rx="2" fill="#d4d4d4"/>
+        <rect x="10" y="42" width="52" height="4" rx="2" fill="#e5e5e5"/>
+
+        <!-- PDF badge with gradient and shine -->
+        <g transform="translate(40 52)">
+          <!-- Badge body -->
+          <rect width="44" height="40" rx="6" fill="url(#pdfGrad)"/>
+          <!-- Shine overlay -->
+          <rect width="44" height="20" rx="6" fill="url(#pdfShine)"/>
+          <!-- Text -->
+          <text x="22" y="18" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">PDF</text>
+          <!-- Download arrow -->
+          <path d="M22 22 L22 32 M17 28 L22 34 L27 28" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.95"/>
+        </g>
+      </g>
+    </g>
+
+    <!-- Scan Frame Corners - iOS glass effect -->
+    <g filter="url(#frame3D)">
+      <!-- Main frame with glass fill -->
+      <g fill="url(#frameGrad)">
+        <!-- Top left corner -->
+        <path d="M-70 -48 L-70 -64 Q-70 -70 -64 -70 L-48 -70 Q-44 -70 -44 -66 Q-44 -62 -48 -62 L-62 -62 L-62 -48 Q-62 -44 -66 -44 Q-70 -44 -70 -48 Z"/>
+        <!-- Top right corner -->
+        <path d="M70 -48 L70 -64 Q70 -70 64 -70 L48 -70 Q44 -70 44 -66 Q44 -62 48 -62 L62 -62 L62 -48 Q62 -44 66 -44 Q70 -44 70 -48 Z"/>
+        <!-- Bottom left corner -->
+        <path d="M-70 48 L-70 64 Q-70 70 -64 70 L-48 70 Q-44 70 -44 66 Q-44 62 -48 62 L-62 62 L-62 48 Q-62 44 -66 44 Q-70 44 -70 48 Z"/>
+        <!-- Bottom right corner -->
+        <path d="M70 48 L70 64 Q70 70 64 70 L48 70 Q44 70 44 66 Q44 62 48 62 L62 62 L62 48 Q62 44 66 44 Q70 44 70 48 Z"/>
+      </g>
+
+      <!-- Glass highlight border (inner edge) -->
+      <g fill="none" stroke="url(#glassShine)" stroke-width="1.5">
+        <path d="M-68 -48 L-68 -64 Q-68 -68 -64 -68 L-48 -68"/>
+        <path d="M68 -48 L68 -64 Q68 -68 64 -68 L48 -68"/>
+        <path d="M-68 48 L-68 64 Q-68 68 -64 68 L-48 68"/>
+        <path d="M68 48 L68 64 Q68 68 64 68 L48 68"/>
+      </g>
+    </g>
+
+  </g>
+</svg>
