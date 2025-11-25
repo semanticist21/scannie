@@ -677,14 +677,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.17.2"
-  ndialog:
-    dependency: "direct main"
-    description:
-      name: ndialog
-      sha256: "6d74b247b0d5d34d57df4489c5ef6fc4e508f03a786068998e6cad3980a154a1"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.5.0+1"
   objective_c:
     dependency: transitive
     description:
@@ -1194,6 +1186,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.15.0"
+  wolt_modal_sheet:
+    dependency: "direct main"
+    description:
+      name: wolt_modal_sheet
+      sha256: "03e28e39dd4de44dc58a7c623877488a89ca3b41a62fc3e70bfc86b64be067d6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.11.0"
   xdg_directories:
     dependency: transitive
     description:

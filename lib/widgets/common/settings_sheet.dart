@@ -197,7 +197,7 @@ class SettingsSheet extends StatelessWidget {
             ),
             const Divider(height: 1, color: AppColors.border),
 
-          // Premium section (광고제거)
+          // Premium section
           Padding(
             padding: const EdgeInsets.all(AppSpacing.lg),
             child: Column(
@@ -221,7 +221,7 @@ class SettingsSheet extends StatelessWidget {
                     child: Row(
                       children: [
                         Icon(
-                          LucideIcons.sparkles,
+                          isPremium ? LucideIcons.circleOff : LucideIcons.sparkles,
                           size: 22,
                           color: isPremium
                               ? AppColors.primary
@@ -250,7 +250,7 @@ class SettingsSheet extends StatelessWidget {
           ),
           const Divider(height: 1, color: AppColors.border),
 
-          // View Mode section (보기방식)
+          // View Mode section
           Padding(
             padding: const EdgeInsets.all(AppSpacing.lg),
             child: Column(
@@ -467,7 +467,7 @@ class SettingsSheet extends StatelessWidget {
           ),
           const Divider(height: 1, color: AppColors.border),
 
-          // Language section (언어 설정)
+          // Language section
           Padding(
             padding: const EdgeInsets.all(AppSpacing.lg),
             child: Column(

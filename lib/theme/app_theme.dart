@@ -1,6 +1,8 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:wolt_modal_sheet/wolt_modal_sheet.dart';
 import 'app_colors.dart';
 import 'app_text_styles.dart';
 
@@ -211,6 +213,54 @@ class AppTheme {
         unselectedItemColor: AppColors.textSecondary,
         type: BottomNavigationBarType.fixed,
         elevation: 8,
+      ),
+
+      // WoltModalSheet theme extension
+      extensions: const <ThemeExtension>[
+        WoltModalSheetThemeData(
+          backgroundColor: AppColors.surface,
+          modalBarrierColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
+          modalElevation: 8.0,
+          topBarShadowColor: AppColors.shadowLight,
+          dragHandleColor: AppColors.border,
+          dragHandleSize: Size(40, 4),
+          showDragHandle: true,
+          enableDrag: true,
+          useSafeArea: true,
+          clipBehavior: Clip.antiAlias,
+          mainContentScrollPhysics: ClampingScrollPhysics(),
+        ),
+      ],
+    );
+  }
+
+  /// Background blur decorator for modals
+  static Widget blurDecorator(Widget child) {
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+      child: Container(
+        color: AppColors.barrier,
+        child: child,
+      ),
+    );
+  }
+
+  /// Page content decorator with rounded corners for dialogs
+  static Widget dialogContentDecorator(Widget child) {
+    return Align(
+      alignment: Alignment.center,
+      child: child,
+    );
+  }
+
+  /// Page content decorator for bottom sheets
+  static Widget sheetContentDecorator(Widget child) {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: ClipRRect(
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
+        child: child,
       ),
     );
   }

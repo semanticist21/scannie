@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:ndialog/ndialog.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:wolt_modal_sheet/wolt_modal_sheet.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../utils/app_toast.dart';
+import '../../utils/app_modal.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/app_text_styles.dart';
@@ -53,100 +54,139 @@ class TextInputDialog {
     final TextEditingController controller =
         TextEditingController(text: initialValue);
 
-    DialogBackground(
-      blur: 6,
-      dismissable: true,
-      barrierColor: AppColors.barrier,
-      dialog: Material(
-        color: Colors.transparent,
-        child: Center(
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return Container(
-                width: 320,
-                margin: const EdgeInsets.all(AppSpacing.lg),
-                padding: const EdgeInsets.all(AppSpacing.lg),
-                decoration: BoxDecoration(
-                  color: AppColors.surface,
-                  borderRadius: BorderRadius.circular(AppRadius.lg),
-                  border: Border.all(color: AppColors.border),
-                  boxShadow: AppShadows.dialog,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: AppTextStyles.h3,
-                    ),
-                    const SizedBox(height: AppSpacing.xs),
-                    Text(
-                      description,
-                      style: AppTextStyles.bodyMedium.copyWith(
-                        color: AppColors.textSecondary,
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    ShadInput(
-                      controller: controller,
-                      placeholder: Text(placeholder),
-                      autofocus: true,
-                      maxLength: maxLength,
-                      onChanged: (_) => setState(() {}),
-                    ),
-                    const SizedBox(height: AppSpacing.xs),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        '${controller.text.length} / $maxLength',
-                        style: AppTextStyles.caption.copyWith(
-                          color: controller.text.length > maxLength
-                              ? AppColors.error
-                              : AppColors.textHint,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        ShadButton.outline(
-                          child: Text(cancelText),
-                          onPressed: () => Navigator.of(context).pop(),
-                        ),
-                        const SizedBox(width: AppSpacing.sm),
-                        ShadButton(
-                          child: Text(confirmText),
-                          onPressed: () async {
-                            final value = controller.text.trim();
-                            final error = _validateName(value, context);
-                            if (error != null) {
-                              AppToast.show(context, error, isError: true);
-                              return;
-                            }
-
-                            // Call onSave BEFORE pop to avoid race with didPopNext
-                            // which would reload documents before they're saved
-                            await onSave(value);
-                            // Only pop if dialog route is still current (not replaced by navigation)
-                            if (context.mounted) {
-                              final route = ModalRoute.of(context);
-                              if (route != null && route.isCurrent) {
-                                Navigator.of(context).pop();
-                              }
-                            }
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              );
-            },
+    AppModal.showDialog(
+      context: context,
+      pageListBuilder: (modalContext) => [
+        WoltModalSheetPage(
+          backgroundColor: AppColors.surface,
+          hasSabGradient: false,
+          hasTopBarLayer: false,
+          isTopBarLayerAlwaysVisible: false,
+          child: _TextInputContent(
+            controller: controller,
+            title: title,
+            description: description,
+            placeholder: placeholder,
+            cancelText: cancelText,
+            confirmText: confirmText,
+            modalContext: modalContext,
+            onSave: onSave,
           ),
         ),
+      ],
+    );
+  }
+}
+
+class _TextInputContent extends StatefulWidget {
+  final TextEditingController controller;
+  final String title;
+  final String description;
+  final String placeholder;
+  final String cancelText;
+  final String confirmText;
+  final BuildContext modalContext;
+  final Future<void> Function(String value) onSave;
+
+  const _TextInputContent({
+    required this.controller,
+    required this.title,
+    required this.description,
+    required this.placeholder,
+    required this.cancelText,
+    required this.confirmText,
+    required this.modalContext,
+    required this.onSave,
+  });
+
+  @override
+  State<_TextInputContent> createState() => _TextInputContentState();
+}
+
+class _TextInputContentState extends State<_TextInputContent> {
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.addListener(_onTextChanged);
+  }
+
+  @override
+  void dispose() {
+    widget.controller.removeListener(_onTextChanged);
+    super.dispose();
+  }
+
+  void _onTextChanged() {
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(widget.title, style: AppTextStyles.h3),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            widget.description,
+            style: AppTextStyles.bodyMedium.copyWith(
+              color: AppColors.textSecondary,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          ShadInput(
+            controller: widget.controller,
+            placeholder: Text(widget.placeholder),
+            autofocus: true,
+            maxLength: TextInputDialog.maxLength,
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Text(
+              '${widget.controller.text.length} / ${TextInputDialog.maxLength}',
+              style: AppTextStyles.caption.copyWith(
+                color: widget.controller.text.length > TextInputDialog.maxLength
+                    ? AppColors.error
+                    : AppColors.textHint,
+              ),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              ShadButton.outline(
+                child: Text(widget.cancelText),
+                onPressed: () => Navigator.of(widget.modalContext).pop(),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              ShadButton(
+                child: Text(widget.confirmText),
+                onPressed: () async {
+                  final value = widget.controller.text.trim();
+                  final error = TextInputDialog._validateName(value, context);
+                  if (error != null) {
+                    AppToast.show(context, error, isError: true);
+                    return;
+                  }
+
+                  await widget.onSave(value);
+                  if (widget.modalContext.mounted) {
+                    final route = ModalRoute.of(widget.modalContext);
+                    if (route != null && route.isCurrent) {
+                      Navigator.of(widget.modalContext).pop();
+                    }
+                  }
+                },
+              ),
+            ],
+          ),
+        ],
       ),
-    ).show(context, transitionType: DialogTransitionType.Shrink, dismissable: true);
+    );
   }
 }

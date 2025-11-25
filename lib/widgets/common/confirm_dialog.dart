@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:ndialog/ndialog.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:wolt_modal_sheet/wolt_modal_sheet.dart';
+import '../../utils/app_modal.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/app_text_styles.dart';
@@ -19,31 +20,21 @@ class ConfirmDialog {
     bool isDestructive = false,
     required AsyncCallback onConfirm,
   }) {
-    DialogBackground(
-      blur: 6,
-      dismissable: true,
-      barrierColor: AppColors.barrier,
-      dialog: Material(
-        color: Colors.transparent,
-        child: Center(
-          child: Container(
-            width: 320,
-            margin: const EdgeInsets.all(AppSpacing.lg),
+    AppModal.showDialog(
+      context: context,
+      pageListBuilder: (modalContext) => [
+        WoltModalSheetPage(
+          backgroundColor: AppColors.surface,
+          hasSabGradient: false,
+          hasTopBarLayer: false,
+          isTopBarLayerAlwaysVisible: false,
+          child: Padding(
             padding: const EdgeInsets.all(AppSpacing.lg),
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              borderRadius: BorderRadius.circular(AppRadius.lg),
-              border: Border.all(color: AppColors.border),
-              boxShadow: AppShadows.dialog,
-            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: AppTextStyles.h3,
-                ),
+                Text(title, style: AppTextStyles.h3),
                 const SizedBox(height: AppSpacing.xs),
                 Text(
                   message,
@@ -57,18 +48,16 @@ class ConfirmDialog {
                   children: [
                     ShadButton.outline(
                       child: Text(cancelText),
-                      onPressed: () => Navigator.of(context).pop(),
+                      onPressed: () => Navigator.of(modalContext).pop(),
                     ),
                     const SizedBox(width: AppSpacing.sm),
                     if (isDestructive)
                       ShadButton.destructive(
                         child: Text(confirmText),
                         onPressed: () async {
-                          // Call onConfirm BEFORE pop to avoid race with didPopNext
-                          // which would reload documents before they're saved
                           await onConfirm();
-                          if (context.mounted) {
-                            Navigator.of(context).pop();
+                          if (modalContext.mounted) {
+                            Navigator.of(modalContext).pop();
                           }
                         },
                       )
@@ -76,11 +65,9 @@ class ConfirmDialog {
                       ShadButton(
                         child: Text(confirmText),
                         onPressed: () async {
-                          // Call onConfirm BEFORE pop to avoid race with didPopNext
-                          // which would reload documents before they're saved
                           await onConfirm();
-                          if (context.mounted) {
-                            Navigator.of(context).pop();
+                          if (modalContext.mounted) {
+                            Navigator.of(modalContext).pop();
                           }
                         },
                       ),
@@ -90,8 +77,8 @@ class ConfirmDialog {
             ),
           ),
         ),
-      ),
-    ).show(context, transitionType: DialogTransitionType.Shrink, dismissable: true);
+      ],
+    );
   }
 
   /// Show a confirmation dialog and return true if confirmed, false if cancelled
@@ -104,33 +91,22 @@ class ConfirmDialog {
     bool isDestructive = false,
     bool dismissable = true,
   }) async {
-    final completer = Completer<bool>();
-
-    DialogBackground(
-      blur: 6,
-      dismissable: dismissable,
-      barrierColor: AppColors.barrier,
-      dialog: Material(
-        color: Colors.transparent,
-        child: Center(
-          child: Container(
-            width: 320,
-            margin: const EdgeInsets.all(AppSpacing.lg),
+    final result = await AppModal.showDialog<bool>(
+      context: context,
+      barrierDismissible: dismissable,
+      pageListBuilder: (modalContext) => [
+        WoltModalSheetPage(
+          backgroundColor: AppColors.surface,
+          hasSabGradient: false,
+          hasTopBarLayer: false,
+          isTopBarLayerAlwaysVisible: false,
+          child: Padding(
             padding: const EdgeInsets.all(AppSpacing.lg),
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              borderRadius: BorderRadius.circular(AppRadius.lg),
-              border: Border.all(color: AppColors.border),
-              boxShadow: AppShadows.dialog,
-            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: AppTextStyles.h3,
-                ),
+                Text(title, style: AppTextStyles.h3),
                 const SizedBox(height: AppSpacing.xs),
                 Text(
                   message,
@@ -144,27 +120,18 @@ class ConfirmDialog {
                   children: [
                     ShadButton.outline(
                       child: Text(cancelText),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        completer.complete(false);
-                      },
+                      onPressed: () => Navigator.of(modalContext).pop(false),
                     ),
                     const SizedBox(width: AppSpacing.sm),
                     if (isDestructive)
                       ShadButton.destructive(
                         child: Text(confirmText),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          completer.complete(true);
-                        },
+                        onPressed: () => Navigator.of(modalContext).pop(true),
                       )
                     else
                       ShadButton(
                         child: Text(confirmText),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          completer.complete(true);
-                        },
+                        onPressed: () => Navigator.of(modalContext).pop(true),
                       ),
                   ],
                 ),
@@ -172,9 +139,9 @@ class ConfirmDialog {
             ),
           ),
         ),
-      ),
-    ).show(context, transitionType: DialogTransitionType.Shrink, dismissable: true);
+      ],
+    );
 
-    return completer.future;
+    return result ?? false;
   }
 }
