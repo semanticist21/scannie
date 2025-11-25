@@ -412,6 +412,13 @@ import '../theme/app_text_styles.dart';
 // 타이포그래피: AppTextStyles.h1 / h2 / bodyLarge / button
 ```
 
+**색상 스킴**: 앱은 `ShadSlateColorScheme.light()`를 사용합니다 (shadcn_ui):
+- Primary: `#0f172a` (slate-900)
+- Secondary/Muted: `#f1f5f9` (slate-100)
+- Destructive: `#ef4444` (red-500)
+- Border: `#e2e8f0` (slate-200)
+- Selection: `#B4D7FF`
+
 ### 네비게이션 플로우
 
 ```
@@ -1298,7 +1305,9 @@ final prefs = await SharedPreferences.getInstance();
 final isPremium = prefs.getBool('isPremium') ?? false;
 ```
 
-## 앱 아이콘 생성
+## 앱 아이콘 및 스플래시 스크린
+
+### 앱 아이콘 생성
 
 ```bash
 # SVG → PNG 변환 (rsvg-convert 필요: brew install librsvg)
@@ -1309,3 +1318,48 @@ dart run flutter_launcher_icons
 ```
 
 **Android Adaptive Icon Safe Zone**: 콘텐츠는 중앙 66dp (전체의 61%) 내에 배치. 현재 55%로 설정하여 여유 공간 확보.
+
+### 스플래시 스크린 (Android 12+)
+
+Android 12+는 스플래시 아이콘에 **원형 마스킹**을 적용합니다. 아이콘의 1/3이 잘릴 수 있으므로 별도의 스플래시 아이콘이 필요합니다.
+
+**안전 영역 요구사항**:
+- 캔버스 크기: 1152×1152px
+- 안전 영역: 중앙 768px 직경 원형 (외곽 1/3 마스킹됨)
+- 아이콘은 768px 원 안에 완전히 들어가야 함
+
+```bash
+# 스플래시용 아이콘 생성
+rsvg-convert -w 1152 -h 1152 assets/splash_icon.svg -o assets/splash_icon.png
+
+# 스플래시 스크린 적용
+dart run flutter_native_splash:create
+```
+
+**pubspec.yaml 스플래시 설정**:
+```yaml
+flutter_native_splash:
+  color: "#171717"
+  image: assets/splash_icon.png
+  fullscreen: false
+
+  android_12:
+    color: "#171717"
+    image: assets/splash_icon.png
+    icon_background_color: "#171717"
+```
+
+**⚠️ 중요**: 스플래시 스크린 변경 후 앱을 **완전히 삭제 후 재설치**해야 캐시된 스플래시가 갱신됩니다.
+
+### 앱 아이콘 색상 (shadcn Slate 테마 기반)
+
+현재 앱 아이콘은 다크 테마를 사용합니다:
+- 배경 그라데이션: `#1f1f1f` → `#171717` → `#0f0f0f`
+- PDF 배지: `#ef4444` (shadcn destructive)
+- 테두리/강조: `#ffffff` / `#e5e5e5`
+
+**권장 검은색 톤** (순수 검정 #000000 피하기):
+- Google Material Dark: `#121212`
+- Apple Dark: `#1A1A1A`
+- YouTube Dark: `#0F0F0F`
+- Neutral Dark: `#171717` (현재 사용)
