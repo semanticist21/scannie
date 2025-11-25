@@ -350,6 +350,7 @@ lib/
 │   ├── custom_icon_button.dart     # 커스텀 아이콘 버튼
 │   ├── context_menu_sheet.dart     # 공통 컨텍스트 메뉴 (bottom sheet)
 │   ├── pdf_options_sheet.dart      # PDF 옵션 설정 시트
+│   ├── quality_selector_sheet.dart # PDF 품질 선택 시트
 │   ├── settings_sheet.dart         # 앱 설정 시트
 │   ├── edit_bottom_actions.dart    # EditScreen 하단 액션 버튼
 │   ├── document_info_header.dart   # 문서 정보 헤더
@@ -882,7 +883,7 @@ final result = await navigator.pushNamed('/edit', arguments: scannedImages);
 | 페이지 크기 | `PdfPageSize` | a4, letter, legal | a4 |
 | 방향 | `PdfOrientation` | portrait, landscape | portrait |
 | 이미지 맞춤 | `PdfImageFit` | contain, cover, fill | contain |
-| 여백 | `PdfMargin` | none, small, medium, large | none |
+| 여백 | `PdfMargin` | none, small, medium, large, xl | medium |
 
 ```dart
 // 문서별 PDF 옵션
@@ -892,7 +893,7 @@ final document = ScanDocument(
   pdfPageSize: PdfPageSize.a4,
   pdfOrientation: PdfOrientation.portrait,
   pdfImageFit: PdfImageFit.contain,
-  pdfMargin: PdfMargin.none,
+  pdfMargin: PdfMargin.medium,
 );
 ```
 
