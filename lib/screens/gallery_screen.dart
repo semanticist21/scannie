@@ -17,6 +17,7 @@ import '../widgets/common/scan_card.dart';
 import '../widgets/common/empty_state.dart';
 import '../widgets/common/document_grid_card.dart';
 import 'package:printing/printing.dart';
+import 'package:uuid/uuid.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:open_file_manager/open_file_manager.dart';
@@ -27,6 +28,7 @@ import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import '../utils/app_toast.dart';
 import '../widgets/common/pdf_options_sheet.dart';
 import '../widgets/common/rename_dialog.dart';
+import '../widgets/common/tag_dialog.dart';
 import '../widgets/common/confirm_dialog.dart';
 import '../widgets/common/text_input_dialog.dart';
 import '../widgets/common/premium_dialog.dart';
@@ -578,6 +580,7 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
           onSaveZip: () => _saveZipDocument(document),
           onSaveImages: () => _saveImagesDocument(document),
           onQualityChange: () => _showQualitySelector(document),
+          onTag: () => _editDocumentTag(document),
           isSelectionMode: _isSelectionMode,
           isSelected: _selectedDocumentIds.contains(document.id),
           onSelect: () => _toggleDocumentSelection(document.id),
@@ -613,6 +616,7 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
           onSaveZip: () => _saveZipDocument(document),
           onSaveImages: () => _saveImagesDocument(document),
           onQualityChange: () => _showQualitySelector(document),
+          onTag: () => _editDocumentTag(document),
           isSelectionMode: _isSelectionMode,
           isSelected: _selectedDocumentIds.contains(document.id),
           onSelect: () => _toggleDocumentSelection(document.id),
@@ -639,7 +643,7 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
       onSave: (documentName) async {
         debugPrint('➕ Creating document: $documentName, current count: ${_documents.length}');
         final newDocument = ScanDocument(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          id: const Uuid().v7(),
           name: documentName,
           createdAt: DateTime.now(),
           imagePaths: [],
@@ -758,6 +762,27 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
           final index = _documents.indexWhere((d) => d.id == document.id);
           if (index != -1) {
             _documents[index] = document.copyWith(name: newName);
+          }
+        });
+        await _saveDocuments();
+      },
+    );
+  }
+
+  void _editDocumentTag(ScanDocument document) {
+    TagDialog.show(
+      context: context,
+      currentTagText: document.tagText,
+      currentTagColor: document.tagColor,
+      onSave: (tagText, tagColor) async {
+        setState(() {
+          final index = _documents.indexWhere((d) => d.id == document.id);
+          if (index != -1) {
+            if (tagText == null) {
+              _documents[index] = document.copyWith(clearTag: true);
+            } else {
+              _documents[index] = document.copyWith(tagText: tagText, tagColor: tagColor);
+            }
           }
         });
         await _saveDocuments();

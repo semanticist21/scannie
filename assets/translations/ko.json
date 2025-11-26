@@ -14,6 +14,7 @@
     "edit": "편집",
     "rename": "이름 변경",
     "export": "내보내기",
+    "tag": "태그",
     "loading": "불러오는 중...",
     "pages": "페이지",
     "page": "페이지",
@@ -103,13 +104,25 @@
     "deleteScan": "스캔 삭제",
     "deleteScanMessage": "\"{name}\"을 삭제할까요?",
     "renameScan": "스캔 이름 변경",
-    "renameScanDesc": "새로운 이름을 입력해주세요"
+    "renameScanDesc": "새로운 이름을 입력해주세요",
+    "addTag": "태그 추가",
+    "editTag": "태그 편집",
+    "tagDesc": "문서를 정리할 태그를 추가해보세요",
+    "tagPlaceholder": "태그 이름 입력",
+    "tagColor": "태그 색상",
+    "tagPreview": "미리보기",
+    "removeTag": "삭제"
   },
   "validation": {
     "nameEmpty": "이름을 입력해주세요",
     "nameTooLong": "이름은 {max}자 이하로 입력해주세요",
     "nameForbiddenChars": "이름에 {chars} 문자는 사용할 수 없어요",
-    "nameInvalid": "유효하지 않은 이름이에요"
+    "nameInvalid": "유효하지 않은 이름이에요",
+    "nameControlChars": "이름에 제어 문자는 사용할 수 없어요",
+    "nameLeadingTrailingDot": "이름은 점(.)으로 시작하거나 끝날 수 없어요",
+    "nameReserved": "시스템에서 예약된 이름이에요",
+    "tagEmpty": "태그를 입력해주세요",
+    "tagTooLong": "태그는 {max}자 이하로 입력해주세요"
   },
   "toast": {
     "success": "성공",

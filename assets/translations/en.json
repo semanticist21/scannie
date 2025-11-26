@@ -14,6 +14,7 @@
     "edit": "Edit",
     "rename": "Rename",
     "export": "Export",
+    "tag": "Tag",
     "loading": "Loading...",
     "pages": "Pages",
     "page": "page",
@@ -103,13 +104,25 @@
     "deleteScan": "Delete Scan",
     "deleteScanMessage": "Delete \"{name}\"?",
     "renameScan": "Rename Scan",
-    "renameScanDesc": "Enter a new name for this document"
+    "renameScanDesc": "Enter a new name for this document",
+    "addTag": "Add Tag",
+    "editTag": "Edit Tag",
+    "tagDesc": "Add a tag to help organize this document",
+    "tagPlaceholder": "Enter tag name",
+    "tagColor": "Tag Color",
+    "tagPreview": "Preview",
+    "removeTag": "Remove"
   },
   "validation": {
     "nameEmpty": "Name cannot be empty",
     "nameTooLong": "Name must be {max} characters or less",
     "nameForbiddenChars": "Name cannot contain: {chars}",
-    "nameInvalid": "Invalid name"
+    "nameInvalid": "Invalid name",
+    "nameControlChars": "Name cannot contain control characters",
+    "nameLeadingTrailingDot": "Name cannot start or end with a dot",
+    "nameReserved": "This name is reserved by the system",
+    "tagEmpty": "Tag cannot be empty",
+    "tagTooLong": "Tag must be {max} characters or less"
   },
   "toast": {
     "success": "Success",

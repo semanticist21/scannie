@@ -21,6 +21,7 @@ class DocumentGridCard extends StatelessWidget {
   final VoidCallback? onSaveZip;
   final VoidCallback? onSaveImages;
   final VoidCallback? onQualityChange;
+  final VoidCallback? onTag;
   final bool isSelectionMode;
   final bool isSelected;
   final VoidCallback? onSelect;
@@ -37,6 +38,7 @@ class DocumentGridCard extends StatelessWidget {
     this.onSaveZip,
     this.onSaveImages,
     this.onQualityChange,
+    this.onTag,
     this.isSelectionMode = false,
     this.isSelected = false,
     this.onSelect,
@@ -178,6 +180,30 @@ class DocumentGridCard extends StatelessWidget {
                             ),
                           ],
                         ),
+                        if (document.hasTag) ...[
+                          const SizedBox(height: AppSpacing.xs),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppSpacing.sm,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Color(document.tagColor ?? 0xFF6B7280),
+                              borderRadius: BorderRadius.circular(AppRadius.sm),
+                            ),
+                            child: Transform.translate(
+                              offset: const Offset(0, -1),
+                              child: Text(
+                                document.tagText!,
+                                style: TextStyle(
+                                  color: _getContrastColor(Color(document.tagColor ?? 0xFF6B7280)),
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 9,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                   ),
@@ -277,6 +303,17 @@ class DocumentGridCard extends StatelessWidget {
             onEdit?.call();
           },
         ),
+      if (onTag != null)
+        ContextMenuItem(
+          icon: LucideIcons.tag,
+          label: document.hasTag
+              ? 'dialogs.editTag'.tr()
+              : 'dialogs.addTag'.tr(),
+          onTap: () {
+            Navigator.pop(context);
+            onTag?.call();
+          },
+        ),
       if (onQualityChange != null)
         ContextMenuItem(
           icon: LucideIcons.settings2,
@@ -339,5 +376,10 @@ class DocumentGridCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Color _getContrastColor(Color backgroundColor) {
+    final luminance = backgroundColor.computeLuminance();
+    return luminance > 0.5 ? Colors.black : Colors.white;
   }
 }

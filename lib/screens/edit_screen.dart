@@ -18,6 +18,7 @@ import '../widgets/common/edit_bottom_actions.dart';
 import '../widgets/common/confirm_dialog.dart';
 import '../widgets/common/text_input_dialog.dart';
 import '../widgets/common/empty_state.dart';
+import 'package:uuid/uuid.dart';
 import '../services/ad_service.dart';
 
 /// Edit screen for managing scanned images
@@ -278,7 +279,7 @@ class _EditScreenState extends State<EditScreen> {
 
         // Create new scan document with default PDF settings
         final newDocument = ScanDocument(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          id: const Uuid().v7(),
           name: documentName,
           createdAt: DateTime.now(),
           imagePaths: _imagePaths,

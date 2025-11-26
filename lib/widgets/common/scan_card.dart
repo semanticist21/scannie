@@ -21,6 +21,7 @@ class ScanCard extends StatefulWidget {
   final VoidCallback? onSaveZip;
   final VoidCallback? onSaveImages;
   final VoidCallback? onQualityChange;
+  final VoidCallback? onTag;
   final bool isSelectionMode;
   final bool isSelected;
   final VoidCallback? onSelect;
@@ -37,6 +38,7 @@ class ScanCard extends StatefulWidget {
     this.onSaveZip,
     this.onSaveImages,
     this.onQualityChange,
+    this.onTag,
     this.isSelectionMode = false,
     this.isSelected = false,
     this.onSelect,
@@ -216,6 +218,30 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
                             color: AppColors.textSecondary,
                           ),
                         ),
+                        if (widget.document.hasTag) ...[
+                          const SizedBox(height: AppSpacing.xs),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppSpacing.sm,
+                              vertical: 3,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Color(widget.document.tagColor ?? 0xFF6B7280),
+                              borderRadius: BorderRadius.circular(AppRadius.sm),
+                            ),
+                            child: Transform.translate(
+                              offset: const Offset(0, -1),
+                              child: Text(
+                                widget.document.tagText!,
+                                style: TextStyle(
+                                  color: _getContrastColor(Color(widget.document.tagColor ?? 0xFF6B7280)),
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 10,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                   ),
@@ -322,6 +348,17 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
             widget.onEdit?.call();
           },
         ),
+      if (widget.onTag != null)
+        ContextMenuItem(
+          icon: LucideIcons.tag,
+          label: widget.document.hasTag
+              ? 'dialogs.editTag'.tr()
+              : 'dialogs.addTag'.tr(),
+          onTap: () {
+            Navigator.pop(context);
+            widget.onTag?.call();
+          },
+        ),
       if (widget.onQualityChange != null)
         ContextMenuItem(
           icon: LucideIcons.settings2,
@@ -396,5 +433,10 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
     final month = date.month.toString().padLeft(2, '0');
     final day = date.day.toString().padLeft(2, '0');
     return '$year.$month.$day';
+  }
+
+  Color _getContrastColor(Color backgroundColor) {
+    final luminance = backgroundColor.computeLuminance();
+    return luminance > 0.5 ? Colors.black : Colors.white;
   }
 }

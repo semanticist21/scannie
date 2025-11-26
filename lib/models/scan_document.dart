@@ -180,6 +180,26 @@ extension PdfQualityExtension on PdfQuality {
   }
 }
 
+/// Tag color presets for documents
+class TagColors {
+  static const List<int> presets = [
+    0xFFEF4444, // Red
+    0xFFF97316, // Orange
+    0xFFFBBF24, // Amber
+    0xFFFACC15, // Yellow
+    0xFF84CC16, // Lime
+    0xFF22C55E, // Green
+    0xFF14B8A6, // Teal
+    0xFF06B6D4, // Cyan
+    0xFF3B82F6, // Blue
+    0xFF6366F1, // Indigo
+    0xFF8B5CF6, // Purple
+    0xFFA855F7, // Violet
+    0xFFEC4899, // Pink
+    0xFF6B7280, // Gray
+  ];
+}
+
 /// Model representing a scanned document
 class ScanDocument {
   final String id;
@@ -192,6 +212,8 @@ class ScanDocument {
   final PdfOrientation pdfOrientation;
   final PdfImageFit pdfImageFit;
   final PdfMargin pdfMargin;
+  final String? tagText;
+  final int? tagColor;
 
   const ScanDocument({
     required this.id,
@@ -204,7 +226,12 @@ class ScanDocument {
     this.pdfOrientation = PdfOrientation.portrait,
     this.pdfImageFit = PdfImageFit.contain,
     this.pdfMargin = PdfMargin.medium,
+    this.tagText,
+    this.tagColor,
   });
+
+  /// Check if document has a tag
+  bool get hasTag => tagText != null && tagText!.isNotEmpty;
 
   ScanDocument copyWith({
     String? id,
@@ -217,6 +244,9 @@ class ScanDocument {
     PdfOrientation? pdfOrientation,
     PdfImageFit? pdfImageFit,
     PdfMargin? pdfMargin,
+    String? tagText,
+    int? tagColor,
+    bool clearTag = false,
   }) {
     return ScanDocument(
       id: id ?? this.id,
@@ -229,6 +259,8 @@ class ScanDocument {
       pdfOrientation: pdfOrientation ?? this.pdfOrientation,
       pdfImageFit: pdfImageFit ?? this.pdfImageFit,
       pdfMargin: pdfMargin ?? this.pdfMargin,
+      tagText: clearTag ? null : (tagText ?? this.tagText),
+      tagColor: clearTag ? null : (tagColor ?? this.tagColor),
     );
   }
 
@@ -245,6 +277,8 @@ class ScanDocument {
       'pdfOrientation': pdfOrientation.name,
       'pdfImageFit': pdfImageFit.name,
       'pdfMargin': pdfMargin.name,
+      'tagText': tagText,
+      'tagColor': tagColor,
     };
   }
 
@@ -276,6 +310,8 @@ class ScanDocument {
         (e) => e.name == json['pdfMargin'],
         orElse: () => PdfMargin.medium,
       ),
+      tagText: json['tagText'] as String?,
+      tagColor: json['tagColor'] as int?,
     );
   }
 

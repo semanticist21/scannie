@@ -26,6 +26,7 @@ import '../utils/app_toast.dart';
 import '../widgets/common/page_card.dart';
 import '../widgets/common/pdf_options_sheet.dart';
 import '../widgets/common/rename_dialog.dart';
+import '../widgets/common/tag_dialog.dart';
 import '../widgets/common/confirm_dialog.dart';
 import '../widgets/common/empty_state.dart';
 
@@ -614,6 +615,16 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
         },
       ),
       ContextMenuItem(
+        icon: LucideIcons.tag,
+        label: _document.hasTag
+            ? 'dialogs.editTag'.tr()
+            : 'dialogs.addTag'.tr(),
+        onTap: () {
+          Navigator.pop(context);
+          _editTag();
+        },
+      ),
+      ContextMenuItem(
         icon: LucideIcons.settings2,
         label: 'viewer.pdfOptions'.tr(),
         onTap: () {
@@ -675,6 +686,33 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
         // Update local state
         setState(() {
           _document = _document.copyWith(name: newName);
+        });
+
+        // Save to storage
+        final documents = await DocumentStorage.loadDocuments();
+        final index = documents.indexWhere((doc) => doc.id == _document.id);
+        if (index != -1) {
+          documents[index] = _document;
+          await DocumentStorage.saveDocuments(documents);
+        }
+      },
+    );
+  }
+
+  /// Edit tag
+  void _editTag() {
+    TagDialog.show(
+      context: context,
+      currentTagText: _document.tagText,
+      currentTagColor: _document.tagColor,
+      onSave: (tagText, tagColor) async {
+        // Update local state
+        setState(() {
+          if (tagText == null) {
+            _document = _document.copyWith(clearTag: true);
+          } else {
+            _document = _document.copyWith(tagText: tagText, tagColor: tagColor);
+          }
         });
 
         // Save to storage
