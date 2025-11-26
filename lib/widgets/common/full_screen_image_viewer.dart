@@ -8,6 +8,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
+import 'package:photo_view/photo_view.dart';
+import 'package:photo_view/photo_view_gallery.dart';
 import '../../models/image_filter_type.dart';
 import '../../utils/app_toast.dart';
 import '../../theme/app_colors.dart';
@@ -601,7 +603,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
       body: SafeArea(
         child: Stack(
           children: [
-            // Page viewer with zoom
+            // Page viewer with zoom (using photo_view for better gesture handling)
             Padding(
               padding: EdgeInsets.only(
                 bottom: widget.showFilters ? 160 : 0,
@@ -610,19 +612,22 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                 onTap: () {
                   setState(() => _showControls = !_showControls);
                 },
-                child: PageView.builder(
-                  controller: _pageController,
+                child: PhotoViewGallery.builder(
+                  scrollPhysics: const BouncingScrollPhysics(),
+                  pageController: _pageController,
                   onPageChanged: (index) {
                     setState(() => _currentPage = index);
                   },
                   itemCount: widget.imagePaths.length,
-                  itemBuilder: (context, index) {
-                    return InteractiveViewer(
-                      minScale: 0.5,
-                      maxScale: 4.0,
-                      child: Center(
-                        child: _buildFullScreenImage(index),
-                      ),
+                  backgroundDecoration: const BoxDecoration(
+                    color: AppColors.darkBackground,
+                  ),
+                  builder: (context, index) {
+                    return PhotoViewGalleryPageOptions.customChild(
+                      child: _buildFullScreenImage(index),
+                      minScale: PhotoViewComputedScale.contained,
+                      maxScale: PhotoViewComputedScale.covered * 4.0,
+                      initialScale: PhotoViewComputedScale.contained,
                     );
                   },
                 ),
