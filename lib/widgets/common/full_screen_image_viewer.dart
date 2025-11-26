@@ -605,34 +605,34 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
           children: [
             // Page viewer with zoom (using photo_view for better gesture handling)
             Padding(
-              padding: EdgeInsets.only(
-                bottom: widget.showFilters ? 160 : 0,
-              ),
-              child: GestureDetector(
-                onTap: () {
-                  setState(() => _showControls = !_showControls);
-                },
-                child: PhotoViewGallery.builder(
-                  scrollPhysics: const BouncingScrollPhysics(),
-                  pageController: _pageController,
-                  onPageChanged: (index) {
-                    setState(() => _currentPage = index);
+                padding: EdgeInsets.only(
+                  bottom: widget.showFilters ? 160 : 0,
+                ),
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() => _showControls = !_showControls);
                   },
-                  itemCount: widget.imagePaths.length,
-                  backgroundDecoration: const BoxDecoration(
-                    color: AppColors.darkBackground,
+                  child: PhotoViewGallery.builder(
+                    scrollPhysics: const BouncingScrollPhysics(),
+                    pageController: _pageController,
+                    onPageChanged: (index) {
+                      setState(() => _currentPage = index);
+                    },
+                    itemCount: widget.imagePaths.length,
+                    backgroundDecoration: const BoxDecoration(
+                      color: AppColors.darkBackground,
+                    ),
+                    builder: (context, index) {
+                      return PhotoViewGalleryPageOptions.customChild(
+                        child: _buildFullScreenImage(index),
+                        minScale: PhotoViewComputedScale.contained,
+                        maxScale: PhotoViewComputedScale.covered * 4.0,
+                        initialScale: PhotoViewComputedScale.contained,
+                      );
+                    },
                   ),
-                  builder: (context, index) {
-                    return PhotoViewGalleryPageOptions.customChild(
-                      child: _buildFullScreenImage(index),
-                      minScale: PhotoViewComputedScale.contained,
-                      maxScale: PhotoViewComputedScale.covered * 4.0,
-                      initialScale: PhotoViewComputedScale.contained,
-                    );
-                  },
                 ),
               ),
-            ),
 
             // Controls overlay
             if (_showControls) ...[
