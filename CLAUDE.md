@@ -339,41 +339,44 @@ import '../models/scan_document.dart';
 
 ```
 lib/
-├── screens/          # 3개 화면
+├── screens/              # 3개 화면
 │   ├── gallery_screen.dart          # 홈, 문서 리스트/그리드, PDF 공유/다운로드
 │   ├── edit_screen.dart              # 이미지 관리 (드래그앤드롭 순서, 삭제, 추가)
 │   └── document_viewer_screen.dart   # 페이지 갤러리, 전체 화면 뷰어
-├── widgets/common/   # 재사용 위젯
-│   ├── scan_card.dart              # 문서 카드 (GalleryScreen 그리드)
-│   ├── document_grid_card.dart     # 문서 그리드 카드 (대체 레이아웃)
-│   ├── page_card.dart              # 개별 페이지 카드 (DocumentViewer)
-│   ├── image_tile.dart             # EditScreen 이미지 타일
-│   ├── custom_app_bar.dart         # 커스텀 AppBar
-│   ├── custom_fab.dart             # 커스텀 FAB 컴포넌트
-│   ├── custom_icon_button.dart     # 커스텀 아이콘 버튼
-│   ├── context_menu_sheet.dart     # 공통 컨텍스트 메뉴 (bottom sheet)
-│   ├── pdf_options_sheet.dart      # PDF 옵션 설정 시트
-│   ├── quality_selector_sheet.dart # PDF 품질 선택 시트
-│   ├── settings_sheet.dart         # 앱 설정 시트
-│   ├── edit_bottom_actions.dart    # EditScreen 하단 액션 버튼
-│   ├── document_info_header.dart   # 문서 정보 헤더
-│   ├── empty_state.dart            # 빈 상태 표시 위젯
-│   ├── full_screen_image_viewer.dart # 이미지 뷰어 + 필터 + 저장
-│   ├── confirm_dialog.dart         # 공통 확인 다이얼로그
-│   ├── rename_dialog.dart          # 이름 변경 다이얼로그
-│   ├── text_input_dialog.dart      # 텍스트 입력 다이얼로그
-│   └── premium_dialog.dart         # 프리미엄 기능 다이얼로그
-├── services/         # 비즈니스 로직
+├── widgets/
+│   ├── common/           # 공통 위젯 (2개 이상 화면에서 사용)
+│   │   ├── confirm_dialog.dart         # 확인/삭제 다이얼로그
+│   │   ├── context_menu_sheet.dart     # 컨텍스트 메뉴 (bottom sheet)
+│   │   ├── custom_app_bar.dart         # 커스텀 AppBar
+│   │   ├── empty_state.dart            # 빈 상태 표시
+│   │   ├── full_screen_image_viewer.dart # 이미지 뷰어 + 필터
+│   │   ├── pdf_options_sheet.dart      # PDF 옵션 설정 시트
+│   │   ├── rename_dialog.dart          # 이름 변경 다이얼로그
+│   │   ├── tag_dialog.dart             # 태그 편집 다이얼로그
+│   │   └── text_input_dialog.dart      # 텍스트 입력 다이얼로그
+│   ├── gallery/          # GalleryScreen 전용
+│   │   ├── document_grid_card.dart     # 그리드 뷰 카드
+│   │   ├── premium_dialog.dart         # 프리미엄 기능 안내
+│   │   ├── scan_card.dart              # 리스트 뷰 카드
+│   │   └── settings_sheet.dart         # 앱 설정 시트
+│   ├── edit/             # EditScreen 전용
+│   │   ├── edit_bottom_actions.dart    # 하단 액션 버튼
+│   │   └── image_tile.dart             # 드래그 가능한 이미지 타일
+│   └── viewer/           # DocumentViewerScreen 전용
+│       ├── document_info_header.dart   # 문서 정보 헤더
+│       └── page_card.dart              # 페이지 썸네일 카드
+├── services/             # 비즈니스 로직
 │   ├── document_storage.dart         # 문서 영구 저장/로드
 │   ├── pdf_generator.dart            # PDF 생성 (Isolate 지원)
 │   ├── pdf_settings_service.dart     # PDF 기본 설정 관리
 │   └── ad_service.dart               # AdMob 광고 관리 (싱글톤)
-├── theme/            # 디자인 시스템
+├── theme/                # 디자인 시스템
 │   ├── app_theme.dart        # M3 ThemeData 구성
 │   ├── app_colors.dart       # 색상 팔레트
 │   └── app_text_styles.dart  # 타이포그래피
-├── utils/            # 유틸리티
-│   └── app_toast.dart        # 토스트 알림 유틸리티
+├── utils/                # 유틸리티
+│   ├── app_toast.dart        # 토스트 알림 유틸리티
+│   └── app_modal.dart        # 모달 유틸리티
 └── models/
     ├── scan_document.dart    # ScanDocument + PDF 옵션 enums
     ├── context_menu_item.dart # 컨텍스트 메뉴 아이템 모델
@@ -382,20 +385,30 @@ lib/
 
 ### 위젯 책임 분리
 
-| 위젯 | 용도 | 사용 화면 |
-|------|------|-----------|
-| `scan_card.dart` | 문서 카드 (리스트/그리드 뷰) | GalleryScreen |
-| `document_grid_card.dart` | 대체 그리드 카드 레이아웃 | GalleryScreen |
-| `page_card.dart` | 단일 페이지 썸네일 카드 | DocumentViewerScreen |
-| `image_tile.dart` | 드래그 가능한 이미지 타일 | EditScreen |
-| `pdf_options_sheet.dart` | PDF 옵션 설정 바텀 시트 | GalleryScreen, DocumentViewer |
-| `settings_sheet.dart` | 앱 설정 (기본 PDF 옵션) | GalleryScreen |
-| `edit_bottom_actions.dart` | 저장/추가 버튼 그룹 | EditScreen |
-| `empty_state.dart` | 빈 문서 목록 상태 표시 | GalleryScreen |
-| `confirm_dialog.dart` | 확인/삭제/폐기 다이얼로그 | 전체 화면 |
-| `rename_dialog.dart` | 문서 이름 변경 | GalleryScreen, DocumentViewer |
-| `text_input_dialog.dart` | 텍스트 입력 (새 문서 등) | GalleryScreen, EditScreen |
-| `premium_dialog.dart` | 프리미엄 기능 안내 | 전체 화면 |
+**Gallery 전용** (`widgets/gallery/`):
+- `scan_card.dart` - 리스트 뷰 문서 카드
+- `document_grid_card.dart` - 그리드 뷰 문서 카드
+- `settings_sheet.dart` - 앱 설정 시트
+- `premium_dialog.dart` - 프리미엄 기능 안내
+
+**Edit 전용** (`widgets/edit/`):
+- `image_tile.dart` - 드래그 가능한 이미지 타일
+- `edit_bottom_actions.dart` - 저장/추가 버튼 그룹
+
+**Viewer 전용** (`widgets/viewer/`):
+- `page_card.dart` - 페이지 썸네일 카드
+- `document_info_header.dart` - 문서 정보 헤더
+
+**공통** (`widgets/common/`):
+- `confirm_dialog.dart` - 확인/삭제 다이얼로그
+- `rename_dialog.dart` - 이름 변경 다이얼로그
+- `text_input_dialog.dart` - 텍스트 입력 다이얼로그
+- `tag_dialog.dart` - 태그 편집 다이얼로그
+- `pdf_options_sheet.dart` - PDF 옵션 설정 시트
+- `full_screen_image_viewer.dart` - 이미지 뷰어 + 필터
+- `empty_state.dart` - 빈 상태 표시
+- `custom_app_bar.dart` - 커스텀 AppBar
+- `context_menu_sheet.dart` - 컨텍스트 메뉴
 
 ### 테마 시스템 (필수)
 
