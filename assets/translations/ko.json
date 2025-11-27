@@ -45,7 +45,7 @@
   "edit": {
     "title": "스캔 편집 ({count})",
     "noImagesTitle": "이미지가 없어요",
-    "noImagesSubtitle": "\"추가\"를 눌러 시작해보세요",
+    "noImagesSubtitle": "아래 스캔 또는 사진 버튼을 눌러 이미지를 추가해보세요",
     "saveScan": "스캔 저장",
     "saveScanDesc": "스캔 이름을 입력해주세요",
     "scanSaved": "스캔을 저장했어요",

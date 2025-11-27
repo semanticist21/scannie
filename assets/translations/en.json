@@ -45,7 +45,7 @@
   "edit": {
     "title": "Edit Scan ({count})",
     "noImagesTitle": "No images added yet",
-    "noImagesSubtitle": "Tap \"Add More\" to start",
+    "noImagesSubtitle": "Tap Scan or Photo below to add images",
     "saveScan": "Save Scan",
     "saveScanDesc": "Enter a name for this scan",
     "scanSaved": "Scan saved",
