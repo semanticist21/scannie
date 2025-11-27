@@ -7,7 +7,7 @@ import '../../theme/app_colors.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/app_text_styles.dart';
 import '../../models/context_menu_item.dart';
-import 'context_menu_sheet.dart';
+import '../common/context_menu_sheet.dart';
 
 /// Card widget for displaying a scanned document
 class ScanCard extends StatefulWidget {

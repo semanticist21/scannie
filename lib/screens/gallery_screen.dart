@@ -13,9 +13,9 @@ import '../services/pdf_generator.dart';
 import '../services/pdf_settings_service.dart';
 import '../theme/app_theme.dart';
 import '../theme/app_colors.dart';
-import '../widgets/common/scan_card.dart';
+import '../widgets/gallery/scan_card.dart';
 import '../widgets/common/empty_state.dart';
-import '../widgets/common/document_grid_card.dart';
+import '../widgets/gallery/document_grid_card.dart';
 import 'package:printing/printing.dart';
 import 'package:uuid/uuid.dart';
 import 'package:path_provider/path_provider.dart';
@@ -31,8 +31,8 @@ import '../widgets/common/rename_dialog.dart';
 import '../widgets/common/tag_dialog.dart';
 import '../widgets/common/confirm_dialog.dart';
 import '../widgets/common/text_input_dialog.dart';
-import '../widgets/common/premium_dialog.dart';
-import '../widgets/common/settings_sheet.dart';
+import '../widgets/gallery/premium_dialog.dart';
+import '../widgets/gallery/settings_sheet.dart';
 import '../main.dart' show routeObserver;
 
 /// Creates ZIP archive from image paths in a separate isolate
