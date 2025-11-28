@@ -1,4 +1,4 @@
-package com.example.scannie
+package com.kobbokkom.scannie
 
 import io.flutter.embedding.android.FlutterFragmentActivity
 
