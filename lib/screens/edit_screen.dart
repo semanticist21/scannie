@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 import 'package:cunning_document_scanner_plus/cunning_document_scanner_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -197,16 +198,23 @@ class _EditScreenState extends State<EditScreen> {
 
   /// Check if ad should be shown on save
   /// Ad is shown when:
-  /// 1. Saving a NEW scan (from Scan button)
-  /// 2. Saving an existing EMPTY document that now has images (from + button)
+  /// Determines if ad should show on save:
+  /// 1. NEW scan (from Scan button) → always show
+  /// 2. Existing EMPTY document now has images → always show
+  /// 3. Existing document with images being edited → 20% chance
   bool _shouldShowAdOnSave() {
-    // New scan from Scan button
+    // New scan from Scan button - always show
     if (_existingDocumentId == null) {
       return true;
     }
-    // Existing document that was empty and now has images
+    // Existing document that was empty and now has images - always show
     if (_wasEmptyOnStart && _imagePaths.isNotEmpty) {
       return true;
+    }
+    // Existing document being edited - 20% chance
+    // (This won't conflict with above cases due to early returns)
+    if (_existingDocumentId != null && !_wasEmptyOnStart) {
+      return Random().nextDouble() < 0.2;
     }
     return false;
   }
