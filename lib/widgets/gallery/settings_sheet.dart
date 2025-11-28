@@ -741,7 +741,6 @@ class _SettingsSheetState extends State<SettingsSheet> {
 
   void _showLanguageSelector(BuildContext context) {
     final colors = ThemedColors.of(context);
-    final navigator = Navigator.of(context);
 
     showModalBottomSheet(
       context: context,
@@ -754,8 +753,9 @@ class _SettingsSheetState extends State<SettingsSheet> {
       builder: (sheetContext) => _LanguageSelectorSheet(
         currentLanguage: widget.currentLanguage,
         onLanguageSelected: (language) {
+          // Close language selector sheet first
           Navigator.pop(sheetContext);
-          navigator.pop();
+          // Then close settings sheet and trigger callback
           widget.onLanguageChanged(language);
         },
       ),
