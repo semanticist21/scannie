@@ -88,7 +88,7 @@ class PageCard extends StatelessWidget {
                   child: Text(
                     '${index + 1}',
                     style: AppTextStyles.caption.copyWith(
-                      fontWeight: FontWeight.w600,
+                      fontWeight: AppFontWeight.semiBold,
                       color: AppColors.darkTextPrimary,
                     ),
                   ),

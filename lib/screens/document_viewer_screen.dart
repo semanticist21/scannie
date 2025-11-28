@@ -267,7 +267,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(LucideIcons.images, size: 16),
-                const SizedBox(width: 8),
+                AppGap.hSm,
                 Text('common.pages'.tr()),
               ],
             ),
@@ -279,7 +279,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(LucideIcons.fileText, size: 16),
-                const SizedBox(width: 8),
+                AppGap.hSm,
                 Text('common.pdf'.tr()),
               ],
             ),
@@ -423,7 +423,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
                               '${_currentPdfPage + 1}',
                               style: AppTextStyles.bodyMedium.copyWith(
                                 color: AppColors.darkTextPrimary,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: AppFontWeight.semiBold,
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -465,7 +465,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
                               '$_totalPdfPages',
                               style: AppTextStyles.bodyMedium.copyWith(
                                 color: AppColors.darkTextPrimary,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: AppFontWeight.semiBold,
                               ),
                               textAlign: TextAlign.center,
                             ),

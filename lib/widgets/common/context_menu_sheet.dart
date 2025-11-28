@@ -64,7 +64,7 @@ class ContextMenuSheet extends StatelessWidget {
             child: Text(
               title,
               style: AppTextStyles.bodyMedium.copyWith(
-                fontWeight: FontWeight.w600,
+                fontWeight: AppFontWeight.semiBold,
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,

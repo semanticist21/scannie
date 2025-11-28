@@ -32,7 +32,7 @@ class DocumentInfoHeader extends StatelessWidget {
           children: [
             // Document icon
             Container(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(AppSpacing.smd),
               decoration: BoxDecoration(
                 color: AppColors.textHint.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -53,7 +53,7 @@ class DocumentInfoHeader extends StatelessWidget {
                   Text(
                     document.name,
                     style: AppTextStyles.bodyMedium.copyWith(
-                      fontWeight: FontWeight.w600,
+                      fontWeight: AppFontWeight.semiBold,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

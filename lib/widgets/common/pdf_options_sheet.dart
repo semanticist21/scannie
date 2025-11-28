@@ -105,7 +105,7 @@ class _PdfOptionsSheetState extends State<PdfOptionsSheet> {
             Text(
               'viewer.pdfOptions'.tr(),
               style: AppTextStyles.bodyMedium.copyWith(
-                fontWeight: FontWeight.w600,
+                fontWeight: AppFontWeight.semiBold,
               ),
             ),
             const SizedBox(height: AppSpacing.lg),

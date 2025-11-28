@@ -64,10 +64,10 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
         AndroidUiSettings(
           toolbarTitle: 'imageViewer.rotateImage'.tr(),
           toolbarColor: AppColors.darkBackground,
-          toolbarWidgetColor: Colors.white,
+          toolbarWidgetColor: AppColors.white,
           statusBarLight: false,
           backgroundColor: AppColors.darkBackground,
-          dimmedLayerColor: Colors.black.withValues(alpha: 0.7),
+          dimmedLayerColor: AppColors.barrierDark,
           activeControlsWidgetColor: AppColors.primary,
           initAspectRatio: CropAspectRatioPreset.original,
           lockAspectRatio: false,
@@ -480,7 +480,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
       return Container(
         margin: const EdgeInsets.all(AppSpacing.lg),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(AppRadius.sm),
         ),
         child: Center(
@@ -564,10 +564,10 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
           vertical: AppSpacing.xs,
         ),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.darkOverlay : Colors.transparent,
+          color: isSelected ? AppColors.darkOverlay : AppColors.transparent,
           borderRadius: BorderRadius.circular(AppRadius.sm),
           border: Border.all(
-            color: isSelected ? AppColors.darkOverlayLight : Colors.transparent,
+            color: isSelected ? AppColors.darkOverlayLight : AppColors.transparent,
           ),
         ),
         child: Column(
@@ -580,14 +580,14 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                   : AppColors.darkTextSecondary,
               size: 20,
             ),
-            const SizedBox(height: 4),
+            AppGap.vXs,
             Text(
               label,
               style: AppTextStyles.overline.copyWith(
                 color: isSelected
                     ? AppColors.darkTextPrimary
                     : AppColors.darkTextSecondary,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                fontWeight: isSelected ? AppFontWeight.semiBold : AppFontWeight.normal,
               ),
             ),
           ],
@@ -649,7 +649,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                       end: Alignment.bottomCenter,
                       colors: [
                         AppColors.shadowDarker,
-                        Colors.transparent,
+                        AppColors.transparent,
                       ],
                     ),
                   ),
@@ -668,7 +668,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                           }),
                           style: AppTextStyles.bodyLarge.copyWith(
                             color: AppColors.darkTextPrimary,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: AppFontWeight.semiBold,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -711,7 +711,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                         end: Alignment.topCenter,
                         colors: [
                           AppColors.shadowDarkest,
-                          Colors.transparent,
+                          AppColors.transparent,
                         ],
                       ),
                     ),
@@ -790,10 +790,10 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                           child: ShadButton(
                             onPressed: _saveFilteredImage,
                             height: 48,
-                            backgroundColor: Colors.white,
-                            foregroundColor: Colors.black,
-                            hoverBackgroundColor: Colors.grey.shade200,
-                            pressedBackgroundColor: Colors.grey.shade300,
+                            backgroundColor: AppColors.white,
+                            foregroundColor: AppColors.black,
+                            hoverBackgroundColor: AppColors.hoverLight,
+                            pressedBackgroundColor: AppColors.pressedLight,
                             leading: const Icon(LucideIcons.check, size: 18),
                             child: Text('common.save'.tr()),
                           ),

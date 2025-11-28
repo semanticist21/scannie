@@ -62,7 +62,7 @@ class ImageTile extends StatelessWidget {
                 '${index + 1}',
                 style: AppTextStyles.caption.copyWith(
                   color: AppColors.darkTextPrimary,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: AppFontWeight.medium,
                 ),
               ),
             ),

@@ -73,7 +73,7 @@ class PremiumDialog {
                           'premium.unlocked'.tr(),
                           style: AppTextStyles.bodyMedium.copyWith(
                             color: AppColors.primary,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: AppFontWeight.semiBold,
                           ),
                         ),
                       ],
@@ -135,7 +135,7 @@ class PremiumDialog {
                         '[DEV] Reset Premium',
                         style: TextStyle(
                           color: AppColors.error,
-                          fontSize: 12,
+                          fontSize: AppFontSize.sm,
                         ),
                       ),
                     ),

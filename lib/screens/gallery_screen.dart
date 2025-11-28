@@ -13,6 +13,7 @@ import '../services/pdf_generator.dart';
 import '../services/pdf_settings_service.dart';
 import '../theme/app_theme.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
 import '../widgets/gallery/scan_card.dart';
 import '../widgets/common/empty_state.dart';
 import '../widgets/gallery/document_grid_card.dart';
@@ -422,19 +423,19 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
                                 height: 40,
                                 decoration: BoxDecoration(
                                   color: AppColors.neumorphicBase,
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(AppRadius.mdd),
                                   boxShadow: [
                                     // Inner shadow (top-left light)
                                     BoxShadow(
                                       color:
-                                          Colors.white.withValues(alpha: 0.8),
+                                          AppColors.white.withValues(alpha: 0.8),
                                       offset: const Offset(-2, -2),
                                       blurRadius: 4,
                                     ),
                                     // Inner shadow (bottom-right dark)
                                     BoxShadow(
                                       color:
-                                          Colors.black.withValues(alpha: 0.08),
+                                          AppColors.black.withValues(alpha: 0.08),
                                       offset: const Offset(2, 2),
                                       blurRadius: 4,
                                     ),
@@ -444,17 +445,17 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
                                   controller: _searchController,
                                   focusNode: _searchFocusNode,
                                   onChanged: _onSearchChanged,
-                                  style: const TextStyle(fontSize: 13),
+                                  style: const TextStyle(fontSize: AppFontSize.smd),
                                   decoration: InputDecoration(
                                     hintText: 'gallery.searchPlaceholder'.tr(),
                                     hintStyle: TextStyle(
-                                      fontSize: 13,
+                                      fontSize: AppFontSize.smd,
                                       color: AppColors.textHint,
                                     ),
                                     border: InputBorder.none,
                                     contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 12,
-                                      vertical: 10,
+                                      horizontal: AppSpacing.ms,
+                                      vertical: AppSpacing.smd,
                                     ),
                                     isDense: true,
                                   ),

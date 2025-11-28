@@ -47,7 +47,7 @@ class EmptyState extends StatelessWidget {
             Text(
               title,
               style: AppTextStyles.h3.copyWith(
-                fontWeight: FontWeight.w600,
+                fontWeight: AppFontWeight.semiBold,
                 color: AppColors.textPrimary,
               ),
             ),

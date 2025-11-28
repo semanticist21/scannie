@@ -6,28 +6,107 @@ import 'package:wolt_modal_sheet/wolt_modal_sheet.dart';
 import 'app_colors.dart';
 import 'app_text_styles.dart';
 
-/// App spacing constants
+// ============================================
+// Spacing System
+// ============================================
+/// App spacing constants for consistent margins and padding
+/// Use these instead of hardcoded numeric values
 class AppSpacing {
   AppSpacing._();
 
+  /// 2px - Extra extra small
+  static const double xxs = 2.0;
+  /// 4px - Extra small
   static const double xs = 4.0;
+  /// 8px - Small
   static const double sm = 8.0;
+  /// 10px - Small-medium (for specific cases like icon containers)
+  static const double smd = 10.0;
+  /// 12px - Medium-small
+  static const double ms = 12.0;
+  /// 16px - Medium (default)
   static const double md = 16.0;
+  /// 24px - Large
   static const double lg = 24.0;
+  /// 32px - Extra large
   static const double xl = 32.0;
+  /// 48px - Extra extra large
   static const double xxl = 48.0;
+
+  // Pre-built EdgeInsets for common patterns
+  static const EdgeInsets allXs = EdgeInsets.all(xs);
+  static const EdgeInsets allSm = EdgeInsets.all(sm);
+  static const EdgeInsets allMd = EdgeInsets.all(md);
+  static const EdgeInsets allLg = EdgeInsets.all(lg);
+
+  static const EdgeInsets horizontalSm = EdgeInsets.symmetric(horizontal: sm);
+  static const EdgeInsets horizontalMd = EdgeInsets.symmetric(horizontal: md);
+  static const EdgeInsets horizontalLg = EdgeInsets.symmetric(horizontal: lg);
+
+  static const EdgeInsets verticalSm = EdgeInsets.symmetric(vertical: sm);
+  static const EdgeInsets verticalMd = EdgeInsets.symmetric(vertical: md);
+  static const EdgeInsets verticalLg = EdgeInsets.symmetric(vertical: lg);
 }
 
-/// Border radius constants
+// ============================================
+// Gap System (for Column/Row children spacing)
+// ============================================
+/// Pre-built SizedBox widgets for consistent spacing in Rows/Columns
+class AppGap {
+  AppGap._();
+
+  // Vertical gaps
+  static const SizedBox vXxs = SizedBox(height: AppSpacing.xxs);
+  static const SizedBox vXs = SizedBox(height: AppSpacing.xs);
+  static const SizedBox vSm = SizedBox(height: AppSpacing.sm);
+  static const SizedBox vMd = SizedBox(height: AppSpacing.md);
+  static const SizedBox vLg = SizedBox(height: AppSpacing.lg);
+  static const SizedBox vXl = SizedBox(height: AppSpacing.xl);
+
+  // Horizontal gaps
+  static const SizedBox hXxs = SizedBox(width: AppSpacing.xxs);
+  static const SizedBox hXs = SizedBox(width: AppSpacing.xs);
+  static const SizedBox hSm = SizedBox(width: AppSpacing.sm);
+  static const SizedBox hMd = SizedBox(width: AppSpacing.md);
+  static const SizedBox hLg = SizedBox(width: AppSpacing.lg);
+  static const SizedBox hXl = SizedBox(width: AppSpacing.xl);
+}
+
+// ============================================
+// Border Radius System
+// ============================================
+/// Border radius constants for consistent rounded corners
 class AppRadius {
   AppRadius._();
 
+  /// 2px - Extra small
   static const double xs = 2.0;
+  /// 4px - Small
   static const double sm = 4.0;
+  /// 8px - Medium (default)
   static const double md = 8.0;
+  /// 10px - Medium (for specific card corners)
+  static const double mdd = 10.0;
+  /// 12px - Medium-large
+  static const double ml = 12.0;
+  /// 16px - Large
   static const double lg = 16.0;
+  /// 24px - Extra large
   static const double xl = 24.0;
+  /// 999px - Full round (pills)
   static const double round = 999.0;
+
+  // Pre-built BorderRadius for common patterns
+  static final BorderRadius allXs = BorderRadius.circular(xs);
+  static final BorderRadius allSm = BorderRadius.circular(sm);
+  static final BorderRadius allMd = BorderRadius.circular(md);
+  static final BorderRadius allLg = BorderRadius.circular(lg);
+  static final BorderRadius allXl = BorderRadius.circular(xl);
+  static final BorderRadius allRound = BorderRadius.circular(round);
+
+  // Top-only radius (for bottom sheets)
+  static const BorderRadius topLg = BorderRadius.vertical(top: Radius.circular(lg));
+  static const BorderRadius topXl = BorderRadius.vertical(top: Radius.circular(xl));
 }
 
 /// Shadow presets for consistent elevation

@@ -191,7 +191,7 @@ class SettingsSheet extends StatelessWidget {
               child: Text(
                 'settings.title'.tr(),
                 style: AppTextStyles.bodyMedium.copyWith(
-                  fontWeight: FontWeight.w600,
+                  fontWeight: AppFontWeight.semiBold,
                 ),
               ),
             ),
@@ -207,7 +207,7 @@ class SettingsSheet extends StatelessWidget {
                   'settings.premium'.tr(),
                   style: AppTextStyles.caption.copyWith(
                     color: AppColors.textSecondary,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: AppFontWeight.medium,
                   ),
                 ),
                 const SizedBox(height: AppSpacing.sm),
@@ -232,7 +232,7 @@ class SettingsSheet extends StatelessWidget {
                           child: Text(
                             isPremium ? 'settings.premiumActive'.tr() : 'settings.getPremium'.tr(),
                             style: AppTextStyles.bodyMedium.copyWith(
-                              fontWeight: FontWeight.w500,
+                              fontWeight: AppFontWeight.medium,
                             ),
                           ),
                         ),
@@ -260,7 +260,7 @@ class SettingsSheet extends StatelessWidget {
                   'settings.viewMode'.tr(),
                   style: AppTextStyles.caption.copyWith(
                     color: AppColors.textSecondary,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: AppFontWeight.medium,
                   ),
                 ),
                 const SizedBox(height: AppSpacing.sm),
@@ -299,8 +299,8 @@ class SettingsSheet extends StatelessWidget {
                               'settings.${mode.name}'.tr(),
                               style: AppTextStyles.bodyMedium.copyWith(
                                 fontWeight: isSelected
-                                    ? FontWeight.w600
-                                    : FontWeight.normal,
+                                    ? AppFontWeight.semiBold
+                                    : AppFontWeight.normal,
                               ),
                             ),
                           ),
@@ -324,7 +324,7 @@ class SettingsSheet extends StatelessWidget {
                   'settings.pdfDefaults'.tr(),
                   style: AppTextStyles.caption.copyWith(
                     color: AppColors.textSecondary,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: AppFontWeight.medium,
                   ),
                 ),
                 const SizedBox(height: AppSpacing.md),
@@ -477,7 +477,7 @@ class SettingsSheet extends StatelessWidget {
                   'settings.language'.tr(),
                   style: AppTextStyles.caption.copyWith(
                     color: AppColors.textSecondary,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: AppFontWeight.medium,
                   ),
                 ),
                 const SizedBox(height: AppSpacing.sm),

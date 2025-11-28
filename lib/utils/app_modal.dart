@@ -24,7 +24,7 @@ class _BlurDialogType extends WoltDialogType {
         Positioned.fill(
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
-            child: Container(color: Colors.transparent),
+            child: Container(color: AppColors.transparent),
           ),
         ),
         super.decorateModal(context, modal, useSafeArea),
@@ -54,7 +54,7 @@ class _BlurBottomSheetType extends WoltBottomSheetType {
         Positioned.fill(
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
-            child: Container(color: Colors.transparent),
+            child: Container(color: AppColors.transparent),
           ),
         ),
         super.decorateModal(context, modal, useSafeArea),

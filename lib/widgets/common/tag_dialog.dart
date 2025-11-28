@@ -128,7 +128,7 @@ class _TagContentState extends State<_TagContent> {
           Text(
             'dialogs.tagColor'.tr(),
             style: AppTextStyles.bodyMedium.copyWith(
-              fontWeight: FontWeight.w500,
+              fontWeight: AppFontWeight.medium,
             ),
           ),
           const SizedBox(height: AppSpacing.sm),
@@ -160,7 +160,7 @@ class _TagContentState extends State<_TagContent> {
               color: Color(colorValue),
               shape: BoxShape.circle,
               border: Border.all(
-                color: isSelected ? AppColors.textPrimary : Colors.transparent,
+                color: isSelected ? AppColors.textPrimary : AppColors.transparent,
                 width: 2,
               ),
             ),
@@ -234,6 +234,6 @@ class _TagContentState extends State<_TagContent> {
   Color _getContrastColor(Color color) {
     // Calculate luminance to determine if text should be light or dark
     final luminance = color.computeLuminance();
-    return luminance > 0.5 ? Colors.black : Colors.white;
+    return luminance > 0.5 ? AppColors.black : AppColors.white;
   }
 }

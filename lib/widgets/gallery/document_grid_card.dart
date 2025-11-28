@@ -79,7 +79,7 @@ class DocumentGridCard extends StatelessWidget {
                     duration: const Duration(milliseconds: 200),
                     scale: isSelectionMode ? 1.0 : 0.5,
                     child: Container(
-                      padding: const EdgeInsets.all(2),
+                      padding: const EdgeInsets.all(AppSpacing.xxs),
                       decoration: BoxDecoration(
                         color: AppColors.surface,
                         shape: BoxShape.circle,
@@ -143,7 +143,7 @@ class DocumentGridCard extends StatelessWidget {
                               child: Text(
                                 document.name,
                                 style: AppTextStyles.bodyMedium.copyWith(
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: AppFontWeight.semiBold,
                                   letterSpacing: -0.2,
                                 ),
                                 maxLines: 1,
@@ -197,8 +197,8 @@ class DocumentGridCard extends StatelessWidget {
                                 document.tagText!,
                                 style: TextStyle(
                                   color: _getContrastColor(Color(document.tagColor ?? 0xFF6B7280)),
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 9,
+                                  fontWeight: AppFontWeight.medium,
+                                  fontSize: AppFontSize.xxs,
                                 ),
                               ),
                             ),
@@ -380,6 +380,6 @@ class DocumentGridCard extends StatelessWidget {
 
   Color _getContrastColor(Color backgroundColor) {
     final luminance = backgroundColor.computeLuminance();
-    return luminance > 0.5 ? Colors.black : Colors.white;
+    return luminance > 0.5 ? AppColors.black : AppColors.white;
   }
 }

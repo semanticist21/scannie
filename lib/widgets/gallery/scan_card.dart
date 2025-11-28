@@ -206,7 +206,7 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
                         Text(
                           widget.document.name,
                           style: AppTextStyles.bodyMedium.copyWith(
-                            fontWeight: FontWeight.w500,
+                            fontWeight: AppFontWeight.medium,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -235,8 +235,8 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
                                 widget.document.tagText!,
                                 style: TextStyle(
                                   color: _getContrastColor(Color(widget.document.tagColor ?? 0xFF6B7280)),
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 10,
+                                  fontWeight: AppFontWeight.medium,
+                                  fontSize: AppFontSize.xs,
                                 ),
                               ),
                             ),
@@ -437,6 +437,6 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
 
   Color _getContrastColor(Color backgroundColor) {
     final luminance = backgroundColor.computeLuminance();
-    return luminance > 0.5 ? Colors.black : Colors.white;
+    return luminance > 0.5 ? AppColors.black : AppColors.white;
   }
 }
