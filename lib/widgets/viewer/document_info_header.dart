@@ -50,13 +50,40 @@ class DocumentInfoHeader extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    document.name,
-                    style: AppTextStyles.bodyMedium.copyWith(
-                      fontWeight: AppFontWeight.semiBold,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          document.name,
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            fontWeight: AppFontWeight.semiBold,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      // Tag badge
+                      if (document.hasTag) ...[
+                        const SizedBox(width: AppSpacing.sm),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.sm,
+                            vertical: AppSpacing.xxs,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Color(document.tagColor!).withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(AppRadius.xs),
+                          ),
+                          child: Text(
+                            document.tagText!,
+                            style: AppTextStyles.caption.copyWith(
+                              color: Color(document.tagColor!),
+                              fontWeight: AppFontWeight.medium,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                   const SizedBox(height: AppSpacing.xs),
                   Text(
