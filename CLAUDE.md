@@ -423,14 +423,32 @@ import '../theme/app_text_styles.dart';
 // Border Radius: AppRadius.sm(4) / md(8) / lg(16) / xl(24) / round(999)
 // 색상: AppColors.primary / accent / surface / background
 // 타이포그래피: AppTextStyles.h1 / h2 / bodyLarge / button
+// 폰트 크기: AppFontSize.xs(10) / sm(12) / md(14) / lg(16) / xl(18) / xxl(24)
+// 폰트 굵기: AppFontWeight.normal(400) / medium(500) / semiBold(600) / bold(700)
 ```
 
-**색상 스킴**: 앱은 `ShadSlateColorScheme.light()`를 사용합니다 (shadcn_ui):
-- Primary: `#0f172a` (slate-900)
-- Secondary/Muted: `#f1f5f9` (slate-100)
-- Destructive: `#ef4444` (red-500)
-- Border: `#e2e8f0` (slate-200)
-- Selection: `#B4D7FF`
+**하드코딩 금지**: 숫자 값 직접 사용 금지 → 디자인 토큰 사용
+
+```dart
+// ❌ WRONG
+fontSize: 12, fontWeight: FontWeight.w500, padding: EdgeInsets.all(16)
+
+// ✅ CORRECT
+fontSize: AppFontSize.sm, fontWeight: AppFontWeight.medium, padding: EdgeInsets.all(AppSpacing.md)
+```
+
+**색상 스킴**: 앱은 `ShadSlateColorScheme.light()`를 기반으로 Teal 테마를 사용합니다:
+
+| 용도 | 색상 | HEX |
+|------|------|-----|
+| Primary (버튼, 체크) | teal-600 | `#0d9488` |
+| Primary Dark (hover) | teal-700 | `#0f766e` |
+| Primary Light | teal-200 | `#99f6e4` |
+| Accent | teal-500 | `#14b8a6` |
+| Destructive | red-500 | `#ef4444` |
+| Border | slate-200 | `#e2e8f0` |
+
+**ShadButton 테마**: `main.dart`에서 `primaryButtonTheme`으로 hover 상태까지 teal 색상 적용
 
 ### 네비게이션 플로우
 
