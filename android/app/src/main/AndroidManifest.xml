@@ -7,6 +7,8 @@
         android:maxSdkVersion="32" />
     <!-- Android 13+ granular media permissions -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <!-- In-app billing permission -->
+    <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
         android:label="Scannie"
