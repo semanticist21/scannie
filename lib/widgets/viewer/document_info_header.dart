@@ -50,41 +50,39 @@ class DocumentInfoHeader extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Row(
-                    children: [
-                      Flexible(
+                  // Document name
+                  Text(
+                    document.name,
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      fontWeight: AppFontWeight.semiBold,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  // Tag badge (below title)
+                  if (document.hasTag) ...[
+                    const SizedBox(height: AppSpacing.xs),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.sm,
+                          vertical: AppSpacing.xxs,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Color(document.tagColor!).withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(AppRadius.xs),
+                        ),
                         child: Text(
-                          document.name,
-                          style: AppTextStyles.bodyMedium.copyWith(
-                            fontWeight: AppFontWeight.semiBold,
+                          document.tagText!,
+                          style: AppTextStyles.caption.copyWith(
+                            color: Color(document.tagColor!),
+                            fontWeight: AppFontWeight.medium,
                           ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      // Tag badge
-                      if (document.hasTag) ...[
-                        const SizedBox(width: AppSpacing.sm),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: AppSpacing.sm,
-                            vertical: AppSpacing.xxs,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Color(document.tagColor!).withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(AppRadius.xs),
-                          ),
-                          child: Text(
-                            document.tagText!,
-                            style: AppTextStyles.caption.copyWith(
-                              color: Color(document.tagColor!),
-                              fontWeight: AppFontWeight.medium,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
+                    ),
+                  ],
                   const SizedBox(height: AppSpacing.xs),
                   Text(
                     _buildInfoText(),
