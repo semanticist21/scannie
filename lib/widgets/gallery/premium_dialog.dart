@@ -15,9 +15,11 @@ class PremiumDialog {
   static void show(BuildContext context, {VoidCallback? onPurchase, bool isPremium = false}) {
     AppModal.showDialog(
       context: context,
-      pageListBuilder: (modalContext) => [
+      pageListBuilder: (modalContext) {
+        final colors = ThemedColors.of(modalContext);
+        return [
         WoltModalSheetPage(
-          backgroundColor: AppColors.surface,
+          backgroundColor: colors.surface,
           hasSabGradient: false,
           hasTopBarLayer: false,
           isTopBarLayerAlwaysVisible: false,
@@ -30,7 +32,9 @@ class PremiumDialog {
                 // Title
                 Text(
                   isPremium ? 'premium.titleActive'.tr() : 'premium.title'.tr(),
-                  style: AppTextStyles.h3,
+                  style: AppTextStyles.h3.copyWith(
+                    color: colors.textPrimary,
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.md),
 
@@ -40,7 +44,7 @@ class PremiumDialog {
                       ? 'premium.descriptionActive'.tr()
                       : 'premium.description'.tr(),
                   style: AppTextStyles.bodyMedium.copyWith(
-                    color: AppColors.textSecondary,
+                    color: colors.textSecondary,
                   ),
                 ),
                 const SizedBox(height: AppSpacing.xl),
@@ -86,6 +90,7 @@ class PremiumDialog {
                     width: double.infinity,
                     child: ShadButton.outline(
                       onPressed: () => Navigator.of(modalContext).pop(),
+                      backgroundColor: colors.surface,
                       child: Text('common.close'.tr()),
                     ),
                   ),
@@ -108,6 +113,7 @@ class PremiumDialog {
                     width: double.infinity,
                     child: ShadButton.outline(
                       onPressed: () => Navigator.of(modalContext).pop(),
+                      backgroundColor: colors.surface,
                       child: Text('premium.maybeLater'.tr()),
                     ),
                   ),
@@ -145,7 +151,8 @@ class PremiumDialog {
             ),
           ),
         ),
-      ],
+      ];
+      },
     );
   }
 }

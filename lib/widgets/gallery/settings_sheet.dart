@@ -176,6 +176,9 @@ class _SettingsSheetState extends State<SettingsSheet> {
   Future<void> _setThemeMode(AppThemeMode mode) async {
     setState(() => _currentTheme = mode);
     await ThemeService.instance.setThemeMode(mode);
+    if (mounted) {
+      Navigator.of(context).pop();
+    }
   }
 
   String _getThemeDisplayName(AppThemeMode mode) {
