@@ -182,5 +182,11 @@
     "search": "검색",
     "createEmptyDocument": "빈 문서 만들기",
     "settings": "설정"
+  },
+  "tags": {
+    "working": "진행 중",
+    "todo": "할 일",
+    "review": "검토",
+    "done": "완료"
   }
 }

@@ -113,6 +113,10 @@ class _TagContentState extends State<_TagContent> {
             ),
           ),
           const SizedBox(height: AppSpacing.md),
+          // Preset tags section
+          _buildPresetTags(),
+          const SizedBox(height: AppSpacing.md),
+          // Custom tag input
           ShadInput(
             controller: widget.controller,
             placeholder: Text('dialogs.tagPlaceholder'.tr()),
@@ -145,6 +149,43 @@ class _TagContentState extends State<_TagContent> {
           _buildButtons(),
         ],
       ),
+    );
+  }
+
+  Widget _buildPresetTags() {
+    return Wrap(
+      spacing: AppSpacing.sm,
+      runSpacing: AppSpacing.sm,
+      children: TagPreset.presets.map((preset) {
+        final presetColor = Color(preset.color);
+        final contrastColor = _getContrastColor(presetColor);
+
+        return GestureDetector(
+          onTap: () {
+            setState(() {
+              widget.controller.text = preset.label;
+              _selectedColor = preset.color;
+            });
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.sm + 2,
+              vertical: AppSpacing.xs,
+            ),
+            decoration: BoxDecoration(
+              color: presetColor,
+              borderRadius: BorderRadius.circular(AppRadius.round),
+            ),
+            child: Text(
+              preset.label,
+              style: AppTextStyles.bodySmall.copyWith(
+                color: contrastColor,
+                fontWeight: AppFontWeight.medium,
+              ),
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 

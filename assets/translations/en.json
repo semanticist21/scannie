@@ -182,5 +182,11 @@
     "search": "Search",
     "createEmptyDocument": "Create Empty Document",
     "settings": "Settings"
+  },
+  "tags": {
+    "working": "Working",
+    "todo": "To Do",
+    "review": "Review",
+    "done": "Done"
   }
 }

@@ -200,6 +200,25 @@ class TagColors {
   ];
 }
 
+/// Preset tag with label and color
+class TagPreset {
+  final String label;
+  final int color;
+
+  const TagPreset({
+    required this.label,
+    required this.color,
+  });
+
+  /// Predefined tag presets
+  static const List<TagPreset> presets = [
+    TagPreset(label: 'Working', color: 0xFFEF4444), // Red
+    TagPreset(label: 'To Do', color: 0xFFF97316), // Orange
+    TagPreset(label: 'In Review', color: 0xFF8B5CF6), // Purple
+    TagPreset(label: 'Done', color: 0xFF22C55E), // Green
+  ];
+}
+
 /// Model representing a scanned document
 class ScanDocument {
   final String id;
