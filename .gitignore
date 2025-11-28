@@ -44,6 +44,7 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+
 # iOS Flutter Generated files
 **/ios/Flutter/Generated.xcconfig
 **/ios/Flutter/Debug.xcconfig
