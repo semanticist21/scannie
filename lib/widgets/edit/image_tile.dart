@@ -22,11 +22,13 @@ class ImageTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = ThemedColors.of(context);
+
     return Container(
       key: ValueKey(imagePath),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppRadius.md),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: colors.border),
       ),
       child: Stack(
         clipBehavior: Clip.none,
@@ -78,14 +80,14 @@ class ImageTile extends StatelessWidget {
                 width: 32,
                 height: 32,
                 decoration: BoxDecoration(
-                  color: AppColors.surface,
+                  color: colors.surface,
                   shape: BoxShape.circle,
-                  border: Border.all(color: AppColors.border),
+                  border: Border.all(color: colors.border),
                   boxShadow: AppShadows.card,
                 ),
-                child: const Icon(
+                child: Icon(
                   LucideIcons.x,
-                  color: AppColors.textSecondary,
+                  color: colors.textSecondary,
                   size: 18,
                 ),
               ),

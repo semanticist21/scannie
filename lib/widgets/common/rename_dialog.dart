@@ -86,9 +86,11 @@ class RenameDialog {
 
     AppModal.showDialog(
       context: context,
-      pageListBuilder: (modalContext) => [
+      pageListBuilder: (modalContext) {
+        final colors = ThemedColors.of(modalContext);
+        return [
         WoltModalSheetPage(
-          backgroundColor: AppColors.surface,
+          backgroundColor: colors.surface,
           hasSabGradient: false,
           hasTopBarLayer: false,
           isTopBarLayerAlwaysVisible: false,
@@ -98,7 +100,8 @@ class RenameDialog {
             onSave: onSave,
           ),
         ),
-      ],
+      ];
+      },
     );
   }
 }
@@ -137,18 +140,25 @@ class _RenameContentState extends State<_RenameContent> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = ThemedColors.of(context);
+
     return Padding(
       padding: const EdgeInsets.all(AppSpacing.lg),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('dialogs.renameScan'.tr(), style: AppTextStyles.h3),
+          Text(
+            'dialogs.renameScan'.tr(),
+            style: AppTextStyles.h3.copyWith(
+              color: colors.textPrimary,
+            ),
+          ),
           const SizedBox(height: AppSpacing.xs),
           Text(
             'dialogs.renameScanDesc'.tr(),
             style: AppTextStyles.bodyMedium.copyWith(
-              color: AppColors.textSecondary,
+              color: colors.textSecondary,
             ),
           ),
           const SizedBox(height: AppSpacing.md),
@@ -165,8 +175,8 @@ class _RenameContentState extends State<_RenameContent> {
               '${widget.controller.text.length} / ${RenameDialog.maxLength}',
               style: AppTextStyles.caption.copyWith(
                 color: widget.controller.text.length > RenameDialog.maxLength
-                    ? AppColors.error
-                    : AppColors.textHint,
+                    ? colors.error
+                    : colors.textHint,
               ),
             ),
           ),

@@ -86,6 +86,7 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
   Widget build(BuildContext context) {
     final pageCount = widget.document.imagePaths.length;
     final formattedDate = _formatDate(widget.document.createdAt);
+    final colors = ThemedColors.of(context);
 
     // Material 3 card design with subtle scale animation and swipe-to-delete
     return ScaleTransition(
@@ -103,7 +104,7 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
             vertical: AppSpacing.sm,
           ),
           decoration: BoxDecoration(
-            color: AppColors.error,
+            color: colors.error,
             borderRadius: BorderRadius.circular(AppRadius.lg),
           ),
           alignment: Alignment.centerRight,
@@ -116,7 +117,7 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
             child: Container(
               width: 60,
               height: 60,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: AppColors.darkOverlay,
                 shape: BoxShape.circle,
               ),
@@ -134,7 +135,7 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
             vertical: AppSpacing.sm,
           ),
           decoration: BoxDecoration(
-            color: AppColors.surface,
+            color: colors.cardBackground,
             borderRadius: BorderRadius.circular(AppRadius.lg),
             boxShadow: AppShadows.card,
           ),
@@ -173,7 +174,7 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
                                   size: 24,
                                   color: widget.isSelected
                                       ? AppColors.primary
-                                      : AppColors.textSecondary,
+                                      : colors.textSecondary,
                                 ),
                               ),
                               const SizedBox(width: AppSpacing.sm),
@@ -187,7 +188,7 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
                     height: 72,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(AppRadius.sm),
-                      color: AppColors.divider,
+                      color: colors.divider,
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -207,6 +208,7 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
                           widget.document.name,
                           style: AppTextStyles.bodyMedium.copyWith(
                             fontWeight: AppFontWeight.medium,
+                            color: colors.textPrimary,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -215,7 +217,7 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
                         Text(
                           '$pageCount ${pageCount == 1 ? 'common.page'.tr() : 'common.pagesLower'.tr()} · $formattedDate',
                           style: AppTextStyles.caption.copyWith(
-                            color: AppColors.textSecondary,
+                            color: colors.textSecondary,
                           ),
                         ),
                         if (widget.document.hasTag) ...[
@@ -372,7 +374,7 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
         ContextMenuItem(
           icon: LucideIcons.trash2,
           label: 'common.delete'.tr(),
-          color: AppColors.error,
+          color: ThemedColors.of(context).error,
           onTap: () {
             Navigator.pop(context);
             widget.onDelete?.call();
@@ -388,6 +390,8 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
   }
 
   Widget _buildThumbnail() {
+    final colors = ThemedColors.of(context);
+
     // If document has images, show the first image as thumbnail
     if (widget.document.imagePaths.isNotEmpty) {
       final firstImagePath = widget.document.imagePaths.first;
@@ -401,11 +405,11 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
           cacheWidth: 250,
           errorBuilder: (context, error, stackTrace) {
             return Container(
-              color: AppColors.background,
-              child: const Center(
+              color: colors.background,
+              child: Center(
                 child: Icon(
                   LucideIcons.fileText,
-                  color: AppColors.textHint,
+                  color: colors.textHint,
                   size: 28,
                 ),
               ),
@@ -417,11 +421,11 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
 
     // Fallback to icon if no images or file doesn't exist
     return Container(
-      color: AppColors.background,
-      child: const Center(
+      color: colors.background,
+      child: Center(
         child: Icon(
           LucideIcons.fileText,
-          color: AppColors.textHint,
+          color: colors.textHint,
           size: 28,
         ),
       ),

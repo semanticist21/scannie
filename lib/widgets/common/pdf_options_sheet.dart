@@ -34,9 +34,10 @@ class PdfOptionsSheet extends StatefulWidget {
     required PdfMargin margin,
     required Function(PdfQuality, PdfPageSize, PdfOrientation, PdfImageFit, PdfMargin) onSave,
   }) {
+    final colors = ThemedColors.of(context);
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppColors.surface,
+      backgroundColor: colors.surface,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
@@ -81,6 +82,8 @@ class _PdfOptionsSheetState extends State<PdfOptionsSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = ThemedColors.of(context);
+
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.lg),
@@ -95,7 +98,7 @@ class _PdfOptionsSheetState extends State<PdfOptionsSheet> {
                 width: 32,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: AppColors.border,
+                  color: colors.border,
                   borderRadius: BorderRadius.circular(AppRadius.xs),
                 ),
               ),
@@ -106,12 +109,13 @@ class _PdfOptionsSheetState extends State<PdfOptionsSheet> {
               'viewer.pdfOptions'.tr(),
               style: AppTextStyles.bodyMedium.copyWith(
                 fontWeight: AppFontWeight.semiBold,
+                color: colors.textPrimary,
               ),
             ),
             const SizedBox(height: AppSpacing.lg),
 
             // Quality
-            _buildOptionRow(
+            _buildOptionRow(context,
               icon: LucideIcons.image,
               label: 'settings.pdfQuality'.tr(),
               child: SizedBox(
@@ -137,7 +141,7 @@ class _PdfOptionsSheetState extends State<PdfOptionsSheet> {
             const SizedBox(height: AppSpacing.sm),
 
             // Page Size
-            _buildOptionRow(
+            _buildOptionRow(context,
               icon: LucideIcons.fileText,
               label: 'settings.pdfPageSize'.tr(),
               child: SizedBox(
@@ -163,7 +167,7 @@ class _PdfOptionsSheetState extends State<PdfOptionsSheet> {
             const SizedBox(height: AppSpacing.sm),
 
             // Orientation
-            _buildOptionRow(
+            _buildOptionRow(context,
               icon: LucideIcons.smartphone,
               label: 'settings.pdfOrientation'.tr(),
               child: SizedBox(
@@ -189,7 +193,7 @@ class _PdfOptionsSheetState extends State<PdfOptionsSheet> {
             const SizedBox(height: AppSpacing.sm),
 
             // Image Fit
-            _buildOptionRow(
+            _buildOptionRow(context,
               icon: LucideIcons.maximize,
               label: 'settings.pdfImageFit'.tr(),
               child: SizedBox(
@@ -215,7 +219,7 @@ class _PdfOptionsSheetState extends State<PdfOptionsSheet> {
             const SizedBox(height: AppSpacing.sm),
 
             // Margin
-            _buildOptionRow(
+            _buildOptionRow(context,
               icon: LucideIcons.square,
               label: 'settings.pdfMargin'.tr(),
               child: SizedBox(
@@ -262,23 +266,27 @@ class _PdfOptionsSheetState extends State<PdfOptionsSheet> {
     );
   }
 
-  Widget _buildOptionRow({
+  Widget _buildOptionRow(BuildContext context, {
     required IconData icon,
     required String label,
     required Widget child,
   }) {
+    final colors = ThemedColors.of(context);
+
     return Row(
       children: [
         Icon(
           icon,
           size: 18,
-          color: AppColors.textSecondary,
+          color: colors.textSecondary,
         ),
         const SizedBox(width: AppSpacing.sm),
         Expanded(
           child: Text(
             label,
-            style: AppTextStyles.bodySmall,
+            style: AppTextStyles.bodySmall.copyWith(
+              color: colors.textPrimary,
+            ),
           ),
         ),
         child,

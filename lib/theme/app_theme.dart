@@ -163,12 +163,17 @@ class AppShadows {
 class AppTheme {
   AppTheme._();
 
+  // ============================================
+  // Light Theme
+  // ============================================
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
+      brightness: Brightness.light,
       textTheme: GoogleFonts.interTextTheme(),
       colorScheme: ColorScheme.fromSeed(
         seedColor: AppColors.primary,
+        brightness: Brightness.light,
         primary: AppColors.primary,
         secondary: AppColors.accent,
         surface: AppColors.surface,
@@ -294,6 +299,15 @@ class AppTheme {
         elevation: 8,
       ),
 
+      // Bottom sheet
+      bottomSheetTheme: const BottomSheetThemeData(
+        backgroundColor: AppColors.surface,
+        modalBackgroundColor: AppColors.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
+        ),
+      ),
+
       // WoltModalSheet theme extension
       extensions: const <ThemeExtension>[
         WoltModalSheetThemeData(
@@ -303,6 +317,171 @@ class AppTheme {
           modalElevation: 8.0,
           topBarShadowColor: AppColors.shadowLight,
           dragHandleColor: AppColors.border,
+          dragHandleSize: Size(40, 4),
+          showDragHandle: true,
+          enableDrag: true,
+          useSafeArea: true,
+          clipBehavior: Clip.antiAlias,
+          mainContentScrollPhysics: ClampingScrollPhysics(),
+        ),
+      ],
+    );
+  }
+
+  // ============================================
+  // Dark Theme
+  // ============================================
+  static ThemeData get darkTheme {
+    return ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.dark,
+      textTheme: GoogleFonts.interTextTheme(ThemeData.dark().textTheme),
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: AppColors.primary,
+        brightness: Brightness.dark,
+        primary: AppColors.primaryLight,  // lighter teal for dark mode
+        secondary: AppColors.accent,
+        surface: AppColors.surfaceDark,
+        error: AppColors.errorDark,
+      ),
+
+      // Scaffold
+      scaffoldBackgroundColor: AppColors.backgroundDark,
+
+      // App bar
+      appBarTheme: AppBarTheme(
+        elevation: 0,
+        centerTitle: false,
+        backgroundColor: AppColors.surfaceDark,
+        foregroundColor: AppColors.textPrimaryDark,
+        systemOverlayStyle: SystemUiOverlayStyle.light,
+        titleTextStyle: AppTextStyles.h3.copyWith(color: AppColors.textPrimaryDark),
+      ),
+
+      // Card
+      cardTheme: CardThemeData(
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.md),
+        ),
+        color: AppColors.cardBackgroundDark,
+      ),
+
+      // Button themes
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.primary,
+          foregroundColor: Colors.white,
+          elevation: 2,
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.lg,
+            vertical: AppSpacing.md,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppRadius.md),
+          ),
+          textStyle: AppTextStyles.button,
+        ),
+      ),
+
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: AppColors.primaryLight,
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.lg,
+            vertical: AppSpacing.md,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppRadius.md),
+          ),
+          side: const BorderSide(color: AppColors.borderDark),
+          textStyle: AppTextStyles.button,
+        ),
+      ),
+
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          foregroundColor: AppColors.primaryLight,
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.md,
+            vertical: AppSpacing.sm,
+          ),
+          textStyle: AppTextStyles.button,
+        ),
+      ),
+
+      // Icon theme
+      iconTheme: const IconThemeData(
+        color: AppColors.textPrimaryDark,
+        size: 24,
+      ),
+
+      // Floating action button
+      floatingActionButtonTheme: const FloatingActionButtonThemeData(
+        backgroundColor: AppColors.primary,
+        foregroundColor: Colors.white,
+        elevation: 4,
+      ),
+
+      // Input decoration
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: AppColors.surfaceDark,
+        contentPadding: const EdgeInsets.all(AppSpacing.md),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.md),
+          borderSide: const BorderSide(color: AppColors.borderDark),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.md),
+          borderSide: const BorderSide(color: AppColors.borderDark),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.md),
+          borderSide: const BorderSide(color: AppColors.primaryLight, width: 2),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.md),
+          borderSide: const BorderSide(color: AppColors.errorDark),
+        ),
+        labelStyle: AppTextStyles.label.copyWith(color: AppColors.textSecondaryDark),
+        hintStyle: AppTextStyles.caption.copyWith(color: AppColors.textHintDark),
+      ),
+
+      // Divider
+      dividerTheme: const DividerThemeData(
+        color: AppColors.dividerDark,
+        thickness: 1,
+        space: 1,
+      ),
+
+      // Bottom navigation bar
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+        backgroundColor: AppColors.surfaceDark,
+        selectedItemColor: AppColors.primaryLight,
+        unselectedItemColor: AppColors.textSecondaryDark,
+        type: BottomNavigationBarType.fixed,
+        elevation: 8,
+      ),
+
+      // Bottom sheet
+      bottomSheetTheme: const BottomSheetThemeData(
+        backgroundColor: AppColors.surfaceDark,
+        modalBackgroundColor: AppColors.surfaceDark,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
+        ),
+      ),
+
+      // WoltModalSheet theme extension
+      extensions: const <ThemeExtension>[
+        WoltModalSheetThemeData(
+          backgroundColor: AppColors.surfaceDark,
+          modalBarrierColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
+          modalElevation: 8.0,
+          topBarShadowColor: AppColors.shadowLight,
+          dragHandleColor: AppColors.borderDark,
           dragHandleSize: Size(40, 4),
           showDragHandle: true,
           enableDrag: true,

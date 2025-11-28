@@ -21,9 +21,10 @@ class ContextMenuSheet extends StatelessWidget {
     required String title,
     required List<ContextMenuItem> items,
   }) {
+    final colors = ThemedColors.of(context);
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppColors.surface,
+      backgroundColor: colors.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
       ),
@@ -36,6 +37,8 @@ class ContextMenuSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = ThemedColors.of(context);
+
     return SafeArea(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -48,7 +51,7 @@ class ContextMenuSheet extends StatelessWidget {
               width: 32,
               height: 4,
               decoration: BoxDecoration(
-                color: AppColors.border,
+                color: colors.border,
                 borderRadius: BorderRadius.circular(AppRadius.xs),
               ),
             ),
@@ -65,18 +68,19 @@ class ContextMenuSheet extends StatelessWidget {
               title,
               style: AppTextStyles.bodyMedium.copyWith(
                 fontWeight: AppFontWeight.semiBold,
+                color: colors.textPrimary,
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          const Divider(height: 1, color: AppColors.border),
+          Divider(height: 1, color: colors.border),
 
           // Menu items
           Padding(
             padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
             child: Column(
-              children: items.map((item) => _buildMenuItem(item)).toList(),
+              children: items.map((item) => _buildMenuItem(context, item)).toList(),
             ),
           ),
           const SizedBox(height: AppSpacing.sm),
@@ -85,8 +89,9 @@ class ContextMenuSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildMenuItem(ContextMenuItem item) {
-    final itemColor = item.color ?? AppColors.textPrimary;
+  Widget _buildMenuItem(BuildContext context, ContextMenuItem item) {
+    final colors = ThemedColors.of(context);
+    final itemColor = item.color ?? colors.textPrimary;
     return InkWell(
       onTap: item.onTap,
       child: Padding(

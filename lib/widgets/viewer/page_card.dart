@@ -24,11 +24,12 @@ class PageCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: _buildCardContent(),
+      child: _buildCardContent(context),
     );
   }
 
-  Widget _buildCardContent() {
+  Widget _buildCardContent(BuildContext context) {
+    final colors = ThemedColors.of(context);
     final imageWidget = imageFile.existsSync()
         ? Image.file(
             imageFile,
@@ -36,31 +37,31 @@ class PageCard extends StatelessWidget {
             cacheWidth: isListView ? 600 : 1350,
             errorBuilder: (context, error, stackTrace) {
               return Container(
-                color: AppColors.neumorphicBase,
+                color: colors.background,
                 child: Center(
                   child: Icon(
                     LucideIcons.imageOff,
                     size: isListView ? 80 : 48,
-                    color: AppColors.neumorphicShadowDark,
+                    color: colors.textHint,
                   ),
                 ),
               );
             },
           )
         : Container(
-            color: AppColors.neumorphicBase,
+            color: colors.background,
             child: Center(
               child: Icon(
                 LucideIcons.image,
                 size: isListView ? 80 : 48,
-                color: AppColors.neumorphicShadowDark,
+                color: colors.textHint,
               ),
             ),
           );
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: colors.surface,
         borderRadius: BorderRadius.circular(AppRadius.md),
         boxShadow: AppShadows.card,
       ),

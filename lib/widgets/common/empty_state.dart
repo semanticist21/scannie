@@ -22,6 +22,8 @@ class EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = ThemedColors.of(context);
+
     return Center(
       child: Transform.translate(
         offset: Offset(0, verticalOffset),
@@ -34,13 +36,13 @@ class EmptyState extends StatelessWidget {
               width: 120,
               height: 120,
               decoration: BoxDecoration(
-                color: AppColors.textHint.withValues(alpha: 0.1),
+                color: colors.textHint.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 icon,
                 size: iconSize,
-                color: AppColors.textHint,
+                color: colors.textHint,
               ),
             ),
             const SizedBox(height: AppSpacing.xl),
@@ -48,14 +50,14 @@ class EmptyState extends StatelessWidget {
               title,
               style: AppTextStyles.h3.copyWith(
                 fontWeight: AppFontWeight.semiBold,
-                color: AppColors.textPrimary,
+                color: colors.textPrimary,
               ),
             ),
             const SizedBox(height: AppSpacing.sm),
             Text(
               subtitle,
               style: AppTextStyles.bodyMedium.copyWith(
-                color: AppColors.textSecondary,
+                color: colors.textSecondary,
               ),
               textAlign: TextAlign.center,
             ),

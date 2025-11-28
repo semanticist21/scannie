@@ -46,6 +46,8 @@ class DocumentGridCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = ThemedColors.of(context);
+
     return TweenAnimationBuilder<double>(
       duration: const Duration(milliseconds: 200),
       tween: Tween(begin: 0.95, end: 1.0),
@@ -58,7 +60,7 @@ class DocumentGridCard extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.surface,
+          color: colors.cardBackground,
           borderRadius: BorderRadius.circular(AppRadius.lg),
           boxShadow: AppShadows.card,
         ),
@@ -81,7 +83,7 @@ class DocumentGridCard extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.all(AppSpacing.xxs),
                       decoration: BoxDecoration(
-                        color: AppColors.surface,
+                        color: colors.surface,
                         shape: BoxShape.circle,
                       ),
                       child: AnimatedSwitcher(
@@ -100,7 +102,7 @@ class DocumentGridCard extends StatelessWidget {
                           size: 22,
                           color: isSelected
                               ? AppColors.primary
-                              : AppColors.textSecondary,
+                              : colors.textSecondary,
                         ),
                       ),
                     ),
@@ -116,12 +118,12 @@ class DocumentGridCard extends StatelessWidget {
                       margin: const EdgeInsets.all(AppSpacing.sm),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(AppRadius.md),
-                        color: AppColors.surface,
+                        color: colors.surface,
                         boxShadow: AppShadows.card,
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(AppRadius.md),
-                        child: _buildThumbnail(),
+                        child: _buildThumbnail(context),
                       ),
                     ),
                   ),
@@ -145,6 +147,7 @@ class DocumentGridCard extends StatelessWidget {
                                 style: AppTextStyles.bodyMedium.copyWith(
                                   fontWeight: AppFontWeight.semiBold,
                                   letterSpacing: -0.2,
+                                  color: colors.textPrimary,
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -169,13 +172,13 @@ class DocumentGridCard extends StatelessWidget {
                             Icon(
                               LucideIcons.file,
                               size: 14,
-                              color: AppColors.textSecondary.withValues(alpha: 0.7),
+                              color: colors.textSecondary.withValues(alpha: 0.7),
                             ),
                             const SizedBox(width: AppSpacing.xs),
                             Text(
                               '${document.imagePaths.length} ${document.imagePaths.length == 1 ? 'common.page'.tr() : 'common.pagesLower'.tr()}',
                               style: AppTextStyles.caption.copyWith(
-                                color: AppColors.textSecondary,
+                                color: colors.textSecondary,
                               ),
                             ),
                           ],
@@ -327,7 +330,7 @@ class DocumentGridCard extends StatelessWidget {
         ContextMenuItem(
           icon: LucideIcons.trash2,
           label: 'common.delete'.tr(),
-          color: AppColors.error,
+          color: ThemedColors.of(context).error,
           onTap: () {
             Navigator.pop(context);
             onDelete?.call();
@@ -342,7 +345,7 @@ class DocumentGridCard extends StatelessWidget {
     );
   }
 
-  Widget _buildThumbnail() {
+  Widget _buildThumbnail(BuildContext context) {
     // If document has images, show the first image as thumbnail
     if (document.imagePaths.isNotEmpty) {
       final firstImagePath = document.imagePaths.first;
@@ -355,24 +358,26 @@ class DocumentGridCard extends StatelessWidget {
           fit: BoxFit.cover,
           cacheWidth: 450,
           errorBuilder: (context, error, stackTrace) {
-            return _buildPlaceholder();
+            return _buildPlaceholder(context);
           },
         );
       }
     }
 
     // Fallback to icon if no images or file doesn't exist
-    return _buildPlaceholder();
+    return _buildPlaceholder(context);
   }
 
-  Widget _buildPlaceholder() {
+  Widget _buildPlaceholder(BuildContext context) {
+    final colors = ThemedColors.of(context);
+
     return Container(
-      color: AppColors.background,
-      child: const Center(
+      color: colors.background,
+      child: Center(
         child: Icon(
           LucideIcons.fileText,
           size: 40,
-          color: AppColors.textHint,
+          color: colors.textHint,
         ),
       ),
     );

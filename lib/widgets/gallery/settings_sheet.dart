@@ -5,6 +5,7 @@ import '../../theme/app_colors.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/app_text_styles.dart';
 import '../../models/scan_document.dart';
+import '../../services/theme_service.dart';
 
 /// App language options
 enum AppLanguage {
@@ -55,7 +56,7 @@ enum ViewMode {
 }
 
 /// Bottom sheet for app settings
-class SettingsSheet extends StatelessWidget {
+class SettingsSheet extends StatefulWidget {
   final bool isGridView;
   final ValueChanged<bool> onViewModeChanged;
   final bool isPremium;
@@ -94,6 +95,9 @@ class SettingsSheet extends StatelessWidget {
     required this.onPdfMarginChanged,
   });
 
+  @override
+  State<SettingsSheet> createState() => _SettingsSheetState();
+
   /// Show the settings bottom sheet
   static void show({
     required BuildContext context,
@@ -114,9 +118,10 @@ class SettingsSheet extends StatelessWidget {
     required PdfMargin pdfMargin,
     required ValueChanged<PdfMargin> onPdfMarginChanged,
   }) {
+    final colors = ThemedColors.of(context);
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppColors.surface,
+      backgroundColor: colors.surface,
       isScrollControlled: true,
       clipBehavior: Clip.antiAlias,
       shape: const RoundedRectangleBorder(
@@ -157,10 +162,37 @@ class SettingsSheet extends StatelessWidget {
       ),
     );
   }
+}
+
+class _SettingsSheetState extends State<SettingsSheet> {
+  late AppThemeMode _currentTheme;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentTheme = ThemeService.instance.themeMode;
+  }
+
+  Future<void> _setThemeMode(AppThemeMode mode) async {
+    setState(() => _currentTheme = mode);
+    await ThemeService.instance.setThemeMode(mode);
+  }
+
+  String _getThemeDisplayName(AppThemeMode mode) {
+    switch (mode) {
+      case AppThemeMode.system:
+        return 'settings.themeSystem'.tr();
+      case AppThemeMode.light:
+        return 'settings.themeLight'.tr();
+      case AppThemeMode.dark:
+        return 'settings.themeDark'.tr();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final currentMode = isGridView ? ViewMode.grid : ViewMode.list;
+    final currentMode = widget.isGridView ? ViewMode.grid : ViewMode.list;
+    final colors = ThemedColors.of(context);
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -175,7 +207,7 @@ class SettingsSheet extends StatelessWidget {
                 width: 32,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: AppColors.border,
+                  color: colors.border,
                   borderRadius: BorderRadius.circular(AppRadius.xs),
                 ),
               ),
@@ -192,83 +224,28 @@ class SettingsSheet extends StatelessWidget {
                 'settings.title'.tr(),
                 style: AppTextStyles.bodyMedium.copyWith(
                   fontWeight: AppFontWeight.semiBold,
+                  color: colors.textPrimary,
                 ),
               ),
             ),
-            const Divider(height: 1, color: AppColors.border),
+            Divider(height: 1, color: colors.border),
 
-          // Premium section
-          Padding(
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'settings.premium'.tr(),
-                  style: AppTextStyles.caption.copyWith(
-                    color: AppColors.textSecondary,
-                    fontWeight: AppFontWeight.medium,
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.sm),
-                InkWell(
-                  onTap: onPremiumTap,
-                  borderRadius: BorderRadius.circular(AppRadius.md),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: AppSpacing.md,
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          isPremium ? LucideIcons.circleOff : LucideIcons.sparkles,
-                          size: 22,
-                          color: isPremium
-                              ? AppColors.primary
-                              : AppColors.textSecondary,
-                        ),
-                        const SizedBox(width: AppSpacing.md),
-                        Expanded(
-                          child: Text(
-                            isPremium ? 'settings.premiumActive'.tr() : 'settings.getPremium'.tr(),
-                            style: AppTextStyles.bodyMedium.copyWith(
-                              fontWeight: AppFontWeight.medium,
-                            ),
-                          ),
-                        ),
-                        Icon(
-                          LucideIcons.chevronRight,
-                          size: 18,
-                          color: AppColors.textSecondary,
-                        ),
-                      ],
+            // Premium section
+            Padding(
+              padding: const EdgeInsets.all(AppSpacing.lg),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'settings.premium'.tr(),
+                    style: AppTextStyles.caption.copyWith(
+                      color: colors.textSecondary,
+                      fontWeight: AppFontWeight.medium,
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
-          const Divider(height: 1, color: AppColors.border),
-
-          // View Mode section
-          Padding(
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'settings.viewMode'.tr(),
-                  style: AppTextStyles.caption.copyWith(
-                    color: AppColors.textSecondary,
-                    fontWeight: AppFontWeight.medium,
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.sm),
-                // View mode options
-                ...ViewMode.values.map((mode) {
-                  final isSelected = mode == currentMode;
-                  return InkWell(
-                    onTap: () => onViewModeChanged(mode == ViewMode.grid),
+                  const SizedBox(height: AppSpacing.sm),
+                  InkWell(
+                    onTap: widget.onPremiumTap,
                     borderRadius: BorderRadius.circular(AppRadius.md),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -277,254 +254,394 @@ class SettingsSheet extends StatelessWidget {
                       child: Row(
                         children: [
                           Icon(
-                            isSelected
-                                ? LucideIcons.circleCheck
-                                : LucideIcons.circle,
+                            widget.isPremium ? LucideIcons.circleOff : LucideIcons.sparkles,
                             size: 22,
-                            color: isSelected
+                            color: widget.isPremium
                                 ? AppColors.primary
-                                : AppColors.textSecondary,
+                                : colors.textSecondary,
                           ),
                           const SizedBox(width: AppSpacing.md),
-                          Icon(
-                            mode.icon,
-                            size: 18,
-                            color: isSelected
-                                ? AppColors.textPrimary
-                                : AppColors.textSecondary,
-                          ),
-                          const SizedBox(width: AppSpacing.sm),
                           Expanded(
                             child: Text(
-                              'settings.${mode.name}'.tr(),
+                              widget.isPremium ? 'settings.premiumActive'.tr() : 'settings.getPremium'.tr(),
                               style: AppTextStyles.bodyMedium.copyWith(
-                                fontWeight: isSelected
-                                    ? AppFontWeight.semiBold
-                                    : AppFontWeight.normal,
+                                fontWeight: AppFontWeight.medium,
+                                color: colors.textPrimary,
                               ),
                             ),
+                          ),
+                          Icon(
+                            LucideIcons.chevronRight,
+                            size: 18,
+                            color: colors.textSecondary,
                           ),
                         ],
                       ),
                     ),
-                  );
-                }),
-              ],
+                  ),
+                ],
+              ),
             ),
-          ),
-          const Divider(height: 1, color: AppColors.border),
+            Divider(height: 1, color: colors.border),
 
-          // PDF Default Settings section
-          Padding(
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'settings.pdfDefaults'.tr(),
-                  style: AppTextStyles.caption.copyWith(
-                    color: AppColors.textSecondary,
-                    fontWeight: AppFontWeight.medium,
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.md),
-
-                // Quality
-                _buildPdfOptionRow(
-                  context,
-                  icon: LucideIcons.image,
-                  label: 'settings.pdfQuality'.tr(),
-                  child: SizedBox(
-                    width: 120,
-                    child: ShadSelect<PdfQuality>(
-                      initialValue: pdfQuality,
-                      onChanged: (value) {
-                        if (value != null) onPdfQualityChanged(value);
-                      },
-                      selectedOptionBuilder: (context, value) => Text(
-                        value.displayName,
-                        style: AppTextStyles.bodySmall,
-                      ),
-                      options: PdfQuality.values
-                          .map((q) => ShadOption(
-                                value: q,
-                                child: Text(q.displayName),
-                              ))
-                          .toList(),
+            // Appearance section (Theme)
+            Padding(
+              padding: const EdgeInsets.all(AppSpacing.lg),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'settings.appearance'.tr(),
+                    style: AppTextStyles.caption.copyWith(
+                      color: colors.textSecondary,
+                      fontWeight: AppFontWeight.medium,
                     ),
                   ),
-                ),
-                const SizedBox(height: AppSpacing.sm),
-
-                // Page Size
-                _buildPdfOptionRow(
-                  context,
-                  icon: LucideIcons.fileText,
-                  label: 'settings.pdfPageSize'.tr(),
-                  child: SizedBox(
-                    width: 120,
-                    child: ShadSelect<PdfPageSize>(
-                      initialValue: pdfPageSize,
-                      onChanged: (value) {
-                        if (value != null) onPdfPageSizeChanged(value);
-                      },
-                      selectedOptionBuilder: (context, value) => Text(
-                        value.displayName,
-                        style: AppTextStyles.bodySmall,
-                      ),
-                      options: PdfPageSize.values
-                          .map((s) => ShadOption(
-                                value: s,
-                                child: Text(s.displayName),
-                              ))
-                          .toList(),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.sm),
-
-                // Orientation
-                _buildPdfOptionRow(
-                  context,
-                  icon: LucideIcons.smartphone,
-                  label: 'settings.pdfOrientation'.tr(),
-                  child: SizedBox(
-                    width: 120,
-                    child: ShadSelect<PdfOrientation>(
-                      initialValue: pdfOrientation,
-                      onChanged: (value) {
-                        if (value != null) onPdfOrientationChanged(value);
-                      },
-                      selectedOptionBuilder: (context, value) => Text(
-                        value.displayName,
-                        style: AppTextStyles.bodySmall,
-                      ),
-                      options: PdfOrientation.values
-                          .map((o) => ShadOption(
-                                value: o,
-                                child: Text(o.displayName),
-                              ))
-                          .toList(),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.sm),
-
-                // Image Fit
-                _buildPdfOptionRow(
-                  context,
-                  icon: LucideIcons.maximize,
-                  label: 'settings.pdfImageFit'.tr(),
-                  child: SizedBox(
-                    width: 120,
-                    child: ShadSelect<PdfImageFit>(
-                      initialValue: pdfImageFit,
-                      onChanged: (value) {
-                        if (value != null) onPdfImageFitChanged(value);
-                      },
-                      selectedOptionBuilder: (context, value) => Text(
-                        value.displayName,
-                        style: AppTextStyles.bodySmall,
-                      ),
-                      options: PdfImageFit.values
-                          .map((f) => ShadOption(
-                                value: f,
-                                child: Text(f.displayName),
-                              ))
-                          .toList(),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.sm),
-
-                // Margin
-                _buildPdfOptionRow(
-                  context,
-                  icon: LucideIcons.square,
-                  label: 'settings.pdfMargin'.tr(),
-                  child: SizedBox(
-                    width: 120,
-                    child: ShadSelect<PdfMargin>(
-                      initialValue: pdfMargin,
-                      onChanged: (value) {
-                        if (value != null) onPdfMarginChanged(value);
-                      },
-                      selectedOptionBuilder: (context, value) => Text(
-                        value.displayName,
-                        style: AppTextStyles.bodySmall,
-                      ),
-                      options: PdfMargin.values
-                          .map((m) => ShadOption(
-                                value: m,
-                                child: Text(m.displayName),
-                              ))
-                          .toList(),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const Divider(height: 1, color: AppColors.border),
-
-          // Language section
-          Padding(
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'settings.language'.tr(),
-                  style: AppTextStyles.caption.copyWith(
-                    color: AppColors.textSecondary,
-                    fontWeight: AppFontWeight.medium,
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.sm),
-                // Language select
-                SizedBox(
-                  width: 160,
-                  child: ShadSelect<AppLanguage>(
-                    initialValue: currentLanguage,
-                    onChanged: (value) {
-                      if (value != null) {
-                        onLanguageChanged(value);
-                      }
-                    },
-                    selectedOptionBuilder: (context, value) => Row(
-                      children: [
-                        const Icon(
-                          LucideIcons.globe,
-                          size: 16,
-                          color: AppColors.textSecondary,
+                  const SizedBox(height: AppSpacing.sm),
+                  // Theme options
+                  ...AppThemeMode.values.map((mode) {
+                    final isSelected = mode == _currentTheme;
+                    return InkWell(
+                      onTap: () => _setThemeMode(mode),
+                      borderRadius: BorderRadius.circular(AppRadius.md),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: AppSpacing.md,
                         ),
-                        const SizedBox(width: AppSpacing.sm),
-                        Expanded(
-                          child: Text(
-                            value.displayName,
-                            style: AppTextStyles.bodyMedium,
-                            overflow: TextOverflow.ellipsis,
+                        child: Row(
+                          children: [
+                            Icon(
+                              isSelected
+                                  ? LucideIcons.circleCheck
+                                  : LucideIcons.circle,
+                              size: 22,
+                              color: isSelected
+                                  ? AppColors.primary
+                                  : colors.textSecondary,
+                            ),
+                            const SizedBox(width: AppSpacing.md),
+                            Icon(
+                              mode.icon,
+                              size: 18,
+                              color: isSelected
+                                  ? colors.textPrimary
+                                  : colors.textSecondary,
+                            ),
+                            const SizedBox(width: AppSpacing.sm),
+                            Expanded(
+                              child: Text(
+                                _getThemeDisplayName(mode),
+                                style: AppTextStyles.bodyMedium.copyWith(
+                                  fontWeight: isSelected
+                                      ? AppFontWeight.semiBold
+                                      : AppFontWeight.normal,
+                                  color: colors.textPrimary,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+                ],
+              ),
+            ),
+            Divider(height: 1, color: colors.border),
+
+            // View Mode section
+            Padding(
+              padding: const EdgeInsets.all(AppSpacing.lg),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'settings.viewMode'.tr(),
+                    style: AppTextStyles.caption.copyWith(
+                      color: colors.textSecondary,
+                      fontWeight: AppFontWeight.medium,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  // View mode options
+                  ...ViewMode.values.map((mode) {
+                    final isSelected = mode == currentMode;
+                    return InkWell(
+                      onTap: () => widget.onViewModeChanged(mode == ViewMode.grid),
+                      borderRadius: BorderRadius.circular(AppRadius.md),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: AppSpacing.md,
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              isSelected
+                                  ? LucideIcons.circleCheck
+                                  : LucideIcons.circle,
+                              size: 22,
+                              color: isSelected
+                                  ? AppColors.primary
+                                  : colors.textSecondary,
+                            ),
+                            const SizedBox(width: AppSpacing.md),
+                            Icon(
+                              mode.icon,
+                              size: 18,
+                              color: isSelected
+                                  ? colors.textPrimary
+                                  : colors.textSecondary,
+                            ),
+                            const SizedBox(width: AppSpacing.sm),
+                            Expanded(
+                              child: Text(
+                                'settings.${mode.name}'.tr(),
+                                style: AppTextStyles.bodyMedium.copyWith(
+                                  fontWeight: isSelected
+                                      ? AppFontWeight.semiBold
+                                      : AppFontWeight.normal,
+                                  color: colors.textPrimary,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+                ],
+              ),
+            ),
+            Divider(height: 1, color: colors.border),
+
+            // PDF Default Settings section
+            Padding(
+              padding: const EdgeInsets.all(AppSpacing.lg),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'settings.pdfDefaults'.tr(),
+                    style: AppTextStyles.caption.copyWith(
+                      color: colors.textSecondary,
+                      fontWeight: AppFontWeight.medium,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+
+                  // Quality
+                  _buildPdfOptionRow(
+                    context,
+                    colors: colors,
+                    icon: LucideIcons.image,
+                    label: 'settings.pdfQuality'.tr(),
+                    child: SizedBox(
+                      width: 120,
+                      child: ShadSelect<PdfQuality>(
+                        initialValue: widget.pdfQuality,
+                        onChanged: (value) {
+                          if (value != null) widget.onPdfQualityChanged(value);
+                        },
+                        selectedOptionBuilder: (context, value) => Text(
+                          value.displayName,
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: colors.textPrimary,
                           ),
                         ),
-                      ],
+                        options: PdfQuality.values
+                            .map((q) => ShadOption(
+                                  value: q,
+                                  child: Text(q.displayName),
+                                ))
+                            .toList(),
+                      ),
                     ),
-                    options: AppLanguage.values
-                        .map(
-                          (language) => ShadOption(
-                            value: language,
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+
+                  // Page Size
+                  _buildPdfOptionRow(
+                    context,
+                    colors: colors,
+                    icon: LucideIcons.fileText,
+                    label: 'settings.pdfPageSize'.tr(),
+                    child: SizedBox(
+                      width: 120,
+                      child: ShadSelect<PdfPageSize>(
+                        initialValue: widget.pdfPageSize,
+                        onChanged: (value) {
+                          if (value != null) widget.onPdfPageSizeChanged(value);
+                        },
+                        selectedOptionBuilder: (context, value) => Text(
+                          value.displayName,
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: colors.textPrimary,
+                          ),
+                        ),
+                        options: PdfPageSize.values
+                            .map((s) => ShadOption(
+                                  value: s,
+                                  child: Text(s.displayName),
+                                ))
+                            .toList(),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+
+                  // Orientation
+                  _buildPdfOptionRow(
+                    context,
+                    colors: colors,
+                    icon: LucideIcons.smartphone,
+                    label: 'settings.pdfOrientation'.tr(),
+                    child: SizedBox(
+                      width: 120,
+                      child: ShadSelect<PdfOrientation>(
+                        initialValue: widget.pdfOrientation,
+                        onChanged: (value) {
+                          if (value != null) widget.onPdfOrientationChanged(value);
+                        },
+                        selectedOptionBuilder: (context, value) => Text(
+                          value.displayName,
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: colors.textPrimary,
+                          ),
+                        ),
+                        options: PdfOrientation.values
+                            .map((o) => ShadOption(
+                                  value: o,
+                                  child: Text(o.displayName),
+                                ))
+                            .toList(),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+
+                  // Image Fit
+                  _buildPdfOptionRow(
+                    context,
+                    colors: colors,
+                    icon: LucideIcons.maximize,
+                    label: 'settings.pdfImageFit'.tr(),
+                    child: SizedBox(
+                      width: 120,
+                      child: ShadSelect<PdfImageFit>(
+                        initialValue: widget.pdfImageFit,
+                        onChanged: (value) {
+                          if (value != null) widget.onPdfImageFitChanged(value);
+                        },
+                        selectedOptionBuilder: (context, value) => Text(
+                          value.displayName,
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: colors.textPrimary,
+                          ),
+                        ),
+                        options: PdfImageFit.values
+                            .map((f) => ShadOption(
+                                  value: f,
+                                  child: Text(f.displayName),
+                                ))
+                            .toList(),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+
+                  // Margin
+                  _buildPdfOptionRow(
+                    context,
+                    colors: colors,
+                    icon: LucideIcons.square,
+                    label: 'settings.pdfMargin'.tr(),
+                    child: SizedBox(
+                      width: 120,
+                      child: ShadSelect<PdfMargin>(
+                        initialValue: widget.pdfMargin,
+                        onChanged: (value) {
+                          if (value != null) widget.onPdfMarginChanged(value);
+                        },
+                        selectedOptionBuilder: (context, value) => Text(
+                          value.displayName,
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: colors.textPrimary,
+                          ),
+                        ),
+                        options: PdfMargin.values
+                            .map((m) => ShadOption(
+                                  value: m,
+                                  child: Text(m.displayName),
+                                ))
+                            .toList(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Divider(height: 1, color: colors.border),
+
+            // Language section
+            Padding(
+              padding: const EdgeInsets.all(AppSpacing.lg),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'settings.language'.tr(),
+                    style: AppTextStyles.caption.copyWith(
+                      color: colors.textSecondary,
+                      fontWeight: AppFontWeight.medium,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  // Language select
+                  SizedBox(
+                    width: 160,
+                    child: ShadSelect<AppLanguage>(
+                      initialValue: widget.currentLanguage,
+                      onChanged: (value) {
+                        if (value != null) {
+                          widget.onLanguageChanged(value);
+                        }
+                      },
+                      selectedOptionBuilder: (context, value) => Row(
+                        children: [
+                          Icon(
+                            LucideIcons.globe,
+                            size: 16,
+                            color: colors.textSecondary,
+                          ),
+                          const SizedBox(width: AppSpacing.sm),
+                          Expanded(
                             child: Text(
-                              language.displayName,
+                              value.displayName,
+                              style: AppTextStyles.bodyMedium.copyWith(
+                                color: colors.textPrimary,
+                              ),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                        )
-                        .toList(),
+                        ],
+                      ),
+                      options: AppLanguage.values
+                          .map(
+                            (language) => ShadOption(
+                              value: language,
+                              child: Text(
+                                language.displayName,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.sm),
           ],
         ),
       ),
@@ -533,6 +650,7 @@ class SettingsSheet extends StatelessWidget {
 
   Widget _buildPdfOptionRow(
     BuildContext context, {
+    required ThemedColors colors,
     required IconData icon,
     required String label,
     required Widget child,
@@ -542,13 +660,15 @@ class SettingsSheet extends StatelessWidget {
         Icon(
           icon,
           size: 18,
-          color: AppColors.textSecondary,
+          color: colors.textSecondary,
         ),
         const SizedBox(width: AppSpacing.sm),
         Expanded(
           child: Text(
             label,
-            style: AppTextStyles.bodySmall,
+            style: AppTextStyles.bodySmall.copyWith(
+              color: colors.textPrimary,
+            ),
           ),
         ),
         child,

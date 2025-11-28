@@ -422,7 +422,7 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
                                 width: 200,
                                 height: 40,
                                 decoration: BoxDecoration(
-                                  color: AppColors.neumorphicBase,
+                                  color: ThemedColors.of(context).surface,
                                   borderRadius: BorderRadius.circular(AppRadius.mdd),
                                   boxShadow: [
                                     // Inner shadow (top-left light)
@@ -450,7 +450,7 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
                                     hintText: 'gallery.searchPlaceholder'.tr(),
                                     hintStyle: TextStyle(
                                       fontSize: AppFontSize.smd,
-                                      color: AppColors.textHint,
+                                      color: ThemedColors.of(context).textHint,
                                     ),
                                     border: InputBorder.none,
                                     contentPadding: const EdgeInsets.symmetric(
@@ -497,7 +497,7 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
                     ),
                   ],
       ),
-      backgroundColor: AppColors.neumorphicBase,
+      backgroundColor: ThemedColors.of(context).background,
       body: SizedBox.expand(
         child: _isLoading
             ? const Center(child: CircularProgressIndicator())

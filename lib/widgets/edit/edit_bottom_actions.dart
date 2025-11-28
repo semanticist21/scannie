@@ -19,6 +19,7 @@ class EditBottomActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = ThemedColors.of(context);
     // Get safe area bottom padding for iOS/Android home indicator
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
@@ -30,10 +31,10 @@ class EditBottomActions extends StatelessWidget {
         bottom: AppSpacing.md + bottomPadding, // Add safe area padding
       ),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: colors.surface,
         border: Border(
           top: BorderSide(
-            color: AppColors.textSecondary.withValues(alpha: 0.1),
+            color: colors.border,
             width: 1,
           ),
         ),

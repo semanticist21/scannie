@@ -22,9 +22,11 @@ class ConfirmDialog {
   }) {
     AppModal.showDialog(
       context: context,
-      pageListBuilder: (modalContext) => [
+      pageListBuilder: (modalContext) {
+        final colors = ThemedColors.of(modalContext);
+        return [
         WoltModalSheetPage(
-          backgroundColor: AppColors.surface,
+          backgroundColor: colors.surface,
           hasSabGradient: false,
           hasTopBarLayer: false,
           isTopBarLayerAlwaysVisible: false,
@@ -34,12 +36,17 @@ class ConfirmDialog {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: AppTextStyles.h3),
+                Text(
+                  title,
+                  style: AppTextStyles.h3.copyWith(
+                    color: colors.textPrimary,
+                  ),
+                ),
                 const SizedBox(height: AppSpacing.xs),
                 Text(
                   message,
                   style: AppTextStyles.bodyMedium.copyWith(
-                    color: AppColors.textSecondary,
+                    color: colors.textSecondary,
                   ),
                 ),
                 const SizedBox(height: AppSpacing.lg),
@@ -77,7 +84,8 @@ class ConfirmDialog {
             ),
           ),
         ),
-      ],
+      ];
+      },
     );
   }
 
@@ -94,9 +102,11 @@ class ConfirmDialog {
     final result = await AppModal.showDialog<bool>(
       context: context,
       barrierDismissible: dismissable,
-      pageListBuilder: (modalContext) => [
+      pageListBuilder: (modalContext) {
+        final colors = ThemedColors.of(modalContext);
+        return [
         WoltModalSheetPage(
-          backgroundColor: AppColors.surface,
+          backgroundColor: colors.surface,
           hasSabGradient: false,
           hasTopBarLayer: false,
           isTopBarLayerAlwaysVisible: false,
@@ -106,12 +116,17 @@ class ConfirmDialog {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: AppTextStyles.h3),
+                Text(
+                  title,
+                  style: AppTextStyles.h3.copyWith(
+                    color: colors.textPrimary,
+                  ),
+                ),
                 const SizedBox(height: AppSpacing.xs),
                 Text(
                   message,
                   style: AppTextStyles.bodyMedium.copyWith(
-                    color: AppColors.textSecondary,
+                    color: colors.textSecondary,
                   ),
                 ),
                 const SizedBox(height: AppSpacing.lg),
@@ -139,7 +154,8 @@ class ConfirmDialog {
             ),
           ),
         ),
-      ],
+      ];
+      },
     );
 
     return result ?? false;

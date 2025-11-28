@@ -19,12 +19,14 @@ class DocumentInfoHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = ThemedColors.of(context);
+
     return Padding(
       padding: const EdgeInsets.all(AppSpacing.md),
       child: Container(
         padding: const EdgeInsets.all(AppSpacing.md),
         decoration: BoxDecoration(
-          color: AppColors.surface,
+          color: colors.surface,
           borderRadius: BorderRadius.circular(AppRadius.md),
           boxShadow: AppShadows.card,
         ),
@@ -34,12 +36,12 @@ class DocumentInfoHeader extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(AppSpacing.smd),
               decoration: BoxDecoration(
-                color: AppColors.textHint.withValues(alpha: 0.1),
+                color: colors.textHint.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(AppRadius.sm),
               ),
               child: Icon(
                 LucideIcons.fileText,
-                color: AppColors.textHint,
+                color: colors.textHint,
                 size: 20,
               ),
             ),
@@ -55,6 +57,7 @@ class DocumentInfoHeader extends StatelessWidget {
                     document.name,
                     style: AppTextStyles.bodyMedium.copyWith(
                       fontWeight: AppFontWeight.semiBold,
+                      color: colors.textPrimary,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -87,7 +90,7 @@ class DocumentInfoHeader extends StatelessWidget {
                   Text(
                     _buildInfoText(),
                     style: AppTextStyles.caption.copyWith(
-                      color: AppColors.textSecondary,
+                      color: colors.textSecondary,
                     ),
                   ),
                 ],

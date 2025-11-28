@@ -150,7 +150,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.neumorphicBase,
+      backgroundColor: ThemedColors.of(context).background,
       appBar: CustomAppBar(
         title: '',
         actions: [
@@ -242,7 +242,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
       child: Text(
         'common.loading'.tr(),
         style: AppTextStyles.bodyMedium.copyWith(
-          color: AppColors.textSecondary,
+          color: ThemedColors.of(context).textSecondary,
         ),
       ),
     );
@@ -290,24 +290,25 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
   }
 
   Widget _buildPdfPreview() {
+    final colors = ThemedColors.of(context);
+
     if (_isLoadingPdf) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
+            const SizedBox(
               width: 48,
               height: 48,
               child: CircularProgressIndicator(
                 strokeWidth: 3,
-                color: AppColors.primary,
               ),
             ),
             const SizedBox(height: AppSpacing.lg),
             Text(
               'viewer.generatingPdfPreview'.tr(),
               style: AppTextStyles.bodyMedium.copyWith(
-                color: AppColors.textSecondary,
+                color: colors.textSecondary,
               ),
             ),
           ],
@@ -321,19 +322,18 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
+            const SizedBox(
               width: 48,
               height: 48,
               child: CircularProgressIndicator(
                 strokeWidth: 3,
-                color: AppColors.primary,
               ),
             ),
             const SizedBox(height: AppSpacing.lg),
             Text(
               'viewer.preparingPdf'.tr(),
               style: AppTextStyles.bodyMedium.copyWith(
-                color: AppColors.textSecondary,
+                color: colors.textSecondary,
               ),
             ),
           ],
@@ -366,7 +366,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppRadius.md),
             border: Border.all(
-              color: AppColors.border,
+              color: ThemedColors.of(context).border,
               width: 1,
             ),
           ),
@@ -635,7 +635,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
       ContextMenuItem(
         icon: LucideIcons.trash2,
         label: 'common.delete'.tr(),
-        color: AppColors.error,
+        color: ThemedColors.of(context).error,
         onTap: () {
           Navigator.pop(context);
           _confirmDelete();

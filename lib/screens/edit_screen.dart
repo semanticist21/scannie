@@ -20,6 +20,7 @@ import '../widgets/common/text_input_dialog.dart';
 import '../widgets/common/empty_state.dart';
 import 'package:uuid/uuid.dart';
 import '../services/ad_service.dart';
+import '../theme/app_colors.dart';
 
 /// Edit screen for managing scanned images
 /// Features: Reorder, Delete, Add more images
@@ -373,6 +374,7 @@ class _EditScreenState extends State<EditScreen> {
         await _handleBackPress();
       },
       child: Scaffold(
+        backgroundColor: ThemedColors.of(context).background,
         appBar: CustomAppBar(
           title: 'edit.title'.tr(namedArgs: {'count': _imagePaths.length.toString()}),
           leading: IconButton(

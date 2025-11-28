@@ -3,11 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'theme/app_theme.dart';
+import 'theme/app_colors.dart';
 import 'screens/gallery_screen.dart';
 import 'screens/edit_screen.dart';
 import 'screens/document_viewer_screen.dart';
 import 'models/scan_document.dart';
 import 'services/ad_service.dart';
+import 'services/theme_service.dart';
 
 // Global RouteObserver for detecting route changes
 final RouteObserver<ModalRoute<void>> routeObserver =
@@ -20,16 +22,11 @@ void main() async {
   // Initialize easy_localization
   await EasyLocalization.ensureInitialized();
 
+  // Initialize theme service
+  await ThemeService.instance.initialize();
+
   // Initialize AdMob
   await AdService.instance.initialize();
-
-  // Set system UI overlay style
-  SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-    ),
-  );
 
   runApp(
     EasyLocalization(
@@ -44,11 +41,48 @@ void main() async {
   );
 }
 
-class ScannierApp extends StatelessWidget {
+class ScannierApp extends StatefulWidget {
   const ScannierApp({super.key});
 
   @override
+  State<ScannierApp> createState() => _ScannierAppState();
+}
+
+class _ScannierAppState extends State<ScannierApp> {
+  @override
+  void initState() {
+    super.initState();
+    // Listen to theme changes
+    ThemeService.instance.addListener(_onThemeChanged);
+  }
+
+  @override
+  void dispose() {
+    ThemeService.instance.removeListener(_onThemeChanged);
+    super.dispose();
+  }
+
+  void _onThemeChanged() {
+    setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final themeMode = ThemeService.instance.flutterThemeMode;
+    final isDark = themeMode == ThemeMode.dark ||
+        (themeMode == ThemeMode.system &&
+            MediaQuery.platformBrightnessOf(context) == Brightness.dark);
+
+    // Update system UI overlay based on theme
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+        systemNavigationBarColor: isDark ? AppColors.backgroundDark : AppColors.background,
+        systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+      ),
+    );
+
     return ShadApp(
       title: 'Scannie',
       debugShowCheckedModeBanner: false,
@@ -58,28 +92,55 @@ class ScannierApp extends StatelessWidget {
       supportedLocales: context.supportedLocales,
       locale: context.locale,
 
-      // Shadcn theme configuration with Teal color scheme
+      // Theme mode (system, light, or dark)
+      themeMode: themeMode,
+
+      // Light theme - Shadcn configuration with Teal color scheme
       // Teal palette from Tailwind CSS:
       // 400: #2dd4bf, 500: #14b8a6, 600: #0d9488, 700: #0f766e
       theme: ShadThemeData(
         brightness: Brightness.light,
         colorScheme: const ShadSlateColorScheme.light().copyWith(
-          // Teal-600 as primary (less bright, professional)
-          primary: Color(0xFF0d9488),
-          // White text on teal buttons
-          primaryForeground: Color(0xFFFFFFFF),
+          primary: const Color(0xFF0d9488),  // teal-600
+          primaryForeground: const Color(0xFFFFFFFF),
         ),
-        // Button theme with consistent teal colors for all states
         primaryButtonTheme: ShadButtonTheme(
-          backgroundColor: const Color(0xFF0d9488), // teal-600
-          foregroundColor: const Color(0xFFFFFFFF), // white
-          hoverBackgroundColor: const Color(0xFF0f766e), // teal-700 (darker on hover)
-          hoverForegroundColor: const Color(0xFFFFFFFF), // white
+          backgroundColor: const Color(0xFF0d9488),
+          foregroundColor: const Color(0xFFFFFFFF),
+          hoverBackgroundColor: const Color(0xFF0f766e),
+          hoverForegroundColor: const Color(0xFFFFFFFF),
+        ),
+      ),
+
+      // Dark theme - Shadcn configuration with Teal color scheme
+      darkTheme: ShadThemeData(
+        brightness: Brightness.dark,
+        colorScheme: const ShadSlateColorScheme.dark().copyWith(
+          primary: const Color(0xFF2dd4bf),  // teal-400 (brighter for dark mode)
+          primaryForeground: const Color(0xFF0F172A),  // slate-900
+          background: AppColors.backgroundDark,
+          foreground: AppColors.textPrimaryDark,
+          card: AppColors.cardBackgroundDark,
+          cardForeground: AppColors.textPrimaryDark,
+          muted: AppColors.slate700,
+          mutedForeground: AppColors.textSecondaryDark,
+          border: AppColors.borderDark,
+          input: AppColors.borderDark,
+        ),
+        primaryButtonTheme: ShadButtonTheme(
+          backgroundColor: const Color(0xFF0d9488),  // teal-600
+          foregroundColor: const Color(0xFFFFFFFF),
+          hoverBackgroundColor: const Color(0xFF14b8a6),  // teal-500 (lighter on hover for dark)
+          hoverForegroundColor: const Color(0xFFFFFFFF),
         ),
       ),
 
       // Material theme for backwards compatibility with existing Material widgets
       materialThemeBuilder: (context, theme) {
+        final brightness = theme.brightness;
+        if (brightness == Brightness.dark) {
+          return AppTheme.darkTheme;
+        }
         return AppTheme.lightTheme;
       },
 
@@ -95,7 +156,7 @@ class ScannierApp extends StatelessWidget {
           case '/edit':
             return MaterialPageRoute(
               builder: (context) => const EditScreen(),
-              settings: settings, // Pass arguments to EditScreen
+              settings: settings,
             );
 
           case '/viewer':

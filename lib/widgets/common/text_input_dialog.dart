@@ -91,9 +91,11 @@ class TextInputDialog {
 
     AppModal.showDialog(
       context: context,
-      pageListBuilder: (modalContext) => [
+      pageListBuilder: (modalContext) {
+        final colors = ThemedColors.of(modalContext);
+        return [
         WoltModalSheetPage(
-          backgroundColor: AppColors.surface,
+          backgroundColor: colors.surface,
           hasSabGradient: false,
           hasTopBarLayer: false,
           isTopBarLayerAlwaysVisible: false,
@@ -108,7 +110,8 @@ class TextInputDialog {
             onSave: onSave,
           ),
         ),
-      ],
+      ];
+      },
     );
   }
 }
@@ -157,18 +160,25 @@ class _TextInputContentState extends State<_TextInputContent> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = ThemedColors.of(context);
+
     return Padding(
       padding: const EdgeInsets.all(AppSpacing.lg),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(widget.title, style: AppTextStyles.h3),
+          Text(
+            widget.title,
+            style: AppTextStyles.h3.copyWith(
+              color: colors.textPrimary,
+            ),
+          ),
           const SizedBox(height: AppSpacing.xs),
           Text(
             widget.description,
             style: AppTextStyles.bodyMedium.copyWith(
-              color: AppColors.textSecondary,
+              color: colors.textSecondary,
             ),
           ),
           const SizedBox(height: AppSpacing.md),
@@ -185,8 +195,8 @@ class _TextInputContentState extends State<_TextInputContent> {
               '${widget.controller.text.length} / ${TextInputDialog.maxLength}',
               style: AppTextStyles.caption.copyWith(
                 color: widget.controller.text.length > TextInputDialog.maxLength
-                    ? AppColors.error
-                    : AppColors.textHint,
+                    ? colors.error
+                    : colors.textHint,
               ),
             ),
           ),

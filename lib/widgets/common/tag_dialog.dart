@@ -26,9 +26,11 @@ class TagDialog {
 
     AppModal.showDialog(
       context: context,
-      pageListBuilder: (modalContext) => [
+      pageListBuilder: (modalContext) {
+        final colors = ThemedColors.of(modalContext);
+        return [
         WoltModalSheetPage(
-          backgroundColor: AppColors.surface,
+          backgroundColor: colors.surface,
           hasSabGradient: false,
           hasTopBarLayer: false,
           isTopBarLayerAlwaysVisible: false,
@@ -40,7 +42,8 @@ class TagDialog {
             onSave: onSave,
           ),
         ),
-      ],
+      ];
+      },
     );
   }
 }
@@ -86,6 +89,8 @@ class _TagContentState extends State<_TagContent> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = ThemedColors.of(context);
+
     return Padding(
       padding: const EdgeInsets.all(AppSpacing.lg),
       child: Column(
@@ -96,13 +101,15 @@ class _TagContentState extends State<_TagContent> {
             widget.hasExistingTag
                 ? 'dialogs.editTag'.tr()
                 : 'dialogs.addTag'.tr(),
-            style: AppTextStyles.h3,
+            style: AppTextStyles.h3.copyWith(
+              color: colors.textPrimary,
+            ),
           ),
           const SizedBox(height: AppSpacing.xs),
           Text(
             'dialogs.tagDesc'.tr(),
             style: AppTextStyles.bodyMedium.copyWith(
-              color: AppColors.textSecondary,
+              color: colors.textSecondary,
             ),
           ),
           const SizedBox(height: AppSpacing.md),
@@ -119,8 +126,8 @@ class _TagContentState extends State<_TagContent> {
               '${widget.controller.text.length} / ${TagDialog.maxLength}',
               style: AppTextStyles.caption.copyWith(
                 color: widget.controller.text.length > TagDialog.maxLength
-                    ? AppColors.error
-                    : AppColors.textHint,
+                    ? colors.error
+                    : colors.textHint,
               ),
             ),
           ),
@@ -129,6 +136,7 @@ class _TagContentState extends State<_TagContent> {
             'dialogs.tagColor'.tr(),
             style: AppTextStyles.bodyMedium.copyWith(
               fontWeight: AppFontWeight.medium,
+              color: colors.textPrimary,
             ),
           ),
           const SizedBox(height: AppSpacing.sm),
