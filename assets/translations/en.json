@@ -103,7 +103,13 @@
     "description": "Enjoy Scannie without interruptions.\nRemove all ads with a one-time purchase.",
     "unlocked": "Ads Removed",
     "unlock": "Remove Ads ($2)",
-    "maybeLater": "Maybe Later"
+    "unlockWithPrice": "Remove Ads ({0})",
+    "maybeLater": "Maybe Later",
+    "restore": "Restore Purchase",
+    "restoreRequested": "Checking for previous purchases...",
+    "restoreFailed": "Could not restore purchases",
+    "storeNotAvailable": "Store not available",
+    "purchaseFailed": "Purchase failed. Please try again."
   },
   "dialogs": {
     "deleteScan": "Delete Scan",

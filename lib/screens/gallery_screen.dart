@@ -301,7 +301,7 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
       onPremiumTap: () => PremiumDialog.show(
         context,
         isPremium: _isPremium,
-        onPurchase: () => _savePremiumStatus(true),
+        onPurchaseComplete: () => _savePremiumStatus(true),
       ),
       currentLanguage: currentLanguage,
       onLanguageChanged: (language) {
@@ -630,7 +630,7 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
   void _createEmptyDocument() {
     // Check premium status
     if (!_canAddDocument()) {
-      PremiumDialog.show(context, onPurchase: () => _savePremiumStatus(true));
+      PremiumDialog.show(context, onPurchaseComplete: () => _savePremiumStatus(true));
       return;
     }
 
@@ -671,7 +671,7 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
   Future<void> _openCamera() async {
     // Check premium status
     if (!_canAddDocument()) {
-      PremiumDialog.show(context, onPurchase: () => _savePremiumStatus(true));
+      PremiumDialog.show(context, onPurchaseComplete: () => _savePremiumStatus(true));
       return;
     }
 

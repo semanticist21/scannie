@@ -10,6 +10,7 @@ import 'screens/document_viewer_screen.dart';
 import 'models/scan_document.dart';
 import 'services/ad_service.dart';
 import 'services/theme_service.dart';
+import 'services/purchase_service.dart';
 
 // Global RouteObserver for detecting route changes
 final RouteObserver<ModalRoute<void>> routeObserver =
@@ -27,6 +28,9 @@ void main() async {
 
   // Initialize AdMob
   await AdService.instance.initialize();
+
+  // Initialize In-App Purchase
+  await PurchaseService.instance.initialize();
 
   runApp(
     EasyLocalization(
