@@ -86,6 +86,8 @@
     "themeLight": "Light",
     "themeDark": "Dark",
     "language": "Wika",
+    "searchLanguage": "Maghanap ng mga wika...",
+    "noLanguageFound": "Walang nahanap na wika",
     "viewMode": "View mode",
     "list": "List",
     "grid": "Grid",
@@ -103,7 +105,13 @@
     "description": "Gamitin ang Scannie nang walang abala.\nAlisin ang lahat ng ad sa isang pagbili lamang.",
     "unlocked": "Naalis na ang mga ad",
     "unlock": "Alisin ang mga ad ($2)",
-    "maybeLater": "Mamaya na"
+    "maybeLater": "Mamaya na",
+    "unlockWithPrice": "Alisin ang mga ad ({0})",
+    "restore": "Ibalik ang pagbili",
+    "restoreRequested": "Sinusuri ang mga nakaraang pagbili...",
+    "restoreFailed": "Hindi maibalik ang mga pagbili",
+    "storeNotAvailable": "Hindi available ang store",
+    "purchaseFailed": "Nabigo ang pagbili. Pakisubukang muli."
   },
   "dialogs": {
     "deleteScan": "Burahin ang scan",

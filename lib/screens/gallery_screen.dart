@@ -284,11 +284,10 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
 
   /// Show settings sheet
   void _showSettingsSheet() {
-    // Map current locale to AppLanguage
+    // Map current locale to AppLanguage (default to English if not found)
     final currentLocale = context.locale;
-    final currentLanguage = currentLocale.languageCode == 'ko'
-        ? AppLanguage.korean
-        : AppLanguage.english;
+    final currentLanguage = AppLanguage.fromCode(currentLocale.languageCode)
+        ?? AppLanguage.all.firstWhere((lang) => lang.code == 'en');
 
     SettingsSheet.show(
       context: context,
@@ -305,11 +304,8 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
       ),
       currentLanguage: currentLanguage,
       onLanguageChanged: (language) {
-        // Change app locale
-        final newLocale = language == AppLanguage.korean
-            ? const Locale('ko')
-            : const Locale('en');
-        context.setLocale(newLocale);
+        // Change app locale using the language code
+        context.setLocale(Locale(language.code));
       },
       // PDF settings
       pdfQuality: _defaultPdfQuality,

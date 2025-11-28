@@ -86,6 +86,8 @@
     "themeLight": "लाइट",
     "themeDark": "डार्क",
     "language": "भाषा",
+    "searchLanguage": "भाषाएँ खोजें...",
+    "noLanguageFound": "कोई भाषा नहीं मिली",
     "viewMode": "दृश्य मोड",
     "list": "सूची",
     "grid": "ग्रिड",
@@ -103,7 +105,13 @@
     "description": "बिना रुकावट Scannie का आनंद लें।\nएक बार की खरीद से सभी विज्ञापन हटाएं।",
     "unlocked": "विज्ञापन हटाए गए",
     "unlock": "विज्ञापन हटाएं ($2)",
-    "maybeLater": "बाद में"
+    "maybeLater": "बाद में",
+    "unlockWithPrice": "विज्ञापन हटाएं ({0})",
+    "restore": "खरीदारी पुनर्स्थापित करें",
+    "restoreRequested": "पिछली खरीदारी की जांच हो रही है...",
+    "restoreFailed": "खरीदारी पुनर्स्थापित नहीं की जा सकी",
+    "storeNotAvailable": "स्टोर उपलब्ध नहीं है",
+    "purchaseFailed": "खरीदारी विफल। कृपया पुनः प्रयास करें।"
   },
   "dialogs": {
     "deleteScan": "स्कैन हटाएं",

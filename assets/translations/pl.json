@@ -14,45 +14,45 @@
     "edit": "Edytuj",
     "rename": "Zmień nazwę",
     "export": "Eksportuj",
-    "tag": "Tag",
+    "tag": "Etykieta",
     "loading": "Ładowanie...",
     "pages": "Strony",
     "page": "strona",
-    "pagesLower": "stron",
+    "pagesLower": "strony",
     "pdf": "PDF"
   },
   "gallery": {
     "title": "Moje skany",
     "selectItems": "Wybierz",
-    "selectedCount": "Wybrano: {count}",
+    "selectedCount": "{count} wybranych",
     "searchPlaceholder": "Szukaj dokumentów",
     "noScansTitle": "Brak skanów",
-    "noScansSubtitle": "Dotknij przycisku poniżej, aby rozpocząć skanowanie",
+    "noScansSubtitle": "Naciśnij przycisk poniżej, aby rozpocząć skanowanie",
     "noResultsTitle": "Brak wyników",
-    "noResultsSubtitle": "Spróbuj innego wyszukiwania",
+    "noResultsSubtitle": "Spróbuj innej frazy wyszukiwania",
     "createNewDocument": "Utwórz nowy dokument",
     "createNewDocumentDesc": "Wprowadź nazwę nowego dokumentu",
     "documentNamePlaceholder": "Nazwa dokumentu",
-    "emptyDocumentCreated": "Utworzono pusty dokument",
-    "documentDeleted": "Usunięto dokument",
-    "scanUpdated": "Zaktualizowano skan",
+    "emptyDocumentCreated": "Pusty dokument utworzony",
+    "documentDeleted": "Dokument usunięty",
+    "scanUpdated": "Skan zaktualizowany",
     "generatingPdf": "Generowanie PDF...",
     "preparingZip": "Przygotowywanie ZIP...",
-    "deleteScans": "Usuń {count} {count, plural, =1{skan} few{skany} other{skanów}}",
-    "deletedScans": "Usunięto {count} {count, plural, =1{skan} few{skany} other{skanów}}",
-    "actionCannotBeUndone": "Tej operacji nie można cofnąć."
+    "deleteScans": "Usuń {count} skanów",
+    "deletedScans": "{count} skanów usunięto",
+    "actionCannotBeUndone": "Tej akcji nie można cofnąć."
   },
   "edit": {
     "title": "Edytuj skan ({count})",
     "noImagesTitle": "Brak obrazów",
-    "noImagesSubtitle": "Dotknij Skanuj lub Zdjęcie poniżej, aby dodać obrazy",
+    "noImagesSubtitle": "Naciśnij Skanuj lub Zdjęcie poniżej, aby dodać obrazy",
     "saveScan": "Zapisz skan",
     "saveScanDesc": "Wprowadź nazwę dla tego skanu",
-    "scanSaved": "Zapisano skan",
+    "scanSaved": "Skan zapisany",
     "addAtLeastOneImage": "Dodaj co najmniej jeden obraz, aby zapisać",
     "discardChangesTitle": "Odrzucić zmiany?",
-    "discardNewScan": "Czy chcesz odrzucić ten skan? Wszystkie obrazy zostaną utracone.",
-    "discardEditScan": "Czy chcesz odrzucić zmiany? Niezapisane zmiany zostaną utracone."
+    "discardNewScan": "Czy na pewno chcesz odrzucić ten skan? Wszystkie obrazy zostaną utracone.",
+    "discardEditScan": "Czy na pewno chcesz odrzucić zmiany? Twoje zmiany nie zostaną zapisane."
   },
   "viewer": {
     "listView": "Widok listy",
@@ -61,7 +61,7 @@
     "generatingPdfPreview": "Generowanie podglądu PDF...",
     "preparingPdf": "Przygotowywanie PDF...",
     "noPagesTitle": "Brak stron",
-    "noPagesSubtitle": "Ten dokument jest pusty.\nSpróbuj edytować, aby dodać skany.",
+    "noPagesSubtitle": "Ten dokument jest pusty.\nSpróbuj edytować, aby dodać nowe skany.",
     "downloadPdf": "Pobierz PDF",
     "sharePdf": "Udostępnij PDF",
     "downloadAsZip": "Pobierz jako ZIP",
@@ -70,9 +70,9 @@
     "pdfQuality": "Jakość PDF ({quality})",
     "pdfOptions": "Opcje PDF",
     "deleteDocument": "Usunąć dokument?",
-    "deleteDocumentMessage": "„{name}" i wszystkie jego strony zostaną trwale usunięte. Tej operacji nie można cofnąć.",
+    "deleteDocumentMessage": "To trwale usunie \"{name}\" i wszystkie jego strony. Tej akcji nie można cofnąć.",
     "downloadImagesTitle": "Pobierz obrazy",
-    "downloadImagesMessage": "Pobrać {count} {count, plural, =1{obraz} few{obrazy} other{obrazów}} do galerii?",
+    "downloadImagesMessage": "Pobrać {count} obrazów do galerii?",
     "pageOf": "Strona {current} z {total}"
   },
   "settings": {
@@ -86,6 +86,8 @@
     "themeLight": "Jasny",
     "themeDark": "Ciemny",
     "language": "Język",
+    "searchLanguage": "Szukaj języków...",
+    "noLanguageFound": "Nie znaleziono języka",
     "viewMode": "Tryb widoku",
     "list": "Lista",
     "grid": "Siatka",
@@ -99,22 +101,28 @@
   "premium": {
     "title": "Usuń reklamy",
     "titleActive": "Reklamy usunięte",
-    "descriptionActive": "Korzystasz ze Scannie bez reklam.\nDziękujemy za wsparcie!",
-    "description": "Korzystaj ze Scannie bez przerw.\nUsuń wszystkie reklamy jednorazowym zakupem.",
+    "descriptionActive": "Korzystasz z aplikacji bez reklam.\nDziękujemy za wsparcie!",
+    "description": "Ciesz się Scannie bez przerw.\nUsuń wszystkie reklamy jednorazowym zakupem.",
     "unlocked": "Reklamy usunięte",
     "unlock": "Usuń reklamy ($2)",
-    "maybeLater": "Może później"
+    "unlockWithPrice": "Usuń reklamy ({0})",
+    "maybeLater": "Może później",
+    "restore": "Przywróć zakup",
+    "restoreRequested": "Sprawdzanie poprzednich zakupów...",
+    "restoreFailed": "Nie udało się przywrócić zakupów",
+    "storeNotAvailable": "Sklep niedostępny",
+    "purchaseFailed": "Zakup nie powiódł się. Spróbuj ponownie."
   },
   "dialogs": {
     "deleteScan": "Usuń skan",
-    "deleteScanMessage": "Usunąć „{name}"?",
+    "deleteScanMessage": "Usunąć \"{name}\"?",
     "renameScan": "Zmień nazwę skanu",
     "renameScanDesc": "Wprowadź nową nazwę dla tego dokumentu",
-    "addTag": "Dodaj tag",
-    "editTag": "Edytuj tag",
-    "tagDesc": "Dodaj tag, aby uporządkować ten dokument",
-    "tagPlaceholder": "Wprowadź nazwę tagu",
-    "tagColor": "Kolor tagu",
+    "addTag": "Dodaj etykietę",
+    "editTag": "Edytuj etykietę",
+    "tagDesc": "Dodaj etykietę, aby uporządkować ten dokument",
+    "tagPlaceholder": "Wprowadź nazwę etykiety",
+    "tagColor": "Kolor etykiety",
     "tagPreview": "Podgląd",
     "removeTag": "Usuń"
   },
@@ -126,8 +134,8 @@
     "nameControlChars": "Nazwa nie może zawierać znaków kontrolnych",
     "nameLeadingTrailingDot": "Nazwa nie może zaczynać się ani kończyć kropką",
     "nameReserved": "Ta nazwa jest zarezerwowana przez system",
-    "tagEmpty": "Tag nie może być pusty",
-    "tagTooLong": "Tag musi mieć {max} znaków lub mniej"
+    "tagEmpty": "Etykieta nie może być pusta",
+    "tagTooLong": "Etykieta musi mieć {max} znaków lub mniej"
   },
   "toast": {
     "success": "Sukces",
@@ -145,7 +153,7 @@
     "failedToProcessImage": "Nie udało się przetworzyć obrazu",
     "failedToSaveImage": "Nie udało się zapisać obrazu: {error}",
     "failedToShareImage": "Nie udało się udostępnić obrazu: {error}",
-    "imageNotFound": "Nie znaleziono pliku obrazu",
+    "imageNotFound": "Plik obrazu nie został znaleziony",
     "imageSavedToPhotos": "Obraz zapisany w Zdjęciach",
     "scanFailed": "Skanowanie nie powiodło się: {error}"
   },
@@ -156,15 +164,15 @@
     "brighten": "Rozjaśnij",
     "document": "Dokument",
     "sepia": "Sepia",
-    "invert": "Negatyw",
+    "invert": "Odwróć",
     "warm": "Ciepły",
-    "cool": "Zimny"
+    "cool": "Chłodny"
   },
   "imageViewer": {
     "saveToPhotos": "Zapisz w Zdjęciach",
     "shareImage": "Udostępnij obraz",
     "rotateImage": "Obróć",
-    "imageNotFound": "Nie znaleziono obrazu",
+    "imageNotFound": "Obraz nie został znaleziony",
     "failedToLoadImage": "Nie udało się załadować obrazu"
   },
   "pdfQuality": {
@@ -184,9 +192,9 @@
     "settings": "Ustawienia"
   },
   "tags": {
-    "working": "W trakcie",
+    "working": "W toku",
     "todo": "Do zrobienia",
-    "review": "Do przeglądu",
+    "review": "Do sprawdzenia",
     "done": "Gotowe"
   }
 }

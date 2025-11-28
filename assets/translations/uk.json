@@ -86,6 +86,8 @@
     "themeLight": "Світла",
     "themeDark": "Темна",
     "language": "Мова",
+    "searchLanguage": "Шукати мови...",
+    "noLanguageFound": "Мову не знайдено",
     "viewMode": "Режим перегляду",
     "list": "Список",
     "grid": "Сітка",
@@ -103,7 +105,13 @@
     "description": "Користуйтеся Scannie без перерв.\nПриберіть усю рекламу за одну покупку.",
     "unlocked": "Рекламу прибрано",
     "unlock": "Прибрати рекламу ($2)",
-    "maybeLater": "Пізніше"
+    "maybeLater": "Пізніше",
+    "unlockWithPrice": "Видалити рекламу ({0})",
+    "restore": "Відновити покупку",
+    "restoreRequested": "Перевірка попередніх покупок...",
+    "restoreFailed": "Не вдалося відновити покупки",
+    "storeNotAvailable": "Магазин недоступний",
+    "purchaseFailed": "Покупка не вдалася. Спробуйте ще раз."
   },
   "dialogs": {
     "deleteScan": "Видалити скан",

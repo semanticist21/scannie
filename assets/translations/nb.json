@@ -86,6 +86,8 @@
     "themeLight": "Lyst",
     "themeDark": "Mørkt",
     "language": "Språk",
+    "searchLanguage": "Søk etter språk...",
+    "noLanguageFound": "Ingen språk funnet",
     "viewMode": "Visningsmodus",
     "list": "Liste",
     "grid": "Rutenett",
@@ -103,7 +105,13 @@
     "description": "Bruk Scannie uten avbrudd.\nFjern alle annonser med et engangskjøp.",
     "unlocked": "Annonser fjernet",
     "unlock": "Fjern annonser ($2)",
-    "maybeLater": "Kanskje senere"
+    "maybeLater": "Kanskje senere",
+    "unlockWithPrice": "Fjern annonser ({0})",
+    "restore": "Gjenopprett kjøp",
+    "restoreRequested": "Sjekker tidligere kjøp...",
+    "restoreFailed": "Kunne ikke gjenopprette kjøp",
+    "storeNotAvailable": "Butikken er ikke tilgjengelig",
+    "purchaseFailed": "Kjøpet mislyktes. Prøv igjen."
   },
   "dialogs": {
     "deleteScan": "Slett skanning",

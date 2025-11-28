@@ -86,6 +86,8 @@
     "themeLight": "Ljust",
     "themeDark": "Mörkt",
     "language": "Språk",
+    "searchLanguage": "Sök språk...",
+    "noLanguageFound": "Inget språk hittades",
     "viewMode": "Visningsläge",
     "list": "Lista",
     "grid": "Rutnät",
@@ -103,7 +105,13 @@
     "description": "Använd Scannie utan avbrott.\nTa bort alla annonser med ett engångsköp.",
     "unlocked": "Annonser borttagna",
     "unlock": "Ta bort annonser ($2)",
-    "maybeLater": "Kanske senare"
+    "maybeLater": "Kanske senare",
+    "unlockWithPrice": "Ta bort annonser ({0})",
+    "restore": "Återställ köp",
+    "restoreRequested": "Kontrollerar tidigare köp...",
+    "restoreFailed": "Kunde inte återställa köp",
+    "storeNotAvailable": "Butiken är inte tillgänglig",
+    "purchaseFailed": "Köpet misslyckades. Försök igen."
   },
   "dialogs": {
     "deleteScan": "Radera skanning",

@@ -86,6 +86,8 @@
     "themeLight": "Chiaro",
     "themeDark": "Scuro",
     "language": "Lingua",
+    "searchLanguage": "Cerca lingue...",
+    "noLanguageFound": "Nessuna lingua trovata",
     "viewMode": "Modalità visualizzazione",
     "list": "Elenco",
     "grid": "Griglia",
@@ -103,7 +105,13 @@
     "description": "Goditi Scannie senza interruzioni.\nRimuovi tutte le pubblicità con un solo acquisto.",
     "unlocked": "Pubblicità rimossa",
     "unlock": "Rimuovi pubblicità ($2)",
-    "maybeLater": "Forse più tardi"
+    "maybeLater": "Forse più tardi",
+    "unlockWithPrice": "Rimuovi pubblicità ({0})",
+    "restore": "Ripristina acquisto",
+    "restoreRequested": "Verifica acquisti precedenti...",
+    "restoreFailed": "Impossibile ripristinare gli acquisti",
+    "storeNotAvailable": "Negozio non disponibile",
+    "purchaseFailed": "Acquisto fallito. Riprova."
   },
   "dialogs": {
     "deleteScan": "Elimina scansione",

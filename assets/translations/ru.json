@@ -86,6 +86,8 @@
     "themeLight": "Светлая",
     "themeDark": "Тёмная",
     "language": "Язык",
+    "searchLanguage": "Поиск языков...",
+    "noLanguageFound": "Язык не найден",
     "viewMode": "Режим просмотра",
     "list": "Список",
     "grid": "Сетка",
@@ -103,7 +105,13 @@
     "description": "Используйте Scannie без перерывов.\nУберите всю рекламу за одну покупку.",
     "unlocked": "Реклама отключена",
     "unlock": "Убрать рекламу ($2)",
-    "maybeLater": "Позже"
+    "maybeLater": "Позже",
+    "unlockWithPrice": "Убрать рекламу ({0})",
+    "restore": "Восстановить покупку",
+    "restoreRequested": "Проверка предыдущих покупок...",
+    "restoreFailed": "Не удалось восстановить покупки",
+    "storeNotAvailable": "Магазин недоступен",
+    "purchaseFailed": "Покупка не удалась. Пожалуйста, попробуйте снова."
   },
   "dialogs": {
     "deleteScan": "Удалить скан",

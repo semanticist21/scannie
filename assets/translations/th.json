@@ -86,6 +86,8 @@
     "themeLight": "สว่าง",
     "themeDark": "มืด",
     "language": "ภาษา",
+    "searchLanguage": "ค้นหาภาษา...",
+    "noLanguageFound": "ไม่พบภาษา",
     "viewMode": "โหมดมุมมอง",
     "list": "รายการ",
     "grid": "ตาราง",
@@ -103,7 +105,13 @@
     "description": "ใช้งาน Scannie โดยไม่มีการรบกวน\nลบโฆษณาทั้งหมดด้วยการซื้อครั้งเดียว",
     "unlocked": "ลบโฆษณาแล้ว",
     "unlock": "ลบโฆษณา ($2)",
-    "maybeLater": "ไว้ทีหลัง"
+    "maybeLater": "ไว้ทีหลัง",
+    "unlockWithPrice": "ลบโฆษณา ({0})",
+    "restore": "กู้คืนการซื้อ",
+    "restoreRequested": "กำลังตรวจสอบการซื้อก่อนหน้า...",
+    "restoreFailed": "ไม่สามารถกู้คืนการซื้อได้",
+    "storeNotAvailable": "ร้านค้าไม่พร้อมใช้งาน",
+    "purchaseFailed": "การซื้อล้มเหลว กรุณาลองอีกครั้ง"
   },
   "dialogs": {
     "deleteScan": "ลบการสแกน",

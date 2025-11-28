@@ -35,8 +35,82 @@ void main() async {
   runApp(
     EasyLocalization(
       supportedLocales: const [
-        Locale('en'),
-        Locale('ko'),
+        // 75 languages supported by Google Play Store
+        Locale('af'),      // Afrikaans
+        Locale('am'),      // Amharic
+        Locale('ar'),      // Arabic
+        Locale('az'),      // Azerbaijani
+        Locale('be'),      // Belarusian
+        Locale('bg'),      // Bulgarian
+        Locale('bn'),      // Bengali
+        Locale('bs'),      // Bosnian
+        Locale('ca'),      // Catalan
+        Locale('cs'),      // Czech
+        Locale('cy'),      // Welsh
+        Locale('da'),      // Danish
+        Locale('de'),      // German
+        Locale('el'),      // Greek
+        Locale('en'),      // English
+        Locale('es'),      // Spanish
+        Locale('et'),      // Estonian
+        Locale('eu'),      // Basque
+        Locale('fa'),      // Persian
+        Locale('fi'),      // Finnish
+        Locale('fil'),     // Filipino
+        Locale('fr'),      // French
+        Locale('ga'),      // Irish
+        Locale('gl'),      // Galician
+        Locale('gu'),      // Gujarati
+        Locale('he'),      // Hebrew
+        Locale('hi'),      // Hindi
+        Locale('hr'),      // Croatian
+        Locale('hu'),      // Hungarian
+        Locale('hy'),      // Armenian
+        Locale('id'),      // Indonesian
+        Locale('is'),      // Icelandic
+        Locale('it'),      // Italian
+        Locale('ja'),      // Japanese
+        Locale('ka'),      // Georgian
+        Locale('kk'),      // Kazakh
+        Locale('km'),      // Khmer
+        Locale('kn'),      // Kannada
+        Locale('ko'),      // Korean
+        Locale('ky'),      // Kyrgyz
+        Locale('lo'),      // Lao
+        Locale('lt'),      // Lithuanian
+        Locale('lv'),      // Latvian
+        Locale('mk'),      // Macedonian
+        Locale('ml'),      // Malayalam
+        Locale('mn'),      // Mongolian
+        Locale('mr'),      // Marathi
+        Locale('ms'),      // Malay
+        Locale('mt'),      // Maltese
+        Locale('my'),      // Burmese
+        Locale('nb'),      // Norwegian Bokmål
+        Locale('ne'),      // Nepali
+        Locale('nl'),      // Dutch
+        Locale('pa'),      // Punjabi
+        Locale('pl'),      // Polish
+        Locale('pt'),      // Portuguese
+        Locale('ro'),      // Romanian
+        Locale('ru'),      // Russian
+        Locale('si'),      // Sinhala
+        Locale('sk'),      // Slovak
+        Locale('sl'),      // Slovenian
+        Locale('sq'),      // Albanian
+        Locale('sr'),      // Serbian
+        Locale('sv'),      // Swedish
+        Locale('sw'),      // Swahili
+        Locale('ta'),      // Tamil
+        Locale('te'),      // Telugu
+        Locale('th'),      // Thai
+        Locale('tr'),      // Turkish
+        Locale('uk'),      // Ukrainian
+        Locale('ur'),      // Urdu
+        Locale('uz'),      // Uzbek
+        Locale('vi'),      // Vietnamese
+        Locale('zh'),      // Chinese
+        Locale('zu'),      // Zulu
       ],
       path: 'assets/translations',
       fallbackLocale: const Locale('en'),

@@ -86,6 +86,8 @@
     "themeLight": "Claro",
     "themeDark": "Escuro",
     "language": "Idioma",
+    "searchLanguage": "Pesquisar idiomas...",
+    "noLanguageFound": "Nenhum idioma encontrado",
     "viewMode": "Modo de visualização",
     "list": "Lista",
     "grid": "Grade",
@@ -103,7 +105,13 @@
     "description": "Aproveite o Scannie sem interrupções.\nRemova todos os anúncios com uma única compra.",
     "unlocked": "Anúncios removidos",
     "unlock": "Remover anúncios ($2)",
-    "maybeLater": "Talvez depois"
+    "maybeLater": "Talvez depois",
+    "unlockWithPrice": "Remover anúncios ({0})",
+    "restore": "Restaurar compra",
+    "restoreRequested": "Verificando compras anteriores...",
+    "restoreFailed": "Não foi possível restaurar as compras",
+    "storeNotAvailable": "Loja não disponível",
+    "purchaseFailed": "A compra falhou. Por favor, tente novamente."
   },
   "dialogs": {
     "deleteScan": "Excluir escaneamento",

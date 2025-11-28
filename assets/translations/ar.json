@@ -86,6 +86,8 @@
     "themeLight": "فاتح",
     "themeDark": "داكن",
     "language": "اللغة",
+    "searchLanguage": "البحث عن اللغات...",
+    "noLanguageFound": "لم يتم العثور على لغة",
     "viewMode": "وضع العرض",
     "list": "قائمة",
     "grid": "شبكة",
@@ -103,7 +105,13 @@
     "description": "استمتع بـ Scannie بدون انقطاع.\nأزل جميع الإعلانات بعملية شراء واحدة.",
     "unlocked": "تمت إزالة الإعلانات",
     "unlock": "إزالة الإعلانات ($2)",
-    "maybeLater": "ربما لاحقًا"
+    "maybeLater": "ربما لاحقًا",
+    "unlockWithPrice": "إزالة الإعلانات ({0})",
+    "restore": "استعادة الشراء",
+    "restoreRequested": "جارٍ التحقق من المشتريات السابقة...",
+    "restoreFailed": "تعذر استعادة المشتريات",
+    "storeNotAvailable": "المتجر غير متاح",
+    "purchaseFailed": "فشل الشراء. يرجى المحاولة مرة أخرى."
   },
   "dialogs": {
     "deleteScan": "حذف المسح",

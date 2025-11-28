@@ -18,13 +18,13 @@
     "loading": "Načítání...",
     "pages": "Stránky",
     "page": "stránka",
-    "pagesLower": "stránek",
+    "pagesLower": "stránky",
     "pdf": "PDF"
   },
   "gallery": {
     "title": "Moje skeny",
     "selectItems": "Vybrat",
-    "selectedCount": "Vybráno: {count}",
+    "selectedCount": "{count} vybráno",
     "searchPlaceholder": "Hledat dokumenty",
     "noScansTitle": "Žádné skeny",
     "noScansSubtitle": "Klepnutím na tlačítko níže začnete skenovat",
@@ -36,32 +36,32 @@
     "emptyDocumentCreated": "Prázdný dokument vytvořen",
     "documentDeleted": "Dokument smazán",
     "scanUpdated": "Sken aktualizován",
-    "generatingPdf": "Vytváření PDF...",
+    "generatingPdf": "Generování PDF...",
     "preparingZip": "Příprava ZIP...",
-    "deleteScans": "Smazat {count} {count, plural, =1{sken} few{skeny} other{skenů}}",
-    "deletedScans": "Smazáno {count} {count, plural, =1{sken} few{skeny} other{skenů}}",
+    "deleteScans": "Smazat {count} skenů",
+    "deletedScans": "{count} skenů smazáno",
     "actionCannotBeUndone": "Tuto akci nelze vrátit zpět."
   },
   "edit": {
     "title": "Upravit sken ({count})",
     "noImagesTitle": "Žádné obrázky",
-    "noImagesSubtitle": "Klepněte na Skenovat nebo Fotka níže pro přidání obrázků",
+    "noImagesSubtitle": "Klepnutím na Skenovat nebo Fotka níže přidáte obrázky",
     "saveScan": "Uložit sken",
     "saveScanDesc": "Zadejte název pro tento sken",
     "scanSaved": "Sken uložen",
-    "addAtLeastOneImage": "Přidejte alespoň jeden obrázek pro uložení",
+    "addAtLeastOneImage": "Pro uložení přidejte alespoň jeden obrázek",
     "discardChangesTitle": "Zahodit změny?",
-    "discardNewScan": "Chcete zahodit tento sken? Všechny obrázky budou ztraceny.",
-    "discardEditScan": "Chcete zahodit změny? Neuložené změny budou ztraceny."
+    "discardNewScan": "Opravdu chcete zahodit tento sken? Všechny obrázky budou ztraceny.",
+    "discardEditScan": "Opravdu chcete zahodit změny? Vaše změny nebudou uloženy."
   },
   "viewer": {
-    "listView": "Seznam",
-    "gridView": "Mřížka",
+    "listView": "Zobrazení seznamu",
+    "gridView": "Zobrazení mřížky",
     "exportPdf": "Exportovat PDF",
-    "generatingPdfPreview": "Vytváření náhledu PDF...",
+    "generatingPdfPreview": "Generování náhledu PDF...",
     "preparingPdf": "Příprava PDF...",
     "noPagesTitle": "Žádné stránky",
-    "noPagesSubtitle": "Tento dokument je prázdný.\nZkuste upravit a přidat skeny.",
+    "noPagesSubtitle": "Tento dokument je prázdný.\nZkuste upravit a přidat nové skeny.",
     "downloadPdf": "Stáhnout PDF",
     "sharePdf": "Sdílet PDF",
     "downloadAsZip": "Stáhnout jako ZIP",
@@ -70,9 +70,9 @@
     "pdfQuality": "Kvalita PDF ({quality})",
     "pdfOptions": "Možnosti PDF",
     "deleteDocument": "Smazat dokument?",
-    "deleteDocumentMessage": "„{name}" a všechny jeho stránky budou trvale smazány. Tuto akci nelze vrátit zpět.",
+    "deleteDocumentMessage": "Trvale se smaže \"{name}\" a všechny jeho stránky. Tuto akci nelze vrátit zpět.",
     "downloadImagesTitle": "Stáhnout obrázky",
-    "downloadImagesMessage": "Stáhnout {count} {count, plural, =1{obrázek} few{obrázky} other{obrázků}} do galerie?",
+    "downloadImagesMessage": "Stáhnout {count} obrázků do galerie?",
     "pageOf": "Stránka {current} z {total}"
   },
   "settings": {
@@ -86,6 +86,8 @@
     "themeLight": "Světlý",
     "themeDark": "Tmavý",
     "language": "Jazyk",
+    "searchLanguage": "Hledat jazyky...",
+    "noLanguageFound": "Jazyk nenalezen",
     "viewMode": "Režim zobrazení",
     "list": "Seznam",
     "grid": "Mřížka",
@@ -99,20 +101,26 @@
   "premium": {
     "title": "Odstranit reklamy",
     "titleActive": "Reklamy odstraněny",
-    "descriptionActive": "Užíváte si Scannie bez reklam.\nDěkujeme za vaši podporu!",
+    "descriptionActive": "Používáte aplikaci bez reklam.\nDěkujeme za vaši podporu!",
     "description": "Užívejte si Scannie bez přerušení.\nOdstraňte všechny reklamy jednorázovým nákupem.",
     "unlocked": "Reklamy odstraněny",
     "unlock": "Odstranit reklamy ($2)",
-    "maybeLater": "Možná později"
+    "unlockWithPrice": "Odstranit reklamy ({0})",
+    "maybeLater": "Možná později",
+    "restore": "Obnovit nákup",
+    "restoreRequested": "Kontrola předchozích nákupů...",
+    "restoreFailed": "Nepodařilo se obnovit nákupy",
+    "storeNotAvailable": "Obchod není dostupný",
+    "purchaseFailed": "Nákup se nezdařil. Zkuste to prosím znovu."
   },
   "dialogs": {
     "deleteScan": "Smazat sken",
-    "deleteScanMessage": "Smazat „{name}"?",
+    "deleteScanMessage": "Smazat \"{name}\"?",
     "renameScan": "Přejmenovat sken",
     "renameScanDesc": "Zadejte nový název pro tento dokument",
     "addTag": "Přidat štítek",
     "editTag": "Upravit štítek",
-    "tagDesc": "Přidejte štítek pro uspořádání tohoto dokumentu",
+    "tagDesc": "Přidejte štítek pro organizaci tohoto dokumentu",
     "tagPlaceholder": "Zadejte název štítku",
     "tagColor": "Barva štítku",
     "tagPreview": "Náhled",
@@ -121,11 +129,11 @@
   "validation": {
     "nameEmpty": "Název nemůže být prázdný",
     "nameTooLong": "Název musí mít {max} znaků nebo méně",
-    "nameForbiddenChars": "Název nemůže obsahovat: {chars}",
+    "nameForbiddenChars": "Název nesmí obsahovat: {chars}",
     "nameInvalid": "Neplatný název",
-    "nameControlChars": "Název nemůže obsahovat řídicí znaky",
-    "nameLeadingTrailingDot": "Název nemůže začínat ani končit tečkou",
-    "nameReserved": "Tento název je rezervován systémem",
+    "nameControlChars": "Název nesmí obsahovat řídící znaky",
+    "nameLeadingTrailingDot": "Název nesmí začínat ani končit tečkou",
+    "nameReserved": "Tento název je vyhrazen systémem",
     "tagEmpty": "Štítek nemůže být prázdný",
     "tagTooLong": "Štítek musí mít {max} znaků nebo méně"
   },
@@ -133,21 +141,21 @@
     "success": "Úspěch",
     "error": "Chyba",
     "processing": "Zpracování",
-    "failedToLoadDocuments": "Načtení dokumentů se nezdařilo: {error}",
-    "failedToAddScans": "Přidání skenů se nezdařilo",
-    "failedToAddPhotos": "Přidání fotek se nezdařilo",
-    "failedToExportPdf": "Export PDF se nezdařil",
-    "failedToSavePdf": "Uložení PDF se nezdařilo",
-    "failedToCreateZip": "Vytvoření ZIP se nezdařilo",
-    "failedToSaveZip": "Uložení ZIP se nezdařilo",
-    "failedToSaveImages": "Uložení obrázků se nezdařilo",
-    "failedToDeleteDocument": "Smazání dokumentu se nezdařilo",
-    "failedToProcessImage": "Zpracování obrázku se nezdařilo",
-    "failedToSaveImage": "Uložení obrázku se nezdařilo: {error}",
-    "failedToShareImage": "Sdílení obrázku se nezdařilo: {error}",
+    "failedToLoadDocuments": "Nepodařilo se načíst dokumenty: {error}",
+    "failedToAddScans": "Nepodařilo se přidat skeny",
+    "failedToAddPhotos": "Nepodařilo se přidat fotky",
+    "failedToExportPdf": "Nepodařilo se exportovat PDF",
+    "failedToSavePdf": "Nepodařilo se uložit PDF",
+    "failedToCreateZip": "Nepodařilo se vytvořit ZIP",
+    "failedToSaveZip": "Nepodařilo se uložit ZIP",
+    "failedToSaveImages": "Nepodařilo se uložit obrázky",
+    "failedToDeleteDocument": "Nepodařilo se smazat dokument",
+    "failedToProcessImage": "Nepodařilo se zpracovat obrázek",
+    "failedToSaveImage": "Nepodařilo se uložit obrázek: {error}",
+    "failedToShareImage": "Nepodařilo se sdílet obrázek: {error}",
     "imageNotFound": "Soubor obrázku nenalezen",
     "imageSavedToPhotos": "Obrázek uložen do Fotek",
-    "scanFailed": "Skenování se nezdařilo: {error}"
+    "scanFailed": "Skenování selhalo: {error}"
   },
   "filters": {
     "original": "Originál",
@@ -157,22 +165,22 @@
     "document": "Dokument",
     "sepia": "Sépie",
     "invert": "Invertovat",
-    "warm": "Teplý",
-    "cool": "Studený"
+    "warm": "Teplé",
+    "cool": "Studené"
   },
   "imageViewer": {
     "saveToPhotos": "Uložit do Fotek",
     "shareImage": "Sdílet obrázek",
     "rotateImage": "Otočit",
     "imageNotFound": "Obrázek nenalezen",
-    "failedToLoadImage": "Načtení obrázku se nezdařilo"
+    "failedToLoadImage": "Nepodařilo se načíst obrázek"
   },
   "pdfQuality": {
     "title": "Kvalita PDF",
     "low": "Nízká",
     "medium": "Střední",
     "high": "Vysoká",
-    "original": "Originál"
+    "original": "Originální"
   },
   "tooltips": {
     "cancel": "Zrušit",
@@ -184,9 +192,9 @@
     "settings": "Nastavení"
   },
   "tags": {
-    "working": "Rozpracováno",
+    "working": "Probíhá",
     "todo": "K vyřízení",
-    "review": "Ke kontrole",
+    "review": "K revizi",
     "done": "Hotovo"
   }
 }

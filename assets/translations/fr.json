@@ -86,6 +86,8 @@
     "themeLight": "Clair",
     "themeDark": "Sombre",
     "language": "Langue",
+    "searchLanguage": "Rechercher des langues...",
+    "noLanguageFound": "Aucune langue trouvée",
     "viewMode": "Mode d'affichage",
     "list": "Liste",
     "grid": "Grille",
@@ -103,7 +105,13 @@
     "description": "Profitez de Scannie sans interruption.\nSupprimez toutes les pubs avec un achat unique.",
     "unlocked": "Pubs supprimées",
     "unlock": "Supprimer les pubs ($2)",
-    "maybeLater": "Plus tard"
+    "maybeLater": "Plus tard",
+    "unlockWithPrice": "Supprimer les publicités ({0})",
+    "restore": "Restaurer l'achat",
+    "restoreRequested": "Vérification des achats précédents...",
+    "restoreFailed": "Impossible de restaurer les achats",
+    "storeNotAvailable": "Boutique non disponible",
+    "purchaseFailed": "L'achat a échoué. Veuillez réessayer."
   },
   "dialogs": {
     "deleteScan": "Supprimer le scan",

@@ -86,6 +86,8 @@
     "themeLight": "Sáng",
     "themeDark": "Tối",
     "language": "Ngôn ngữ",
+    "searchLanguage": "Tìm kiếm ngôn ngữ...",
+    "noLanguageFound": "Không tìm thấy ngôn ngữ",
     "viewMode": "Chế độ xem",
     "list": "Danh sách",
     "grid": "Lưới",
@@ -103,7 +105,13 @@
     "description": "Tận hưởng Scannie không bị gián đoạn.\nXóa tất cả quảng cáo chỉ với một lần mua.",
     "unlocked": "Đã xóa quảng cáo",
     "unlock": "Xóa quảng cáo ($2)",
-    "maybeLater": "Để sau"
+    "maybeLater": "Để sau",
+    "unlockWithPrice": "Xóa quảng cáo ({0})",
+    "restore": "Khôi phục mua hàng",
+    "restoreRequested": "Đang kiểm tra các giao dịch trước...",
+    "restoreFailed": "Không thể khôi phục giao dịch",
+    "storeNotAvailable": "Cửa hàng không khả dụng",
+    "purchaseFailed": "Mua hàng thất bại. Vui lòng thử lại."
   },
   "dialogs": {
     "deleteScan": "Xóa bản quét",

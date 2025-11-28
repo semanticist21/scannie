@@ -86,6 +86,8 @@
     "themeLight": "Hell",
     "themeDark": "Dunkel",
     "language": "Sprache",
+    "searchLanguage": "Sprachen suchen...",
+    "noLanguageFound": "Keine Sprache gefunden",
     "viewMode": "Ansichtsmodus",
     "list": "Liste",
     "grid": "Raster",
@@ -103,7 +105,13 @@
     "description": "Genieße Scannie ohne Unterbrechungen.\nEntferne alle Werbung mit einem einmaligen Kauf.",
     "unlocked": "Werbung entfernt",
     "unlock": "Werbung entfernen ($2)",
-    "maybeLater": "Vielleicht später"
+    "maybeLater": "Vielleicht später",
+    "unlockWithPrice": "Werbung entfernen ({0})",
+    "restore": "Kauf wiederherstellen",
+    "restoreRequested": "Frühere Käufe werden überprüft...",
+    "restoreFailed": "Käufe konnten nicht wiederhergestellt werden",
+    "storeNotAvailable": "Store nicht verfügbar",
+    "purchaseFailed": "Kauf fehlgeschlagen. Bitte erneut versuchen."
   },
   "dialogs": {
     "deleteScan": "Scan löschen",

@@ -86,6 +86,8 @@
     "themeLight": "Light",
     "themeDark": "Dark",
     "language": "Language",
+    "searchLanguage": "Search languages...",
+    "noLanguageFound": "No language found",
     "viewMode": "View Mode",
     "list": "List",
     "grid": "Grid",

@@ -86,6 +86,8 @@
     "themeLight": "Cerah",
     "themeDark": "Gelap",
     "language": "Bahasa",
+    "searchLanguage": "Cari bahasa...",
+    "noLanguageFound": "Tiada bahasa ditemui",
     "viewMode": "Mod paparan",
     "list": "Senarai",
     "grid": "Grid",
@@ -103,7 +105,13 @@
     "description": "Gunakan Scannie tanpa gangguan.\nAlih keluar semua iklan dengan pembelian sekali sahaja.",
     "unlocked": "Iklan dialih keluar",
     "unlock": "Alih keluar iklan ($2)",
-    "maybeLater": "Mungkin nanti"
+    "maybeLater": "Mungkin nanti",
+    "unlockWithPrice": "Alih keluar iklan ({0})",
+    "restore": "Pulihkan pembelian",
+    "restoreRequested": "Menyemak pembelian sebelumnya...",
+    "restoreFailed": "Tidak dapat memulihkan pembelian",
+    "storeNotAvailable": "Kedai tidak tersedia",
+    "purchaseFailed": "Pembelian gagal. Sila cuba lagi."
   },
   "dialogs": {
     "deleteScan": "Padam imbasan",

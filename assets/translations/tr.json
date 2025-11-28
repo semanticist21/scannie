@@ -86,6 +86,8 @@
     "themeLight": "Açık",
     "themeDark": "Koyu",
     "language": "Dil",
+    "searchLanguage": "Dil ara...",
+    "noLanguageFound": "Dil bulunamadı",
     "viewMode": "Görünüm Modu",
     "list": "Liste",
     "grid": "Izgara",
@@ -103,7 +105,13 @@
     "description": "Scannie'yi kesintisiz kullanın.\nTek seferlik ödemeyle tüm reklamları kaldırın.",
     "unlocked": "Reklamlar Kaldırıldı",
     "unlock": "Reklamları Kaldır ($2)",
-    "maybeLater": "Belki Daha Sonra"
+    "maybeLater": "Belki Daha Sonra",
+    "unlockWithPrice": "Reklamları kaldır ({0})",
+    "restore": "Satın almayı geri yükle",
+    "restoreRequested": "Önceki satın almalar kontrol ediliyor...",
+    "restoreFailed": "Satın almalar geri yüklenemedi",
+    "storeNotAvailable": "Mağaza kullanılamıyor",
+    "purchaseFailed": "Satın alma başarısız. Lütfen tekrar deneyin."
   },
   "dialogs": {
     "deleteScan": "Taramayı Sil",

@@ -86,6 +86,8 @@
     "themeLight": "ライト",
     "themeDark": "ダーク",
     "language": "言語",
+    "searchLanguage": "言語を検索...",
+    "noLanguageFound": "言語が見つかりません",
     "viewMode": "表示モード",
     "list": "リスト",
     "grid": "グリッド",
@@ -103,7 +105,13 @@
     "description": "広告なしでScannieをお楽しみください。\n一度のお支払いですべての広告が消えます。",
     "unlocked": "広告削除済み",
     "unlock": "広告を削除 ($2)",
-    "maybeLater": "あとで"
+    "maybeLater": "あとで",
+    "unlockWithPrice": "広告を削除 ({0})",
+    "restore": "購入を復元",
+    "restoreRequested": "以前の購入を確認中...",
+    "restoreFailed": "購入を復元できませんでした",
+    "storeNotAvailable": "ストアが利用できません",
+    "purchaseFailed": "購入に失敗しました。もう一度お試しください。"
   },
   "dialogs": {
     "deleteScan": "スキャンを削除",

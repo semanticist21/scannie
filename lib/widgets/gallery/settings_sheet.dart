@@ -7,28 +7,113 @@ import '../../theme/app_text_styles.dart';
 import '../../models/scan_document.dart';
 import '../../services/theme_service.dart';
 
-/// App language options
-enum AppLanguage {
-  english,
-  korean;
+/// Language data for app localization (75 languages)
+class AppLanguage {
+  final String code;
+  final String displayName;
+  final String nativeName;
 
-  String get displayName {
-    switch (this) {
-      case AppLanguage.english:
-        return 'English';
-      case AppLanguage.korean:
-        return '한국어';
+  const AppLanguage({
+    required this.code,
+    required this.displayName,
+    required this.nativeName,
+  });
+
+  /// All supported languages sorted alphabetically by display name
+  static const List<AppLanguage> all = [
+    AppLanguage(code: 'af', displayName: 'Afrikaans', nativeName: 'Afrikaans'),
+    AppLanguage(code: 'sq', displayName: 'Albanian', nativeName: 'Shqip'),
+    AppLanguage(code: 'am', displayName: 'Amharic', nativeName: 'አማርኛ'),
+    AppLanguage(code: 'ar', displayName: 'Arabic', nativeName: 'العربية'),
+    AppLanguage(code: 'hy', displayName: 'Armenian', nativeName: 'Հdelays'),
+    AppLanguage(code: 'az', displayName: 'Azerbaijani', nativeName: 'Azərbaycan'),
+    AppLanguage(code: 'eu', displayName: 'Basque', nativeName: 'Euskara'),
+    AppLanguage(code: 'be', displayName: 'Belarusian', nativeName: 'Беларуская'),
+    AppLanguage(code: 'bn', displayName: 'Bengali', nativeName: 'বাংলা'),
+    AppLanguage(code: 'bs', displayName: 'Bosnian', nativeName: 'Bosanski'),
+    AppLanguage(code: 'bg', displayName: 'Bulgarian', nativeName: 'Български'),
+    AppLanguage(code: 'my', displayName: 'Burmese', nativeName: 'မြန်မာ'),
+    AppLanguage(code: 'ca', displayName: 'Catalan', nativeName: 'Català'),
+    AppLanguage(code: 'zh', displayName: 'Chinese', nativeName: '中文'),
+    AppLanguage(code: 'hr', displayName: 'Croatian', nativeName: 'Hrvatski'),
+    AppLanguage(code: 'cs', displayName: 'Czech', nativeName: 'Čeština'),
+    AppLanguage(code: 'da', displayName: 'Danish', nativeName: 'Dansk'),
+    AppLanguage(code: 'nl', displayName: 'Dutch', nativeName: 'Nederlands'),
+    AppLanguage(code: 'en', displayName: 'English', nativeName: 'English'),
+    AppLanguage(code: 'et', displayName: 'Estonian', nativeName: 'Eesti'),
+    AppLanguage(code: 'fil', displayName: 'Filipino', nativeName: 'Filipino'),
+    AppLanguage(code: 'fi', displayName: 'Finnish', nativeName: 'Suomi'),
+    AppLanguage(code: 'fr', displayName: 'French', nativeName: 'Français'),
+    AppLanguage(code: 'gl', displayName: 'Galician', nativeName: 'Galego'),
+    AppLanguage(code: 'ka', displayName: 'Georgian', nativeName: 'ქართული'),
+    AppLanguage(code: 'de', displayName: 'German', nativeName: 'Deutsch'),
+    AppLanguage(code: 'el', displayName: 'Greek', nativeName: 'Ελληνικά'),
+    AppLanguage(code: 'gu', displayName: 'Gujarati', nativeName: 'ગુજરાતી'),
+    AppLanguage(code: 'he', displayName: 'Hebrew', nativeName: 'עברית'),
+    AppLanguage(code: 'hi', displayName: 'Hindi', nativeName: 'हिन्दी'),
+    AppLanguage(code: 'hu', displayName: 'Hungarian', nativeName: 'Magyar'),
+    AppLanguage(code: 'is', displayName: 'Icelandic', nativeName: 'Íslenska'),
+    AppLanguage(code: 'id', displayName: 'Indonesian', nativeName: 'Indonesia'),
+    AppLanguage(code: 'ga', displayName: 'Irish', nativeName: 'Gaeilge'),
+    AppLanguage(code: 'it', displayName: 'Italian', nativeName: 'Italiano'),
+    AppLanguage(code: 'ja', displayName: 'Japanese', nativeName: '日本語'),
+    AppLanguage(code: 'kn', displayName: 'Kannada', nativeName: 'ಕನ್ನಡ'),
+    AppLanguage(code: 'kk', displayName: 'Kazakh', nativeName: 'Қазақ'),
+    AppLanguage(code: 'km', displayName: 'Khmer', nativeName: 'ខ្មែរ'),
+    AppLanguage(code: 'ko', displayName: 'Korean', nativeName: '한국어'),
+    AppLanguage(code: 'ky', displayName: 'Kyrgyz', nativeName: 'Кыргызча'),
+    AppLanguage(code: 'lo', displayName: 'Lao', nativeName: 'ລາວ'),
+    AppLanguage(code: 'lv', displayName: 'Latvian', nativeName: 'Latviešu'),
+    AppLanguage(code: 'lt', displayName: 'Lithuanian', nativeName: 'Lietuvių'),
+    AppLanguage(code: 'mk', displayName: 'Macedonian', nativeName: 'Македонски'),
+    AppLanguage(code: 'ms', displayName: 'Malay', nativeName: 'Melayu'),
+    AppLanguage(code: 'ml', displayName: 'Malayalam', nativeName: 'മലയാളം'),
+    AppLanguage(code: 'mt', displayName: 'Maltese', nativeName: 'Malti'),
+    AppLanguage(code: 'mr', displayName: 'Marathi', nativeName: 'मराठी'),
+    AppLanguage(code: 'mn', displayName: 'Mongolian', nativeName: 'Монгол'),
+    AppLanguage(code: 'ne', displayName: 'Nepali', nativeName: 'नेपाली'),
+    AppLanguage(code: 'nb', displayName: 'Norwegian', nativeName: 'Norsk'),
+    AppLanguage(code: 'fa', displayName: 'Persian', nativeName: 'فارسی'),
+    AppLanguage(code: 'pl', displayName: 'Polish', nativeName: 'Polski'),
+    AppLanguage(code: 'pt', displayName: 'Portuguese', nativeName: 'Português'),
+    AppLanguage(code: 'pa', displayName: 'Punjabi', nativeName: 'ਪੰਜਾਬੀ'),
+    AppLanguage(code: 'ro', displayName: 'Romanian', nativeName: 'Română'),
+    AppLanguage(code: 'ru', displayName: 'Russian', nativeName: 'Русский'),
+    AppLanguage(code: 'sr', displayName: 'Serbian', nativeName: 'Српски'),
+    AppLanguage(code: 'si', displayName: 'Sinhala', nativeName: 'සිංහල'),
+    AppLanguage(code: 'sk', displayName: 'Slovak', nativeName: 'Slovenčina'),
+    AppLanguage(code: 'sl', displayName: 'Slovenian', nativeName: 'Slovenščina'),
+    AppLanguage(code: 'es', displayName: 'Spanish', nativeName: 'Español'),
+    AppLanguage(code: 'sw', displayName: 'Swahili', nativeName: 'Kiswahili'),
+    AppLanguage(code: 'sv', displayName: 'Swedish', nativeName: 'Svenska'),
+    AppLanguage(code: 'ta', displayName: 'Tamil', nativeName: 'தமிழ்'),
+    AppLanguage(code: 'te', displayName: 'Telugu', nativeName: 'తెలుగు'),
+    AppLanguage(code: 'th', displayName: 'Thai', nativeName: 'ไทย'),
+    AppLanguage(code: 'tr', displayName: 'Turkish', nativeName: 'Türkçe'),
+    AppLanguage(code: 'uk', displayName: 'Ukrainian', nativeName: 'Українська'),
+    AppLanguage(code: 'ur', displayName: 'Urdu', nativeName: 'اردو'),
+    AppLanguage(code: 'uz', displayName: 'Uzbek', nativeName: 'Oʻzbek'),
+    AppLanguage(code: 'vi', displayName: 'Vietnamese', nativeName: 'Tiếng Việt'),
+    AppLanguage(code: 'cy', displayName: 'Welsh', nativeName: 'Cymraeg'),
+    AppLanguage(code: 'zu', displayName: 'Zulu', nativeName: 'isiZulu'),
+  ];
+
+  /// Find language by code
+  static AppLanguage? fromCode(String code) {
+    try {
+      return all.firstWhere((lang) => lang.code == code);
+    } catch (_) {
+      return null;
     }
   }
 
-  String get code {
-    switch (this) {
-      case AppLanguage.english:
-        return 'en';
-      case AppLanguage.korean:
-        return 'ko';
-    }
-  }
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is AppLanguage && runtimeType == other.runtimeType && code == other.code;
+
+  @override
+  int get hashCode => code.hashCode;
 }
 
 /// View mode options for document list
@@ -599,46 +684,49 @@ class _SettingsSheetState extends State<SettingsSheet> {
                     ),
                   ),
                   const SizedBox(height: AppSpacing.sm),
-                  // Language select
-                  SizedBox(
-                    width: 160,
-                    child: ShadSelect<AppLanguage>(
-                      initialValue: widget.currentLanguage,
-                      onChanged: (value) {
-                        if (value != null) {
-                          widget.onLanguageChanged(value);
-                        }
-                      },
-                      selectedOptionBuilder: (context, value) => Row(
+                  // Language select - opens a separate bottom sheet
+                  InkWell(
+                    onTap: () => _showLanguageSelector(context),
+                    borderRadius: BorderRadius.circular(AppRadius.md),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: AppSpacing.md,
+                      ),
+                      child: Row(
                         children: [
                           Icon(
                             LucideIcons.globe,
-                            size: 16,
+                            size: 22,
                             color: colors.textSecondary,
                           ),
-                          const SizedBox(width: AppSpacing.sm),
+                          const SizedBox(width: AppSpacing.md),
                           Expanded(
-                            child: Text(
-                              value.displayName,
-                              style: AppTextStyles.bodyMedium.copyWith(
-                                color: colors.textPrimary,
-                              ),
-                              overflow: TextOverflow.ellipsis,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  widget.currentLanguage.displayName,
+                                  style: AppTextStyles.bodyMedium.copyWith(
+                                    fontWeight: AppFontWeight.medium,
+                                    color: colors.textPrimary,
+                                  ),
+                                ),
+                                Text(
+                                  widget.currentLanguage.nativeName,
+                                  style: AppTextStyles.bodySmall.copyWith(
+                                    color: colors.textSecondary,
+                                  ),
+                                ),
+                              ],
                             ),
+                          ),
+                          Icon(
+                            LucideIcons.chevronRight,
+                            size: 18,
+                            color: colors.textSecondary,
                           ),
                         ],
                       ),
-                      options: AppLanguage.values
-                          .map(
-                            (language) => ShadOption(
-                              value: language,
-                              child: Text(
-                                language.displayName,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          )
-                          .toList(),
                     ),
                   ),
                 ],
@@ -647,6 +735,29 @@ class _SettingsSheetState extends State<SettingsSheet> {
             const SizedBox(height: AppSpacing.sm),
           ],
         ),
+      ),
+    );
+  }
+
+  void _showLanguageSelector(BuildContext context) {
+    final colors = ThemedColors.of(context);
+    final navigator = Navigator.of(context);
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: colors.surface,
+      isScrollControlled: true,
+      clipBehavior: Clip.antiAlias,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
+      ),
+      builder: (sheetContext) => _LanguageSelectorSheet(
+        currentLanguage: widget.currentLanguage,
+        onLanguageSelected: (language) {
+          Navigator.pop(sheetContext);
+          navigator.pop();
+          widget.onLanguageChanged(language);
+        },
       ),
     );
   }
@@ -676,6 +787,258 @@ class _SettingsSheetState extends State<SettingsSheet> {
         ),
         child,
       ],
+    );
+  }
+}
+
+/// Separate StatefulWidget for language selector with search
+class _LanguageSelectorSheet extends StatefulWidget {
+  final AppLanguage currentLanguage;
+  final ValueChanged<AppLanguage> onLanguageSelected;
+
+  const _LanguageSelectorSheet({
+    required this.currentLanguage,
+    required this.onLanguageSelected,
+  });
+
+  @override
+  State<_LanguageSelectorSheet> createState() => _LanguageSelectorSheetState();
+}
+
+class _LanguageSelectorSheetState extends State<_LanguageSelectorSheet> {
+  final _searchController = TextEditingController();
+  String _searchQuery = '';
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  List<AppLanguage> get _filteredLanguages {
+    if (_searchQuery.isEmpty) {
+      return AppLanguage.all;
+    }
+    final query = _searchQuery.toLowerCase();
+    return AppLanguage.all.where((lang) {
+      return lang.displayName.toLowerCase().contains(query) ||
+          lang.nativeName.toLowerCase().contains(query) ||
+          lang.code.toLowerCase().contains(query);
+    }).toList();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = ThemedColors.of(context);
+    final filteredLanguages = _filteredLanguages;
+
+    return DraggableScrollableSheet(
+      initialChildSize: 0.7,
+      minChildSize: 0.5,
+      maxChildSize: 0.9,
+      expand: false,
+      builder: (_, scrollController) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Handle bar
+          Center(
+            child: Container(
+              margin: const EdgeInsets.only(top: AppSpacing.sm),
+              width: 32,
+              height: 4,
+              decoration: BoxDecoration(
+                color: colors.border,
+                borderRadius: BorderRadius.circular(AppRadius.xs),
+              ),
+            ),
+          ),
+          // Header
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.lg,
+              AppSpacing.md,
+              AppSpacing.lg,
+              AppSpacing.sm,
+            ),
+            child: Row(
+              children: [
+                Text(
+                  'settings.language'.tr(),
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    fontWeight: AppFontWeight.semiBold,
+                    color: colors.textPrimary,
+                  ),
+                ),
+                const Spacer(),
+                Text(
+                  '${filteredLanguages.length}',
+                  style: AppTextStyles.caption.copyWith(
+                    color: colors.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Search bar
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.lg,
+              vertical: AppSpacing.sm,
+            ),
+            child: TextField(
+              controller: _searchController,
+              onChanged: (value) => setState(() => _searchQuery = value),
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: colors.textPrimary,
+              ),
+              decoration: InputDecoration(
+                hintText: 'settings.searchLanguage'.tr(),
+                hintStyle: AppTextStyles.bodyMedium.copyWith(
+                  color: colors.textHint,
+                ),
+                prefixIcon: Icon(
+                  LucideIcons.search,
+                  size: 18,
+                  color: colors.textSecondary,
+                ),
+                suffixIcon: _searchQuery.isNotEmpty
+                    ? IconButton(
+                        icon: Icon(
+                          LucideIcons.x,
+                          size: 18,
+                          color: colors.textSecondary,
+                        ),
+                        onPressed: () {
+                          _searchController.clear();
+                          setState(() => _searchQuery = '');
+                        },
+                      )
+                    : null,
+                filled: true,
+                fillColor: colors.background,
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.md,
+                  vertical: AppSpacing.sm,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(AppRadius.md),
+                  borderSide: BorderSide(color: colors.border),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(AppRadius.md),
+                  borderSide: BorderSide(color: colors.border),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(AppRadius.md),
+                  borderSide: const BorderSide(color: AppColors.primary),
+                ),
+              ),
+            ),
+          ),
+          Divider(height: 1, color: colors.border),
+          // Current language (pinned at top when not searching)
+          if (_searchQuery.isEmpty) ...[
+            _buildLanguageItem(
+              context,
+              language: widget.currentLanguage,
+              isSelected: true,
+              colors: colors,
+            ),
+            Divider(height: 1, color: colors.border),
+          ],
+          // Language list
+          Expanded(
+            child: filteredLanguages.isEmpty
+                ? Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          LucideIcons.searchX,
+                          size: 48,
+                          color: colors.textHint,
+                        ),
+                        const SizedBox(height: AppSpacing.md),
+                        Text(
+                          'settings.noLanguageFound'.tr(),
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            color: colors.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : ListView.builder(
+                    controller: scrollController,
+                    itemCount: filteredLanguages.length,
+                    itemBuilder: (context, index) {
+                      final language = filteredLanguages[index];
+                      // Skip current language in list when not searching (already shown at top)
+                      if (_searchQuery.isEmpty &&
+                          language.code == widget.currentLanguage.code) {
+                        return const SizedBox.shrink();
+                      }
+                      final isSelected =
+                          language.code == widget.currentLanguage.code;
+                      return _buildLanguageItem(
+                        context,
+                        language: language,
+                        isSelected: isSelected,
+                        colors: colors,
+                      );
+                    },
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLanguageItem(
+    BuildContext context, {
+    required AppLanguage language,
+    required bool isSelected,
+    required ThemedColors colors,
+  }) {
+    return InkWell(
+      onTap: () => widget.onLanguageSelected(language),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.lg,
+          vertical: AppSpacing.md,
+        ),
+        child: Row(
+          children: [
+            Icon(
+              isSelected ? LucideIcons.circleCheck : LucideIcons.circle,
+              size: 22,
+              color: isSelected ? AppColors.primary : colors.textSecondary,
+            ),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    language.displayName,
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      fontWeight:
+                          isSelected ? AppFontWeight.semiBold : AppFontWeight.normal,
+                      color: colors.textPrimary,
+                    ),
+                  ),
+                  Text(
+                    language.nativeName,
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: colors.textSecondary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
