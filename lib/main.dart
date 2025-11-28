@@ -58,10 +58,24 @@ class ScannierApp extends StatelessWidget {
       supportedLocales: context.supportedLocales,
       locale: context.locale,
 
-      // Shadcn theme configuration
+      // Shadcn theme configuration with Teal color scheme
+      // Teal palette from Tailwind CSS:
+      // 400: #2dd4bf, 500: #14b8a6, 600: #0d9488, 700: #0f766e
       theme: ShadThemeData(
         brightness: Brightness.light,
-        colorScheme: const ShadSlateColorScheme.light(),
+        colorScheme: const ShadSlateColorScheme.light().copyWith(
+          // Teal-600 as primary (less bright, professional)
+          primary: Color(0xFF0d9488),
+          // White text on teal buttons
+          primaryForeground: Color(0xFFFFFFFF),
+        ),
+        // Button theme with consistent teal colors for all states
+        primaryButtonTheme: ShadButtonTheme(
+          backgroundColor: const Color(0xFF0d9488), // teal-600
+          foregroundColor: const Color(0xFFFFFFFF), // white
+          hoverBackgroundColor: const Color(0xFF0f766e), // teal-700 (darker on hover)
+          hoverForegroundColor: const Color(0xFFFFFFFF), // white
+        ),
       ),
 
       // Material theme for backwards compatibility with existing Material widgets

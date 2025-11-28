@@ -6,17 +6,18 @@ class AppColors {
   AppColors._();
 
   // ============================================
-  // Primary colors - Clean and professional blue
+  // Primary colors - Teal (matching app icon theme)
+  // Tailwind CSS Teal palette: 400=#2dd4bf, 500=#14b8a6, 600=#0d9488, 700=#0f766e
   // ============================================
-  static const Color primary = Color(0xFF2196F3);
-  static const Color primaryDark = Color(0xFF1976D2);
-  static const Color primaryLight = Color(0xFFBBDEFB);
+  static const Color primary = Color(0xFF0d9488);       // teal-600
+  static const Color primaryDark = Color(0xFF0f766e);   // teal-700
+  static const Color primaryLight = Color(0xFF99f6e4);  // teal-200
 
   // ============================================
-  // Accent colors
+  // Accent colors - Teal variants
   // ============================================
-  static const Color accent = Color(0xFF00BCD4);
-  static const Color accentDark = Color(0xFF0097A7);
+  static const Color accent = Color(0xFF14b8a6);        // teal-500
+  static const Color accentDark = Color(0xFF0d9488);    // teal-600
 
   // ============================================
   // Base colors (replacing Colors.xxx usage)
