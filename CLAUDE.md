@@ -450,6 +450,46 @@ fontSize: AppFontSize.sm, fontWeight: AppFontWeight.medium, padding: EdgeInsets.
 
 **ShadButton 테마**: `main.dart`에서 `primaryButtonTheme`으로 hover 상태까지 teal 색상 적용
 
+### 다크모드 지원
+
+앱은 시스템/라이트/다크 테마를 지원합니다. `ThemeService`가 테마 상태를 관리하고 `ThemedColors`가 현재 테마에 맞는 색상을 제공합니다.
+
+**필수 패턴**: 모든 Text 위젯에 명시적 색상 지정
+
+```dart
+// ❌ WRONG - 다크모드에서 텍스트 안 보임
+Text('Title', style: AppTextStyles.h3)
+
+// ✅ CORRECT - ThemedColors 사용
+final colors = ThemedColors.of(context);
+Text('Title', style: AppTextStyles.h3.copyWith(color: colors.textPrimary))
+```
+
+**ThemedColors 속성**:
+- `surface` - 카드/시트 배경
+- `background` - 화면 배경
+- `textPrimary` - 제목, 본문 텍스트
+- `textSecondary` - 부가 정보 텍스트
+- `textHint` - 힌트, placeholder
+- `border` - 테두리, 구분선
+- `error` - 에러 색상
+
+**다크모드 색상**:
+| 용도 | Light | Dark |
+|------|-------|------|
+| Background | `#fafafa` | `#171717` |
+| Surface | `#ffffff` | `#262626` |
+| Border | `#e2e8f0` | `#404040` |
+
+**ShadButton.outline 다크모드 수정**:
+```dart
+// 다크모드에서 테두리가 안 보이는 문제 해결
+ShadButton.outline(
+  backgroundColor: colors.surface,  // 배경색 명시 필요
+  child: Text('Cancel'),
+)
+```
+
 ### 네비게이션 플로우
 
 ```
