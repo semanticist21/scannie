@@ -1,114 +1,77 @@
 import 'package:flutter/material.dart';
-import 'package:elegant_notification/elegant_notification.dart';
-import 'package:elegant_notification/resources/arrays.dart';
+import 'package:toastification/toastification.dart';
 import 'package:easy_localization/easy_localization.dart';
-import '../theme/app_colors.dart';
-import '../theme/app_theme.dart';
 import '../services/export_service.dart';
 
 /// Centralized toast notification utility for consistent app-wide messaging
+/// Uses toastification with flat style, max 1 toast at a time
 class AppToast {
+  /// Dismiss all existing toasts before showing new one
+  static void _dismissAll() {
+    toastification.dismissAll(delayForAnimation: false);
+  }
+
   /// Show success notification
   static void success(BuildContext context, String message) {
-    final colors = ThemedColors.of(context);
+    _dismissAll();
 
-    ElegantNotification(
-      title: Text(
-        'toast.success'.tr(),
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          color: colors.textPrimary,
-        ),
-      ),
-      description: Text(
-        message,
-        style: TextStyle(color: colors.textSecondary),
-      ),
-      icon: Icon(Icons.check_circle, color: colors.success),
-      background: colors.surface,
-      progressIndicatorColor: colors.success,
-      toastDuration: const Duration(milliseconds: 2500),
-      showProgressIndicator: true,
-      borderRadius: BorderRadius.circular(AppRadius.md),
-      shadow: BoxShadow(
-        color: Colors.black.withValues(alpha: 0.15),
-        spreadRadius: 1,
-        blurRadius: 8,
-        offset: const Offset(0, 2),
-      ),
-      position: Alignment.topCenter,
-      animation: AnimationType.fromTop,
-    ).show(context);
+    toastification.show(
+      context: context,
+      type: ToastificationType.success,
+      style: ToastificationStyle.flat,
+      title: Text(message),
+      autoCloseDuration: const Duration(milliseconds: 2500),
+      alignment: Alignment.topCenter,
+      animationDuration: const Duration(milliseconds: 200),
+      showProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      dragToClose: true,
+    );
   }
 
   /// Show error notification
   static void error(BuildContext context, String message) {
-    final colors = ThemedColors.of(context);
+    _dismissAll();
 
-    ElegantNotification(
-      title: Text(
-        'toast.error'.tr(),
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          color: colors.textPrimary,
-        ),
-      ),
-      description: Text(
-        message,
-        style: TextStyle(color: colors.textSecondary),
-      ),
-      icon: Icon(Icons.error, color: colors.error),
-      background: colors.surface,
-      progressIndicatorColor: colors.error,
-      toastDuration: const Duration(milliseconds: 2500),
-      showProgressIndicator: true,
-      borderRadius: BorderRadius.circular(AppRadius.md),
-      shadow: BoxShadow(
-        color: Colors.black.withValues(alpha: 0.15),
-        spreadRadius: 1,
-        blurRadius: 8,
-        offset: const Offset(0, 2),
-      ),
-      position: Alignment.topCenter,
-      animation: AnimationType.fromTop,
-    ).show(context);
+    toastification.show(
+      context: context,
+      type: ToastificationType.error,
+      style: ToastificationStyle.flat,
+      title: Text(message),
+      autoCloseDuration: const Duration(milliseconds: 2500),
+      alignment: Alignment.topCenter,
+      animationDuration: const Duration(milliseconds: 200),
+      showProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      dragToClose: true,
+    );
   }
 
   /// Show info notification (for processing/loading states)
-  /// Returns the notification instance for manual dismissal
-  static ElegantNotification info(BuildContext context, String message) {
-    final colors = ThemedColors.of(context);
+  /// Returns the ToastificationItem for manual dismissal
+  static ToastificationItem info(BuildContext context, String message) {
+    _dismissAll();
 
-    final notification = ElegantNotification(
-      title: Text(
-        'toast.processing'.tr(),
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          color: colors.textPrimary,
-        ),
-      ),
-      description: Text(
-        message,
-        style: TextStyle(color: colors.textSecondary),
-      ),
-      icon: Icon(Icons.info, color: AppColors.primary),
-      background: colors.surface,
-      progressIndicatorColor: AppColors.primary,
-      toastDuration: const Duration(
-          seconds: 30), // Long duration, will be dismissed manually
-      showProgressIndicator: true,
-      borderRadius: BorderRadius.circular(AppRadius.md),
-      shadow: BoxShadow(
-        color: Colors.black.withValues(alpha: 0.15),
-        spreadRadius: 1,
-        blurRadius: 8,
-        offset: const Offset(0, 2),
-      ),
-      position: Alignment.topCenter,
-      animation: AnimationType.fromTop,
+    return toastification.show(
+      context: context,
+      type: ToastificationType.info,
+      style: ToastificationStyle.flat,
+      title: Text(message),
+      autoCloseDuration: const Duration(seconds: 30),
+      alignment: Alignment.topCenter,
+      animationDuration: const Duration(milliseconds: 200),
+      showProgressBar: true,
+      closeOnClick: false,
+      pauseOnHover: false,
+      dragToClose: false,
     );
-    notification.show(context);
-    return notification;
+  }
+
+  /// Dismiss a specific toast
+  static void dismiss(ToastificationItem item) {
+    toastification.dismiss(item);
   }
 
   /// Convenience method that shows success or error based on isError flag
@@ -129,8 +92,6 @@ class AppToast {
   static bool showExportResult(BuildContext context, ExportResult result) {
     switch (result.type) {
       case ExportResultType.success:
-        // Success cases are often silent (file manager opens, etc.)
-        // But for image saves, show count
         if (result.savedCount != null && result.totalCount != null) {
           success(
             context,
@@ -143,7 +104,6 @@ class AppToast {
         return true;
 
       case ExportResultType.cancelled:
-        // User cancelled - no toast needed
         return false;
 
       case ExportResultType.errorNoImages:

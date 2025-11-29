@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:toastification/toastification.dart';
 import 'theme/app_theme.dart';
 import 'theme/app_colors.dart';
 import 'screens/gallery_screen.dart';
@@ -161,9 +162,10 @@ class _ScannierAppState extends State<ScannierApp> {
       ),
     );
 
-    return ShadApp(
-      title: 'Scannie',
-      debugShowCheckedModeBanner: false,
+    return ToastificationWrapper(
+      child: ShadApp(
+        title: 'Scannie',
+        debugShowCheckedModeBanner: false,
 
       // Localization
       localizationsDelegates: context.localizationDelegates,
@@ -254,6 +256,7 @@ class _ScannierAppState extends State<ScannierApp> {
             );
         }
       },
+      ),
     );
   }
 }

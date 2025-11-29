@@ -228,31 +228,30 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
   }
 
   /// Delete selected documents
-  Future<void> _deleteSelectedDocuments() async {
+  void _deleteSelectedDocuments() {
     if (_selectedDocumentIds.isEmpty) return;
 
     final count = _selectedDocumentIds.length;
-    final confirmed = await ConfirmDialog.showAsync(
+    ConfirmDialog.show(
       context: context,
       title: 'gallery.deleteScans'.tr(namedArgs: {'count': count.toString()}),
       message: 'gallery.actionCannotBeUndone'.tr(),
       cancelText: 'common.cancel'.tr(),
       confirmText: 'common.delete'.tr(),
       isDestructive: true,
+      onConfirm: () async {
+        setState(() {
+          _documents.removeWhere((doc) => _selectedDocumentIds.contains(doc.id));
+          _selectedDocumentIds.clear();
+          _isSelectionMode = false;
+        });
+        await _saveDocuments();
+        if (mounted) {
+          AppToast.show(context,
+              'gallery.deletedScans'.tr(namedArgs: {'count': count.toString()}));
+        }
+      },
     );
-
-    if (confirmed && mounted) {
-      setState(() {
-        _documents.removeWhere((doc) => _selectedDocumentIds.contains(doc.id));
-        _selectedDocumentIds.clear();
-        _isSelectionMode = false;
-      });
-      await _saveDocuments();
-      if (mounted) {
-        AppToast.show(context,
-            'gallery.deletedScans'.tr(namedArgs: {'count': count.toString()}));
-      }
-    }
   }
 
   /// Show settings sheet
@@ -476,7 +475,7 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
                     ? _buildNoSearchResults()
                     : _buildDocumentList(),
       ),
-      floatingActionButton: _isSearching
+      floatingActionButton: _isSearching || _isSelectionMode
           ? null
           : ShadButton(
               onPressed: _openCamera,
@@ -631,9 +630,6 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
         });
         debugPrint('➕ After insert, count: ${_documents.length}');
         await _saveDocuments();
-
-        if (!mounted) return;
-        AppToast.show(context, 'gallery.emptyDocumentCreated'.tr());
       },
     );
   }
@@ -861,7 +857,7 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
 
     final result = await ExportService.instance.sharePdf(document);
 
-    notification.dismiss();
+    AppToast.dismiss(notification);
     if (!mounted) return;
 
     AppToast.showExportResult(context, result);
@@ -873,7 +869,7 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
 
     final result = await ExportService.instance.savePdfWithPicker(document);
 
-    notification.dismiss();
+    AppToast.dismiss(notification);
     if (!mounted) return;
 
     AppToast.showExportResult(context, result);
@@ -886,7 +882,7 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
 
     final result = await ExportService.instance.saveZipWithPicker(document);
 
-    notification.dismiss();
+    AppToast.dismiss(notification);
     if (!mounted) return;
 
     AppToast.showExportResult(context, result);

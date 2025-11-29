@@ -812,7 +812,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
   Future<void> _exportToPdf() async {
     final notification = AppToast.info(context, 'viewer.preparingPdf'.tr());
     final result = await ExportService.instance.sharePdf(_document);
-    notification.dismiss();
+    AppToast.dismiss(notification);
     if (!mounted) return;
 
     if (result.isError) {
@@ -826,7 +826,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
     if (!mounted) return;
     final notification = AppToast.info(context, 'viewer.preparingPdf'.tr());
     final result = await ExportService.instance.savePdfWithPicker(_document);
-    notification.dismiss();
+    AppToast.dismiss(notification);
     if (!mounted) return;
     AppToast.showExportResult(context, result);
   }
@@ -836,7 +836,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
     if (!mounted) return;
     final notification = AppToast.info(context, 'gallery.preparingZip'.tr());
     final result = await ExportService.instance.saveZipWithPicker(_document);
-    notification.dismiss();
+    AppToast.dismiss(notification);
     if (!mounted) return;
     AppToast.showExportResult(context, result);
   }
