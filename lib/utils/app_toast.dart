@@ -27,7 +27,7 @@ class AppToast {
       icon: Icon(Icons.check_circle, color: colors.success),
       background: colors.surface,
       progressIndicatorColor: colors.success,
-      toastDuration: const Duration(seconds: 2),
+      toastDuration: const Duration(milliseconds: 2500),
       showProgressIndicator: true,
       borderRadius: BorderRadius.circular(AppRadius.md),
       shadow: BoxShadow(
@@ -60,7 +60,7 @@ class AppToast {
       icon: Icon(Icons.error, color: colors.error),
       background: colors.surface,
       progressIndicatorColor: colors.error,
-      toastDuration: const Duration(seconds: 3),
+      toastDuration: const Duration(milliseconds: 2500),
       showProgressIndicator: true,
       borderRadius: BorderRadius.circular(AppRadius.md),
       shadow: BoxShadow(
