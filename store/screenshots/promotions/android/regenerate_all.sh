@@ -322,14 +322,14 @@ create_lang_svgs "hu-HU" \
 
 # Armenian (hy-AM) - shortened
 create_lang_svgs "hy-AM" \
-    "Սdelays delays" \
-    "delays PDF" \
-    "delays delays" \
-    "delays delays" \
-    "Kdelays, delays" \
-    "delays delays" \
-    "delays, delays" \
-    "delays delays"
+    "Սկանավորեք փաստաթղթերը" \
+    "PDF միաձուլում" \
+    "Ավտոմատ եզր" \
+    "խելացի բերք" \
+    "Կազմակերպել" \
+    "արտահանում" \
+    "Խմբագրել" \
+    "կառավարել"
 
 # Indonesian (id)
 create_lang_svgs "id" \

@@ -9,8 +9,8 @@
 <rect x="-40.875" width="456.75" height="812" fill="url(#bgGradient)"/>
 
 <!-- Promo Text - Bigger -->
-<text x="187.5" y="95" text-anchor="middle" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="38" font-weight="700" fill="white">Կազմակերպել, նախադիտել</text>
-    <text x="187.5" y="138" text-anchor="middle" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="38" font-weight="700" fill="white">հեշտությամբ արտահանել</text>
+<text x="187.5" y="95" text-anchor="middle" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="38" font-weight="700" fill="white">Կազմակերպել</text>
+    <text x="187.5" y="138" text-anchor="middle" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="38" font-weight="700" fill="white">արտահանում</text>
 
 <g clip-path="url(#clip1_6_2451)" filter="url(#filter0_dddd_6_2451)">
 <path fill-rule="evenodd" clip-rule="evenodd" d="M76.866 211H297.917C322.938 211 343.221 231.283 343.221 256.304V354.075C344.131 354.396 344.784 355.264 344.784 356.285V421.116C344.784 422.136 344.131 423.004 343.221 423.326V818.696C343.221 843.717 322.938 864 297.917 864H76.866C51.8455 864 31.5622 843.717 31.5622 818.696V433.48C30.6521 433.159 30 432.291 30 431.27V393.778C30 392.757 30.6521 391.889 31.5622 391.568V377.241C30.6521 376.919 30 376.051 30 375.031V337.538C30 336.518 30.6521 335.65 31.5622 335.328V316.315C30.6521 315.994 30 315.126 30 314.105V294.578C30 293.557 30.6521 292.689 31.5622 292.368V256.304C31.5622 231.283 51.8455 211 76.866 211Z" fill="black"/>
