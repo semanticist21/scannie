@@ -1,0 +1,50 @@
+# iOS Promo SVG - 수정된 파일 목록
+# 생성일: 2025-11-29
+
+## 수정된 언어별 파일
+
+### Russian (ru) - promo 1,2,3,4 모두 수정
+ios/lang/ru/promo_1.svg
+ios/lang/ru/promo_2.svg
+ios/lang/ru/promo_3.svg
+ios/lang/ru/promo_4.svg
+
+### Greek (el) - promo 3,4 수정
+ios/lang/el/promo_3.svg
+ios/lang/el/promo_4.svg
+
+### Swedish (sv) - promo 3 수정
+ios/lang/sv/promo_3.svg
+
+### Romanian (ro) - promo 3,4 수정
+ios/lang/ro/promo_3.svg
+ios/lang/ro/promo_4.svg
+
+### Polish (pl) - promo 3,4 수정
+ios/lang/pl/promo_3.svg
+ios/lang/pl/promo_4.svg
+
+### Slovak (sk) - promo 3,4 수정
+ios/lang/sk/promo_3.svg
+ios/lang/sk/promo_4.svg
+
+### Hungarian (hu) - promo 3,4 수정
+ios/lang/hu/promo_3.svg
+ios/lang/hu/promo_4.svg
+
+### Spanish (es-ES, es-MX) - promo 2 수정
+ios/lang/es-ES/promo_2.svg
+ios/lang/es-MX/promo_2.svg
+
+---
+
+## PNG 검증 명령어 (rsvg-convert 필요)
+
+# 전체 검증
+cd /Users/semanticist/Documents/code/scannie/store/screenshots/promotions/ios/lang
+for f in ru/promo_*.svg el/promo_*.svg sv/promo_3.svg ro/promo_*.svg pl/promo_*.svg sk/promo_*.svg hu/promo_*.svg es-ES/promo_2.svg es-MX/promo_2.svg; do
+    echo "Checking: $f"
+    rsvg-convert "$f" -o "/tmp/check_$(echo $f | tr '/' '_').png"
+done
+
+# PNG 파일 위치: /tmp/check_*.png
