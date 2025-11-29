@@ -330,25 +330,6 @@ class _SettingsSheetState extends State<SettingsSheet> {
             ),
             Divider(height: 1, color: colors.border),
 
-            // Version info
-            if (_versionString.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.fromLTRB(
-                  AppSpacing.lg,
-                  AppSpacing.lg,
-                  AppSpacing.lg,
-                  AppSpacing.sm,
-                ),
-                child: Center(
-                  child: Text(
-                    _versionString,
-                    style: AppTextStyles.caption.copyWith(
-                      color: colors.textHint,
-                    ),
-                  ),
-                ),
-              ),
-
             // Premium section
             Padding(
               padding: const EdgeInsets.all(AppSpacing.lg),
@@ -764,6 +745,20 @@ class _SettingsSheetState extends State<SettingsSheet> {
               ),
             ),
             const SizedBox(height: AppSpacing.sm),
+
+            // Version info (at bottom)
+            if (_versionString.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(bottom: AppSpacing.lg),
+                child: Center(
+                  child: Text(
+                    _versionString,
+                    style: AppTextStyles.caption.copyWith(
+                      color: colors.textHint,
+                    ),
+                  ),
+                ),
+              ),
           ],
         ),
       ),
