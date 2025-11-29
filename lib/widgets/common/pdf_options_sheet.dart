@@ -127,7 +127,9 @@ class _PdfOptionsSheetState extends State<PdfOptionsSheet> {
                   },
                   selectedOptionBuilder: (context, value) => Text(
                     value.displayName,
-                    style: AppTextStyles.bodySmall,
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: colors.textPrimary,
+                    ),
                   ),
                   options: PdfQuality.values
                       .map((q) => ShadOption(
@@ -153,7 +155,9 @@ class _PdfOptionsSheetState extends State<PdfOptionsSheet> {
                   },
                   selectedOptionBuilder: (context, value) => Text(
                     value.displayName,
-                    style: AppTextStyles.bodySmall,
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: colors.textPrimary,
+                    ),
                   ),
                   options: PdfPageSize.values
                       .map((s) => ShadOption(
@@ -179,7 +183,9 @@ class _PdfOptionsSheetState extends State<PdfOptionsSheet> {
                   },
                   selectedOptionBuilder: (context, value) => Text(
                     value.displayName,
-                    style: AppTextStyles.bodySmall,
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: colors.textPrimary,
+                    ),
                   ),
                   options: PdfOrientation.values
                       .map((o) => ShadOption(
@@ -205,7 +211,9 @@ class _PdfOptionsSheetState extends State<PdfOptionsSheet> {
                   },
                   selectedOptionBuilder: (context, value) => Text(
                     value.displayName,
-                    style: AppTextStyles.bodySmall,
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: colors.textPrimary,
+                    ),
                   ),
                   options: PdfImageFit.values
                       .map((f) => ShadOption(
@@ -231,7 +239,9 @@ class _PdfOptionsSheetState extends State<PdfOptionsSheet> {
                   },
                   selectedOptionBuilder: (context, value) => Text(
                     value.displayName,
-                    style: AppTextStyles.bodySmall,
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: colors.textPrimary,
+                    ),
                   ),
                   options: PdfMargin.values
                       .map((m) => ShadOption(
