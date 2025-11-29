@@ -229,7 +229,7 @@ class PurchaseService {
       debugPrint('💎 Store not available');
       return PurchaseResult.error(
         PurchaseErrorType.storeNotAvailable,
-        'Google Play Store is not available on this device',
+        'Store is not available on this device',
       );
     }
 
