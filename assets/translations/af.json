@@ -204,5 +204,10 @@
     "todo": "Te doen",
     "review": "Hersien",
     "done": "Klaar"
+  },
+  "permission": {
+    "cameraRequired": "Kamera-toestemming benodig",
+    "cameraRequiredMessage": "Kameratoegang is nodig om dokumente te skandeer. Aktiveer dit asseblief in Instellings.",
+    "openSettings": "Open Instellings"
   }
 }

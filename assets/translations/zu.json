@@ -204,5 +204,10 @@
     "todo": "Okufanele kwenziwe",
     "review": "Buyekeza",
     "done": "Kuqediwe"
+  },
+  "permission": {
+    "cameraRequired": "Kudingeka imvume yekhamera",
+    "cameraRequiredMessage": "Ukufinyelela ikhamera kuyadingeka ukuze uskene amadokhumenti. Sicela ukuvule kumaSethingi.",
+    "openSettings": "Vula izilungiselelo"
   }
 }

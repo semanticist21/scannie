@@ -204,5 +204,10 @@
     "todo": "Ediləcək",
     "review": "Nəzərdən keçirmə",
     "done": "Hazır"
+  },
+  "permission": {
+    "cameraRequired": "Kamera icazəsi tələb olunur",
+    "cameraRequiredMessage": "Sənədləri skan etmək üçün kamera girişi lazımdır. Zəhmət olmasa Parametrlərdə aktivləşdirin.",
+    "openSettings": "Parametrləri aç"
   }
 }

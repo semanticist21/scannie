@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:cunning_document_scanner_plus/cunning_document_scanner_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../models/scan_document.dart';
 import '../services/document_storage.dart';
@@ -641,6 +642,27 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
       return;
     }
 
+    // Check camera permission first
+    final cameraStatus = await Permission.camera.status;
+    if (cameraStatus.isDenied || cameraStatus.isPermanentlyDenied) {
+      // Request permission if not permanently denied
+      if (cameraStatus.isDenied) {
+        final result = await Permission.camera.request();
+        if (result.isGranted) {
+          // Permission granted, continue with scanning
+        } else {
+          if (!mounted) return;
+          _showCameraPermissionDialog();
+          return;
+        }
+      } else {
+        // Permanently denied - show dialog to open settings
+        if (!mounted) return;
+        _showCameraPermissionDialog();
+        return;
+      }
+    }
+
     try {
       // Launch cunning_document_scanner_plus with filters mode
       // This allows users to apply filters during scanning
@@ -694,6 +716,18 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
           context, 'toast.scanFailed'.tr(namedArgs: {'error': e.toString()}),
           isError: true);
     }
+  }
+
+  void _showCameraPermissionDialog() {
+    ConfirmDialog.show(
+      context: context,
+      title: 'permission.cameraRequired'.tr(),
+      message: 'permission.cameraRequiredMessage'.tr(),
+      confirmText: 'permission.openSettings'.tr(),
+      onConfirm: () async {
+        await openAppSettings();
+      },
+    );
   }
 
   void _openDocument(ScanDocument document) async {

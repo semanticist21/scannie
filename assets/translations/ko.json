@@ -145,6 +145,11 @@
     "tagEmpty": "태그를 입력해주세요",
     "tagTooLong": "태그는 {max}자 이하로 입력해주세요"
   },
+  "permission": {
+    "cameraRequired": "카메라 권한 필요",
+    "cameraRequiredMessage": "스캔하려면 카메라 권한이 필요해요. 설정에서 권한을 허용해주세요.",
+    "openSettings": "설정 열기"
+  },
   "toast": {
     "success": "성공",
     "error": "오류",

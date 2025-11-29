@@ -204,5 +204,10 @@
     "todo": "Zu erledigen",
     "review": "Überprüfung",
     "done": "Erledigt"
+  },
+  "permission": {
+    "cameraRequired": "Kameraberechtigung erforderlich",
+    "cameraRequiredMessage": "Kamerazugriff wird zum Scannen von Dokumenten benötigt. Bitte in den Einstellungen aktivieren.",
+    "openSettings": "Einstellungen öffnen"
   }
 }

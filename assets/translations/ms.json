@@ -204,5 +204,10 @@
     "todo": "Perlu dibuat",
     "review": "Perlu semak",
     "done": "Selesai"
+  },
+  "permission": {
+    "cameraRequired": "Kebenaran kamera diperlukan",
+    "cameraRequiredMessage": "Akses kamera diperlukan untuk mengimbas dokumen. Sila dayakan dalam Tetapan.",
+    "openSettings": "Buka tetapan"
   }
 }

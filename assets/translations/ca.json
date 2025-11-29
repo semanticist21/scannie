@@ -204,5 +204,10 @@
     "todo": "Pendent",
     "review": "Per revisar",
     "done": "Fet"
+  },
+  "permission": {
+    "cameraRequired": "Es requereix permís de càmera",
+    "cameraRequiredMessage": "Cal accés a la càmera per escanejar documents. Activeu-lo a Configuració.",
+    "openSettings": "Obrir configuració"
   }
 }

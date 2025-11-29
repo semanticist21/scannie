@@ -204,5 +204,10 @@
     "todo": "Qilish kerak",
     "review": "Ko'rib chiqish",
     "done": "Tugadi"
+  },
+  "permission": {
+    "cameraRequired": "Kamera ruxsati kerak",
+    "cameraRequiredMessage": "Hujjatlarni skanerlash uchun kameraga kirish kerak. Sozlamalarda yoqing.",
+    "openSettings": "Sozlamalarni ochish"
   }
 }

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 import 'package:cunning_document_scanner_plus/cunning_document_scanner_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:flutter_reorderable_grid_view/widgets/widgets.dart';
@@ -82,6 +83,23 @@ class _EditScreenState extends State<EditScreen> {
 
   /// Add more scans using document scanner
   Future<void> _addMoreScans() async {
+    // Check camera permission first
+    final cameraStatus = await Permission.camera.status;
+    if (cameraStatus.isDenied || cameraStatus.isPermanentlyDenied) {
+      if (cameraStatus.isDenied) {
+        final result = await Permission.camera.request();
+        if (!result.isGranted) {
+          if (!mounted) return;
+          _showCameraPermissionDialog();
+          return;
+        }
+      } else {
+        if (!mounted) return;
+        _showCameraPermissionDialog();
+        return;
+      }
+    }
+
     setState(() => _isLoading = true);
 
     try {
@@ -109,6 +127,18 @@ class _EditScreenState extends State<EditScreen> {
         setState(() => _isLoading = false);
       }
     }
+  }
+
+  void _showCameraPermissionDialog() {
+    ConfirmDialog.show(
+      context: context,
+      title: 'permission.cameraRequired'.tr(),
+      message: 'permission.cameraRequiredMessage'.tr(),
+      confirmText: 'permission.openSettings'.tr(),
+      onConfirm: () async {
+        await openAppSettings();
+      },
+    );
   }
 
   /// Add photos from gallery

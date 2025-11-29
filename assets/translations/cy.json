@@ -204,5 +204,10 @@
     "todo": "I'w wneud",
     "review": "Adolygu",
     "done": "Gorffennwyd"
+  },
+  "permission": {
+    "cameraRequired": "Angen caniatâd camera",
+    "cameraRequiredMessage": "Mae angen mynediad i'r camera i sganio dogfennau. Galluogwch ef yn y Gosodiadau.",
+    "openSettings": "Agor gosodiadau"
   }
 }

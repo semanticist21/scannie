@@ -204,5 +204,10 @@
     "todo": "Por facer",
     "review": "Revisión",
     "done": "Feito"
+  },
+  "permission": {
+    "cameraRequired": "Requírese permiso de cámara",
+    "cameraRequiredMessage": "Precísase acceso á cámara para escanear documentos. Actívao en Axustes.",
+    "openSettings": "Abrir axustes"
   }
 }

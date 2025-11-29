@@ -204,5 +204,10 @@
     "todo": "To Do",
     "review": "Review",
     "done": "Selesai"
+  },
+  "permission": {
+    "cameraRequired": "Izin kamera diperlukan",
+    "cameraRequiredMessage": "Akses kamera diperlukan untuk memindai dokumen. Aktifkan di Pengaturan.",
+    "openSettings": "Buka pengaturan"
   }
 }

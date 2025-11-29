@@ -204,5 +204,10 @@
     "todo": "Teendő",
     "review": "Áttekintés",
     "done": "Kész"
+  },
+  "permission": {
+    "cameraRequired": "Kameraengedély szükséges",
+    "cameraRequiredMessage": "A dokumentumok szkenneléséhez kamera-hozzáférés szükséges. Kérjük, engedélyezze a Beállításokban.",
+    "openSettings": "Beállítások megnyitása"
   }
 }

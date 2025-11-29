@@ -204,5 +204,10 @@
     "todo": "Ya kufanya",
     "review": "Kagua",
     "done": "Imekamilika"
+  },
+  "permission": {
+    "cameraRequired": "Ruhusa ya kamera inahitajika",
+    "cameraRequiredMessage": "Ufikiaji wa kamera unahitajika ili kuchanganua hati. Tafadhali iwashe katika Mipangilio.",
+    "openSettings": "Fungua mipangilio"
   }
 }

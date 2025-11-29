@@ -204,5 +204,10 @@
     "todo": "Padaryti",
     "review": "Peržiūrėti",
     "done": "Atlikta"
+  },
+  "permission": {
+    "cameraRequired": "Reikalingas kameros leidimas",
+    "cameraRequiredMessage": "Dokumentams nuskaityti reikalinga prieiga prie kameros. Įjunkite ją Nustatymuose.",
+    "openSettings": "Atidaryti nustatymus"
   }
 }

@@ -204,5 +204,10 @@
     "todo": "Egiteko",
     "review": "Berrikusi",
     "done": "Eginda"
+  },
+  "permission": {
+    "cameraRequired": "Kameraren baimena behar da",
+    "cameraRequiredMessage": "Kamerarako sarbidea behar da dokumentuak eskaneatzeko. Gaitu ezazu Ezarpenetan.",
+    "openSettings": "Ireki ezarpenak"
   }
 }

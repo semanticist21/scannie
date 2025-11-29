@@ -204,5 +204,10 @@
     "todo": "Att göra",
     "review": "Granska",
     "done": "Klar"
+  },
+  "permission": {
+    "cameraRequired": "Kamerabehörighet krävs",
+    "cameraRequiredMessage": "Kameraåtkomst behövs för att skanna dokument. Aktivera det i Inställningar.",
+    "openSettings": "Öppna inställningar"
   }
 }

@@ -204,5 +204,10 @@
     "todo": "Za napraviti",
     "review": "Za pregled",
     "done": "Gotovo"
+  },
+  "permission": {
+    "cameraRequired": "Potrebna dozvola kamere",
+    "cameraRequiredMessage": "Pristup kameri potreban je za skeniranje dokumenata. Omogućite ga u Postavkama.",
+    "openSettings": "Otvori postavke"
   }
 }

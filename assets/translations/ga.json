@@ -204,5 +204,10 @@
     "todo": "Le déanamh",
     "review": "Athbhreithniú",
     "done": "Déanta"
+  },
+  "permission": {
+    "cameraRequired": "Cead ceamara ag teastáil",
+    "cameraRequiredMessage": "Tá rochtain ceamara ag teastáil chun doiciméid a scanadh. Cumasaigh é sna Socruithe.",
+    "openSettings": "Oscail socruithe"
   }
 }

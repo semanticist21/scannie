@@ -204,5 +204,10 @@
     "todo": "Teha",
     "review": "Ülevaade",
     "done": "Valmis"
+  },
+  "permission": {
+    "cameraRequired": "Kaamera luba on vajalik",
+    "cameraRequiredMessage": "Dokumentide skannimiseks on vaja kaamerale juurdepääsu. Lubage see Seadetes.",
+    "openSettings": "Ava seaded"
   }
 }

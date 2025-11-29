@@ -204,5 +204,10 @@
     "todo": "Å gjøre",
     "review": "Gjennomgå",
     "done": "Ferdig"
+  },
+  "permission": {
+    "cameraRequired": "Kameratillatelse kreves",
+    "cameraRequiredMessage": "Kameratilgang er nødvendig for å skanne dokumenter. Aktiver det i Innstillinger.",
+    "openSettings": "Åpne innstillinger"
   }
 }

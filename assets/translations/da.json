@@ -204,5 +204,10 @@
     "todo": "At gøre",
     "review": "Gennemse",
     "done": "Færdig"
+  },
+  "permission": {
+    "cameraRequired": "Kameratilladelse påkrævet",
+    "cameraRequiredMessage": "Kameraadgang er nødvendig for at scanne dokumenter. Aktivér det i Indstillinger.",
+    "openSettings": "Åbn indstillinger"
   }
 }

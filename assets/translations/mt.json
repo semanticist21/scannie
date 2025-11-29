@@ -204,5 +204,10 @@
     "todo": "Xi jsir",
     "review": "Reviżjoni",
     "done": "Lest"
+  },
+  "permission": {
+    "cameraRequired": "Meħtieġ permess tal-kamera",
+    "cameraRequiredMessage": "L-aċċess għall-kamera huwa meħtieġ biex tiskennja dokumenti. Jekk jogħġbok attivah fis-Settings.",
+    "openSettings": "Iftaħ is-settings"
   }
 }

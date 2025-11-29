@@ -204,5 +204,10 @@
     "todo": "Te doen",
     "review": "Beoordelen",
     "done": "Klaar"
+  },
+  "permission": {
+    "cameraRequired": "Cameratoestemming vereist",
+    "cameraRequiredMessage": "Cameratoegang is nodig om documenten te scannen. Schakel dit in via Instellingen.",
+    "openSettings": "Open instellingen"
   }
 }

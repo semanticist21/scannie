@@ -204,5 +204,10 @@
     "todo": "Na spravenie",
     "review": "Na kontrolu",
     "done": "Hotovo"
+  },
+  "permission": {
+    "cameraRequired": "Vyžaduje sa povolenie fotoaparátu",
+    "cameraRequiredMessage": "Na skenovanie dokumentov je potrebný prístup k fotoaparátu. Povoľte ho v Nastaveniach.",
+    "openSettings": "Otvoriť nastavenia"
   }
 }

@@ -204,5 +204,10 @@
     "todo": "Tehtävä",
     "review": "Tarkistettava",
     "done": "Valmis"
+  },
+  "permission": {
+    "cameraRequired": "Kameran käyttöoikeus vaaditaan",
+    "cameraRequiredMessage": "Kameran käyttöoikeus tarvitaan asiakirjojen skannaamiseen. Ota se käyttöön Asetuksissa.",
+    "openSettings": "Avaa asetukset"
   }
 }

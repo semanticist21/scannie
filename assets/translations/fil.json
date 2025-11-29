@@ -204,5 +204,10 @@
     "todo": "Kailangang gawin",
     "review": "Kailangang suriin",
     "done": "Tapos na"
+  },
+  "permission": {
+    "cameraRequired": "Kailangan ang pahintulot sa camera",
+    "cameraRequiredMessage": "Kailangan ang access sa camera para mag-scan ng mga dokumento. Paganahin ito sa Settings.",
+    "openSettings": "Buksan ang Settings"
   }
 }

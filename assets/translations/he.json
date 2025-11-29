@@ -204,5 +204,10 @@
     "todo": "לביצוע",
     "review": "לבדיקה",
     "done": "הושלם"
+  },
+  "permission": {
+    "cameraRequired": "נדרשת הרשאת מצלמה",
+    "cameraRequiredMessage": "נדרשת גישה למצלמה לסריקת מסמכים. אנא הפעל אותה בהגדרות.",
+    "openSettings": "פתח הגדרות"
   }
 }

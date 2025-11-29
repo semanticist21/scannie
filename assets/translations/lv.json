@@ -204,5 +204,10 @@
     "todo": "Darāms",
     "review": "Pārskatīt",
     "done": "Pabeigts"
+  },
+  "permission": {
+    "cameraRequired": "Nepieciešama kameras atļauja",
+    "cameraRequiredMessage": "Dokumentu skenēšanai nepieciešama piekļuve kamerai. Lūdzu, iespējojiet to Iestatījumos.",
+    "openSettings": "Atvērt iestatījumus"
   }
 }

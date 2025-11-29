@@ -204,5 +204,10 @@
     "todo": "Að gera",
     "review": "Yfirferð",
     "done": "Lokið"
+  },
+  "permission": {
+    "cameraRequired": "Myndavélaheimild krafist",
+    "cameraRequiredMessage": "Myndavélaaðgangur er nauðsynlegur til að skanna skjöl. Virkjaðu hann í Stillingum.",
+    "openSettings": "Opna stillingar"
   }
 }

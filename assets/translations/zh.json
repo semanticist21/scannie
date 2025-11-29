@@ -204,5 +204,10 @@
     "todo": "待办",
     "review": "审核",
     "done": "完成"
+  },
+  "permission": {
+    "cameraRequired": "需要相机权限",
+    "cameraRequiredMessage": "扫描文档需要访问相机。请在设置中启用。",
+    "openSettings": "打开设置"
   }
 }

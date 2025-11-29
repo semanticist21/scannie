@@ -204,5 +204,10 @@
     "todo": "Cần làm",
     "review": "Xem xét",
     "done": "Hoàn thành"
+  },
+  "permission": {
+    "cameraRequired": "Cần quyền truy cập camera",
+    "cameraRequiredMessage": "Cần quyền truy cập camera để quét tài liệu. Vui lòng bật trong Cài đặt.",
+    "openSettings": "Mở cài đặt"
   }
 }

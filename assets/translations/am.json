@@ -204,5 +204,10 @@
     "todo": "መደረግ ያለበት",
     "review": "መገምገም",
     "done": "ተጠናቋል"
+  },
+  "permission": {
+    "cameraRequired": "የካሜራ ፈቃድ ያስፈልጋል",
+    "cameraRequiredMessage": "ሰነዶችን ለመቃኘት የካሜራ መዳረሻ ያስፈልጋል። እባክዎ በቅንብሮች ውስጥ ያንቁት።",
+    "openSettings": "ቅንብሮችን ክፈት"
   }
 }

@@ -204,5 +204,10 @@
     "todo": "Yapılacak",
     "review": "İnceleme",
     "done": "Tamamlandı"
+  },
+  "permission": {
+    "cameraRequired": "Kamera izni gerekli",
+    "cameraRequiredMessage": "Belgeleri taramak için kamera erişimi gereklidir. Lütfen Ayarlar'dan etkinleştirin.",
+    "openSettings": "Ayarları aç"
   }
 }

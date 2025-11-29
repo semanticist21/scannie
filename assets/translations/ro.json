@@ -204,5 +204,10 @@
     "todo": "De făcut",
     "review": "De revizuit",
     "done": "Gata"
+  },
+  "permission": {
+    "cameraRequired": "Permisiune cameră necesară",
+    "cameraRequiredMessage": "Accesul la cameră este necesar pentru scanarea documentelor. Activați-l din Setări.",
+    "openSettings": "Deschide setările"
   }
 }

@@ -204,5 +204,10 @@
     "todo": "A fazer",
     "review": "Revisão",
     "done": "Concluído"
+  },
+  "permission": {
+    "cameraRequired": "Permissão de câmera necessária",
+    "cameraRequiredMessage": "O acesso à câmera é necessário para digitalizar documentos. Ative nas Configurações.",
+    "openSettings": "Abrir configurações"
   }
 }

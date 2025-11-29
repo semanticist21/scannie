@@ -204,5 +204,10 @@
     "todo": "ToDo",
     "review": "レビュー",
     "done": "完了"
+  },
+  "permission": {
+    "cameraRequired": "カメラの許可が必要です",
+    "cameraRequiredMessage": "書類をスキャンするにはカメラへのアクセスが必要です。設定で有効にしてください。",
+    "openSettings": "設定を開く"
   }
 }

@@ -204,5 +204,10 @@
     "todo": "Do zrobienia",
     "review": "Do sprawdzenia",
     "done": "Gotowe"
+  },
+  "permission": {
+    "cameraRequired": "Wymagane uprawnienie aparatu",
+    "cameraRequiredMessage": "Dostęp do aparatu jest potrzebny do skanowania dokumentów. Włącz go w Ustawieniach.",
+    "openSettings": "Otwórz ustawienia"
   }
 }

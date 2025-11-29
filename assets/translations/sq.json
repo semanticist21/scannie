@@ -204,5 +204,10 @@
     "todo": "Për tu bërë",
     "review": "Rishikim",
     "done": "Përfunduar"
+  },
+  "permission": {
+    "cameraRequired": "Kërkohet leje e kamerës",
+    "cameraRequiredMessage": "Qasja në kamerë nevojitet për të skanuar dokumente. Aktivizojeni në Cilësimet.",
+    "openSettings": "Hap cilësimet"
   }
 }
