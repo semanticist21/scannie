@@ -280,6 +280,36 @@ AppModal.showBottomSheet(
 ### RouteAware (화면 복귀 시 리로드)
 GalleryScreen은 `RouteAware`로 다른 화면에서 돌아올 때 문서 목록 자동 리로드
 
+### 권한 처리 패턴
+```dart
+// 카메라/사진 라이브러리 권한 체크 후 다이얼로그 표시
+final status = await Permission.camera.status;
+if (status.isDenied) {
+  status = await Permission.camera.request();
+}
+if (status.isPermanentlyDenied || status.isDenied) {
+  if (mounted) {
+    ConfirmDialog.show(
+      context: context,
+      title: 'permission.cameraRequired'.tr(),
+      message: 'permission.cameraRequiredMessage'.tr(),
+      confirmText: 'permission.openSettings'.tr(),
+      onConfirm: () async => await openAppSettings(),
+    );
+  }
+  return;
+}
+```
+
+### 경로 저장 패턴 (iOS 샌드박스 대응)
+```dart
+// iOS 앱 업데이트 시 샌드박스 UUID 변경으로 인한 데이터 손실 방지
+// 저장 시: 절대경로 → 상대경로로 변환
+final relativePath = await PathHelper.toRelativePath(absolutePath);
+// 로드 시: 상대경로 → 절대경로로 변환
+final absolutePath = await PathHelper.toAbsolutePath(storedPath);
+```
+
 ## 문제 해결
 
 ### 빌드 실패
