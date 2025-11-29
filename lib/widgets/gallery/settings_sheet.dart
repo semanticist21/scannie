@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/app_text_styles.dart';
@@ -251,11 +252,22 @@ class SettingsSheet extends StatefulWidget {
 
 class _SettingsSheetState extends State<SettingsSheet> {
   late AppThemeMode _currentTheme;
+  String _versionString = '';
 
   @override
   void initState() {
     super.initState();
     _currentTheme = ThemeService.instance.themeMode;
+    _loadVersionInfo();
+  }
+
+  Future<void> _loadVersionInfo() async {
+    final packageInfo = await PackageInfo.fromPlatform();
+    if (mounted) {
+      setState(() {
+        _versionString = 'Scannie ${packageInfo.version} (+${packageInfo.buildNumber})';
+      });
+    }
   }
 
   Future<void> _setThemeMode(AppThemeMode mode) async {
@@ -317,6 +329,25 @@ class _SettingsSheetState extends State<SettingsSheet> {
               ),
             ),
             Divider(height: 1, color: colors.border),
+
+            // Version info
+            if (_versionString.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.lg,
+                  AppSpacing.lg,
+                  AppSpacing.lg,
+                  AppSpacing.sm,
+                ),
+                child: Center(
+                  child: Text(
+                    _versionString,
+                    style: AppTextStyles.caption.copyWith(
+                      color: colors.textHint,
+                    ),
+                  ),
+                ),
+              ),
 
             // Premium section
             Padding(
