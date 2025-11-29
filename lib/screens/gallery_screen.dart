@@ -374,7 +374,20 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
   @override
   Widget build(BuildContext context) {
     debugPrint('🔄 build() called, documents: ${_documents.length}, isLoading: $_isLoading');
-    return Scaffold(
+    return PopScope(
+      canPop: !_isSelectionMode && !_isSearching,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        if (_isSelectionMode) {
+          setState(() {
+            _isSelectionMode = false;
+            _selectedDocumentIds.clear();
+          });
+        } else if (_isSearching) {
+          _toggleSearch();
+        }
+      },
+      child: Scaffold(
       appBar: AppBar(
         scrolledUnderElevation: 0,
         title: _isSelectionMode
@@ -497,6 +510,7 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
               leading: const Icon(LucideIcons.camera, size: 18),
               child: Text('common.scan'.tr()),
             ),
+      ),
     );
   }
 
