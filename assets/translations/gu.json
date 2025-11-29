@@ -111,7 +111,12 @@
     "restoreRequested": "અગાઉની ખરીદીઓ તપાસી રહ્યા છીએ...",
     "restoreFailed": "ખરીદીઓ પુનઃસ્થાપિત કરી શકાઈ નહીં",
     "storeNotAvailable": "સ્ટોર ઉપલબ્ધ નથી",
-    "purchaseFailed": "ખરીદી નિષ્ફળ. કૃપા કરીને ફરી પ્રયાસ કરો."
+    "purchaseFailed": "ખરીદી નિષ્ફળ. કૃપા કરીને ફરી પ્રયાસ કરો.",
+    "purchaseSuccess": "જાહેરાતો દૂર કરવામાં આવી!",
+    "errorStoreNotAvailable": "આ ઉપકરણ પર સ્ટોર ઉપલબ્ધ નથી",
+    "errorProductNotFound": "ઉત્પાદન મળ્યું નથી. કૃપા કરીને પછીથી ફરી પ્રયાસ કરો.",
+    "errorNetwork": "નેટવર્ક ભૂલ. કૃપા કરીને તમારું કનેક્શન તપાસો.",
+    "errorCancelled": "ખરીદી રદ થઈ."
   },
   "dialogs": {
     "deleteScan": "સ્કેન ડિલીટ",

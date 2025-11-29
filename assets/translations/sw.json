@@ -111,7 +111,12 @@
     "restoreRequested": "Inakagua ununuzi uliopita...",
     "restoreFailed": "Haikuweza kurejesha ununuzi",
     "storeNotAvailable": "Duka halipatikani",
-    "purchaseFailed": "Ununuzi umeshindikana. Tafadhali jaribu tena."
+    "purchaseFailed": "Ununuzi umeshindikana. Tafadhali jaribu tena.",
+    "purchaseSuccess": "Matangazo yameondolewa!",
+    "errorStoreNotAvailable": "Duka halipatikani kwenye kifaa hiki",
+    "errorProductNotFound": "Bidhaa haipatikani. Tafadhali jaribu tena baadaye.",
+    "errorNetwork": "Hitilafu ya mtandao. Tafadhali angalia muunganisho wako.",
+    "errorCancelled": "Ununuzi umeghairiwa."
   },
   "dialogs": {
     "deleteScan": "Futa skani",

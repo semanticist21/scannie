@@ -111,7 +111,12 @@
     "restoreRequested": "Oldingi xaridlar tekshirilmoqda...",
     "restoreFailed": "Xaridlarni tiklab bo'lmadi",
     "storeNotAvailable": "Do'kon mavjud emas",
-    "purchaseFailed": "Xarid amalga oshmadi. Iltimos, qaytadan urinib ko'ring."
+    "purchaseFailed": "Xarid amalga oshmadi. Iltimos, qaytadan urinib ko'ring.",
+    "purchaseSuccess": "Reklamalar olib tashlandi!",
+    "errorStoreNotAvailable": "Bu qurilmada do'kon mavjud emas",
+    "errorProductNotFound": "Mahsulot topilmadi. Keyinroq qayta urinib ko'ring.",
+    "errorNetwork": "Tarmoq xatosi. Ulanishingizni tekshiring.",
+    "errorCancelled": "Xarid bekor qilindi."
   },
   "dialogs": {
     "deleteScan": "Skanerni o'chirish",

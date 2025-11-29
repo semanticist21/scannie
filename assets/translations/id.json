@@ -111,7 +111,12 @@
     "restoreRequested": "Memeriksa pembelian sebelumnya...",
     "restoreFailed": "Tidak dapat memulihkan pembelian",
     "storeNotAvailable": "Toko tidak tersedia",
-    "purchaseFailed": "Pembelian gagal. Silakan coba lagi."
+    "purchaseFailed": "Pembelian gagal. Silakan coba lagi.",
+    "purchaseSuccess": "Iklan dihapus!",
+    "errorStoreNotAvailable": "Toko tidak tersedia di perangkat ini",
+    "errorProductNotFound": "Produk tidak ditemukan. Coba lagi nanti.",
+    "errorNetwork": "Kesalahan jaringan. Periksa koneksi Anda.",
+    "errorCancelled": "Pembelian dibatalkan."
   },
   "dialogs": {
     "deleteScan": "Hapus Pindaian",

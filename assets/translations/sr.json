@@ -111,7 +111,12 @@
     "restoreRequested": "Провера претходних куповина...",
     "restoreFailed": "Није могуће вратити куповине",
     "storeNotAvailable": "Продавница није доступна",
-    "purchaseFailed": "Куповина није успела. Покушајте поново."
+    "purchaseFailed": "Куповина није успела. Покушајте поново.",
+    "purchaseSuccess": "Огласи су уклоњени!",
+    "errorStoreNotAvailable": "Продавница није доступна на овом уређају",
+    "errorProductNotFound": "Производ није пронађен. Покушајте касније.",
+    "errorNetwork": "Грешка мреже. Проверите своју везу.",
+    "errorCancelled": "Куповина је отказана."
   },
   "dialogs": {
     "deleteScan": "Обриши скенирање",

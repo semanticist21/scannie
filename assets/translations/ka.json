@@ -111,7 +111,12 @@
     "restoreRequested": "წინა შეძენების შემოწმება...",
     "restoreFailed": "შეძენების აღდგენა ვერ მოხერხდა",
     "storeNotAvailable": "მაღაზია მიუწვდომელია",
-    "purchaseFailed": "შეძენა ვერ მოხერხდა. გთხოვთ სცადოთ ხელახლა."
+    "purchaseFailed": "შეძენა ვერ მოხერხდა. გთხოვთ სცადოთ ხელახლა.",
+    "purchaseSuccess": "რეკლამები წაიშალა!",
+    "errorStoreNotAvailable": "მაღაზია ამ მოწყობილობაზე მიუწვდომელია",
+    "errorProductNotFound": "პროდუქტი ვერ მოიძებნა. სცადეთ მოგვიანებით.",
+    "errorNetwork": "ქსელის შეცდომა. შეამოწმეთ კავშირი.",
+    "errorCancelled": "შეძენა გაუქმდა."
   },
   "dialogs": {
     "deleteScan": "სკანის წაშლა",

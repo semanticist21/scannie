@@ -111,7 +111,12 @@
     "restoreRequested": "Tikrinami ankstesni pirkimai...",
     "restoreFailed": "Nepavyko atkurti pirkimų",
     "storeNotAvailable": "Parduotuvė nepasiekiama",
-    "purchaseFailed": "Pirkimas nepavyko. Bandykite dar kartą."
+    "purchaseFailed": "Pirkimas nepavyko. Bandykite dar kartą.",
+    "purchaseSuccess": "Skelbimai pašalinti!",
+    "errorStoreNotAvailable": "Parduotuvė neprieinama šiame įrenginyje",
+    "errorProductNotFound": "Produktas nerastas. Bandykite vėliau.",
+    "errorNetwork": "Tinklo klaida. Patikrinkite ryšį.",
+    "errorCancelled": "Pirkimas atšauktas."
   },
   "dialogs": {
     "deleteScan": "Ištrinti skenavimą",

@@ -111,7 +111,12 @@
     "restoreRequested": "Athuga fyrri kaup...",
     "restoreFailed": "Ekki tókst að endurheimta kaup",
     "storeNotAvailable": "Verslun ekki tiltæk",
-    "purchaseFailed": "Kaup mistókust. Vinsamlegast reyndu aftur."
+    "purchaseFailed": "Kaup mistókust. Vinsamlegast reyndu aftur.",
+    "purchaseSuccess": "Auglýsingar fjarlægðar!",
+    "errorStoreNotAvailable": "Verslun er ekki tiltæk í þessu tæki",
+    "errorProductNotFound": "Vara fannst ekki. Reyndu aftur síðar.",
+    "errorNetwork": "Netvilla. Athugaðu tenginguna þína.",
+    "errorCancelled": "Kaup hætt við."
   },
   "dialogs": {
     "deleteScan": "Eyða skannun",

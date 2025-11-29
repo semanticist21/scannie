@@ -111,7 +111,12 @@
     "restoreRequested": "Перевірка попередніх покупок...",
     "restoreFailed": "Не вдалося відновити покупки",
     "storeNotAvailable": "Магазин недоступний",
-    "purchaseFailed": "Покупка не вдалася. Спробуйте ще раз."
+    "purchaseFailed": "Покупка не вдалася. Спробуйте ще раз.",
+    "purchaseSuccess": "Рекламу видалено!",
+    "errorStoreNotAvailable": "Магазин недоступний на цьому пристрої",
+    "errorProductNotFound": "Товар не знайдено. Спробуйте пізніше.",
+    "errorNetwork": "Помилка мережі. Перевірте підключення.",
+    "errorCancelled": "Покупку скасовано."
   },
   "dialogs": {
     "deleteScan": "Видалити скан",

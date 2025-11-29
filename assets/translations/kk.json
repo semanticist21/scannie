@@ -111,7 +111,12 @@
     "restoreRequested": "Алдыңғы сатып алуларды тексеру...",
     "restoreFailed": "Сатып алуларды қалпына келтіру мүмкін емес",
     "storeNotAvailable": "Дүкен қол жетімді емес",
-    "purchaseFailed": "Сатып алу сәтсіз. Қайтадан көріңіз."
+    "purchaseFailed": "Сатып алу сәтсіз. Қайтадан көріңіз.",
+    "purchaseSuccess": "Жарнамалар жойылды!",
+    "errorStoreNotAvailable": "Дүкен бұл құрылғыда қолжетімді емес",
+    "errorProductNotFound": "Өнім табылмады. Кейінірек қайталап көріңіз.",
+    "errorNetwork": "Желі қатесі. Қосылымыңызды тексеріңіз.",
+    "errorCancelled": "Сатып алу тоқтатылды."
   },
   "dialogs": {
     "deleteScan": "Сканерді жою",

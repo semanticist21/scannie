@@ -111,7 +111,12 @@
     "restoreRequested": "Checking for previous purchases...",
     "restoreFailed": "Could not restore purchases",
     "storeNotAvailable": "Store not available",
-    "purchaseFailed": "Purchase failed. Please try again."
+    "purchaseFailed": "Purchase failed. Please try again.",
+    "purchaseSuccess": "Ads removed successfully!",
+    "errorStoreNotAvailable": "Store is not available on this device",
+    "errorProductNotFound": "Product not found. Please try again later.",
+    "errorNetwork": "Network error. Please check your connection.",
+    "errorCancelled": "Purchase was cancelled."
   },
   "dialogs": {
     "deleteScan": "Delete Scan",

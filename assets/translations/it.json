@@ -111,7 +111,12 @@
     "restoreRequested": "Verifica acquisti precedenti...",
     "restoreFailed": "Impossibile ripristinare gli acquisti",
     "storeNotAvailable": "Negozio non disponibile",
-    "purchaseFailed": "Acquisto fallito. Riprova."
+    "purchaseFailed": "Acquisto fallito. Riprova.",
+    "purchaseSuccess": "Pubblicità rimosse!",
+    "errorStoreNotAvailable": "Lo store non è disponibile su questo dispositivo",
+    "errorProductNotFound": "Prodotto non trovato. Riprova più tardi.",
+    "errorNetwork": "Errore di rete. Controlla la connessione.",
+    "errorCancelled": "Acquisto annullato."
   },
   "dialogs": {
     "deleteScan": "Elimina scansione",

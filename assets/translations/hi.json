@@ -111,7 +111,12 @@
     "restoreRequested": "पिछली खरीदारी की जांच हो रही है...",
     "restoreFailed": "खरीदारी पुनर्स्थापित नहीं की जा सकी",
     "storeNotAvailable": "स्टोर उपलब्ध नहीं है",
-    "purchaseFailed": "खरीदारी विफल। कृपया पुनः प्रयास करें।"
+    "purchaseFailed": "खरीदारी विफल। कृपया पुनः प्रयास करें।",
+    "purchaseSuccess": "विज्ञापन हटा दिए गए!",
+    "errorStoreNotAvailable": "इस डिवाइस पर स्टोर उपलब्ध नहीं है",
+    "errorProductNotFound": "उत्पाद नहीं मिला। कृपया बाद में पुनः प्रयास करें।",
+    "errorNetwork": "नेटवर्क त्रुटि। कृपया अपना कनेक्शन जांचें।",
+    "errorCancelled": "खरीदारी रद्द कर दी गई।"
   },
   "dialogs": {
     "deleteScan": "स्कैन हटाएं",

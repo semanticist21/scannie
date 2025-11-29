@@ -111,7 +111,12 @@
     "restoreRequested": "ກຳລັງກວດສອບການຊື້ກ່ອນໜ້າ...",
     "restoreFailed": "ບໍ່ສາມາດກູ້ຄືນການຊື້ໄດ້",
     "storeNotAvailable": "ຮ້ານບໍ່ມີ",
-    "purchaseFailed": "ການຊື້ລົ້ມເຫລວ. ກະລຸນາລອງໃໝ່."
+    "purchaseFailed": "ການຊື້ລົ້ມເຫລວ. ກະລຸນາລອງໃໝ່.",
+    "purchaseSuccess": "ໂຄສະນາຖືກລຶບອອກແລ້ວ!",
+    "errorStoreNotAvailable": "ຮ້ານຄ້າບໍ່ມີຢູ່ໃນອຸປະກອນນີ້",
+    "errorProductNotFound": "ບໍ່ພົບຜະລິດຕະພັນ. ກະລຸນາລອງໃໝ່ໃນພາຍຫຼັງ.",
+    "errorNetwork": "ຂໍ້ຜິດພາດເຄືອຂ່າຍ. ກະລຸນາກວດສອບການເຊື່ອມຕໍ່ຂອງທ່ານ.",
+    "errorCancelled": "ການຊື້ຖືກຍົກເລີກ."
   },
   "dialogs": {
     "deleteScan": "ລຶບການສະແກນ",

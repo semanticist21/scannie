@@ -111,7 +111,12 @@
     "restoreRequested": "Праверка папярэдніх пакупак...",
     "restoreFailed": "Не ўдалося аднавіць пакупкі",
     "storeNotAvailable": "Крама недаступная",
-    "purchaseFailed": "Пакупка не ўдалася. Паспрабуйце яшчэ раз."
+    "purchaseFailed": "Пакупка не ўдалася. Паспрабуйце яшчэ раз.",
+    "purchaseSuccess": "Ads removed successfully!",
+    "errorStoreNotAvailable": "Store is not available on this device",
+    "errorProductNotFound": "Product not found. Please try again later.",
+    "errorNetwork": "Network error. Please check your connection.",
+    "errorCancelled": "Purchase was cancelled."
   },
   "dialogs": {
     "deleteScan": "Выдаліць скан",

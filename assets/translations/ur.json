@@ -111,7 +111,12 @@
     "restoreRequested": "پچھلی خریداریوں کی جانچ ہو رہی ہے...",
     "restoreFailed": "خریداریاں بحال نہیں ہو سکیں",
     "storeNotAvailable": "اسٹور دستیاب نہیں",
-    "purchaseFailed": "خریداری ناکام۔ دوبارہ کوشش کریں۔"
+    "purchaseFailed": "خریداری ناکام۔ دوبارہ کوشش کریں۔",
+    "purchaseSuccess": "اشتہارات ہٹا دیے گئے!",
+    "errorStoreNotAvailable": "اس ڈیوائس پر اسٹور دستیاب نہیں ہے",
+    "errorProductNotFound": "پروڈکٹ نہیں ملا۔ براہ کرم بعد میں دوبارہ کوشش کریں۔",
+    "errorNetwork": "نیٹ ورک کی خرابی۔ براہ کرم اپنا کنکشن چیک کریں۔",
+    "errorCancelled": "خریداری منسوخ ہو گئی۔"
   },
   "dialogs": {
     "deleteScan": "اسکین حذف کریں",

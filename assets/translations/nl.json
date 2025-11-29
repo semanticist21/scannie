@@ -111,7 +111,12 @@
     "restoreRequested": "Controleren op eerdere aankopen...",
     "restoreFailed": "Kon aankopen niet herstellen",
     "storeNotAvailable": "Store niet beschikbaar",
-    "purchaseFailed": "Aankoop mislukt. Probeer het opnieuw."
+    "purchaseFailed": "Aankoop mislukt. Probeer het opnieuw.",
+    "purchaseSuccess": "Advertenties verwijderd!",
+    "errorStoreNotAvailable": "Store is niet beschikbaar op dit apparaat",
+    "errorProductNotFound": "Product niet gevonden. Probeer het later opnieuw.",
+    "errorNetwork": "Netwerkfout. Controleer je verbinding.",
+    "errorCancelled": "Aankoop geannuleerd."
   },
   "dialogs": {
     "deleteScan": "Scan verwijderen",

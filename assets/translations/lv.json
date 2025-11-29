@@ -111,7 +111,12 @@
     "restoreRequested": "Pārbauda iepriekšējos pirkumus...",
     "restoreFailed": "Neizdevās atjaunot pirkumus",
     "storeNotAvailable": "Veikals nav pieejams",
-    "purchaseFailed": "Pirkums neizdevās. Lūdzu, mēģiniet vēlreiz."
+    "purchaseFailed": "Pirkums neizdevās. Lūdzu, mēģiniet vēlreiz.",
+    "purchaseSuccess": "Reklāmas noņemtas!",
+    "errorStoreNotAvailable": "Veikals nav pieejams šajā ierīcē",
+    "errorProductNotFound": "Produkts nav atrasts. Mēģiniet vēlāk.",
+    "errorNetwork": "Tīkla kļūda. Pārbaudiet savienojumu.",
+    "errorCancelled": "Pirkums atcelts."
   },
   "dialogs": {
     "deleteScan": "Dzēst skenējumu",

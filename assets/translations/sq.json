@@ -111,7 +111,12 @@
     "restoreRequested": "Duke kontrolluar blerjet e mëparshme...",
     "restoreFailed": "Nuk mund të rivendosen blerjet",
     "storeNotAvailable": "Dyqani nuk është i disponueshëm",
-    "purchaseFailed": "Blerja dështoi. Ju lutemi provoni përsëri."
+    "purchaseFailed": "Blerja dështoi. Ju lutemi provoni përsëri.",
+    "purchaseSuccess": "Reklamat u hoqën!",
+    "errorStoreNotAvailable": "Dyqani nuk është i disponueshëm në këtë pajisje",
+    "errorProductNotFound": "Produkti nuk u gjet. Provoni përsëri më vonë.",
+    "errorNetwork": "Gabim rrjeti. Kontrolloni lidhjen tuaj.",
+    "errorCancelled": "Blerja u anulua."
   },
   "dialogs": {
     "deleteScan": "Fshi skanimin",

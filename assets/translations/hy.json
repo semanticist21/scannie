@@ -111,7 +111,12 @@
     "restoreRequested": "Նdelays delays...",
     "restoreFailed": "Չdelays delays",
     "storeNotAvailable": "Խdelays delays",
-    "purchaseFailed": "Գdelays delays."
+    "purchaseFailed": "Գdelays delays.",
+    "purchaseSuccess": "Ads removed successfully!",
+    "errorStoreNotAvailable": "Store is not available on this device",
+    "errorProductNotFound": "Product not found. Please try again later.",
+    "errorNetwork": "Network error. Please check your connection.",
+    "errorCancelled": "Purchase was cancelled."
   },
   "dialogs": {
     "deleteScan": "Ջնջել սկանը",

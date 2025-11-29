@@ -111,7 +111,12 @@
     "restoreRequested": "Comprovant compres anteriors...",
     "restoreFailed": "No s'han pogut restaurar les compres",
     "storeNotAvailable": "Botiga no disponible",
-    "purchaseFailed": "La compra ha fallat. Torneu-ho a provar."
+    "purchaseFailed": "La compra ha fallat. Torneu-ho a provar.",
+    "purchaseSuccess": "Anuncis eliminats!",
+    "errorStoreNotAvailable": "La botiga no està disponible en aquest dispositiu",
+    "errorProductNotFound": "Producte no trobat. Torneu-ho a provar més tard.",
+    "errorNetwork": "Error de xarxa. Comproveu la vostra connexió.",
+    "errorCancelled": "Compra cancel·lada."
   },
   "dialogs": {
     "deleteScan": "Suprimeix l'escaneig",

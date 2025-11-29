@@ -111,7 +111,12 @@
     "restoreRequested": "جارٍ التحقق من المشتريات السابقة...",
     "restoreFailed": "تعذر استعادة المشتريات",
     "storeNotAvailable": "المتجر غير متاح",
-    "purchaseFailed": "فشل الشراء. يرجى المحاولة مرة أخرى."
+    "purchaseFailed": "فشل الشراء. يرجى المحاولة مرة أخرى.",
+    "purchaseSuccess": "تمت إزالة الإعلانات!",
+    "errorStoreNotAvailable": "المتجر غير متاح على هذا الجهاز",
+    "errorProductNotFound": "المنتج غير موجود. يرجى المحاولة لاحقاً.",
+    "errorNetwork": "خطأ في الشبكة. يرجى التحقق من اتصالك.",
+    "errorCancelled": "تم إلغاء الشراء."
   },
   "dialogs": {
     "deleteScan": "حذف المسح",

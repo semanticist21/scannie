@@ -111,7 +111,12 @@
     "restoreRequested": "Varasemate ostude kontrollimine...",
     "restoreFailed": "Ostude taastamine ebaõnnestus",
     "storeNotAvailable": "Pood pole saadaval",
-    "purchaseFailed": "Ost ebaõnnestus. Palun proovige uuesti."
+    "purchaseFailed": "Ost ebaõnnestus. Palun proovige uuesti.",
+    "purchaseSuccess": "Reklaamid eemaldatud!",
+    "errorStoreNotAvailable": "Pood pole selles seadmes saadaval",
+    "errorProductNotFound": "Toodet ei leitud. Proovige hiljem uuesti.",
+    "errorNetwork": "Võrgu viga. Kontrollige ühendust.",
+    "errorCancelled": "Ost tühistatud."
   },
   "dialogs": {
     "deleteScan": "Kustuta skaneering",

@@ -111,7 +111,12 @@
     "restoreRequested": "Korábbi vásárlások ellenőrzése...",
     "restoreFailed": "Nem sikerült visszaállítani a vásárlásokat",
     "storeNotAvailable": "Az áruház nem érhető el",
-    "purchaseFailed": "A vásárlás nem sikerült. Kérjük, próbálja újra."
+    "purchaseFailed": "A vásárlás nem sikerült. Kérjük, próbálja újra.",
+    "purchaseSuccess": "Hirdetések eltávolítva!",
+    "errorStoreNotAvailable": "Az áruház nem érhető el ezen az eszközön",
+    "errorProductNotFound": "A termék nem található. Próbálja újra később.",
+    "errorNetwork": "Hálózati hiba. Ellenőrizze a kapcsolatot.",
+    "errorCancelled": "A vásárlás megszakítva."
   },
   "dialogs": {
     "deleteScan": "Szkennelés törlése",

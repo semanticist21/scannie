@@ -21,6 +21,12 @@ Scannie는 문서 스캔 Flutter 모바일 애플리케이션입니다. 네이�
 - `google_fonts` (커스텀 폰트)
 - `easy_localization` v3.0.7 (다국어 지원)
 - `google_mobile_ads` v6.0.0 (AdMob 전면 광고)
+- `in_app_purchase` v3.2.3 (Google Play 인앱 결제)
+
+**다국어 지원**: 75개 언어 (Google Play Store 지원 전체)
+- `easy_localization` v3.0.7
+- 번역 파일: `assets/translations/{언어코드}.json`
+- 언어 선택기: 검색 기능 + 현재 언어 상단 고정
 
 **현재 상태**:
 - ✅ 문서 스캔 (네이티브 필터/크롭/회전 포함)
@@ -36,9 +42,18 @@ Scannie는 문서 스캔 Flutter 모바일 애플리케이션입니다. 네이�
 - ✅ **광고 제거 기능** ($2 일회성 구매 - Google Play In-App Purchase)
 
 **배포 정보**:
-- **Package Name**: `com.kobbokkom.scannie`
-- **Play Store**: 내부 테스트 트랙 활성화
-- **In-App Product ID**: `premium_remove_ads` (non-consumable)
+- **Package Name / Bundle ID**: `com.kobbokkom.scannie`
+- **Play Store 트랙**:
+  - 내부 테스트 (internal) - 개발자 테스트용
+  - 비공개 테스트 (alpha) - AdMob 연동 검증용
+- **App Store Connect**:
+  - App ID: `6755898639`
+  - SKU: `scannie_ios_001`
+  - 버전 1.0 (PREPARE_FOR_SUBMISSION)
+- **In-App Product ID**: `premium_remove_ads` (non-consumable, iOS/Android 동일)
+  - Android: $2.00
+  - iOS: $1.99 (174개국 자동 가격, 37개 언어 로컬라이제이션)
+- **AdMob 상태**: 비공개 테스트 배포 후 앱 연결 및 승인 대기 필요
 
 ## Quick Reference
 
@@ -55,9 +70,9 @@ flutter devices                # 사용 가능한 기기 확인
 flutter analyze                # 린트 분석 (코드 수정 전/후 필수!)
 flutter clean && flutter pub get  # 의존성 초기화
 
-# 테스트 (현재 테스트 파일 없음)
-# flutter test                          # 모든 테스트 실행
-# flutter test test/path/to/test.dart   # 단일 테스트 파일 실행
+# 테스트
+flutter test                                    # 모든 테스트 실행
+flutter test test/language_settings_test.dart   # 언어 설정 테스트
 
 # 빌드
 flutter build apk --release           # Android 릴리스 APK
@@ -1430,6 +1445,116 @@ PremiumDialog.show(
   },
 );
 ```
+
+## 다국어 지원 (i18n)
+
+### 개요
+
+앱은 Google Play Store에서 지원하는 75개 언어를 모두 지원합니다.
+
+### 번역 파일 구조
+
+```
+assets/translations/
+├── en.json    # 영어 (기본)
+├── ko.json    # 한국어
+├── ja.json    # 일본어
+├── zh.json    # 중국어
+├── ... (총 75개 파일)
+└── zu.json    # 줄루어
+```
+
+### 번역 키 구조
+
+```json
+{
+  "common": { "save": "Save", "cancel": "Cancel", ... },
+  "gallery": { "title": "My Scans", ... },
+  "edit": { ... },
+  "viewer": { ... },
+  "settings": { "searchLanguage": "Search languages...", ... },
+  "premium": { ... },
+  "dialogs": { ... },
+  "validation": { ... },
+  "toast": { ... },
+  "filters": { ... },
+  "imageViewer": { ... },
+  "pdfQuality": { ... },
+  "tooltips": { ... },
+  "tags": { ... }
+}
+```
+
+### 사용 패턴
+
+```dart
+import 'package:easy_localization/easy_localization.dart';
+
+// 단순 번역
+Text('common.save'.tr())
+
+// 파라미터 포함
+Text('gallery.selectedCount'.tr(args: [count.toString()]))
+// JSON: "selectedCount": "{count} selected"
+
+// 언어 변경
+context.setLocale(Locale('ko'));
+```
+
+### AppLanguage 클래스
+
+`settings_sheet.dart`에 정의된 75개 언어 목록:
+
+```dart
+class AppLanguage {
+  final String code;        // 'en', 'ko', 'ja', ...
+  final String displayName; // 'English', 'Korean', ...
+  final String nativeName;  // 'English', '한국어', ...
+
+  static List<AppLanguage> get all => [...]; // 75개 언어
+  static AppLanguage? fromCode(String code) => ...;
+}
+```
+
+### 새 번역 키 추가 시
+
+**모든 75개 파일에 추가 필수!** 스크립트 사용 권장:
+
+```bash
+# Python 스크립트로 일괄 추가
+python3 << 'EOF'
+import json
+import os
+
+translations = {
+    'en': 'English text',
+    'ko': '한국어 텍스트',
+    # ... 75개 언어 모두
+}
+
+for code, text in translations.items():
+    path = f'assets/translations/{code}.json'
+    with open(path, 'r+', encoding='utf-8') as f:
+        data = json.load(f)
+        data['settings']['newKey'] = text
+        f.seek(0)
+        json.dump(data, f, ensure_ascii=False, indent=2)
+        f.truncate()
+EOF
+```
+
+### 테스트
+
+```bash
+flutter test test/language_settings_test.dart
+```
+
+테스트 내용:
+- 75개 언어 존재 여부
+- 모든 번역 파일 JSON 유효성
+- 필수 키 존재 여부
+- 플레이스홀더 (`{count}`, `{name}` 등) 보존 확인
+- 빈 문자열 값 검사
 
 ## 앱 아이콘 및 스플래시 스크린
 

@@ -111,7 +111,12 @@
     "restoreRequested": "以前の購入を確認中...",
     "restoreFailed": "購入を復元できませんでした",
     "storeNotAvailable": "ストアが利用できません",
-    "purchaseFailed": "購入に失敗しました。もう一度お試しください。"
+    "purchaseFailed": "購入に失敗しました。もう一度お試しください。",
+    "purchaseSuccess": "広告が削除されました！",
+    "errorStoreNotAvailable": "このデバイスではストアを利用できません",
+    "errorProductNotFound": "製品が見つかりません。後でもう一度お試しください。",
+    "errorNetwork": "ネットワークエラーです。接続を確認してください。",
+    "errorCancelled": "購入がキャンセルされました。"
   },
   "dialogs": {
     "deleteScan": "スキャンを削除",

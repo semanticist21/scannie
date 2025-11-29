@@ -111,7 +111,12 @@
     "restoreRequested": "Aurreko erosketak egiaztatzen...",
     "restoreFailed": "Ezin izan dira erosketak berrezarri",
     "storeNotAvailable": "Denda ez dago erabilgarri",
-    "purchaseFailed": "Erosketak huts egin du. Saiatu berriro."
+    "purchaseFailed": "Erosketak huts egin du. Saiatu berriro.",
+    "purchaseSuccess": "Iragarkiak kendu dira!",
+    "errorStoreNotAvailable": "Denda ez dago erabilgarri gailu honetan",
+    "errorProductNotFound": "Produktua ez da aurkitu. Saiatu berriro geroago.",
+    "errorNetwork": "Sare-errorea. Egiaztatu zure konexioa.",
+    "errorCancelled": "Erosketa bertan behera utzi da."
   },
   "dialogs": {
     "deleteScan": "Ezabatu eskaneatua",

@@ -3,6 +3,34 @@ import 'package:flutter/foundation.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+/// Purchase result with error details
+class PurchaseResult {
+  final bool success;
+  final PurchaseErrorType? errorType;
+  final String? errorMessage;
+
+  const PurchaseResult({
+    required this.success,
+    this.errorType,
+    this.errorMessage,
+  });
+
+  factory PurchaseResult.success() => const PurchaseResult(success: true);
+
+  factory PurchaseResult.error(PurchaseErrorType type, [String? message]) =>
+      PurchaseResult(success: false, errorType: type, errorMessage: message);
+}
+
+/// Error types for user-friendly messages
+enum PurchaseErrorType {
+  storeNotAvailable,
+  productNotFound,
+  purchaseFailed,
+  purchaseCancelled,
+  networkError,
+  unknown,
+}
+
 /// PurchaseService - Singleton service for managing in-app purchases
 ///
 /// Usage:
@@ -188,10 +216,21 @@ class PurchaseService {
   }
 
   /// Purchase premium (call from UI)
-  Future<bool> purchasePremium() async {
+  /// Returns PurchaseResult with error details for user-friendly messages
+  Future<PurchaseResult> purchasePremium() async {
+    // Debug mode: simulate successful purchase
+    if (kDebugMode) {
+      debugPrint('💎 [DEBUG] Simulating successful purchase');
+      await _setPremiumStatus(true);
+      return PurchaseResult.success();
+    }
+
     if (!_isAvailable) {
       debugPrint('💎 Store not available');
-      return false;
+      return PurchaseResult.error(
+        PurchaseErrorType.storeNotAvailable,
+        'Google Play Store is not available on this device',
+      );
     }
 
     if (_premiumProduct == null) {
@@ -199,7 +238,10 @@ class PurchaseService {
       await _queryProducts();
       if (_premiumProduct == null) {
         debugPrint('💎 Product still not available');
-        return false;
+        return PurchaseResult.error(
+          PurchaseErrorType.productNotFound,
+          'Product not found. Please try again later.',
+        );
       }
     }
 
@@ -215,10 +257,36 @@ class PurchaseService {
       );
 
       debugPrint('💎 Purchase initiated: $success');
-      return success;
+
+      if (success) {
+        return PurchaseResult.success();
+      } else {
+        return PurchaseResult.error(
+          PurchaseErrorType.purchaseFailed,
+          'Could not start purchase. Please try again.',
+        );
+      }
     } catch (e) {
       debugPrint('💎 Purchase failed: $e');
-      return false;
+
+      final errorString = e.toString().toLowerCase();
+      if (errorString.contains('network') || errorString.contains('connection')) {
+        return PurchaseResult.error(
+          PurchaseErrorType.networkError,
+          'Network error. Please check your connection.',
+        );
+      }
+      if (errorString.contains('cancel')) {
+        return PurchaseResult.error(
+          PurchaseErrorType.purchaseCancelled,
+          'Purchase was cancelled.',
+        );
+      }
+
+      return PurchaseResult.error(
+        PurchaseErrorType.unknown,
+        'Purchase failed: ${e.toString()}',
+      );
     }
   }
 

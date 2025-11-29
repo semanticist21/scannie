@@ -111,7 +111,12 @@
     "restoreRequested": "Vérification des achats précédents...",
     "restoreFailed": "Impossible de restaurer les achats",
     "storeNotAvailable": "Boutique non disponible",
-    "purchaseFailed": "L'achat a échoué. Veuillez réessayer."
+    "purchaseFailed": "L'achat a échoué. Veuillez réessayer.",
+    "purchaseSuccess": "Publicités supprimées !",
+    "errorStoreNotAvailable": "La boutique n'est pas disponible sur cet appareil",
+    "errorProductNotFound": "Produit introuvable. Réessayez plus tard.",
+    "errorNetwork": "Erreur réseau. Vérifiez votre connexion.",
+    "errorCancelled": "Achat annulé."
   },
   "dialogs": {
     "deleteScan": "Supprimer le scan",

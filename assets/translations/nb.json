@@ -111,7 +111,12 @@
     "restoreRequested": "Sjekker tidligere kjøp...",
     "restoreFailed": "Kunne ikke gjenopprette kjøp",
     "storeNotAvailable": "Butikken er ikke tilgjengelig",
-    "purchaseFailed": "Kjøpet mislyktes. Prøv igjen."
+    "purchaseFailed": "Kjøpet mislyktes. Prøv igjen.",
+    "purchaseSuccess": "Annonser fjernet!",
+    "errorStoreNotAvailable": "Butikken er ikke tilgjengelig på denne enheten",
+    "errorProductNotFound": "Produktet ble ikke funnet. Prøv igjen senere.",
+    "errorNetwork": "Nettverksfeil. Sjekk tilkoblingen din.",
+    "errorCancelled": "Kjøpet ble avbrutt."
   },
   "dialogs": {
     "deleteScan": "Slett skanning",

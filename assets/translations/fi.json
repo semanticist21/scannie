@@ -111,7 +111,12 @@
     "restoreRequested": "Tarkistetaan aiempia ostoja...",
     "restoreFailed": "Ostojen palauttaminen epäonnistui",
     "storeNotAvailable": "Kauppa ei ole käytettävissä",
-    "purchaseFailed": "Osto epäonnistui. Yritä uudelleen."
+    "purchaseFailed": "Osto epäonnistui. Yritä uudelleen.",
+    "purchaseSuccess": "Mainokset poistettu!",
+    "errorStoreNotAvailable": "Kauppa ei ole käytettävissä tällä laitteella",
+    "errorProductNotFound": "Tuotetta ei löytynyt. Yritä myöhemmin uudelleen.",
+    "errorNetwork": "Verkkovirhe. Tarkista yhteytesi.",
+    "errorCancelled": "Ostos peruutettu."
   },
   "dialogs": {
     "deleteScan": "Poista skannaus",

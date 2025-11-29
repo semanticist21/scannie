@@ -111,7 +111,12 @@
     "restoreRequested": "Kyk vir vorige aankope...",
     "restoreFailed": "Kon nie aankope herstel nie",
     "storeNotAvailable": "Winkel nie beskikbaar nie",
-    "purchaseFailed": "Aankoop het misluk. Probeer asseblief weer."
+    "purchaseFailed": "Aankoop het misluk. Probeer asseblief weer.",
+    "purchaseSuccess": "Advertensies verwyder!",
+    "errorStoreNotAvailable": "Winkel is nie beskikbaar op hierdie toestel nie",
+    "errorProductNotFound": "Produk nie gevind nie. Probeer later weer.",
+    "errorNetwork": "Netwerkfout. Gaan jou verbinding na.",
+    "errorCancelled": "Aankoop gekanselleer."
   },
   "dialogs": {
     "deleteScan": "Skrap skandering",

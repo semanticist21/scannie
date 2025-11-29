@@ -111,7 +111,12 @@
     "restoreRequested": "בודק רכישות קודמות...",
     "restoreFailed": "לא ניתן לשחזר רכישות",
     "storeNotAvailable": "החנות לא זמינה",
-    "purchaseFailed": "הרכישה נכשלה. אנא נסה שוב."
+    "purchaseFailed": "הרכישה נכשלה. אנא נסה שוב.",
+    "purchaseSuccess": "הפרסומות הוסרו!",
+    "errorStoreNotAvailable": "החנות אינה זמינה במכשיר זה",
+    "errorProductNotFound": "המוצר לא נמצא. נסה שוב מאוחר יותר.",
+    "errorNetwork": "שגיאת רשת. בדוק את החיבור שלך.",
+    "errorCancelled": "הרכישה בוטלה."
   },
   "dialogs": {
     "deleteScan": "מחק סריקה",

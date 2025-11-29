@@ -111,7 +111,12 @@
     "restoreRequested": "Ag seiceáil ceannacháin roimhe seo...",
     "restoreFailed": "Níorbh fhéidir ceannacháin a athchóiriú",
     "storeNotAvailable": "Níl an siopa ar fáil",
-    "purchaseFailed": "Theip ar an gceannach. Bain triail as arís."
+    "purchaseFailed": "Theip ar an gceannach. Bain triail as arís.",
+    "purchaseSuccess": "Baineadh fógraí!",
+    "errorStoreNotAvailable": "Níl an siopa ar fáil ar an ngléas seo",
+    "errorProductNotFound": "Níor aimsíodh an táirge. Bain triail as níos déanaí.",
+    "errorNetwork": "Earráid líonra. Seiceáil do cheangal.",
+    "errorCancelled": "Ceallaíodh an ceannach."
   },
   "dialogs": {
     "deleteScan": "Scrios scan",

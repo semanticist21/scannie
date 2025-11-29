@@ -111,7 +111,12 @@
     "restoreRequested": "กำลังตรวจสอบการซื้อก่อนหน้า...",
     "restoreFailed": "ไม่สามารถกู้คืนการซื้อได้",
     "storeNotAvailable": "ร้านค้าไม่พร้อมใช้งาน",
-    "purchaseFailed": "การซื้อล้มเหลว กรุณาลองอีกครั้ง"
+    "purchaseFailed": "การซื้อล้มเหลว กรุณาลองอีกครั้ง",
+    "purchaseSuccess": "ลบโฆษณาแล้ว!",
+    "errorStoreNotAvailable": "ไม่สามารถใช้งาน Store บนอุปกรณ์นี้",
+    "errorProductNotFound": "ไม่พบสินค้า กรุณาลองใหม่ภายหลัง",
+    "errorNetwork": "ข้อผิดพลาดเครือข่าย กรุณาตรวจสอบการเชื่อมต่อ",
+    "errorCancelled": "การซื้อถูกยกเลิก"
   },
   "dialogs": {
     "deleteScan": "ลบการสแกน",

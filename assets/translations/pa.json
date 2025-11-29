@@ -111,7 +111,12 @@
     "restoreRequested": "ਪਿਛਲੀਆਂ ਖਰੀਦਾਂ ਦੀ ਜਾਂਚ ਕੀਤੀ ਜਾ ਰਹੀ ਹੈ...",
     "restoreFailed": "ਖਰੀਦਾਂ ਬਹਾਲ ਨਹੀਂ ਕੀਤੀਆਂ ਜਾ ਸਕੀਆਂ",
     "storeNotAvailable": "ਸਟੋਰ ਉਪਲਬਧ ਨਹੀਂ",
-    "purchaseFailed": "ਖਰੀਦ ਅਸਫਲ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।"
+    "purchaseFailed": "ਖਰੀਦ ਅਸਫਲ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
+    "purchaseSuccess": "ਇਸ਼ਤਿਹਾਰ ਹਟਾ ਦਿੱਤੇ ਗਏ!",
+    "errorStoreNotAvailable": "ਇਸ ਡਿਵਾਈਸ 'ਤੇ ਸਟੋਰ ਉਪਲਬਧ ਨਹੀਂ ਹੈ",
+    "errorProductNotFound": "ਉਤਪਾਦ ਨਹੀਂ ਮਿਲਿਆ। ਕਿਰਪਾ ਕਰਕੇ ਬਾਅਦ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
+    "errorNetwork": "ਨੈੱਟਵਰਕ ਗਲਤੀ। ਕਿਰਪਾ ਕਰਕੇ ਆਪਣਾ ਕੁਨੈਕਸ਼ਨ ਚੈੱਕ ਕਰੋ।",
+    "errorCancelled": "ਖਰੀਦ ਰੱਦ ਕੀਤੀ ਗਈ।"
   },
   "dialogs": {
     "deleteScan": "ਸਕੈਨ ਮਿਟਾਓ",

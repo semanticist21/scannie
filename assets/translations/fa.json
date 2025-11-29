@@ -111,7 +111,12 @@
     "restoreRequested": "در حال بررسی خریدهای قبلی...",
     "restoreFailed": "بازیابی خریدها امکان‌پذیر نبود",
     "storeNotAvailable": "فروشگاه در دسترس نیست",
-    "purchaseFailed": "خرید ناموفق بود. لطفاً دوباره امتحان کنید."
+    "purchaseFailed": "خرید ناموفق بود. لطفاً دوباره امتحان کنید.",
+    "purchaseSuccess": "تبلیغات حذف شد!",
+    "errorStoreNotAvailable": "فروشگاه در این دستگاه موجود نیست",
+    "errorProductNotFound": "محصول یافت نشد. لطفاً بعداً دوباره امتحان کنید.",
+    "errorNetwork": "خطای شبکه. لطفاً اتصال خود را بررسی کنید.",
+    "errorCancelled": "خرید لغو شد."
   },
   "dialogs": {
     "deleteScan": "حذف اسکن",

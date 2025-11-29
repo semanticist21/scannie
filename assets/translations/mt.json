@@ -111,7 +111,12 @@
     "restoreRequested": "Qed niċċekkja xiri preċedenti...",
     "restoreFailed": "Ma setax jiġi rrestawrat ix-xiri",
     "storeNotAvailable": "Il-ħanut mhux disponibbli",
-    "purchaseFailed": "Ix-xiri falla. Jekk jogħġbok erġa' pprova."
+    "purchaseFailed": "Ix-xiri falla. Jekk jogħġbok erġa' pprova.",
+    "purchaseSuccess": "Ir-reklami tneħħew!",
+    "errorStoreNotAvailable": "Il-ħanut mhux disponibbli fuq dan l-apparat",
+    "errorProductNotFound": "Il-prodott ma nstabx. Erġa' pprova aktar tard.",
+    "errorNetwork": "Żball tan-network. Iċċekkja l-konnessjoni tiegħek.",
+    "errorCancelled": "Ix-xiri ġie kkanċellat."
   },
   "dialogs": {
     "deleteScan": "Ħassar skennjar",

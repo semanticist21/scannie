@@ -111,7 +111,12 @@
     "restoreRequested": "Проверка предыдущих покупок...",
     "restoreFailed": "Не удалось восстановить покупки",
     "storeNotAvailable": "Магазин недоступен",
-    "purchaseFailed": "Покупка не удалась. Пожалуйста, попробуйте снова."
+    "purchaseFailed": "Покупка не удалась. Пожалуйста, попробуйте снова.",
+    "purchaseSuccess": "Реклама удалена!",
+    "errorStoreNotAvailable": "Магазин недоступен на этом устройстве",
+    "errorProductNotFound": "Продукт не найден. Попробуйте позже.",
+    "errorNetwork": "Ошибка сети. Проверьте подключение.",
+    "errorCancelled": "Покупка отменена."
   },
   "dialogs": {
     "deleteScan": "Удалить скан",

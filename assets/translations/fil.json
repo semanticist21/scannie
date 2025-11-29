@@ -111,7 +111,12 @@
     "restoreRequested": "Sinusuri ang mga nakaraang pagbili...",
     "restoreFailed": "Hindi maibalik ang mga pagbili",
     "storeNotAvailable": "Hindi available ang store",
-    "purchaseFailed": "Nabigo ang pagbili. Pakisubukang muli."
+    "purchaseFailed": "Nabigo ang pagbili. Pakisubukang muli.",
+    "purchaseSuccess": "Naalis ang mga ad!",
+    "errorStoreNotAvailable": "Hindi available ang store sa device na ito",
+    "errorProductNotFound": "Hindi nahanap ang produkto. Pakisubukang muli mamaya.",
+    "errorNetwork": "Error sa network. Pakitingnan ang iyong koneksyon.",
+    "errorCancelled": "Nakansela ang pagbili."
   },
   "dialogs": {
     "deleteScan": "Burahin ang scan",

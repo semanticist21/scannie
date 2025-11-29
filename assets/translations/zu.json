@@ -111,7 +111,12 @@
     "restoreRequested": "Ihlola ukuthenga kwangaphambili...",
     "restoreFailed": "Ayikwazanga ukubuyisela ukuthenga",
     "storeNotAvailable": "Isitolo asitholakali",
-    "purchaseFailed": "Ukuthenga kuhlulekile. Sicela uzame futhi."
+    "purchaseFailed": "Ukuthenga kuhlulekile. Sicela uzame futhi.",
+    "purchaseSuccess": "Izikhangiso zisusiwe!",
+    "errorStoreNotAvailable": "Isitolo asitholakali kule divayisi",
+    "errorProductNotFound": "Umkhiqizo awutholakali. Sicela uzame futhi kamuva.",
+    "errorNetwork": "Iphutha lenethiwekhi. Sicela uhlole ukuxhumana kwakho.",
+    "errorCancelled": "Ukuthenga kukhanseliwe."
   },
   "dialogs": {
     "deleteScan": "Susa okuskeniwe",

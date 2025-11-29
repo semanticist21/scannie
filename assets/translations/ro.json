@@ -111,7 +111,12 @@
     "restoreRequested": "Se verifică achizițiile anterioare...",
     "restoreFailed": "Nu s-au putut restaura achizițiile",
     "storeNotAvailable": "Magazinul nu este disponibil",
-    "purchaseFailed": "Achiziția a eșuat. Te rugăm să încerci din nou."
+    "purchaseFailed": "Achiziția a eșuat. Te rugăm să încerci din nou.",
+    "purchaseSuccess": "Reclamele au fost eliminate!",
+    "errorStoreNotAvailable": "Magazinul nu este disponibil pe acest dispozitiv",
+    "errorProductNotFound": "Produsul nu a fost găsit. Încercați din nou mai târziu.",
+    "errorNetwork": "Eroare de rețea. Verificați conexiunea.",
+    "errorCancelled": "Achiziția a fost anulată."
   },
   "dialogs": {
     "deleteScan": "Șterge scanarea",

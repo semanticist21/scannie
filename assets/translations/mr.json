@@ -111,7 +111,12 @@
     "restoreRequested": "मागील खरेदी तपासत आहे...",
     "restoreFailed": "खरेदी पुनर्संचयित करता आली नाही",
     "storeNotAvailable": "स्टोअर उपलब्ध नाही",
-    "purchaseFailed": "खरेदी अयशस्वी. कृपया पुन्हा प्रयत्न करा."
+    "purchaseFailed": "खरेदी अयशस्वी. कृपया पुन्हा प्रयत्न करा.",
+    "purchaseSuccess": "जाहिराती काढल्या!",
+    "errorStoreNotAvailable": "या डिव्हाइसवर स्टोअर उपलब्ध नाही",
+    "errorProductNotFound": "उत्पादन सापडले नाही. कृपया नंतर पुन्हा प्रयत्न करा.",
+    "errorNetwork": "नेटवर्क त्रुटी. कृपया आपले कनेक्शन तपासा.",
+    "errorCancelled": "खरेदी रद्द झाली."
   },
   "dialogs": {
     "deleteScan": "स्कॅन हटवा",

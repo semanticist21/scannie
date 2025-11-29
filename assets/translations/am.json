@@ -111,7 +111,12 @@
     "restoreRequested": "ቀደም ያሉ ግዢዎችን በማጣራት ላይ...",
     "restoreFailed": "ግዢዎችን ወደነበረበት መመለስ አልተቻለም",
     "storeNotAvailable": "መደብር አይገኝም",
-    "purchaseFailed": "ግዢ አልተሳካም። እባክዎ እንደገና ይሞክሩ።"
+    "purchaseFailed": "ግዢ አልተሳካም። እባክዎ እንደገና ይሞክሩ።",
+    "purchaseSuccess": "ማስታወቂያዎች ተወግደዋል!",
+    "errorStoreNotAvailable": "መደብር በዚህ መሳሪያ ላይ አይገኝም",
+    "errorProductNotFound": "ምርት አልተገኘም። እባክዎ ቆይተው ይሞክሩ።",
+    "errorNetwork": "የአውታረ መረብ ስህተት። እባክዎ ግንኙነትዎን ያረጋግጡ።",
+    "errorCancelled": "ግዢ ተሰርዟል።"
   },
   "dialogs": {
     "deleteScan": "ስካን ሰርዝ",

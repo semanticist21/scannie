@@ -111,7 +111,12 @@
     "restoreRequested": "Əvvəlki alışlar yoxlanılır...",
     "restoreFailed": "Alışlar bərpa edilə bilmədi",
     "storeNotAvailable": "Mağaza əlçatan deyil",
-    "purchaseFailed": "Alış uğursuz oldu. Yenidən cəhd edin."
+    "purchaseFailed": "Alış uğursuz oldu. Yenidən cəhd edin.",
+    "purchaseSuccess": "Reklamlar silindi!",
+    "errorStoreNotAvailable": "Mağaza bu cihazda mövcud deyil",
+    "errorProductNotFound": "Məhsul tapılmadı. Daha sonra yenidən cəhd edin.",
+    "errorNetwork": "Şəbəkə xətası. Bağlantınızı yoxlayın.",
+    "errorCancelled": "Alış ləğv edildi."
   },
   "dialogs": {
     "deleteScan": "Skanı sil",

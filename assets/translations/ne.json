@@ -111,7 +111,12 @@
     "restoreRequested": "अघिल्ला खरिदहरू जाँच गर्दै...",
     "restoreFailed": "खरिदहरू पुनर्स्थापना गर्न सकिएन",
     "storeNotAvailable": "स्टोर उपलब्ध छैन",
-    "purchaseFailed": "खरिद असफल भयो। कृपया फेरि प्रयास गर्नुहोस्।"
+    "purchaseFailed": "खरिद असफल भयो। कृपया फेरि प्रयास गर्नुहोस्।",
+    "purchaseSuccess": "विज्ञापनहरू हटाइयो!",
+    "errorStoreNotAvailable": "यो यन्त्रमा स्टोर उपलब्ध छैन",
+    "errorProductNotFound": "उत्पादन फेला परेन। कृपया पछि फेरि प्रयास गर्नुहोस्।",
+    "errorNetwork": "नेटवर्क त्रुटि। कृपया आफ्नो जडान जाँच गर्नुहोस्।",
+    "errorCancelled": "खरिद रद्द गरियो।"
   },
   "dialogs": {
     "deleteScan": "स्क्यान मेट्नुहोस्",

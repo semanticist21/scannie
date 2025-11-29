@@ -111,7 +111,12 @@
     "restoreRequested": "Kontrola předchozích nákupů...",
     "restoreFailed": "Nepodařilo se obnovit nákupy",
     "storeNotAvailable": "Obchod není dostupný",
-    "purchaseFailed": "Nákup se nezdařil. Zkuste to prosím znovu."
+    "purchaseFailed": "Nákup se nezdařil. Zkuste to prosím znovu.",
+    "purchaseSuccess": "Reklamy odstraněny!",
+    "errorStoreNotAvailable": "Obchod není na tomto zařízení dostupný",
+    "errorProductNotFound": "Produkt nenalezen. Zkuste to prosím později.",
+    "errorNetwork": "Chyba sítě. Zkontrolujte připojení.",
+    "errorCancelled": "Nákup zrušen."
   },
   "dialogs": {
     "deleteScan": "Smazat sken",

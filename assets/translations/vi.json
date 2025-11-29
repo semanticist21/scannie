@@ -111,7 +111,12 @@
     "restoreRequested": "Đang kiểm tra các giao dịch trước...",
     "restoreFailed": "Không thể khôi phục giao dịch",
     "storeNotAvailable": "Cửa hàng không khả dụng",
-    "purchaseFailed": "Mua hàng thất bại. Vui lòng thử lại."
+    "purchaseFailed": "Mua hàng thất bại. Vui lòng thử lại.",
+    "purchaseSuccess": "Đã xóa quảng cáo!",
+    "errorStoreNotAvailable": "Cửa hàng không khả dụng trên thiết bị này",
+    "errorProductNotFound": "Không tìm thấy sản phẩm. Vui lòng thử lại sau.",
+    "errorNetwork": "Lỗi mạng. Vui lòng kiểm tra kết nối.",
+    "errorCancelled": "Đã hủy mua hàng."
   },
   "dialogs": {
     "deleteScan": "Xóa bản quét",

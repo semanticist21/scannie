@@ -111,11 +111,7 @@ class PremiumDialog {
                   ),
                   const SizedBox(height: AppSpacing.sm),
 
-                  // Restore purchases button
-                  _RestoreButton(colors: colors),
-                  const SizedBox(height: AppSpacing.sm),
-
-                  // Cancel button
+                  // Maybe later button
                   SizedBox(
                     width: double.infinity,
                     child: ShadButton.outline(
@@ -124,6 +120,10 @@ class PremiumDialog {
                       child: Text('premium.maybeLater'.tr()),
                     ),
                   ),
+                  const SizedBox(height: AppSpacing.sm),
+
+                  // Restore purchases button (at bottom)
+                  _RestoreButton(colors: colors),
                 ],
 
                 // Debug: Reset premium button (only in debug mode)
@@ -190,25 +190,24 @@ class _PurchaseButtonState extends State<_PurchaseButton> {
 
     try {
       final purchaseService = PurchaseService.instance;
+      final result = await purchaseService.purchasePremium();
 
-      if (!purchaseService.isAvailable) {
-        if (mounted) {
-          AppToast.error(context, 'premium.storeNotAvailable'.tr());
+      if (!mounted) return;
+
+      if (result.success) {
+        // Debug mode or successful purchase
+        AppToast.success(context, 'premium.purchaseSuccess'.tr());
+        widget.onPurchaseComplete();
+      } else {
+        // Show user-friendly error message
+        final errorMessage = _getLocalizedErrorMessage(result.errorType);
+        AppToast.error(context, errorMessage);
+
+        // In debug mode, also show detailed error
+        if (kDebugMode && result.errorMessage != null) {
+          debugPrint('💎 Error details: ${result.errorMessage}');
         }
-        return;
       }
-
-      final success = await purchaseService.purchasePremium();
-
-      if (!success && mounted) {
-        // Purchase was initiated but may have been cancelled by user
-        // Don't show error - the purchase stream will handle actual errors
-        debugPrint('💎 Purchase not initiated');
-      }
-
-      // Note: onPurchaseComplete will be called when the purchase stream
-      // confirms the purchase is complete. For now, we close the dialog
-      // The purchase result will be handled by PurchaseService
     } catch (e) {
       debugPrint('💎 Purchase error: $e');
       if (mounted) {
@@ -218,6 +217,23 @@ class _PurchaseButtonState extends State<_PurchaseButton> {
       if (mounted) {
         setState(() => _isLoading = false);
       }
+    }
+  }
+
+  String _getLocalizedErrorMessage(PurchaseErrorType? errorType) {
+    switch (errorType) {
+      case PurchaseErrorType.storeNotAvailable:
+        return 'premium.errorStoreNotAvailable'.tr();
+      case PurchaseErrorType.productNotFound:
+        return 'premium.errorProductNotFound'.tr();
+      case PurchaseErrorType.networkError:
+        return 'premium.errorNetwork'.tr();
+      case PurchaseErrorType.purchaseCancelled:
+        return 'premium.errorCancelled'.tr();
+      case PurchaseErrorType.purchaseFailed:
+      case PurchaseErrorType.unknown:
+      case null:
+        return 'premium.purchaseFailed'.tr();
     }
   }
 

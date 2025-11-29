@@ -111,7 +111,12 @@
     "restoreRequested": "পূর্ববর্তী ক্রয় পরীক্ষা করা হচ্ছে...",
     "restoreFailed": "ক্রয় পুনরুদ্ধার করা যায়নি",
     "storeNotAvailable": "স্টোর উপলব্ধ নেই",
-    "purchaseFailed": "ক্রয় ব্যর্থ হয়েছে। আবার চেষ্টা করুন।"
+    "purchaseFailed": "ক্রয় ব্যর্থ হয়েছে। আবার চেষ্টা করুন।",
+    "purchaseSuccess": "বিজ্ঞাপন সরানো হয়েছে!",
+    "errorStoreNotAvailable": "এই ডিভাইসে স্টোর উপলব্ধ নয়",
+    "errorProductNotFound": "পণ্য পাওয়া যায়নি। পরে আবার চেষ্টা করুন।",
+    "errorNetwork": "নেটওয়ার্ক ত্রুটি। আপনার সংযোগ পরীক্ষা করুন।",
+    "errorCancelled": "কেনাকাটা বাতিল করা হয়েছে।"
   },
   "dialogs": {
     "deleteScan": "স্ক্যান মুছুন",

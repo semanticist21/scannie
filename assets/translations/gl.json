@@ -111,7 +111,12 @@
     "restoreRequested": "Comprobando compras anteriores...",
     "restoreFailed": "Non se puideron restaurar as compras",
     "storeNotAvailable": "Tenda non dispoñible",
-    "purchaseFailed": "A compra fallou. Por favor, téntao de novo."
+    "purchaseFailed": "A compra fallou. Por favor, téntao de novo.",
+    "purchaseSuccess": "Anuncios eliminados!",
+    "errorStoreNotAvailable": "A tenda non está dispoñible neste dispositivo",
+    "errorProductNotFound": "Produto non atopado. Ténteo máis tarde.",
+    "errorNetwork": "Erro de rede. Comproba a túa conexión.",
+    "errorCancelled": "Compra cancelada."
   },
   "dialogs": {
     "deleteScan": "Eliminar escaneo",

@@ -111,7 +111,12 @@
     "restoreRequested": "Kontrollerar tidigare köp...",
     "restoreFailed": "Kunde inte återställa köp",
     "storeNotAvailable": "Butiken är inte tillgänglig",
-    "purchaseFailed": "Köpet misslyckades. Försök igen."
+    "purchaseFailed": "Köpet misslyckades. Försök igen.",
+    "purchaseSuccess": "Annonser borttagna!",
+    "errorStoreNotAvailable": "Butiken är inte tillgänglig på den här enheten",
+    "errorProductNotFound": "Produkten hittades inte. Försök igen senare.",
+    "errorNetwork": "Nätverksfel. Kontrollera din anslutning.",
+    "errorCancelled": "Köpet avbröts."
   },
   "dialogs": {
     "deleteScan": "Radera skanning",

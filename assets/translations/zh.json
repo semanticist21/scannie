@@ -111,7 +111,12 @@
     "restoreRequested": "正在检查以前的购买...",
     "restoreFailed": "无法恢复购买",
     "storeNotAvailable": "商店不可用",
-    "purchaseFailed": "购买失败。请重试。"
+    "purchaseFailed": "购买失败。请重试。",
+    "purchaseSuccess": "广告已移除！",
+    "errorStoreNotAvailable": "此设备上无法使用商店",
+    "errorProductNotFound": "找不到产品。请稍后重试。",
+    "errorNetwork": "网络错误。请检查您的连接。",
+    "errorCancelled": "购买已取消。"
   },
   "dialogs": {
     "deleteScan": "删除扫描",

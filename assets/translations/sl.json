@@ -111,7 +111,12 @@
     "restoreRequested": "Preverjanje prejšnjih nakupov...",
     "restoreFailed": "Nakupov ni bilo mogoče obnoviti",
     "storeNotAvailable": "Trgovina ni na voljo",
-    "purchaseFailed": "Nakup ni uspel. Poskusite znova."
+    "purchaseFailed": "Nakup ni uspel. Poskusite znova.",
+    "purchaseSuccess": "Oglasi odstranjeni!",
+    "errorStoreNotAvailable": "Trgovina ni na voljo na tej napravi",
+    "errorProductNotFound": "Izdelek ni najden. Poskusite pozneje.",
+    "errorNetwork": "Napaka omrežja. Preverite povezavo.",
+    "errorCancelled": "Nakup je preklican."
   },
   "dialogs": {
     "deleteScan": "Izbriši sken",

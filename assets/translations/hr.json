@@ -111,7 +111,12 @@
     "restoreRequested": "Provjera prethodnih kupnji...",
     "restoreFailed": "Nije moguće vratiti kupnje",
     "storeNotAvailable": "Trgovina nije dostupna",
-    "purchaseFailed": "Kupnja nije uspjela. Molimo pokušajte ponovno."
+    "purchaseFailed": "Kupnja nije uspjela. Molimo pokušajte ponovno.",
+    "purchaseSuccess": "Oglasi uklonjeni!",
+    "errorStoreNotAvailable": "Trgovina nije dostupna na ovom uređaju",
+    "errorProductNotFound": "Proizvod nije pronađen. Pokušajte kasnije.",
+    "errorNetwork": "Mrežna greška. Provjerite svoju vezu.",
+    "errorCancelled": "Kupnja je otkazana."
   },
   "dialogs": {
     "deleteScan": "Obriši skeniranje",

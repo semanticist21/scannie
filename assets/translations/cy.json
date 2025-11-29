@@ -111,7 +111,12 @@
     "restoreRequested": "Gwirio pryniadau blaenorol...",
     "restoreFailed": "Methu adfer pryniadau",
     "storeNotAvailable": "Siop ddim ar gael",
-    "purchaseFailed": "Methiant prynu. Rhowch gynnig arall arni."
+    "purchaseFailed": "Methiant prynu. Rhowch gynnig arall arni.",
+    "purchaseSuccess": "Hysbysebion wedi'u dileu!",
+    "errorStoreNotAvailable": "Nid yw'r siop ar gael ar y ddyfais hon",
+    "errorProductNotFound": "Ni chanfuwyd y cynnyrch. Ceisiwch eto yn nes ymlaen.",
+    "errorNetwork": "Gwall rhwydwaith. Gwiriwch eich cysylltiad.",
+    "errorCancelled": "Pryniant wedi'i ganslo."
   },
   "dialogs": {
     "deleteScan": "Dileu sgan",

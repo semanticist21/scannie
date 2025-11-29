@@ -111,7 +111,12 @@
     "restoreRequested": "Frühere Käufe werden überprüft...",
     "restoreFailed": "Käufe konnten nicht wiederhergestellt werden",
     "storeNotAvailable": "Store nicht verfügbar",
-    "purchaseFailed": "Kauf fehlgeschlagen. Bitte erneut versuchen."
+    "purchaseFailed": "Kauf fehlgeschlagen. Bitte erneut versuchen.",
+    "purchaseSuccess": "Werbung entfernt!",
+    "errorStoreNotAvailable": "Store ist auf diesem Gerät nicht verfügbar",
+    "errorProductNotFound": "Produkt nicht gefunden. Bitte später erneut versuchen.",
+    "errorNetwork": "Netzwerkfehler. Überprüfe deine Verbindung.",
+    "errorCancelled": "Kauf abgebrochen."
   },
   "dialogs": {
     "deleteScan": "Scan löschen",
