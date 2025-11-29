@@ -67,7 +67,7 @@ class PurchaseService {
   Completer<PurchaseResult>? _restoreCompleter;
 
   // Premium product ID (matches Play Console configuration)
-  static const String premiumProductId = 'premium_remove_ads';
+  static const String premiumProductId = 'premium';
 
   // SharedPreferences key (same as AdService uses)
   static const String _premiumKey = 'isPremium';

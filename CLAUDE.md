@@ -18,7 +18,7 @@ Scannie는 문서 스캔 Flutter 모바일 애플리케이션입니다. 네이�
 
 **배포 정보**:
 - Package Name / Bundle ID: `com.kobbokkom.scannie`
-- In-App Product ID: `premium_remove_ads` (non-consumable)
+- In-App Product ID: `premium` (non-consumable)
 
 ## Quick Reference
 

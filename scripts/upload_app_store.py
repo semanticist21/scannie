@@ -424,22 +424,48 @@ def parse_metadata_xml(xml_path: Path) -> dict:
 # ============================================================
 
 def convert_svg_to_png(svg_path: Path, png_path: Path, width: int = 1290, height: int = 2796) -> bool:
-    """Convert SVG to PNG using rsvg-convert (iPhone 6.7" display size)"""
+    """Convert SVG to PNG using rsvg-convert (iPhone 6.7" display size)
+
+    Note: App Store does not allow alpha channel in screenshots,
+    so we use ImageMagick to flatten the image after conversion.
+    """
+    temp_png = png_path.with_suffix('.temp.png')
+
     try:
+        # Step 1: Convert SVG to PNG with rsvg-convert
         subprocess.run([
             "rsvg-convert",
             "-w", str(width),
             "-h", str(height),
             str(svg_path),
-            "-o", str(png_path)
+            "-o", str(temp_png)
         ], check=True, capture_output=True)
+
+        # Step 2: Remove alpha channel using ImageMagick
+        # App Store requires screenshots without transparency (RGB, not RGBA)
+        subprocess.run([
+            "magick",
+            str(temp_png),
+            "-background", "white",
+            "-alpha", "remove",
+            "-alpha", "off",
+            str(png_path)
+        ], check=True, capture_output=True)
+
         return True
     except subprocess.CalledProcessError as e:
         print(f"    Error converting {svg_path}: {e.stderr.decode()}")
         return False
-    except FileNotFoundError:
-        print("    Error: rsvg-convert not found. Install with: brew install librsvg")
+    except FileNotFoundError as e:
+        if "rsvg-convert" in str(e):
+            print("    Error: rsvg-convert not found. Install with: brew install librsvg")
+        else:
+            print("    Error: magick not found. Install with: brew install imagemagick")
         return False
+    finally:
+        # Clean up temp file
+        if temp_png.exists():
+            temp_png.unlink()
 
 
 def get_screenshot_sets(localization_id: str) -> list:
