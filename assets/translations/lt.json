@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Reikalingas kameros leidimas",
     "cameraRequiredMessage": "Dokumentams nuskaityti reikalinga prieiga prie kameros. Įjunkite ją Nustatymuose.",
-    "openSettings": "Atidaryti nustatymus"
+    "openSettings": "Atidaryti nustatymus",
+    "photosRequired": "Reikalingas nuotraukų bibliotekos leidimas",
+    "photosRequiredMessage": "Vaizdams išsaugoti reikalinga prieiga prie nuotraukų bibliotekos. Įjunkite ją Nustatymuose."
   }
 }

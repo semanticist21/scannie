@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "カメラの許可が必要です",
     "cameraRequiredMessage": "書類をスキャンするにはカメラへのアクセスが必要です。設定で有効にしてください。",
-    "openSettings": "設定を開く"
+    "openSettings": "設定を開く",
+    "photosRequired": "写真ライブラリの許可が必要です",
+    "photosRequiredMessage": "画像を保存するには写真ライブラリへのアクセスが必要です。設定で有効にしてください。"
   }
 }

@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Requírese permiso de cámara",
     "cameraRequiredMessage": "Precísase acceso á cámara para escanear documentos. Actívao en Axustes.",
-    "openSettings": "Abrir axustes"
+    "openSettings": "Abrir axustes",
+    "photosRequired": "Requírese permiso da biblioteca de fotos",
+    "photosRequiredMessage": "Necesítase acceso á biblioteca de fotos para gardar imaxes. Actíveo en Axustes."
   }
 }

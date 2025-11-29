@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Kameran käyttöoikeus vaaditaan",
     "cameraRequiredMessage": "Kameran käyttöoikeus tarvitaan asiakirjojen skannaamiseen. Ota se käyttöön Asetuksissa.",
-    "openSettings": "Avaa asetukset"
+    "openSettings": "Avaa asetukset",
+    "photosRequired": "Valokuvakirjaston käyttöoikeus vaaditaan",
+    "photosRequiredMessage": "Valokuvakirjaston käyttöoikeus tarvitaan kuvien tallentamiseen. Ota se käyttöön Asetuksissa."
   }
 }

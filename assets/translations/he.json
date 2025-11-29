@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "נדרשת הרשאת מצלמה",
     "cameraRequiredMessage": "נדרשת גישה למצלמה לסריקת מסמכים. אנא הפעל אותה בהגדרות.",
-    "openSettings": "פתח הגדרות"
+    "openSettings": "פתח הגדרות",
+    "photosRequired": "נדרשת הרשאת ספריית תמונות",
+    "photosRequiredMessage": "נדרשת גישה לספריית התמונות כדי לשמור תמונות. אנא הפעל בהגדרות."
   }
 }

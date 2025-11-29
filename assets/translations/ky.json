@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Камера уруксаты талап кылынат",
     "cameraRequiredMessage": "Документтерди сканерлөө үчүн камерага кирүү керек. Жөндөөлөрдө иштетиңиз.",
-    "openSettings": "Жөндөөлөрдү ачуу"
+    "openSettings": "Жөндөөлөрдү ачуу",
+    "photosRequired": "Photo Library Permission Required",
+    "photosRequiredMessage": "Photo library access is needed to save images. Please enable it in Settings."
   }
 }

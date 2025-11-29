@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Kameratilladelse påkrævet",
     "cameraRequiredMessage": "Kameraadgang er nødvendig for at scanne dokumenter. Aktivér det i Indstillinger.",
-    "openSettings": "Åbn indstillinger"
+    "openSettings": "Åbn indstillinger",
+    "photosRequired": "Fotobibliotek tilladelse påkrævet",
+    "photosRequiredMessage": "Adgang til fotobiblioteket er nødvendig for at gemme billeder. Aktivér det i Indstillinger."
   }
 }

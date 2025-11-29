@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Cead ceamara ag teastáil",
     "cameraRequiredMessage": "Tá rochtain ceamara ag teastáil chun doiciméid a scanadh. Cumasaigh é sna Socruithe.",
-    "openSettings": "Oscail socruithe"
+    "openSettings": "Oscail socruithe",
+    "photosRequired": "Cead leabharlann grianghraf ag teastáil",
+    "photosRequiredMessage": "Tá rochtain ar an leabharlann grianghraf ag teastáil chun íomhánna a shábháil. Cumasaigh é sna Socruithe."
   }
 }

@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Permissão de câmera necessária",
     "cameraRequiredMessage": "O acesso à câmera é necessário para digitalizar documentos. Ative nas Configurações.",
-    "openSettings": "Abrir configurações"
+    "openSettings": "Abrir configurações",
+    "photosRequired": "Permissão de fotos necessária",
+    "photosRequiredMessage": "O acesso à biblioteca de fotos é necessário para salvar imagens. Ative-o nas Configurações."
   }
 }

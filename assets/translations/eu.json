@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Kameraren baimena behar da",
     "cameraRequiredMessage": "Kamerarako sarbidea behar da dokumentuak eskaneatzeko. Gaitu ezazu Ezarpenetan.",
-    "openSettings": "Ireki ezarpenak"
+    "openSettings": "Ireki ezarpenak",
+    "photosRequired": "Argazki-liburutegiko baimena behar da",
+    "photosRequiredMessage": "Argazki-liburutegirako sarbidea behar da irudiak gordetzeko. Gaitu Ezarpenetan."
   }
 }

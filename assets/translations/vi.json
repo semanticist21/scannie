@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Cần quyền truy cập camera",
     "cameraRequiredMessage": "Cần quyền truy cập camera để quét tài liệu. Vui lòng bật trong Cài đặt.",
-    "openSettings": "Mở cài đặt"
+    "openSettings": "Mở cài đặt",
+    "photosRequired": "Yêu cầu quyền truy cập thư viện ảnh",
+    "photosRequiredMessage": "Cần quyền truy cập thư viện ảnh để lưu hình ảnh. Vui lòng bật trong Cài đặt."
   }
 }

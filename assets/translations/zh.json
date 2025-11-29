@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "需要相机权限",
     "cameraRequiredMessage": "扫描文档需要访问相机。请在设置中启用。",
-    "openSettings": "打开设置"
+    "openSettings": "打开设置",
+    "photosRequired": "Photo Library Permission Required",
+    "photosRequiredMessage": "Photo library access is needed to save images. Please enable it in Settings."
   }
 }

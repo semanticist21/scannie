@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "የካሜራ ፈቃድ ያስፈልጋል",
     "cameraRequiredMessage": "ሰነዶችን ለመቃኘት የካሜራ መዳረሻ ያስፈልጋል። እባክዎ በቅንብሮች ውስጥ ያንቁት።",
-    "openSettings": "ቅንብሮችን ክፈት"
+    "openSettings": "ቅንብሮችን ክፈት",
+    "photosRequired": "የፎቶ ቤተ-መጻሕፍት ፈቃድ ያስፈልጋል",
+    "photosRequiredMessage": "ምስሎችን ለማስቀመጥ የፎቶ ቤተ-መጻሕፍት መዳረሻ ያስፈልጋል። እባክዎ በቅንብሮች ውስጥ ያንቁት።"
   }
 }

@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Nepieciešama kameras atļauja",
     "cameraRequiredMessage": "Dokumentu skenēšanai nepieciešama piekļuve kamerai. Lūdzu, iespējojiet to Iestatījumos.",
-    "openSettings": "Atvērt iestatījumus"
+    "openSettings": "Atvērt iestatījumus",
+    "photosRequired": "Nepieciešama fotoattēlu bibliotēkas atļauja",
+    "photosRequiredMessage": "Attēlu saglabāšanai nepieciešama piekļuve fotoattēlu bibliotēkai. Lūdzu, iespējojiet to Iestatījumos."
   }
 }

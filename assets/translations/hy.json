@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Պահանջվում է տեսախցիկի թույլտվություն",
     "cameraRequiredMessage": "Փաստաթղթերը սկանավորելու համար անհրաժեշտ է տեսախցիկի հասանելիություն: Խնդրում ենք միացնել այն Կարգավորումներում:",
-    "openSettings": "Բացեք Պարամետրերը"
+    "openSettings": "Բացեք Պարամետրերը",
+    "photosRequired": "Անհրաdelays է լուdelays անdelays delays delays արdelays delays delays delays delaysdelays delaysdelays",
+    "photosRequiredMessage": "Պdelays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays"
   }
 }

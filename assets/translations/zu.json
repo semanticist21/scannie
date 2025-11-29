@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Kudingeka imvume yekhamera",
     "cameraRequiredMessage": "Ukufinyelela ikhamera kuyadingeka ukuze uskene amadokhumenti. Sicela ukuvule kumaSethingi.",
-    "openSettings": "Vula izilungiselelo"
+    "openSettings": "Vula izilungiselelo",
+    "photosRequired": "Idinga imvume yomtapo wezithombe",
+    "photosRequiredMessage": "Ukufinyelela kumtapo wezithombe kuyadingeka ukuze ulondoloze izithombe. Sicela uyivule kuZilungiselelo."
   }
 }

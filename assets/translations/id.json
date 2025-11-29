@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Izin kamera diperlukan",
     "cameraRequiredMessage": "Akses kamera diperlukan untuk memindai dokumen. Aktifkan di Pengaturan.",
-    "openSettings": "Buka pengaturan"
+    "openSettings": "Buka pengaturan",
+    "photosRequired": "Izin perpustakaan foto diperlukan",
+    "photosRequiredMessage": "Akses perpustakaan foto diperlukan untuk menyimpan gambar. Aktifkan di Pengaturan."
   }
 }

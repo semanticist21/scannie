@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Kamerabehörighet krävs",
     "cameraRequiredMessage": "Kameraåtkomst behövs för att skanna dokument. Aktivera det i Inställningar.",
-    "openSettings": "Öppna inställningar"
+    "openSettings": "Öppna inställningar",
+    "photosRequired": "Fotobibliotek behörighet krävs",
+    "photosRequiredMessage": "Åtkomst till fotobiblioteket behövs för att spara bilder. Aktivera det i Inställningar."
   }
 }

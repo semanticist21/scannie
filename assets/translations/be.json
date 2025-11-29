@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Патрабуецца дазвол камеры",
     "cameraRequiredMessage": "Для сканавання дакументаў патрэбен доступ да камеры. Калі ласка, уключыце яго ў Наладах.",
-    "openSettings": "Адкрыць налады"
+    "openSettings": "Адкрыць налады",
+    "photosRequired": "Photo Library Permission Required",
+    "photosRequiredMessage": "Photo library access is needed to save images. Please enable it in Settings."
   }
 }

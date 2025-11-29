@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Permisiune cameră necesară",
     "cameraRequiredMessage": "Accesul la cameră este necesar pentru scanarea documentelor. Activați-l din Setări.",
-    "openSettings": "Deschide setările"
+    "openSettings": "Deschide setările",
+    "photosRequired": "Permisiune bibliotecă foto necesară",
+    "photosRequiredMessage": "Accesul la biblioteca foto este necesar pentru salvarea imaginilor. Activați-l din Setări."
   }
 }

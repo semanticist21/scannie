@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Kaamera luba on vajalik",
     "cameraRequiredMessage": "Dokumentide skannimiseks on vaja kaamerale juurdepääsu. Lubage see Seadetes.",
-    "openSettings": "Ava seaded"
+    "openSettings": "Ava seaded",
+    "photosRequired": "Vaja fototeegi luba",
+    "photosRequiredMessage": "Piltide salvestamiseks on vaja juurdepääsu fototeegile. Palun lubage see Seadetes."
   }
 }

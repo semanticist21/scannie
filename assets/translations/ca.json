@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Es requereix permís de càmera",
     "cameraRequiredMessage": "Cal accés a la càmera per escanejar documents. Activeu-lo a Configuració.",
-    "openSettings": "Obrir configuració"
+    "openSettings": "Obrir configuració",
+    "photosRequired": "Es requereix permís de la biblioteca de fotos",
+    "photosRequiredMessage": "Cal accés a la biblioteca de fotos per guardar imatges. Activeu-lo a Configuració."
   }
 }

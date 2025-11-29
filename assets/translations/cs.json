@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Vyžadováno povolení fotoaparátu",
     "cameraRequiredMessage": "Pro skenování dokumentů je potřeba přístup k fotoaparátu. Povolte jej v Nastavení.",
-    "openSettings": "Otevřít nastavení"
+    "openSettings": "Otevřít nastavení",
+    "photosRequired": "Vyžadováno povolení knihovny fotek",
+    "photosRequiredMessage": "Pro ukládání obrázků je potřeba přístup ke knihovně fotek. Povolte jej v Nastavení."
   }
 }

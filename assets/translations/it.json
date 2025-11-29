@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Autorizzazione fotocamera richiesta",
     "cameraRequiredMessage": "L'accesso alla fotocamera è necessario per scansionare documenti. Abilitalo nelle Impostazioni.",
-    "openSettings": "Apri impostazioni"
+    "openSettings": "Apri impostazioni",
+    "photosRequired": "Autorizzazione foto richiesta",
+    "photosRequiredMessage": "L'accesso alla libreria foto è necessario per salvare le immagini. Abilitalo nelle Impostazioni."
   }
 }

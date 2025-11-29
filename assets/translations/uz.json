@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Kamera ruxsati kerak",
     "cameraRequiredMessage": "Hujjatlarni skanerlash uchun kameraga kirish kerak. Sozlamalarda yoqing.",
-    "openSettings": "Sozlamalarni ochish"
+    "openSettings": "Sozlamalarni ochish",
+    "photosRequired": "Foto kutubxona ruxsati kerak",
+    "photosRequiredMessage": "Rasmlarni saqlash uchun foto kutubxonaga kirish kerak. Sozlamalarda yoqing."
   }
 }

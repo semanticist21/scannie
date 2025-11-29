@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Myndavélaheimild krafist",
     "cameraRequiredMessage": "Myndavélaaðgangur er nauðsynlegur til að skanna skjöl. Virkjaðu hann í Stillingum.",
-    "openSettings": "Opna stillingar"
+    "openSettings": "Opna stillingar",
+    "photosRequired": "Ljósmyndasafnsheimild nauðsynleg",
+    "photosRequiredMessage": "Aðgangur að ljósmyndasafni er nauðsynlegur til að vista myndir. Virkjaðu það í Stillingum."
   }
 }

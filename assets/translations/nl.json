@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Cameratoestemming vereist",
     "cameraRequiredMessage": "Cameratoegang is nodig om documenten te scannen. Schakel dit in via Instellingen.",
-    "openSettings": "Open instellingen"
+    "openSettings": "Open instellingen",
+    "photosRequired": "Fotobibliotheek toestemming vereist",
+    "photosRequiredMessage": "Toegang tot de fotobibliotheek is nodig om afbeeldingen op te slaan. Schakel dit in bij Instellingen."
   }
 }

@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Potrebna dozvola kamere",
     "cameraRequiredMessage": "Pristup kameri potreban je za skeniranje dokumenata. Omogućite ga u Postavkama.",
-    "openSettings": "Otvori postavke"
+    "openSettings": "Otvori postavke",
+    "photosRequired": "Potrebna dozvola za foto biblioteku",
+    "photosRequiredMessage": "Pristup foto biblioteci je potreban za spremanje slika. Omogućite ga u Postavkama."
   }
 }

@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Kailangan ang pahintulot sa camera",
     "cameraRequiredMessage": "Kailangan ang access sa camera para mag-scan ng mga dokumento. Paganahin ito sa Settings.",
-    "openSettings": "Buksan ang Settings"
+    "openSettings": "Buksan ang Settings",
+    "photosRequired": "Kailangan ng pahintulot sa photo library",
+    "photosRequiredMessage": "Kailangan ang access sa photo library para mag-save ng mga imahe. Paganahin ito sa Settings."
   }
 }

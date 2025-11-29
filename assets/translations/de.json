@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Kameraberechtigung erforderlich",
     "cameraRequiredMessage": "Kamerazugriff wird zum Scannen von Dokumenten benötigt. Bitte in den Einstellungen aktivieren.",
-    "openSettings": "Einstellungen öffnen"
+    "openSettings": "Einstellungen öffnen",
+    "photosRequired": "Fotoberechtigung erforderlich",
+    "photosRequiredMessage": "Zugriff auf die Fotobibliothek wird benötigt, um Bilder zu speichern. Bitte in den Einstellungen aktivieren."
   }
 }

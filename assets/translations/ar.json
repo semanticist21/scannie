@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "إذن الكاميرا مطلوب",
     "cameraRequiredMessage": "يلزم الوصول إلى الكاميرا لمسح المستندات. يرجى تمكينه في الإعدادات.",
-    "openSettings": "فتح الإعدادات"
+    "openSettings": "فتح الإعدادات",
+    "photosRequired": "إذن مكتبة الصور مطلوب",
+    "photosRequiredMessage": "يلزم الوصول إلى مكتبة الصور لحفظ الصور. يرجى تمكينه في الإعدادات."
   }
 }

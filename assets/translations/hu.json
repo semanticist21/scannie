@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Kameraengedély szükséges",
     "cameraRequiredMessage": "A dokumentumok szkenneléséhez kamera-hozzáférés szükséges. Kérjük, engedélyezze a Beállításokban.",
-    "openSettings": "Beállítások megnyitása"
+    "openSettings": "Beállítások megnyitása",
+    "photosRequired": "Fotókönyvtár engedély szükséges",
+    "photosRequiredMessage": "A képek mentéséhez fotókönyvtár hozzáférés szükséges. Engedélyezze a Beállításokban."
   }
 }

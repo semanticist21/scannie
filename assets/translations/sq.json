@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Kërkohet leje e kamerës",
     "cameraRequiredMessage": "Qasja në kamerë nevojitet për të skanuar dokumente. Aktivizojeni në Cilësimet.",
-    "openSettings": "Hap cilësimet"
+    "openSettings": "Hap cilësimet",
+    "photosRequired": "Kërkohet leje e bibliotekës së fotove",
+    "photosRequiredMessage": "Qasja në bibliotekën e fotove nevojitet për të ruajtur imazhet. Aktivizojeni në Cilësimet."
   }
 }

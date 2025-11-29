@@ -10,8 +10,10 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../../models/image_filter_type.dart';
 import '../../utils/app_toast.dart';
+import '../../widgets/common/confirm_dialog.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/app_text_styles.dart';
@@ -413,14 +415,47 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
     }
   }
 
+  /// Show photo library permission dialog
+  void _showPhotoPermissionDialog() {
+    ConfirmDialog.show(
+      context: context,
+      title: 'permission.photosRequired'.tr(),
+      message: 'permission.photosRequiredMessage'.tr(),
+      confirmText: 'permission.openSettings'.tr(),
+      onConfirm: () async {
+        await openAppSettings();
+      },
+    );
+  }
+
   /// Download current image to device
   Future<void> _downloadCurrentImage() async {
+    // Check photo library permission first
+    final permission = Platform.isIOS
+        ? Permission.photosAddOnly
+        : Permission.photos;
+
+    var status = await permission.status;
+
+    if (status.isDenied) {
+      status = await permission.request();
+    }
+
+    if (status.isPermanentlyDenied || status.isDenied) {
+      if (mounted) {
+        _showPhotoPermissionDialog();
+      }
+      return;
+    }
+
     try {
       final imagePath = widget.imagePaths[_currentPage];
       final imageFile = File(imagePath);
 
       if (!imageFile.existsSync()) {
-        AppToast.show(context, 'toast.imageNotFound'.tr(), isError: true);
+        if (mounted) {
+          AppToast.show(context, 'toast.imageNotFound'.tr(), isError: true);
+        }
         return;
       }
 
@@ -688,18 +723,21 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                           onPressed: _cropAndRotateImage,
                           tooltip: 'imageViewer.rotateImage'.tr(),
                         ),
-                      IconButton(
-                        icon: const Icon(LucideIcons.download,
-                            color: AppColors.darkTextPrimary),
-                        onPressed: _downloadCurrentImage,
-                        tooltip: 'imageViewer.saveToPhotos'.tr(),
-                      ),
-                      IconButton(
-                        icon: const Icon(LucideIcons.share2,
-                            color: AppColors.darkTextPrimary),
-                        onPressed: _shareCurrentImage,
-                        tooltip: 'imageViewer.shareImage'.tr(),
-                      ),
+                      // Hide download/share in edit mode (showFilters = true)
+                      if (!widget.showFilters) ...[
+                        IconButton(
+                          icon: const Icon(LucideIcons.download,
+                              color: AppColors.darkTextPrimary),
+                          onPressed: _downloadCurrentImage,
+                          tooltip: 'imageViewer.saveToPhotos'.tr(),
+                        ),
+                        IconButton(
+                          icon: const Icon(LucideIcons.share2,
+                              color: AppColors.darkTextPrimary),
+                          onPressed: _shareCurrentImage,
+                          tooltip: 'imageViewer.shareImage'.tr(),
+                        ),
+                      ],
                     ],
                   ),
                 ),

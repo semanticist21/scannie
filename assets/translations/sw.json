@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Ruhusa ya kamera inahitajika",
     "cameraRequiredMessage": "Ufikiaji wa kamera unahitajika ili kuchanganua hati. Tafadhali iwashe katika Mipangilio.",
-    "openSettings": "Fungua mipangilio"
+    "openSettings": "Fungua mipangilio",
+    "photosRequired": "Ruhusa ya maktaba ya picha inahitajika",
+    "photosRequiredMessage": "Ufikiaji wa maktaba ya picha unahitajika ili kuhifadhi picha. Tafadhali iwashe katika Mipangilio."
   }
 }

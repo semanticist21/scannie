@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Kamera icazəsi tələb olunur",
     "cameraRequiredMessage": "Sənədləri skan etmək üçün kamera girişi lazımdır. Zəhmət olmasa Parametrlərdə aktivləşdirin.",
-    "openSettings": "Parametrləri aç"
+    "openSettings": "Parametrləri aç",
+    "photosRequired": "Foto kitabxana icazəsi tələb olunur",
+    "photosRequiredMessage": "Şəkilləri saxlamaq üçün foto kitabxanaya giriş tələb olunur. Zəhmət olmasa Parametrlərdə aktiv edin."
   }
 }

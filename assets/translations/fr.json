@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Autorisation caméra requise",
     "cameraRequiredMessage": "L'accès à la caméra est nécessaire pour numériser des documents. Veuillez l'activer dans les Réglages.",
-    "openSettings": "Ouvrir les réglages"
+    "openSettings": "Ouvrir les réglages",
+    "photosRequired": "Autorisation photos requise",
+    "photosRequiredMessage": "L'accès à la bibliothèque de photos est nécessaire pour enregistrer des images. Activez-le dans Réglages."
   }
 }

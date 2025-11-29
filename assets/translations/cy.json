@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Angen caniatâd camera",
     "cameraRequiredMessage": "Mae angen mynediad i'r camera i sganio dogfennau. Galluogwch ef yn y Gosodiadau.",
-    "openSettings": "Agor gosodiadau"
+    "openSettings": "Agor gosodiadau",
+    "photosRequired": "Angen caniatâd llyfrgell luniau",
+    "photosRequiredMessage": "Mae angen mynediad i'r llyfrgell luniau i gadw delweddau. Galluogwch ef yn y Gosodiadau."
   }
 }

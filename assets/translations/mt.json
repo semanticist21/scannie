@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Meħtieġ permess tal-kamera",
     "cameraRequiredMessage": "L-aċċess għall-kamera huwa meħtieġ biex tiskennja dokumenti. Jekk jogħġbok attivah fis-Settings.",
-    "openSettings": "Iftaħ is-settings"
+    "openSettings": "Iftaħ is-settings",
+    "photosRequired": "Meħtieġ permess tal-librerija tal-ritratti",
+    "photosRequiredMessage": "L-aċċess għall-librerija tar-ritratti huwa meħtieġ biex tiffranka l-immaġini. Jekk jogħġbok attivah fis-Settings."
   }
 }

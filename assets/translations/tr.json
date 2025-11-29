@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Kamera izni gerekli",
     "cameraRequiredMessage": "Belgeleri taramak için kamera erişimi gereklidir. Lütfen Ayarlar'dan etkinleştirin.",
-    "openSettings": "Ayarları aç"
+    "openSettings": "Ayarları aç",
+    "photosRequired": "Fotoğraf kitaplığı izni gerekli",
+    "photosRequiredMessage": "Görüntüleri kaydetmek için fotoğraf kitaplığı erişimi gerekli. Ayarlardan etkinleştirin."
   }
 }

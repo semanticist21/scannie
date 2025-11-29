@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Permiso de cámara requerido",
     "cameraRequiredMessage": "Se necesita acceso a la cámara para escanear documentos. Habilítelo en Ajustes.",
-    "openSettings": "Abrir ajustes"
+    "openSettings": "Abrir ajustes",
+    "photosRequired": "Permiso de fotos requerido",
+    "photosRequiredMessage": "Se necesita acceso a la biblioteca de fotos para guardar imágenes. Habilítelo en Ajustes."
   }
 }

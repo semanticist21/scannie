@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Wymagane uprawnienie aparatu",
     "cameraRequiredMessage": "Dostęp do aparatu jest potrzebny do skanowania dokumentów. Włącz go w Ustawieniach.",
-    "openSettings": "Otwórz ustawienia"
+    "openSettings": "Otwórz ustawienia",
+    "photosRequired": "Wymagane uprawnienie do zdjęć",
+    "photosRequiredMessage": "Dostęp do biblioteki zdjęć jest potrzebny do zapisywania obrazów. Włącz go w Ustawieniach."
   }
 }

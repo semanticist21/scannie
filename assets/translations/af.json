@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Kamera-toestemming benodig",
     "cameraRequiredMessage": "Kameratoegang is nodig om dokumente te skandeer. Aktiveer dit asseblief in Instellings.",
-    "openSettings": "Open Instellings"
+    "openSettings": "Open Instellings",
+    "photosRequired": "Fotolibrareie-toestemming benodig",
+    "photosRequiredMessage": "Fotolibrary toegang is nodig om beelde te stoor. Aktiveer dit asseblief in Instellings."
   }
 }

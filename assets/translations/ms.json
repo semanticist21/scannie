@@ -208,6 +208,8 @@
   "permission": {
     "cameraRequired": "Kebenaran kamera diperlukan",
     "cameraRequiredMessage": "Akses kamera diperlukan untuk mengimbas dokumen. Sila dayakan dalam Tetapan.",
-    "openSettings": "Buka tetapan"
+    "openSettings": "Buka tetapan",
+    "photosRequired": "Kebenaran pustaka foto diperlukan",
+    "photosRequiredMessage": "Akses pustaka foto diperlukan untuk menyimpan imej. Sila aktifkan dalam Tetapan."
   }
 }
