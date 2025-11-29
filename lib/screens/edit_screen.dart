@@ -7,7 +7,6 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:flutter_reorderable_grid_view/widgets/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/app_toast.dart';
 import '../models/scan_document.dart';
 import '../services/document_storage.dart';
@@ -35,8 +34,6 @@ class EditScreen extends StatefulWidget {
 }
 
 class _EditScreenState extends State<EditScreen> {
-  static const _hintShownKey = 'edit_tap_hint_shown';
-
   List<String> _imagePaths = [];
   final Set<String> _tempFilePaths = {}; // Track temp files for cleanup
   String? _existingDocumentId; // null = new scan, non-null = editing existing
@@ -44,27 +41,10 @@ class _EditScreenState extends State<EditScreen> {
   bool _isLoading = false;
   bool _hasInteracted = false; // Track if user made any changes
   bool _wasEmptyOnStart = false; // Track if document was empty when editing started (for ad logic)
-  bool _showHint = false; // Show tap hint banner
 
   // For ReorderableBuilder
   final _scrollController = ScrollController();
   final _gridViewKey = GlobalKey();
-
-  @override
-  void initState() {
-    super.initState();
-    _checkAndShowHint();
-  }
-
-  Future<void> _checkAndShowHint() async {
-    final prefs = await SharedPreferences.getInstance();
-    final hintShown = prefs.getBool(_hintShownKey) ?? false;
-
-    if (!hintShown && mounted) {
-      setState(() => _showHint = true);
-      await prefs.setBool(_hintShownKey, true);
-    }
-  }
 
   @override
   void didChangeDependencies() {
@@ -415,9 +395,8 @@ class _EditScreenState extends State<EditScreen> {
             ? const Center(child: CircularProgressIndicator())
             : Column(
                 children: [
-                  // Tap hint banner (shows once for new users)
-                  if (_showHint)
-                    Container(
+                  // Tap hint banner
+                  Container(
                       width: double.infinity,
                       padding: const EdgeInsets.symmetric(
                         horizontal: AppSpacing.md,
