@@ -58,6 +58,9 @@
 		<true/>
 		<key>UIFileSharingEnabled</key>
 		<true/>
+		<!-- Export compliance: No encryption used -->
+		<key>ITSAppUsesNonExemptEncryption</key>
+		<false/>
 		<!-- AdMob App ID (iOS) -->
 		<key>GADApplicationIdentifier</key>
 		<string>ca-app-pub-6737616702687889~9190996284</string>

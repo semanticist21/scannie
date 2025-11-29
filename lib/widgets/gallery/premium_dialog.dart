@@ -195,11 +195,14 @@ class _PurchaseButtonState extends State<_PurchaseButton> {
       if (!mounted) return;
 
       if (result.success) {
-        // Debug mode or successful purchase
+        // Successful purchase or already premium
         AppToast.success(context, 'premium.purchaseSuccess'.tr());
         widget.onPurchaseComplete();
+      } else if (result.errorType == PurchaseErrorType.purchaseCancelled) {
+        // User cancelled - no error toast needed, just stop loading
+        debugPrint('💎 Purchase cancelled by user');
       } else {
-        // Show user-friendly error message
+        // Show user-friendly error message for actual errors
         final errorMessage = _getLocalizedErrorMessage(result.errorType);
         AppToast.error(context, errorMessage);
 

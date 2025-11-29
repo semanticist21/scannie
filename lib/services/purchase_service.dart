@@ -94,36 +94,47 @@ class PurchaseService {
 
   /// Initialize the purchase service
   Future<void> initialize() async {
-    if (_isInitialized) return;
+    if (_isInitialized) {
+      debugPrint('💎 PurchaseService already initialized');
+      return;
+    }
 
     try {
+      debugPrint('💎 Initializing PurchaseService...');
+
       // Check if in-app purchases are available
       _isAvailable = await _inAppPurchase.isAvailable();
 
       if (!_isAvailable) {
-        debugPrint('💎 In-app purchases not available');
+        debugPrint('💎 In-app purchases not available on this device');
         _isInitialized = true;
         return;
       }
 
       debugPrint('💎 In-app purchases available');
 
-      // Listen to purchase updates
+      // IMPORTANT: Listen to purchase updates FIRST before any other operations
+      // This ensures we don't miss any pending transactions from previous sessions
       _subscription = _inAppPurchase.purchaseStream.listen(
         _handlePurchaseUpdates,
+        onDone: () {
+          debugPrint('💎 Purchase stream closed');
+        },
         onError: (error) {
           debugPrint('💎 Purchase stream error: $error');
         },
       );
+      debugPrint('💎 Purchase stream listener registered');
 
       // Query product details
       await _queryProducts();
 
       // Restore purchases on startup (for returning users)
+      // This will handle any pending transactions from previous sessions
       await _restorePurchasesInternal();
 
       _isInitialized = true;
-      debugPrint('💎 PurchaseService initialized');
+      debugPrint('💎 PurchaseService initialized successfully');
     } catch (e) {
       debugPrint('💎 PurchaseService initialization failed: $e');
       _isInitialized = true; // Mark as initialized to prevent repeated failures
@@ -160,27 +171,45 @@ class PurchaseService {
 
   /// Handle purchase updates from the stream
   Future<void> _handlePurchaseUpdates(List<PurchaseDetails> purchaseDetailsList) async {
+    debugPrint('💎 Purchase stream received ${purchaseDetailsList.length} updates');
+
     for (final purchaseDetails in purchaseDetailsList) {
       debugPrint('💎 Purchase update: ${purchaseDetails.productID} - ${purchaseDetails.status}');
+      debugPrint('💎   pendingCompletePurchase: ${purchaseDetails.pendingCompletePurchase}');
 
       // Only handle our product
       if (purchaseDetails.productID != premiumProductId) {
         debugPrint('💎 Ignoring unknown product: ${purchaseDetails.productID}');
+        // Still need to complete unknown transactions to clear them
+        if (purchaseDetails.pendingCompletePurchase) {
+          await _inAppPurchase.completePurchase(purchaseDetails);
+        }
         continue;
+      }
+
+      // IMPORTANT: Complete the transaction FIRST before notifying UI
+      // This prevents iOS from re-delivering the same transaction
+      if (purchaseDetails.pendingCompletePurchase) {
+        try {
+          await _inAppPurchase.completePurchase(purchaseDetails);
+          debugPrint('💎 Transaction completed with store');
+        } catch (e) {
+          debugPrint('💎 Failed to complete transaction: $e');
+          // Continue processing - the purchase was still successful
+        }
       }
 
       switch (purchaseDetails.status) {
         case PurchaseStatus.pending:
-          debugPrint('💎 Purchase pending...');
+          debugPrint('💎 Purchase pending - waiting for user action...');
           // Don't complete the Completer yet - wait for final status
           break;
 
         case PurchaseStatus.purchased:
-          // Verify and deliver the product
+          debugPrint('💎 Purchase successful!');
           final valid = await _verifyPurchase(purchaseDetails);
           if (valid) {
             await _deliverProduct(purchaseDetails);
-            // Complete the purchase Completer with success
             _completePurchaseCompleter(PurchaseResult.success());
           } else {
             _completePurchaseCompleter(PurchaseResult.error(
@@ -191,42 +220,44 @@ class PurchaseService {
           break;
 
         case PurchaseStatus.restored:
-          // Verify and deliver the restored product
+          debugPrint('💎 Purchase restored!');
           final validRestore = await _verifyPurchase(purchaseDetails);
           if (validRestore) {
             await _deliverProduct(purchaseDetails);
-            // Complete the restore Completer with success
+            // Complete BOTH completers - iOS returns 'restored' for re-purchase of owned item
             _completeRestoreCompleter(PurchaseResult.success());
+            _completePurchaseCompleter(PurchaseResult.success());
           } else {
-            _completeRestoreCompleter(PurchaseResult.error(
+            final errorResult = PurchaseResult.error(
               PurchaseErrorType.purchaseFailed,
               'Restore verification failed',
-            ));
+            );
+            _completeRestoreCompleter(errorResult);
+            _completePurchaseCompleter(errorResult);
           }
           break;
 
         case PurchaseStatus.error:
           debugPrint('💎 Purchase error: ${purchaseDetails.error?.message}');
-          _completePurchaseCompleter(PurchaseResult.error(
+          debugPrint('💎   Error code: ${purchaseDetails.error?.code}');
+          debugPrint('💎   Error details: ${purchaseDetails.error?.details}');
+          final errorResult = PurchaseResult.error(
             PurchaseErrorType.purchaseFailed,
             purchaseDetails.error?.message ?? 'Purchase failed',
-          ));
+          );
+          _completePurchaseCompleter(errorResult);
+          _completeRestoreCompleter(errorResult);
           break;
 
         case PurchaseStatus.canceled:
-          debugPrint('💎 Purchase canceled');
-          _completePurchaseCompleter(PurchaseResult.error(
+          debugPrint('💎 Purchase canceled by user');
+          final cancelResult = PurchaseResult.error(
             PurchaseErrorType.purchaseCancelled,
             'Purchase was cancelled',
-          ));
+          );
+          _completePurchaseCompleter(cancelResult);
+          _completeRestoreCompleter(cancelResult);
           break;
-      }
-
-      // Complete the purchase transaction (required for all final states)
-      // This tells the store to finalize the transaction
-      if (purchaseDetails.pendingCompletePurchase) {
-        await _inAppPurchase.completePurchase(purchaseDetails);
-        debugPrint('💎 Purchase transaction completed');
       }
     }
   }
@@ -286,13 +317,14 @@ class PurchaseService {
   /// Note: This method waits for the actual purchase result from the store,
   /// not just the initiation of the purchase flow.
   Future<PurchaseResult> purchasePremium() async {
-    // [DISABLED FOR TESTING] Debug mode: simulate successful purchase
-    // Uncomment below to skip store communication in debug builds
-    // if (kDebugMode) {
-    //   debugPrint('💎 [DEBUG] Simulating successful purchase');
-    //   await _setPremiumStatus(true);
-    //   return PurchaseResult.success();
-    // }
+    debugPrint('💎 purchasePremium() called');
+
+    // Check if already premium - return success immediately
+    final alreadyPremium = await isPremium;
+    if (alreadyPremium) {
+      debugPrint('💎 Already premium, returning success');
+      return PurchaseResult.success();
+    }
 
     if (!_isAvailable) {
       debugPrint('💎 Store not available');
@@ -314,8 +346,11 @@ class PurchaseService {
       }
     }
 
+    debugPrint('💎 Product ready: ${_premiumProduct!.id} - ${_premiumProduct!.price}');
+
     // Cancel any existing purchase Completer
     if (_purchaseCompleter != null && !_purchaseCompleter!.isCompleted) {
+      debugPrint('💎 Cancelling existing purchase completer');
       _purchaseCompleter!.complete(PurchaseResult.error(
         PurchaseErrorType.purchaseCancelled,
         'New purchase started',
@@ -324,15 +359,14 @@ class PurchaseService {
 
     // Create new Completer to wait for actual purchase result
     _purchaseCompleter = Completer<PurchaseResult>();
+    debugPrint('💎 Created new purchase completer');
 
     try {
-      // Create purchase param for non-consumable (one-time purchase)
       final purchaseParam = PurchaseParam(
         productDetails: _premiumProduct!,
       );
 
-      // Buy non-consumable (permanent purchase)
-      // Note: This returns true if the purchase flow was INITIATED, not completed
+      debugPrint('💎 Calling buyNonConsumable...');
       final initiated = await _inAppPurchase.buyNonConsumable(
         purchaseParam: purchaseParam,
       );
@@ -340,7 +374,7 @@ class PurchaseService {
       debugPrint('💎 Purchase flow initiated: $initiated');
 
       if (!initiated) {
-        // Purchase flow failed to start
+        debugPrint('💎 Purchase flow failed to start');
         _purchaseCompleter = null;
         return PurchaseResult.error(
           PurchaseErrorType.purchaseFailed,
@@ -348,23 +382,33 @@ class PurchaseService {
         );
       }
 
+      debugPrint('💎 Waiting for purchase result from stream...');
+
       // Wait for actual purchase result from the stream
-      // Timeout after 5 minutes (in case iOS bug where stream doesn't emit on cancel)
+      // Timeout after 2 minutes - iOS may not emit cancel event
       final result = await _purchaseCompleter!.future.timeout(
-        const Duration(minutes: 5),
-        onTimeout: () {
-          debugPrint('💎 Purchase timeout - user may have cancelled without stream emit');
+        const Duration(minutes: 2),
+        onTimeout: () async {
+          debugPrint('💎 Purchase timeout after 2 minutes');
+          // Check if premium was granted during the wait
+          final isPremiumNow = await isPremium;
+          if (isPremiumNow) {
+            debugPrint('💎 Premium was granted during wait, returning success');
+            return PurchaseResult.success();
+          }
+          debugPrint('💎 No purchase detected, treating as cancellation');
           return PurchaseResult.error(
             PurchaseErrorType.purchaseCancelled,
-            'Purchase timed out. Please try again.',
+            'Purchase was cancelled or timed out.',
           );
         },
       );
 
+      debugPrint('💎 Purchase result received: ${result.success ? "success" : result.errorType}');
       _purchaseCompleter = null;
       return result;
     } catch (e) {
-      debugPrint('💎 Purchase failed: $e');
+      debugPrint('💎 Purchase exception: $e');
       _purchaseCompleter = null;
 
       final errorString = e.toString().toLowerCase();
