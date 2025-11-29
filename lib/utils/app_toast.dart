@@ -28,8 +28,6 @@ class AppToast {
       progressIndicatorColor: colors.success,
       toastDuration: const Duration(seconds: 2),
       showProgressIndicator: true,
-      height: 75,
-      width: 300,
       borderRadius: BorderRadius.circular(AppRadius.md),
       shadow: BoxShadow(
         color: Colors.black.withValues(alpha: 0.15),
@@ -63,7 +61,6 @@ class AppToast {
       progressIndicatorColor: colors.error,
       toastDuration: const Duration(seconds: 3),
       showProgressIndicator: true,
-      width: 300,
       borderRadius: BorderRadius.circular(AppRadius.md),
       shadow: BoxShadow(
         color: Colors.black.withValues(alpha: 0.15),
@@ -99,7 +96,6 @@ class AppToast {
       toastDuration: const Duration(
           seconds: 30), // Long duration, will be dismissed manually
       showProgressIndicator: true,
-      width: 300,
       borderRadius: BorderRadius.circular(AppRadius.md),
       shadow: BoxShadow(
         color: Colors.black.withValues(alpha: 0.15),

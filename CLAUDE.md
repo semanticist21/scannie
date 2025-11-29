@@ -107,19 +107,43 @@ GalleryScreen (홈)
 ## 테마 시스템
 
 ```dart
-// 간격 (EdgeInsets)
-AppSpacing.xs(4) / sm(8) / md(16) / lg(24) / xl(32) / xxl(48)
+// 간격 상수 (double)
+AppSpacing.xs  // 4px
+AppSpacing.sm  // 8px
+AppSpacing.md  // 16px (default)
+AppSpacing.lg  // 24px
+AppSpacing.xl  // 32px
+
+// 간격 EdgeInsets (직접 사용)
+AppSpacing.allMd          // EdgeInsets.all(16)
+AppSpacing.horizontalLg   // EdgeInsets.symmetric(horizontal: 24)
+AppSpacing.verticalSm     // EdgeInsets.symmetric(vertical: 8)
 
 // Gap (Row/Column 사이 간격)
 AppGap.vSm  // SizedBox(height: 8)
 AppGap.hMd  // SizedBox(width: 16)
 
 // Border Radius
-AppRadius.sm(4) / md(8) / lg(16) / xl(24) / round(999)
+AppRadius.sm   // 4px
+AppRadius.md   // 8px (default)
+AppRadius.lg   // 16px
+AppRadius.xl   // 24px
+AppRadius.round  // 999px (pills)
+AppRadius.allMd  // BorderRadius.circular(8) - 직접 사용
 
-// 다크모드 대응 색상
+// 다크모드 대응 색상 (ThemedColors)
 final colors = ThemedColors.of(context);
-Text('Title', style: AppTextStyles.h3.copyWith(color: colors.textPrimary))
+colors.background      // 배경색
+colors.surface         // 카드/컨테이너
+colors.textPrimary     // 주 텍스트
+colors.textSecondary   // 보조 텍스트
+colors.border          // 테두리
+colors.success / warning / error  // 상태 색상
+
+// 그림자
+AppShadows.card    // 카드용 약한 그림자
+AppShadows.dialog  // 다이얼로그용 강한 그림자
+AppShadows.subtle  // 미세한 그림자
 ```
 
 **하드코딩 금지**: 숫자 값 직접 사용 금지 → 디자인 토큰 사용
@@ -162,6 +186,11 @@ import '../utils/app_toast.dart';
 AppToast.success(context, 'Success message');
 AppToast.error(context, 'Error message');
 AppToast.show(context, 'Message', isError: false);  // isError로 타입 결정
+
+// 진행 상태 표시 (긴 작업용) - 반환된 인스턴스로 수동 dismiss
+final notification = AppToast.info(context, 'Processing...');
+await longOperation();
+notification.dismiss();
 ```
 
 ### 다이얼로그
@@ -188,6 +217,35 @@ RenameDialog.show(context: context, currentName: name, onSave: (newName) async {
 
 // 텍스트 입력
 TextInputDialog.show(context: context, title: 'Save', onSave: (value) async { ... });
+```
+
+### 모달 (WoltModalSheet 기반)
+```dart
+import '../utils/app_modal.dart';
+
+// 센터 다이얼로그 (blur 배경)
+AppModal.showDialog(
+  context: context,
+  pageListBuilder: (modalContext) => [
+    WoltModalSheetPage(
+      backgroundColor: ThemedColors.of(modalContext).surface,
+      child: YourContent(),
+    ),
+  ],
+);
+
+// 바텀시트 (blur 배경)
+AppModal.showBottomSheet(
+  context: context,
+  pageListBuilder: (modalContext) => [
+    WoltModalSheetPage(
+      child: Column(children: [
+        AppModal.buildDragHandle(),  // 드래그 핸들
+        YourContent(),
+      ]),
+    ),
+  ],
+);
 ```
 
 ### Race Condition 방지
