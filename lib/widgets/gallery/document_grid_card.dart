@@ -353,12 +353,17 @@ class DocumentGridCard extends StatelessWidget {
 
       // Check if file exists
       if (imageFile.existsSync()) {
-        return Image.file(
-          imageFile,
-          fit: BoxFit.cover,
-          cacheWidth: 450,
-          errorBuilder: (context, error, stackTrace) {
-            return _buildPlaceholder(context);
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final pixelRatio = MediaQuery.devicePixelRatioOf(context);
+            return Image.file(
+              imageFile,
+              fit: BoxFit.cover,
+              cacheWidth: (constraints.maxWidth * pixelRatio).round(),
+              errorBuilder: (context, error, stackTrace) {
+                return _buildPlaceholder(context);
+              },
+            );
           },
         );
       }

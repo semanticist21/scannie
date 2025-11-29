@@ -399,20 +399,25 @@ class _ScanCardState extends State<ScanCard> with SingleTickerProviderStateMixin
 
       // Check if file exists
       if (imageFile.existsSync()) {
-        return Image.file(
-          imageFile,
-          fit: BoxFit.cover,
-          cacheWidth: 250,
-          errorBuilder: (context, error, stackTrace) {
-            return Container(
-              color: colors.background,
-              child: Center(
-                child: Icon(
-                  LucideIcons.fileText,
-                  color: colors.textHint,
-                  size: 28,
-                ),
-              ),
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final pixelRatio = MediaQuery.devicePixelRatioOf(context);
+            return Image.file(
+              imageFile,
+              fit: BoxFit.cover,
+              cacheWidth: (constraints.maxWidth * pixelRatio).round(),
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  color: colors.background,
+                  child: Center(
+                    child: Icon(
+                      LucideIcons.fileText,
+                      color: colors.textHint,
+                      size: 28,
+                    ),
+                  ),
+                );
+              },
             );
           },
         );

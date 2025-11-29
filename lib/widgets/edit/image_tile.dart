@@ -39,10 +39,15 @@ class ImageTile extends StatelessWidget {
             onTap: onTap,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(AppRadius.md - 1),
-              child: Image.file(
-                File(imagePath),
-                fit: BoxFit.cover,
-                cacheWidth: 600,
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final pixelRatio = MediaQuery.devicePixelRatioOf(context);
+                  return Image.file(
+                    File(imagePath),
+                    fit: BoxFit.cover,
+                    cacheWidth: (constraints.maxWidth * pixelRatio).round(),
+                  );
+                },
               ),
             ),
           ),

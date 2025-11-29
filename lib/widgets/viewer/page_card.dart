@@ -31,20 +31,25 @@ class PageCard extends StatelessWidget {
   Widget _buildCardContent(BuildContext context) {
     final colors = ThemedColors.of(context);
     final imageWidget = imageFile.existsSync()
-        ? Image.file(
-            imageFile,
-            fit: BoxFit.cover,
-            cacheWidth: isListView ? 600 : 1350,
-            errorBuilder: (context, error, stackTrace) {
-              return Container(
-                color: colors.background,
-                child: Center(
-                  child: Icon(
-                    LucideIcons.imageOff,
-                    size: isListView ? 80 : 48,
-                    color: colors.textHint,
-                  ),
-                ),
+        ? LayoutBuilder(
+            builder: (context, constraints) {
+              final pixelRatio = MediaQuery.devicePixelRatioOf(context);
+              return Image.file(
+                imageFile,
+                fit: BoxFit.cover,
+                cacheWidth: (constraints.maxWidth * pixelRatio).round(),
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    color: colors.background,
+                    child: Center(
+                      child: Icon(
+                        LucideIcons.imageOff,
+                        size: isListView ? 80 : 48,
+                        color: colors.textHint,
+                      ),
+                    ),
+                  );
+                },
               );
             },
           )
