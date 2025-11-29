@@ -6,11 +6,14 @@ import '../theme/app_theme.dart';
 
 /// Custom dialog type with blur background
 class _BlurDialogType extends WoltDialogType {
-  const _BlurDialogType()
+  _BlurDialogType(BuildContext context)
       : super(
-          shapeBorder: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(AppRadius.lg)),
-            side: BorderSide(color: AppColors.border, width: 1),
+          shapeBorder: RoundedRectangleBorder(
+            borderRadius: const BorderRadius.all(Radius.circular(AppRadius.lg)),
+            side: BorderSide(
+              color: ThemedColors.of(context).border,
+              width: 1,
+            ),
           ),
         );
 
@@ -36,11 +39,15 @@ class _BlurDialogType extends WoltDialogType {
 
 /// Custom bottom sheet type with blur background
 class _BlurBottomSheetType extends WoltBottomSheetType {
-  const _BlurBottomSheetType()
+  _BlurBottomSheetType(BuildContext context)
       : super(
-          shapeBorder: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
-            side: BorderSide(color: AppColors.border, width: 1),
+          shapeBorder: RoundedRectangleBorder(
+            borderRadius:
+                const BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
+            side: BorderSide(
+              color: ThemedColors.of(context).border,
+              width: 1,
+            ),
           ),
           showDragHandle: false, // We draw our own drag handle in content
         );
@@ -78,7 +85,7 @@ class AppModal {
     return WoltModalSheet.show<T>(
       context: context,
       barrierDismissible: barrierDismissible,
-      modalTypeBuilder: (_) => const _BlurDialogType(),
+      modalTypeBuilder: (ctx) => _BlurDialogType(ctx),
       pageListBuilder: pageListBuilder,
     );
   }
@@ -92,7 +99,7 @@ class AppModal {
     return WoltModalSheet.show<T>(
       context: context,
       barrierDismissible: barrierDismissible,
-      modalTypeBuilder: (_) => const _BlurBottomSheetType(),
+      modalTypeBuilder: (ctx) => _BlurBottomSheetType(ctx),
       pageListBuilder: pageListBuilder,
     );
   }
