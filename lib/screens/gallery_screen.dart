@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
@@ -9,23 +7,16 @@ import 'package:cunning_document_scanner_plus/cunning_document_scanner_plus.dart
 import 'package:easy_localization/easy_localization.dart';
 import '../models/scan_document.dart';
 import '../services/document_storage.dart';
-import '../services/pdf_generator.dart';
 import '../services/pdf_settings_service.dart';
+import '../services/export_service.dart';
 import '../theme/app_theme.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../widgets/gallery/scan_card.dart';
 import '../widgets/common/empty_state.dart';
 import '../widgets/gallery/document_grid_card.dart';
-import 'package:printing/printing.dart';
 import 'package:uuid/uuid.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart' as path;
-import 'package:open_file_manager/open_file_manager.dart';
-import 'package:media_store_plus/media_store_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:archive/archive.dart';
-import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import '../utils/app_toast.dart';
 import '../widgets/common/pdf_options_sheet.dart';
 import '../widgets/common/rename_dialog.dart';
@@ -35,24 +26,6 @@ import '../widgets/common/text_input_dialog.dart';
 import '../widgets/gallery/premium_dialog.dart';
 import '../widgets/gallery/settings_sheet.dart';
 import '../main.dart' show routeObserver;
-
-/// Creates ZIP archive from image paths in a separate isolate
-Future<List<int>?> _createZipArchiveGallery(List<String> imagePaths) async {
-  final archive = Archive();
-
-  for (int i = 0; i < imagePaths.length; i++) {
-    final imageFile = File(imagePaths[i]);
-    if (!imageFile.existsSync()) continue;
-
-    final bytes = imageFile.readAsBytesSync();
-    final extension = imagePaths[i].split('.').last.toLowerCase();
-    final fileName = 'page_${(i + 1).toString().padLeft(2, '0')}.$extension';
-
-    archive.addFile(ArchiveFile(fileName, bytes.length, bytes));
-  }
-
-  return ZipEncoder().encode(archive);
-}
 
 /// Gallery screen displaying scanned documents
 class GalleryScreen extends StatefulWidget {
@@ -882,146 +855,41 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
     }
   }
 
-  /// Export document to PDF
+  /// Share PDF via system share sheet
   Future<void> _exportToPdf(ScanDocument document) async {
     final notification = AppToast.info(context, 'gallery.generatingPdf'.tr());
 
-    try {
-      // Generate PDF with document settings
-      final pdfFile = await PdfGenerator.generatePdf(
-        imagePaths: document.imagePaths,
-        documentName: document.name,
-        quality: document.pdfQuality,
-        pageSize: document.pdfPageSize,
-        orientation: document.pdfOrientation,
-        imageFit: document.pdfImageFit,
-      );
+    final result = await ExportService.instance.sharePdf(document);
 
-      notification.dismiss();
-      if (!mounted) return;
+    notification.dismiss();
+    if (!mounted) return;
 
-      // Generate filename for sharing
-      final timestamp =
-          DateTime.now().toString().substring(0, 19).replaceAll(':', '-');
-      final fileName = '${document.name}_$timestamp.pdf';
-
-      // Share the PDF using the printing package
-      await Printing.sharePdf(
-        bytes: await pdfFile.readAsBytes(),
-        filename: fileName,
-      );
-
-      // No snackbar for share - dialog is self-explanatory
-    } catch (e) {
-      notification.dismiss();
-      debugPrint('Error exporting PDF: $e');
-      if (!mounted) return;
-      AppToast.show(context, 'toast.failedToExportPdf'.tr(), isError: true);
-    }
+    AppToast.showExportResult(context, result);
   }
 
-  /// Save PDF to Downloads folder using MediaStore (no permission required)
+  /// Save PDF using system file picker (user chooses location)
   Future<void> _savePdfLocally(ScanDocument document) async {
     final notification = AppToast.info(context, 'gallery.generatingPdf'.tr());
 
-    try {
-      // Generate PDF with document settings
-      final pdfFile = await PdfGenerator.generatePdf(
-        imagePaths: document.imagePaths,
-        documentName: document.name,
-        quality: document.pdfQuality,
-        pageSize: document.pdfPageSize,
-        orientation: document.pdfOrientation,
-        imageFit: document.pdfImageFit,
-      );
+    final result = await ExportService.instance.savePdfWithPicker(document);
 
-      // Generate filename
-      final timestamp =
-          DateTime.now().toString().substring(0, 19).replaceAll(':', '-');
-      final fileName = '${document.name}_$timestamp.pdf';
+    notification.dismiss();
+    if (!mounted) return;
 
-      // Copy to new temp file with proper name
-      final tempDir = await getTemporaryDirectory();
-      final tempFile = File(path.join(tempDir.path, fileName));
-      await pdfFile.copy(tempFile.path);
-
-      // Initialize MediaStore
-      await MediaStore.ensureInitialized();
-      MediaStore.appFolder = 'Scannie';
-
-      // Save to Downloads folder using MediaStore (no permission required!)
-      final mediaStore = MediaStore();
-      final saveInfo = await mediaStore.saveFile(
-        tempFilePath: tempFile.path,
-        dirType: DirType.download,
-        dirName: DirName.download,
-        relativePath: FilePath.root, // Save to root of Downloads folder
-      );
-
-      debugPrint('PDF saved to MediaStore: ${saveInfo?.uri}');
-
-      notification.dismiss();
-      // Open file manager to show the downloaded file
-      if (!mounted) return;
-      await openFileManager();
-    } catch (e) {
-      notification.dismiss();
-      debugPrint('Error saving PDF: $e');
-      if (!mounted) return;
-      AppToast.show(context, 'toast.failedToSavePdf'.tr(), isError: true);
-    }
+    AppToast.showExportResult(context, result);
   }
 
-  /// Save images as ZIP to Downloads folder
+  /// Save ZIP using system file picker (user chooses location)
   Future<void> _saveZipDocument(ScanDocument document) async {
     if (!mounted) return;
     final notification = AppToast.info(context, 'gallery.preparingZip'.tr());
 
-    try {
-      // Create archive in separate isolate
-      final zipData =
-          await compute(_createZipArchiveGallery, document.imagePaths);
-      if (zipData == null) {
-        notification.dismiss();
-        if (!mounted) return;
-        AppToast.show(context, 'toast.failedToCreateZip'.tr(), isError: true);
-        return;
-      }
+    final result = await ExportService.instance.saveZipWithPicker(document);
 
-      // Generate filename with timestamp
-      final timestamp =
-          DateTime.now().toString().substring(0, 19).replaceAll(':', '-');
-      final fileName = '${document.name}_$timestamp.zip';
+    notification.dismiss();
+    if (!mounted) return;
 
-      // Save to temp file
-      final tempDir = await getTemporaryDirectory();
-      final tempFile = File(path.join(tempDir.path, fileName));
-      await tempFile.writeAsBytes(zipData);
-
-      // Initialize MediaStore
-      await MediaStore.ensureInitialized();
-      MediaStore.appFolder = 'Scannie';
-
-      // Save to Downloads folder using MediaStore
-      final mediaStore = MediaStore();
-      final saveInfo = await mediaStore.saveFile(
-        tempFilePath: tempFile.path,
-        dirType: DirType.download,
-        dirName: DirName.download,
-        relativePath: FilePath.root,
-      );
-
-      debugPrint('ZIP saved to MediaStore: ${saveInfo?.uri}');
-
-      notification.dismiss();
-      // Open file manager to show the downloaded file
-      await openFileManager();
-    } catch (e) {
-      notification.dismiss();
-      debugPrint('Error saving ZIP: $e');
-      if (!mounted) return;
-      AppToast.show(context, 'toast.failedToSaveZip'.tr(), isError: true);
-    }
+    AppToast.showExportResult(context, result);
   }
 
   /// Save individual images to gallery
@@ -1036,30 +904,11 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
       cancelText: 'common.cancel'.tr(),
       confirmText: 'common.download'.tr(),
       onConfirm: () async {
-        try {
-          int savedCount = 0;
+        final result = await ExportService.instance
+            .saveImagesToGallery(document.imagePaths);
 
-          for (int i = 0; i < document.imagePaths.length; i++) {
-            final imageFile = File(document.imagePaths[i]);
-            if (!await imageFile.exists()) continue;
-
-            final result = await ImageGallerySaverPlus.saveFile(imageFile.path);
-            if (result['isSuccess'] == true) {
-              savedCount++;
-            }
-          }
-
-          if (!mounted) return;
-          if (savedCount == 0) {
-            AppToast.show(context, 'toast.failedToSaveImages'.tr(),
-                isError: true);
-          }
-        } catch (e) {
-          debugPrint('Error saving images: $e');
-          if (!mounted) return;
-          AppToast.show(context, 'toast.failedToSaveImages'.tr(),
-              isError: true);
-        }
+        if (!mounted) return;
+        AppToast.showExportResult(context, result);
       },
     );
   }

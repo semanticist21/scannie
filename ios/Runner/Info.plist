@@ -53,6 +53,11 @@
 		<string>Scannie needs permission to save scanned documents to your photo library</string>
 		<key>UIStatusBarHidden</key>
 		<false/>
+		<!-- Enable file sharing and document access in Files app -->
+		<key>LSSupportsOpeningDocumentsInPlace</key>
+		<true/>
+		<key>UIFileSharingEnabled</key>
+		<true/>
 		<!-- AdMob App ID (iOS) -->
 		<key>GADApplicationIdentifier</key>
 		<string>ca-app-pub-6737616702687889~9190996284</string>

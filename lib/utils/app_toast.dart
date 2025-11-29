@@ -4,6 +4,7 @@ import 'package:elegant_notification/resources/arrays.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
+import '../services/export_service.dart';
 
 /// Centralized toast notification utility for consistent app-wide messaging
 class AppToast {
@@ -120,6 +121,50 @@ class AppToast {
       error(context, message);
     } else {
       success(context, message);
+    }
+  }
+
+  /// Show toast based on ExportResult
+  /// Returns true if result was successful (for convenience)
+  static bool showExportResult(BuildContext context, ExportResult result) {
+    switch (result.type) {
+      case ExportResultType.success:
+        // Success cases are often silent (file manager opens, etc.)
+        // But for image saves, show count
+        if (result.savedCount != null && result.totalCount != null) {
+          success(
+            context,
+            'toast.imagesSaved'.tr(namedArgs: {
+              'count': result.savedCount.toString(),
+              'total': result.totalCount.toString(),
+            }),
+          );
+        }
+        return true;
+
+      case ExportResultType.cancelled:
+        // User cancelled - no toast needed
+        return false;
+
+      case ExportResultType.errorNoImages:
+        error(context, 'toast.noImagesToExport'.tr());
+        return false;
+
+      case ExportResultType.errorGeneratingPdf:
+        error(context, 'toast.failedToExportPdf'.tr());
+        return false;
+
+      case ExportResultType.errorCreatingZip:
+        error(context, 'toast.failedToCreateZip'.tr());
+        return false;
+
+      case ExportResultType.errorSavingFile:
+        error(context, 'toast.failedToSavePdf'.tr());
+        return false;
+
+      case ExportResultType.errorSavingImages:
+        error(context, 'toast.failedToSaveImages'.tr());
+        return false;
     }
   }
 }
