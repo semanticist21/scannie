@@ -81,13 +81,17 @@ class TextInputDialog {
     required String title,
     required String description,
     required String initialValue,
-    String placeholder = 'Enter text',
-    String cancelText = 'Cancel',
-    String confirmText = 'Save',
+    String? placeholder,
+    String? cancelText,
+    String? confirmText,
     required Future<void> Function(String value) onSave,
   }) {
     final TextEditingController controller =
         TextEditingController(text: initialValue);
+
+    final actualPlaceholder = placeholder ?? 'gallery.documentNamePlaceholder'.tr();
+    final actualCancelText = cancelText ?? 'common.cancel'.tr();
+    final actualConfirmText = confirmText ?? 'common.save'.tr();
 
     AppModal.showDialog(
       context: context,
@@ -103,9 +107,9 @@ class TextInputDialog {
             controller: controller,
             title: title,
             description: description,
-            placeholder: placeholder,
-            cancelText: cancelText,
-            confirmText: confirmText,
+            placeholder: actualPlaceholder,
+            cancelText: actualCancelText,
+            confirmText: actualConfirmText,
             modalContext: modalContext,
             onSave: onSave,
           ),

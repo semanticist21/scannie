@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:wolt_modal_sheet/wolt_modal_sheet.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../utils/app_modal.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_theme.dart';
@@ -15,11 +16,14 @@ class ConfirmDialog {
     required BuildContext context,
     required String title,
     required String message,
-    String cancelText = 'Cancel',
-    String confirmText = 'Confirm',
+    String? cancelText,
+    String? confirmText,
     bool isDestructive = false,
     required AsyncCallback onConfirm,
   }) {
+    final actualCancelText = cancelText ?? 'common.cancel'.tr();
+    final actualConfirmText = confirmText ?? 'common.confirm'.tr();
+
     AppModal.showDialog(
       context: context,
       pageListBuilder: (modalContext) {
@@ -54,13 +58,13 @@ class ConfirmDialog {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     ShadButton.outline(
-                      child: Text(cancelText),
+                      child: Text(actualCancelText),
                       onPressed: () => Navigator.of(modalContext).pop(),
                     ),
                     const SizedBox(width: AppSpacing.sm),
                     if (isDestructive)
                       ShadButton.destructive(
-                        child: Text(confirmText),
+                        child: Text(actualConfirmText),
                         onPressed: () async {
                           await onConfirm();
                           if (modalContext.mounted) {
@@ -70,7 +74,7 @@ class ConfirmDialog {
                       )
                     else
                       ShadButton(
-                        child: Text(confirmText),
+                        child: Text(actualConfirmText),
                         onPressed: () async {
                           await onConfirm();
                           if (modalContext.mounted) {
@@ -94,11 +98,14 @@ class ConfirmDialog {
     required BuildContext context,
     required String title,
     required String message,
-    String cancelText = 'Cancel',
-    String confirmText = 'Confirm',
+    String? cancelText,
+    String? confirmText,
     bool isDestructive = false,
     bool dismissable = true,
   }) async {
+    final actualCancelText = cancelText ?? 'common.cancel'.tr();
+    final actualConfirmText = confirmText ?? 'common.confirm'.tr();
+
     final result = await AppModal.showDialog<bool>(
       context: context,
       barrierDismissible: dismissable,
@@ -134,18 +141,18 @@ class ConfirmDialog {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     ShadButton.outline(
-                      child: Text(cancelText),
+                      child: Text(actualCancelText),
                       onPressed: () => Navigator.of(modalContext).pop(false),
                     ),
                     const SizedBox(width: AppSpacing.sm),
                     if (isDestructive)
                       ShadButton.destructive(
-                        child: Text(confirmText),
+                        child: Text(actualConfirmText),
                         onPressed: () => Navigator.of(modalContext).pop(true),
                       )
                     else
                       ShadButton(
-                        child: Text(confirmText),
+                        child: Text(actualConfirmText),
                         onPressed: () => Navigator.of(modalContext).pop(true),
                       ),
                   ],
