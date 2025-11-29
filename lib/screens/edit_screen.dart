@@ -8,7 +8,9 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:flutter_reorderable_grid_view/widgets/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:path/path.dart' as path;
 import '../utils/app_toast.dart';
+import '../utils/path_helper.dart';
 import '../models/scan_document.dart';
 import '../services/document_storage.dart';
 import '../services/pdf_settings_service.dart';
@@ -227,6 +229,83 @@ class _EditScreenState extends State<EditScreen> {
     _tempFilePaths.clear();
   }
 
+  /// Copy images to permanent storage (Documents/Scannie/{documentId}/)
+  /// Returns list of new permanent paths
+  /// This prevents data loss when app updates change sandbox UUID on iOS
+  Future<List<String>> _copyImagesToPermanentStorage(String documentId) async {
+    // Use PathHelper for consistent path handling
+    final scannieDir = await PathHelper.ensureDocumentDir(documentId);
+    final scannieDirPath = scannieDir.path;
+
+    final List<String> permanentPaths = [];
+
+    for (int i = 0; i < _imagePaths.length; i++) {
+      final originalPath = _imagePaths[i];
+      final originalFile = File(originalPath);
+
+      // Check if already in permanent storage for this document
+      // Use PathHelper to handle both old and new path formats
+      if (PathHelper.isInScannieDir(originalPath) && originalPath.contains(documentId)) {
+        // Already in permanent storage for this document, keep as-is
+        permanentPaths.add(originalPath);
+        debugPrint('📁 Already permanent: $originalPath');
+        continue;
+      }
+
+      if (!await originalFile.exists()) {
+        debugPrint('⚠️ Source file not found: $originalPath');
+        continue;
+      }
+
+      // Generate new filename: page_001.jpg, page_002.jpg, etc.
+      final extension = path.extension(originalPath).toLowerCase();
+      final newFileName = 'page_${(i + 1).toString().padLeft(3, '0')}$extension';
+      final newPath = path.join(scannieDirPath, newFileName);
+
+      try {
+        // Copy file to permanent location
+        await originalFile.copy(newPath);
+        permanentPaths.add(newPath);
+        debugPrint('📁 Copied: $originalPath → $newPath');
+      } catch (e) {
+        debugPrint('❌ Failed to copy $originalPath: $e');
+        // If copy fails, keep original path as fallback
+        permanentPaths.add(originalPath);
+      }
+    }
+
+    return permanentPaths;
+  }
+
+  /// Delete old images from permanent storage when document is updated
+  /// Only deletes images that are no longer used (not in currentPaths)
+  Future<void> _cleanupOldPermanentImages(String documentId, List<String> oldPaths, List<String> currentPaths) async {
+    // Create a set of current paths for fast lookup (normalize to compare correctly)
+    final currentPathsSet = currentPaths.map((p) => path.basename(p)).toSet();
+
+    for (final oldPath in oldPaths) {
+      // Skip if this file is still being used (compare by filename)
+      final oldBasename = path.basename(oldPath);
+      if (currentPathsSet.contains(oldBasename)) {
+        debugPrint('📁 Keeping current file: $oldPath');
+        continue;
+      }
+
+      // Only delete files in our Scannie directory
+      if (PathHelper.isInScannieDir(oldPath)) {
+        try {
+          final file = File(oldPath);
+          if (await file.exists()) {
+            await file.delete();
+            debugPrint('🗑️ Deleted old permanent file: $oldPath');
+          }
+        } catch (e) {
+          debugPrint('⚠️ Failed to delete old file: $oldPath - $e');
+        }
+      }
+    }
+  }
+
   /// Check if ad should be shown on save
   /// Ad is shown when:
   /// Determines if ad should show on save:
@@ -279,13 +358,23 @@ class _EditScreenState extends State<EditScreen> {
       final index = documents.indexWhere((d) => d.id == _existingDocumentId);
       if (index != -1) {
         final existingDoc = documents[index];
+
+        // Copy images to permanent storage first (prevents iOS sandbox path change issues)
+        final permanentPaths = await _copyImagesToPermanentStorage(_existingDocumentId!);
+
+        // Clean up old images that are no longer used (not in new permanentPaths)
+        await _cleanupOldPermanentImages(_existingDocumentId!, existingDoc.imagePaths, permanentPaths);
+
         final updatedDocument = existingDoc.copyWith(
-          imagePaths: _imagePaths,
+          imagePaths: permanentPaths,
           createdAt: DateTime.now(),
           isProcessed: true,
         );
         documents[index] = updatedDocument;
         await DocumentStorage.saveDocuments(documents);
+
+        // Clean up temp files after successful save
+        await _cleanupTempFiles();
 
         if (mounted) {
           AppToast.show(context, 'edit.scanSaved'.tr());
@@ -315,12 +404,18 @@ class _EditScreenState extends State<EditScreen> {
         // Get default PDF settings
         final pdfSettings = await PdfSettingsService.getInstance();
 
+        // Generate document ID first for permanent storage path
+        final documentId = const Uuid().v7();
+
+        // Copy images to permanent storage (prevents iOS sandbox path change issues)
+        final permanentPaths = await _copyImagesToPermanentStorage(documentId);
+
         // Create new scan document with default PDF settings
         final newDocument = ScanDocument(
-          id: const Uuid().v7(),
+          id: documentId,
           name: documentName,
           createdAt: DateTime.now(),
-          imagePaths: _imagePaths,
+          imagePaths: permanentPaths,
           isProcessed: true,
           pdfQuality: pdfSettings.defaultQuality,
           pdfPageSize: pdfSettings.defaultPageSize,
@@ -333,6 +428,9 @@ class _EditScreenState extends State<EditScreen> {
         final documents = await DocumentStorage.loadDocuments();
         documents.insert(0, newDocument);
         await DocumentStorage.saveDocuments(documents);
+
+        // Clean up temp files after successful save
+        await _cleanupTempFiles();
 
         // Navigate directly to viewer, removing EditScreen from stack
         // This ensures back button from viewer goes to GalleryScreen, not EditScreen

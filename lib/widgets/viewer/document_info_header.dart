@@ -5,6 +5,7 @@ import '../../models/scan_document.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/app_text_styles.dart';
+import '../common/document_tag.dart';
 
 /// Document info header widget
 class DocumentInfoHeader extends StatelessWidget {
@@ -67,22 +68,10 @@ class DocumentInfoHeader extends StatelessWidget {
                     const SizedBox(height: AppSpacing.xs),
                     Align(
                       alignment: Alignment.centerLeft,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppSpacing.sm,
-                          vertical: AppSpacing.xxs,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Color(document.tagColor!).withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(AppRadius.xs),
-                        ),
-                        child: Text(
-                          document.tagText!,
-                          style: AppTextStyles.caption.copyWith(
-                            color: Color(document.tagColor!),
-                            fontWeight: AppFontWeight.medium,
-                          ),
-                        ),
+                      child: DocumentTag(
+                        text: document.tagText!,
+                        color: document.tagColor!,
+                        size: DocumentTagSize.medium,
                       ),
                     ),
                   ],

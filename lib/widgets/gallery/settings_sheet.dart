@@ -295,42 +295,47 @@ class _SettingsSheetState extends State<SettingsSheet> {
     final colors = ThemedColors.of(context);
 
     return SafeArea(
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Handle bar
-            Center(
-              child: Container(
-                margin: const EdgeInsets.only(top: AppSpacing.sm),
-                width: 32,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: colors.border,
-                  borderRadius: BorderRadius.circular(AppRadius.xs),
-                ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Handle bar - FIXED (not scrollable, for drag-to-close)
+          Center(
+            child: Container(
+              margin: const EdgeInsets.only(top: AppSpacing.sm),
+              width: 32,
+              height: 4,
+              decoration: BoxDecoration(
+                color: colors.border,
+                borderRadius: BorderRadius.circular(AppRadius.xs),
               ),
             ),
-            // Header
-            Padding(
-              padding: const EdgeInsets.fromLTRB(
-                AppSpacing.lg,
-                AppSpacing.md,
-                AppSpacing.lg,
-                AppSpacing.sm,
-              ),
-              child: Text(
-                'settings.title'.tr(),
-                style: AppTextStyles.bodyMedium.copyWith(
-                  fontWeight: AppFontWeight.semiBold,
-                  color: colors.textPrimary,
-                ),
+          ),
+          // Header - FIXED
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.lg,
+              AppSpacing.md,
+              AppSpacing.lg,
+              AppSpacing.sm,
+            ),
+            child: Text(
+              'settings.title'.tr(),
+              style: AppTextStyles.bodyMedium.copyWith(
+                fontWeight: AppFontWeight.semiBold,
+                color: colors.textPrimary,
               ),
             ),
-            Divider(height: 1, color: colors.border),
+          ),
+          Divider(height: 1, color: colors.border),
 
-            // Premium section
+          // Scrollable content area
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Premium section
             Padding(
               padding: const EdgeInsets.all(AppSpacing.lg),
               child: Column(
@@ -746,21 +751,24 @@ class _SettingsSheetState extends State<SettingsSheet> {
             ),
             const SizedBox(height: AppSpacing.sm),
 
-            // Version info (at bottom)
-            if (_versionString.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(bottom: AppSpacing.lg),
-                child: Center(
-                  child: Text(
-                    _versionString,
-                    style: AppTextStyles.caption.copyWith(
-                      color: colors.textHint,
+                  // Version info (at bottom)
+                  if (_versionString.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: AppSpacing.lg),
+                      child: Center(
+                        child: Text(
+                          _versionString,
+                          style: AppTextStyles.caption.copyWith(
+                            color: colors.textHint,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
+                ],
               ),
-          ],
-        ),
+            ),
+          ),
+        ],
       ),
     );
   }

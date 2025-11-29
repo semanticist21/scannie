@@ -8,6 +8,7 @@ import '../../theme/app_theme.dart';
 import '../../theme/app_text_styles.dart';
 import '../../models/context_menu_item.dart';
 import '../common/context_menu_sheet.dart';
+import '../common/document_tag.dart';
 
 /// Grid card for displaying a document in grid view
 class DocumentGridCard extends StatelessWidget {
@@ -146,26 +147,10 @@ class DocumentGridCard extends StatelessWidget {
                         ),
                         if (document.hasTag) ...[
                           const SizedBox(height: AppSpacing.xs),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: AppSpacing.sm,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Color(document.tagColor ?? 0xFF6B7280),
-                              borderRadius: BorderRadius.circular(AppRadius.sm),
-                            ),
-                            child: Transform.translate(
-                              offset: const Offset(0, -1),
-                              child: Text(
-                                document.tagText!,
-                                style: TextStyle(
-                                  color: _getContrastColor(Color(document.tagColor ?? 0xFF6B7280)),
-                                  fontWeight: AppFontWeight.medium,
-                                  fontSize: AppFontSize.xxs,
-                                ),
-                              ),
-                            ),
+                          DocumentTag(
+                            text: document.tagText!,
+                            color: document.tagColor ?? 0xFF6B7280,
+                            size: DocumentTagSize.small,
                           ),
                         ],
                       ],
@@ -386,10 +371,5 @@ class DocumentGridCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Color _getContrastColor(Color backgroundColor) {
-    final luminance = backgroundColor.computeLuminance();
-    return luminance > 0.5 ? AppColors.black : AppColors.white;
   }
 }

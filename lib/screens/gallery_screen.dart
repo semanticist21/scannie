@@ -61,13 +61,19 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
   PdfImageFit _defaultPdfImageFit = PdfImageFit.contain;
   PdfMargin _defaultPdfMargin = PdfMargin.none;
 
-  // Filtered documents for search
+  // Filtered documents for search (searches name and tag)
   List<ScanDocument> get _filteredDocuments {
     if (_searchQuery.isEmpty) return _documents;
     final query = _searchQuery.toLowerCase();
-    return _documents
-        .where((doc) => doc.name.toLowerCase().contains(query))
-        .toList();
+    return _documents.where((doc) {
+      // Search in document name
+      if (doc.name.toLowerCase().contains(query)) return true;
+      // Search in tag text
+      if (doc.tagText != null && doc.tagText!.toLowerCase().contains(query)) {
+        return true;
+      }
+      return false;
+    }).toList();
   }
 
   @override
