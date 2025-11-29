@@ -46,16 +46,16 @@ xcrun altool --upload-app --type ios -f build/ios/ipa/Scannie.ipa \
 open build/app/outputs/bundle/release/
 ```
 
-⚠️ **Claude는 `flutter run` 절대 실행 금지** - 사용자가 직접 실행합니다!
+**Claude는 `flutter run` 절대 실행 금지** - 사용자가 직접 실행합니다!
 
 ## 핵심 규칙
 
 ### 필수 사항
-- ✅ shadcn_ui 컴포넌트 우선 (ShadButton, ShadBadge, LucideIcons)
-- ✅ 테마 시스템 사용 (`AppSpacing`, `AppColors`, `AppTextStyles`)
-- ✅ `flutter analyze` 통과 필수 - 에러/경고 0개 확인
-- ✅ 토스트는 `AppToast` 유틸리티만 사용
-- ✅ 다이얼로그는 공통 위젯 사용 (`ConfirmDialog`, `RenameDialog`, `TextInputDialog`)
+- shadcn_ui 컴포넌트 우선 (ShadButton, ShadBadge, LucideIcons)
+- 테마 시스템 사용 (`AppSpacing`, `AppColors`, `AppTextStyles`)
+- `flutter analyze` 통과 필수 - 에러/경고 0개 확인
+- 토스트는 `AppToast` 유틸리티만 사용
+- 다이얼로그는 공통 위젯 사용 (`ConfirmDialog`, `RenameDialog`, `TextInputDialog`)
 
 ### 금지 사항
 ```dart
@@ -107,10 +107,39 @@ GalleryScreen (홈)
   → 문서 메뉴 → Share/Download PDF
 ```
 
-### 싱글톤 서비스
+### 싱글톤 서비스 & 초기화 순서 (main.dart)
+```dart
+await EasyLocalization.ensureInitialized();
+await ThemeService.instance.initialize();
+await AdService.instance.initialize();
+await PurchaseService.instance.initialize();  // 마지막
+```
+
 - `AdService.instance` - AdMob 광고 관리
 - `PurchaseService.instance` - 인앱 결제 관리
 - `ThemeService` - 테마 상태 관리
+
+## 인앱 결제 (IAP)
+
+### 구조
+- `PurchaseService.instance` - 싱글톤
+- `purchaseStream` 기반 비동기 처리 (Completer로 Future 변환)
+- `buyNonConsumable()` → 구매 시작만 반환, 실제 결과는 스트림으로
+
+### 핵심 주의사항
+```dart
+// ❌ WRONG - completer 먼저 complete하면 트랜잭션 미완료
+_completePurchaseCompleter(result);
+await _inAppPurchase.completePurchase(purchaseDetails);
+
+// ✅ CORRECT - completePurchase 먼저 호출!
+await _inAppPurchase.completePurchase(purchaseDetails);
+_completePurchaseCompleter(result);
+```
+
+- iOS에서 이미 구매한 non-consumable 재구매 시 `restored` 상태 반환 (not `purchased`)
+- `restored` 상태에서 `_purchaseCompleter`도 complete 해야 함
+- 디버깅: 콘솔에서 `💎` 로그 확인
 
 ## 테마 시스템
 
@@ -171,7 +200,6 @@ AppShadows.subtle  // 미세한 그림자
 ### 스토어 프로모션 이미지
 - **Android**: `store/screenshots/promotions/android/lang/{언어코드}/promo_1~4.svg`
 - **iOS**: `store/screenshots/promotions/ios/lang/{언어코드}/promo_1~4.svg`
-- iOS 39개 언어, Android 71개 언어 지원
 - 재생성 스크립트: `regenerate_all.sh`
 - PNG 변환: `rsvg-convert promo_1.svg -o promo_1.png`
 
@@ -180,7 +208,6 @@ AppShadows.subtle  // 미세한 그림자
 - 말투: 카카오/토스 스타일 (친근한 ~요 체)
 
 ```bash
-# translate-shell 설치 및 사용
 brew install translate-shell
 trans -b :hy "Document Scanner"  # 아르메니아어 번역
 ```
@@ -193,9 +220,9 @@ import '../utils/app_toast.dart';
 
 AppToast.success(context, 'Success message');
 AppToast.error(context, 'Error message');
-AppToast.show(context, 'Message', isError: false);  // isError로 타입 결정
+AppToast.show(context, 'Message', isError: false);
 
-// 진행 상태 표시 (긴 작업용) - 반환된 인스턴스로 수동 dismiss
+// 진행 상태 표시 (긴 작업용)
 final notification = AppToast.info(context, 'Processing...');
 await longOperation();
 notification.dismiss();
@@ -212,18 +239,12 @@ ConfirmDialog.show(
   onConfirm: () async { ... },
 );
 
-// 확인 다이얼로그 (async 버전 - 결과 반환)
-final confirmed = await ConfirmDialog.showAsync(
-  context: context,
-  title: 'Delete?',
-  message: 'Are you sure?',
-);
+// 확인 다이얼로그 (async 버전)
+final confirmed = await ConfirmDialog.showAsync(context: context, title: 'Delete?', message: 'Are you sure?');
 if (confirmed) { ... }
 
-// 이름 변경
+// 이름 변경 / 텍스트 입력
 RenameDialog.show(context: context, currentName: name, onSave: (newName) async { ... });
-
-// 텍스트 입력
 TextInputDialog.show(context: context, title: 'Save', onSave: (value) async { ... });
 ```
 
@@ -248,21 +269,12 @@ AppModal.showBottomSheet(
   pageListBuilder: (modalContext) => [
     WoltModalSheetPage(
       child: Column(children: [
-        AppModal.buildDragHandle(),  // 드래그 핸들
+        AppModal.buildDragHandle(),
         YourContent(),
       ]),
     ),
   ],
 );
-```
-
-### Race Condition 방지
-```dart
-// 다이얼로그에서 async 작업 후 pop() 순서
-onSave: (value) async {
-  await saveData(value);  // 1. 먼저 저장
-  Navigator.pop(context);  // 2. 그 다음 pop
-},
 ```
 
 ### RouteAware (화면 복귀 시 리로드)
@@ -284,15 +296,15 @@ flutter clean && flutter pub get
 ### arguments가 null일 때
 `main.dart`의 `onGenerateRoute`에서 `settings: settings` 누락 확인
 
-## 스토어 업로드 스크립트
+## 스토어 업로드
 
 ```bash
-# iOS App Store Connect 업로드
-python3 scripts/upload_app_store.py --all              # 전체 언어 업로드
-python3 scripts/upload_app_store.py en-US              # 특정 언어만
-python3 scripts/upload_app_store.py --skip-screenshots # 메타데이터만
+# iOS App Store Connect
+python3 scripts/upload_app_store.py --all
+python3 scripts/upload_app_store.py en-US
+python3 scripts/upload_app_store.py --skip-screenshots
 
-# Google Play Store 업로드
+# Google Play Store
 python3 scripts/upload_play_store.py --all
 python3 scripts/upload_play_store.py ko-KR
 ```
@@ -300,8 +312,8 @@ python3 scripts/upload_play_store.py ko-KR
 **필수 의존성**: `pip install pyjwt requests google-auth google-api-python-client`
 
 **스크린샷 요구사항**:
-- App Store는 알파 채널(투명도) 포함 PNG 거부 → 스크립트가 자동으로 RGB 변환
-- SVG → PNG 변환 필요 도구: `brew install librsvg imagemagick`
+- App Store는 알파 채널(투명도) 포함 PNG 거부 → 스크립트가 자동 RGB 변환
+- SVG → PNG 변환: `brew install librsvg imagemagick`
 
 ## Git 컨벤션
 
