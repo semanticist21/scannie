@@ -63,4 +63,4 @@ app.*.map.json
 **/macos/Pods/
 
 # Promotion PNG exports (generated from SVG)
-screenshots/promotions/**/*.png
+store/screenshots/promotions/**/*.png
