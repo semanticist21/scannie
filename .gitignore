@@ -61,3 +61,6 @@ app.*.map.json
 **/macos/Flutter/GeneratedPluginRegistrant.swift
 **/macos/Flutter/Flutter-*.xcconfig
 **/macos/Pods/
+
+# Promotion PNG exports (generated from SVG)
+screenshots/promotions/**/*.png
