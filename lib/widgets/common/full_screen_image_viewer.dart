@@ -39,6 +39,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
   bool _showControls = true;
   ImageFilterType _currentFilter = ImageFilterType.original;
   String? _tempRotatedImagePath; // Temporary rotated image (not yet saved)
+  bool _isSaving = false;
 
   @override
   void initState() {
@@ -325,6 +326,9 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
   /// Save filtered/rotated image to temp file and return path
   /// Does NOT modify original - EditScreen will handle final save
   Future<void> _saveFilteredImage() async {
+    if (_isSaving) return;
+    setState(() => _isSaving = true);
+
     final navigator = Navigator.of(context);
 
     try {
@@ -401,6 +405,10 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
         AppToast.show(context,
             'toast.failedToSaveImage'.tr(namedArgs: {'error': e.toString()}),
             isError: true);
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isSaving = false);
       }
     }
   }
@@ -788,14 +796,25 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                         SizedBox(
                           width: double.infinity,
                           child: ShadButton(
-                            onPressed: _saveFilteredImage,
+                            onPressed: _isSaving ? null : _saveFilteredImage,
                             height: 48,
                             backgroundColor: AppColors.white,
                             foregroundColor: AppColors.black,
                             hoverBackgroundColor: AppColors.hoverLight,
                             pressedBackgroundColor: AppColors.pressedLight,
-                            leading: const Icon(LucideIcons.check, size: 18),
-                            child: Text('common.save'.tr()),
+                            leading: _isSaving
+                                ? null
+                                : const Icon(LucideIcons.check, size: 18),
+                            child: _isSaving
+                                ? const SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: AppColors.black,
+                                    ),
+                                  )
+                                : Text('common.save'.tr()),
                           ),
                         ),
                       ],
