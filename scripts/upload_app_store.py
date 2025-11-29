@@ -423,8 +423,8 @@ def parse_metadata_xml(xml_path: Path) -> dict:
 # Screenshot Upload
 # ============================================================
 
-def convert_svg_to_png(svg_path: Path, png_path: Path, width: int = 1242, height: int = 2688) -> bool:
-    """Convert SVG to PNG using rsvg-convert (iPhone 6.5" display size)"""
+def convert_svg_to_png(svg_path: Path, png_path: Path, width: int = 1290, height: int = 2796) -> bool:
+    """Convert SVG to PNG using rsvg-convert (iPhone 6.7" display size)"""
     try:
         subprocess.run([
             "rsvg-convert",
@@ -573,10 +573,10 @@ def upload_screenshots_for_locale(localization_id: str, locale: str, promo_folde
         print(f"    No promo folder found: {promo_path}")
         return
 
-    # Get or create screenshot set for iPhone 6.5" display
+    # Get or create screenshot set for iPhone 6.7" display (largest available)
     screenshot_sets = get_screenshot_sets(localization_id)
 
-    display_type = "APP_IPHONE_65"  # iPhone 6.5" display
+    display_type = "APP_IPHONE_67"  # iPhone 6.7" display
     screenshot_set = None
 
     for ss in screenshot_sets:
