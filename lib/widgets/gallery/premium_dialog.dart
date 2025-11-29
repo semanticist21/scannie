@@ -278,14 +278,18 @@ class _RestoreButtonState extends State<_RestoreButton> {
 
     try {
       final purchaseService = PurchaseService.instance;
-      final success = await purchaseService.restorePurchases();
+      final result = await purchaseService.restorePurchases();
 
-      if (mounted) {
-        if (success) {
-          AppToast.success(context, 'premium.restoreRequested'.tr());
-        } else {
-          AppToast.error(context, 'premium.restoreFailed'.tr());
-        }
+      if (!mounted) return;
+
+      if (result.success) {
+        AppToast.success(context, 'premium.restoreSuccess'.tr());
+        // Close dialog and notify parent
+        Navigator.of(context).pop();
+      } else {
+        // Show appropriate error message
+        final errorMessage = _getLocalizedRestoreError(result.errorType);
+        AppToast.error(context, errorMessage);
       }
     } catch (e) {
       debugPrint('💎 Restore error: $e');
@@ -296,6 +300,22 @@ class _RestoreButtonState extends State<_RestoreButton> {
       if (mounted) {
         setState(() => _isLoading = false);
       }
+    }
+  }
+
+  String _getLocalizedRestoreError(PurchaseErrorType? errorType) {
+    switch (errorType) {
+      case PurchaseErrorType.storeNotAvailable:
+        return 'premium.errorStoreNotAvailable'.tr();
+      case PurchaseErrorType.productNotFound:
+        return 'premium.restoreNoPurchases'.tr();
+      case PurchaseErrorType.networkError:
+        return 'premium.errorNetwork'.tr();
+      case PurchaseErrorType.purchaseFailed:
+      case PurchaseErrorType.purchaseCancelled:
+      case PurchaseErrorType.unknown:
+      case null:
+        return 'premium.restoreFailed'.tr();
     }
   }
 

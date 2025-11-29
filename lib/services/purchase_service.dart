@@ -63,6 +63,9 @@ class PurchaseService {
   // Completer for waiting on purchase result
   Completer<PurchaseResult>? _purchaseCompleter;
 
+  // Completer for waiting on restore result
+  Completer<PurchaseResult>? _restoreCompleter;
+
   // Premium product ID (matches Play Console configuration)
   static const String premiumProductId = 'premium_remove_ads';
 
@@ -173,17 +176,31 @@ class PurchaseService {
           break;
 
         case PurchaseStatus.purchased:
-        case PurchaseStatus.restored:
           // Verify and deliver the product
           final valid = await _verifyPurchase(purchaseDetails);
           if (valid) {
             await _deliverProduct(purchaseDetails);
-            // Complete the Completer with success
+            // Complete the purchase Completer with success
             _completePurchaseCompleter(PurchaseResult.success());
           } else {
             _completePurchaseCompleter(PurchaseResult.error(
               PurchaseErrorType.purchaseFailed,
               'Purchase verification failed',
+            ));
+          }
+          break;
+
+        case PurchaseStatus.restored:
+          // Verify and deliver the restored product
+          final validRestore = await _verifyPurchase(purchaseDetails);
+          if (validRestore) {
+            await _deliverProduct(purchaseDetails);
+            // Complete the restore Completer with success
+            _completeRestoreCompleter(PurchaseResult.success());
+          } else {
+            _completeRestoreCompleter(PurchaseResult.error(
+              PurchaseErrorType.purchaseFailed,
+              'Restore verification failed',
             ));
           }
           break;
@@ -219,6 +236,14 @@ class PurchaseService {
     if (_purchaseCompleter != null && !_purchaseCompleter!.isCompleted) {
       _purchaseCompleter!.complete(result);
       debugPrint('💎 Purchase Completer completed with: ${result.success ? "success" : result.errorType}');
+    }
+  }
+
+  /// Safely complete the restore Completer
+  void _completeRestoreCompleter(PurchaseResult result) {
+    if (_restoreCompleter != null && !_restoreCompleter!.isCompleted) {
+      _restoreCompleter!.complete(result);
+      debugPrint('💎 Restore Completer completed with: ${result.success ? "success" : result.errorType}');
     }
   }
 
@@ -374,19 +399,63 @@ class PurchaseService {
   }
 
   /// Restore purchases (call from UI - e.g., settings)
-  Future<bool> restorePurchases() async {
+  /// Returns PurchaseResult indicating success or failure of restore
+  ///
+  /// Note: This method waits for the actual restore result from the store,
+  /// not just the initiation of the restore flow.
+  Future<PurchaseResult> restorePurchases() async {
     if (!_isAvailable) {
       debugPrint('💎 Store not available');
-      return false;
+      return PurchaseResult.error(
+        PurchaseErrorType.storeNotAvailable,
+        'Store is not available on this device',
+      );
     }
+
+    // Cancel any existing restore Completer
+    if (_restoreCompleter != null && !_restoreCompleter!.isCompleted) {
+      _restoreCompleter!.complete(PurchaseResult.error(
+        PurchaseErrorType.purchaseCancelled,
+        'New restore started',
+      ));
+    }
+
+    // Create new Completer to wait for actual restore result
+    _restoreCompleter = Completer<PurchaseResult>();
 
     try {
       await _inAppPurchase.restorePurchases();
       debugPrint('💎 Restore purchases requested');
-      return true;
+
+      // Wait for actual restore result from the stream
+      // Timeout after 10 seconds (restore might have no previous purchases)
+      final result = await _restoreCompleter!.future.timeout(
+        const Duration(seconds: 10),
+        onTimeout: () async {
+          debugPrint('💎 Restore timeout - checking premium status');
+          // Check if premium was restored during the wait
+          final isPremiumNow = await isPremium;
+          if (isPremiumNow) {
+            return PurchaseResult.success();
+          }
+          // No previous purchases found (not an error, just nothing to restore)
+          return PurchaseResult.error(
+            PurchaseErrorType.productNotFound,
+            'No previous purchases found',
+          );
+        },
+      );
+
+      _restoreCompleter = null;
+      return result;
     } catch (e) {
       debugPrint('💎 Failed to restore purchases: $e');
-      return false;
+      _restoreCompleter = null;
+
+      return PurchaseResult.error(
+        PurchaseErrorType.unknown,
+        'Restore failed: ${e.toString()}',
+      );
     }
   }
 
