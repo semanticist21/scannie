@@ -35,7 +35,15 @@ flutter test test/language_settings_test.dart   # 언어 설정 테스트
 # 빌드
 flutter build apk --release    # Android APK
 flutter build appbundle        # Android App Bundle (Play Store)
-flutter build ios --release    # iOS 빌드
+flutter build ios --release    # iOS 빌드 (디바이스용)
+flutter build ipa --release    # iOS IPA (App Store Connect용)
+
+# App Store Connect 업로드
+xcrun altool --upload-app --type ios -f build/ios/ipa/Scannie.ipa \
+  --apiKey 74HC92L9NA --apiIssuer a7524762-b1db-463b-84a8-bbee51a37cc2
+
+# Android 빌드 폴더 열기
+open build/app/outputs/bundle/release/
 ```
 
 ⚠️ **Claude는 `flutter run` 절대 실행 금지** - 사용자가 직접 실행합니다!
