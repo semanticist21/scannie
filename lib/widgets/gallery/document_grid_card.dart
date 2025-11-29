@@ -70,45 +70,6 @@ class DocumentGridCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppRadius.lg),
           child: Stack(
             children: [
-              // Selection indicator with animation
-              Positioned(
-                top: AppSpacing.sm,
-                left: AppSpacing.sm,
-                child: AnimatedOpacity(
-                  duration: const Duration(milliseconds: 200),
-                  opacity: isSelectionMode ? 1.0 : 0.0,
-                  child: AnimatedScale(
-                    duration: const Duration(milliseconds: 200),
-                    scale: isSelectionMode ? 1.0 : 0.5,
-                    child: Container(
-                      padding: const EdgeInsets.all(AppSpacing.xxs),
-                      decoration: BoxDecoration(
-                        color: colors.surface,
-                        shape: BoxShape.circle,
-                      ),
-                      child: AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 200),
-                        transitionBuilder: (child, animation) {
-                          return ScaleTransition(
-                            scale: animation,
-                            child: child,
-                          );
-                        },
-                        child: Icon(
-                          isSelected
-                              ? LucideIcons.circleCheck
-                              : LucideIcons.circle,
-                          key: ValueKey(isSelected),
-                          size: 22,
-                          color: isSelected
-                              ? AppColors.primary
-                              : colors.textSecondary,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -211,6 +172,45 @@ class DocumentGridCard extends StatelessWidget {
                     ),
                   ),
                 ],
+              ),
+              // Selection indicator with animation
+              Positioned(
+                top: AppSpacing.sm,
+                left: AppSpacing.sm,
+                child: AnimatedOpacity(
+                  duration: const Duration(milliseconds: 200),
+                  opacity: isSelectionMode ? 1.0 : 0.0,
+                  child: AnimatedScale(
+                    duration: const Duration(milliseconds: 200),
+                    scale: isSelectionMode ? 1.0 : 0.5,
+                    child: Container(
+                      padding: const EdgeInsets.all(AppSpacing.xxs),
+                      decoration: BoxDecoration(
+                        color: colors.surface,
+                        shape: BoxShape.circle,
+                      ),
+                      child: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 200),
+                        transitionBuilder: (child, animation) {
+                          return ScaleTransition(
+                            scale: animation,
+                            child: child,
+                          );
+                        },
+                        child: Icon(
+                          isSelected
+                              ? LucideIcons.circleCheck
+                              : LucideIcons.circle,
+                          key: ValueKey(isSelected),
+                          size: 22,
+                          color: isSelected
+                              ? AppColors.primary
+                              : colors.textSecondary,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ),
               // Download button overlay
               if (document.imagePaths.isNotEmpty)
