@@ -128,9 +128,16 @@ Text('Title', style: AppTextStyles.h3.copyWith(color: colors.textPrimary))
 - 사용: `'common.save'.tr()`
 
 ### 스토어 메타데이터 번역
-- 파일 위치: `store/metadata/android/{언어코드}.xml`
-- 71개 언어 (Play Store 지원 전체)
+- Android: `store/metadata/android/{언어코드}.xml` (71개 언어)
+- iOS: `store/metadata/ios/{언어코드}.xml` (39개 언어)
 - 형식: XML (`<listing>`, `<title>`, `<short-description>`, `<full-description>`)
+
+### 스토어 프로모션 이미지
+- **Android**: `store/screenshots/promotions/android/lang/{언어코드}/promo_1~4.svg`
+- **iOS**: `store/screenshots/promotions/ios/lang/{언어코드}/promo_1~4.svg`
+- iOS 39개 언어, Android 71개 언어 지원
+- 재생성 스크립트: `regenerate_all.sh`
+- PNG 변환: `rsvg-convert promo_1.svg -o promo_1.png`
 
 **번역 작업 시 주의**:
 - 아르메니아어(hy-AM), 크메르어(km-KH) 등 특수 문자는 `translate-shell` CLI 사용
