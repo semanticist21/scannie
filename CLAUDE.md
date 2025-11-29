@@ -291,6 +291,10 @@ python3 scripts/upload_play_store.py ko-KR
 
 **필수 의존성**: `pip install pyjwt requests google-auth google-api-python-client`
 
+**스크린샷 요구사항**:
+- App Store는 알파 채널(투명도) 포함 PNG 거부 → 스크립트가 자동으로 RGB 변환
+- SVG → PNG 변환 필요 도구: `brew install librsvg imagemagick`
+
 ## Git 컨벤션
 
 - `feat:` 새 기능
