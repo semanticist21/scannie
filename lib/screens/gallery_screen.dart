@@ -420,22 +420,9 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
                                 decoration: BoxDecoration(
                                   color: ThemedColors.of(context).surface,
                                   borderRadius: BorderRadius.circular(AppRadius.mdd),
-                                  boxShadow: [
-                                    // Inner shadow (top-left light)
-                                    BoxShadow(
-                                      color:
-                                          AppColors.white.withValues(alpha: 0.8),
-                                      offset: const Offset(-2, -2),
-                                      blurRadius: 4,
-                                    ),
-                                    // Inner shadow (bottom-right dark)
-                                    BoxShadow(
-                                      color:
-                                          AppColors.black.withValues(alpha: 0.08),
-                                      offset: const Offset(2, 2),
-                                      blurRadius: 4,
-                                    ),
-                                  ],
+                                  border: Border.all(
+                                    color: ThemedColors.of(context).border,
+                                  ),
                                 ),
                                 child: TextField(
                                   controller: _searchController,
