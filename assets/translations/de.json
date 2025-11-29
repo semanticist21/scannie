@@ -38,8 +38,8 @@
     "scanUpdated": "Scan aktualisiert",
     "generatingPdf": "PDF wird erstellt...",
     "preparingZip": "ZIP wird vorbereitet...",
-    "deleteScans": "{count} {count, plural, =1{Scan} other{Scans}} löschen",
-    "deletedScans": "{count} {count, plural, =1{Scan} other{Scans}} gelöscht",
+    "deleteScans": "{count} Scans löschen",
+    "deletedScans": "{count} Scans gelöscht",
     "actionCannotBeUndone": "Diese Aktion kann nicht rückgängig gemacht werden."
   },
   "edit": {
@@ -73,7 +73,7 @@
     "deleteDocument": "Dokument löschen?",
     "deleteDocumentMessage": "\"{name}\" und alle Seiten werden dauerhaft gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.",
     "downloadImagesTitle": "Bilder herunterladen",
-    "downloadImagesMessage": "{count} {count, plural, =1{Bild} other{Bilder}} in die Galerie herunterladen?",
+    "downloadImagesMessage": "{count} Bilder in die Galerie herunterladen?",
     "pageOf": "Seite {current} von {total}"
   },
   "settings": {

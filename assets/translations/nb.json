@@ -38,8 +38,8 @@
     "scanUpdated": "Skanning oppdatert",
     "generatingPdf": "Oppretter PDF...",
     "preparingZip": "Forbereder ZIP...",
-    "deleteScans": "Slett {count} {count, plural, =1{skanning} other{skanninger}}",
-    "deletedScans": "{count} {count, plural, =1{skanning slettet} other{skanninger slettet}}",
+    "deleteScans": "Slett {count} skanninger",
+    "deletedScans": "{count} skanninger slettet",
     "actionCannotBeUndone": "Denne handlingen kan ikke angres."
   },
   "edit": {
@@ -73,7 +73,7 @@
     "deleteDocument": "Slette dokument?",
     "deleteDocumentMessage": "«{name}» og alle sidene vil bli permanent slettet. Denne handlingen kan ikke angres.",
     "downloadImagesTitle": "Last ned bilder",
-    "downloadImagesMessage": "Laste ned {count} {count, plural, =1{bilde} other{bilder}} til galleriet?",
+    "downloadImagesMessage": "Laste ned {count} bilder til galleriet?",
     "pageOf": "Side {current} av {total}"
   },
   "settings": {

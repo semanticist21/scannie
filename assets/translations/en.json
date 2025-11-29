@@ -38,8 +38,8 @@
     "scanUpdated": "Scan updated successfully",
     "generatingPdf": "Generating PDF...",
     "preparingZip": "Preparing ZIP...",
-    "deleteScans": "Delete {count} {count, plural, =1{Scan} other{Scans}}",
-    "deletedScans": "Deleted {count} {count, plural, =1{scan} other{scans}}",
+    "deleteScans": "Delete {count} Scans",
+    "deletedScans": "Deleted {count} scans",
     "actionCannotBeUndone": "This action cannot be undone."
   },
   "edit": {
@@ -73,7 +73,7 @@
     "deleteDocument": "Delete Document?",
     "deleteDocumentMessage": "This will permanently delete \"{name}\" and all its pages. This action cannot be undone.",
     "downloadImagesTitle": "Download Images",
-    "downloadImagesMessage": "Download {count} {count, plural, =1{image} other{images}} to gallery?",
+    "downloadImagesMessage": "Download {count} images to gallery?",
     "pageOf": "Page {current} of {total}"
   },
   "settings": {

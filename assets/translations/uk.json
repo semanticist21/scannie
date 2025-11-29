@@ -38,8 +38,8 @@
     "scanUpdated": "Скан оновлено",
     "generatingPdf": "Створення PDF...",
     "preparingZip": "Підготовка ZIP...",
-    "deleteScans": "Видалити {count} {count, plural, =1{скан} few{скани} other{сканів}}",
-    "deletedScans": "Видалено {count} {count, plural, =1{скан} few{скани} other{сканів}}",
+    "deleteScans": "Видалити {count} сканів",
+    "deletedScans": "Видалено {count} сканів",
     "actionCannotBeUndone": "Цю дію не можна скасувати."
   },
   "edit": {
@@ -73,7 +73,7 @@
     "deleteDocument": "Видалити документ?",
     "deleteDocumentMessage": "«{name}» та всі його сторінки буде видалено назавжди. Цю дію не можна скасувати.",
     "downloadImagesTitle": "Завантажити зображення",
-    "downloadImagesMessage": "Завантажити {count} {count, plural, =1{зображення} few{зображення} other{зображень}} до галереї?",
+    "downloadImagesMessage": "Завантажити {count} зображень до галереї?",
     "pageOf": "Сторінка {current} з {total}"
   },
   "settings": {

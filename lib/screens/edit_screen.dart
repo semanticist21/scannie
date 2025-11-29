@@ -244,27 +244,25 @@ class _EditScreenState extends State<EditScreen> {
       }
       if (!mounted) return;
 
-      final updatedDocument = ScanDocument(
-        id: _existingDocumentId!,
-        name: _existingDocumentName!,
-        createdAt: DateTime.now(),
-        imagePaths: _imagePaths,
-        isProcessed: true,
-      );
-
-      // Update in storage
+      // Update in storage - use copyWith to preserve tags and PDF settings
       final documents = await DocumentStorage.loadDocuments();
       final index = documents.indexWhere((d) => d.id == _existingDocumentId);
       if (index != -1) {
+        final existingDoc = documents[index];
+        final updatedDocument = existingDoc.copyWith(
+          imagePaths: _imagePaths,
+          createdAt: DateTime.now(),
+          isProcessed: true,
+        );
         documents[index] = updatedDocument;
         await DocumentStorage.saveDocuments(documents);
-      }
 
-      if (mounted) {
-        AppToast.show(context, 'edit.scanSaved'.tr());
-      }
+        if (mounted) {
+          AppToast.show(context, 'edit.scanSaved'.tr());
+        }
 
-      navigator.pop(updatedDocument);
+        navigator.pop(updatedDocument);
+      }
       return;
     }
 

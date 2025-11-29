@@ -38,8 +38,8 @@
     "scanUpdated": "Скан обновлён",
     "generatingPdf": "Создание PDF...",
     "preparingZip": "Подготовка ZIP...",
-    "deleteScans": "Удалить {count} {count, plural, =1{скан} few{скана} other{сканов}}",
-    "deletedScans": "Удалено {count} {count, plural, =1{скан} few{скана} other{сканов}}",
+    "deleteScans": "Удалить {count} сканов",
+    "deletedScans": "Удалено {count} сканов",
     "actionCannotBeUndone": "Это действие нельзя отменить."
   },
   "edit": {
@@ -73,7 +73,7 @@
     "deleteDocument": "Удалить документ?",
     "deleteDocumentMessage": "«{name}» и все его страницы будут удалены навсегда. Это действие нельзя отменить.",
     "downloadImagesTitle": "Скачать изображения",
-    "downloadImagesMessage": "Скачать {count} {count, plural, =1{изображение} few{изображения} other{изображений}} в галерею?",
+    "downloadImagesMessage": "Скачать {count} изображений в галерею?",
     "pageOf": "Страница {current} из {total}"
   },
   "settings": {

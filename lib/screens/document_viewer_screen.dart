@@ -333,11 +333,12 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
         break;
     }
 
-    return Container(
-      margin: const EdgeInsets.all(AppSpacing.md),
-      child: AspectRatio(
-        aspectRatio: aspectRatio,
-        child: Container(
+    return Center(
+      child: Container(
+        margin: const EdgeInsets.all(AppSpacing.md),
+        child: AspectRatio(
+          aspectRatio: aspectRatio,
+          child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppRadius.md),
             border: Border.all(
@@ -455,6 +456,7 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
             ),
           ),
         ),
+      ),
       ),
     );
   }

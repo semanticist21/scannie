@@ -38,8 +38,8 @@
     "scanUpdated": "Escaneamento atualizado",
     "generatingPdf": "Gerando PDF...",
     "preparingZip": "Preparando ZIP...",
-    "deleteScans": "Excluir {count} {count, plural, =1{escaneamento} other{escaneamentos}}",
-    "deletedScans": "{count} {count, plural, =1{escaneamento excluído} other{escaneamentos excluídos}}",
+    "deleteScans": "Excluir {count} escaneamentos",
+    "deletedScans": "{count} escaneamentos excluídos",
     "actionCannotBeUndone": "Esta ação não pode ser desfeita."
   },
   "edit": {
@@ -73,7 +73,7 @@
     "deleteDocument": "Excluir documento?",
     "deleteDocumentMessage": "\"{name}\" e todas as suas páginas serão excluídos permanentemente. Esta ação não pode ser desfeita.",
     "downloadImagesTitle": "Baixar imagens",
-    "downloadImagesMessage": "Baixar {count} {count, plural, =1{imagem} other{imagens}} para a galeria?",
+    "downloadImagesMessage": "Baixar {count} imagens para a galeria?",
     "pageOf": "Página {current} de {total}"
   },
   "settings": {

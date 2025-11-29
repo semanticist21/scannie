@@ -38,8 +38,8 @@
     "scanUpdated": "Scansione aggiornata",
     "generatingPdf": "Generazione PDF...",
     "preparingZip": "Preparazione ZIP...",
-    "deleteScans": "Elimina {count} {count, plural, =1{scansione} other{scansioni}}",
-    "deletedScans": "{count} {count, plural, =1{scansione eliminata} other{scansioni eliminate}}",
+    "deleteScans": "Elimina {count} scansioni",
+    "deletedScans": "{count} scansioni eliminate",
     "actionCannotBeUndone": "Questa azione non può essere annullata."
   },
   "edit": {
@@ -73,7 +73,7 @@
     "deleteDocument": "Eliminare il documento?",
     "deleteDocumentMessage": "«{name}» e tutte le sue pagine verranno eliminati definitivamente. Questa azione non può essere annullata.",
     "downloadImagesTitle": "Scarica immagini",
-    "downloadImagesMessage": "Scaricare {count} {count, plural, =1{immagine} other{immagini}} nella galleria?",
+    "downloadImagesMessage": "Scaricare {count} immagini nella galleria?",
     "pageOf": "Pagina {current} di {total}"
   },
   "settings": {

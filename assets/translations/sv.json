@@ -38,8 +38,8 @@
     "scanUpdated": "Skanning uppdaterad",
     "generatingPdf": "Skapar PDF...",
     "preparingZip": "Förbereder ZIP...",
-    "deleteScans": "Radera {count} {count, plural, =1{skanning} other{skanningar}}",
-    "deletedScans": "{count} {count, plural, =1{skanning raderad} other{skanningar raderade}}",
+    "deleteScans": "Radera {count} skanningar",
+    "deletedScans": "{count} skanningar raderade",
     "actionCannotBeUndone": "Denna åtgärd kan inte ångras."
   },
   "edit": {
@@ -73,7 +73,7 @@
     "deleteDocument": "Radera dokument?",
     "deleteDocumentMessage": "\"{name}\" och alla dess sidor kommer att raderas permanent. Denna åtgärd kan inte ångras.",
     "downloadImagesTitle": "Ladda ner bilder",
-    "downloadImagesMessage": "Ladda ner {count} {count, plural, =1{bild} other{bilder}} till galleriet?",
+    "downloadImagesMessage": "Ladda ner {count} bilder till galleriet?",
     "pageOf": "Sida {current} av {total}"
   },
   "settings": {
