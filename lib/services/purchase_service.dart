@@ -134,8 +134,14 @@ class PurchaseService {
         return;
       }
 
+      // Log not found IDs for debugging
+      if (response.notFoundIDs.isNotEmpty) {
+        debugPrint('💎 Not found IDs: ${response.notFoundIDs}');
+      }
+
       if (response.productDetails.isEmpty) {
         debugPrint('💎 No products found for ID: $premiumProductId');
+        debugPrint('💎 Tip: Check license testers in Play Console → Settings → License testing');
         return;
       }
 
