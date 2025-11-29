@@ -60,6 +60,9 @@ class PurchaseService {
   bool _isInitialized = false;
   ProductDetails? _premiumProduct;
 
+  // Completer for waiting on purchase result
+  Completer<PurchaseResult>? _purchaseCompleter;
+
   // Premium product ID (matches Play Console configuration)
   static const String premiumProductId = 'premium_remove_ads';
 
@@ -157,9 +160,16 @@ class PurchaseService {
     for (final purchaseDetails in purchaseDetailsList) {
       debugPrint('💎 Purchase update: ${purchaseDetails.productID} - ${purchaseDetails.status}');
 
+      // Only handle our product
+      if (purchaseDetails.productID != premiumProductId) {
+        debugPrint('💎 Ignoring unknown product: ${purchaseDetails.productID}');
+        continue;
+      }
+
       switch (purchaseDetails.status) {
         case PurchaseStatus.pending:
           debugPrint('💎 Purchase pending...');
+          // Don't complete the Completer yet - wait for final status
           break;
 
         case PurchaseStatus.purchased:
@@ -168,23 +178,47 @@ class PurchaseService {
           final valid = await _verifyPurchase(purchaseDetails);
           if (valid) {
             await _deliverProduct(purchaseDetails);
+            // Complete the Completer with success
+            _completePurchaseCompleter(PurchaseResult.success());
+          } else {
+            _completePurchaseCompleter(PurchaseResult.error(
+              PurchaseErrorType.purchaseFailed,
+              'Purchase verification failed',
+            ));
           }
           break;
 
         case PurchaseStatus.error:
           debugPrint('💎 Purchase error: ${purchaseDetails.error?.message}');
+          _completePurchaseCompleter(PurchaseResult.error(
+            PurchaseErrorType.purchaseFailed,
+            purchaseDetails.error?.message ?? 'Purchase failed',
+          ));
           break;
 
         case PurchaseStatus.canceled:
           debugPrint('💎 Purchase canceled');
+          _completePurchaseCompleter(PurchaseResult.error(
+            PurchaseErrorType.purchaseCancelled,
+            'Purchase was cancelled',
+          ));
           break;
       }
 
-      // Complete the purchase (required for Android)
+      // Complete the purchase transaction (required for all final states)
+      // This tells the store to finalize the transaction
       if (purchaseDetails.pendingCompletePurchase) {
         await _inAppPurchase.completePurchase(purchaseDetails);
-        debugPrint('💎 Purchase completed');
+        debugPrint('💎 Purchase transaction completed');
       }
+    }
+  }
+
+  /// Safely complete the purchase Completer
+  void _completePurchaseCompleter(PurchaseResult result) {
+    if (_purchaseCompleter != null && !_purchaseCompleter!.isCompleted) {
+      _purchaseCompleter!.complete(result);
+      debugPrint('💎 Purchase Completer completed with: ${result.success ? "success" : result.errorType}');
     }
   }
 
@@ -223,13 +257,17 @@ class PurchaseService {
 
   /// Purchase premium (call from UI)
   /// Returns PurchaseResult with error details for user-friendly messages
+  ///
+  /// Note: This method waits for the actual purchase result from the store,
+  /// not just the initiation of the purchase flow.
   Future<PurchaseResult> purchasePremium() async {
-    // Debug mode: simulate successful purchase
-    if (kDebugMode) {
-      debugPrint('💎 [DEBUG] Simulating successful purchase');
-      await _setPremiumStatus(true);
-      return PurchaseResult.success();
-    }
+    // [DISABLED FOR TESTING] Debug mode: simulate successful purchase
+    // Uncomment below to skip store communication in debug builds
+    // if (kDebugMode) {
+    //   debugPrint('💎 [DEBUG] Simulating successful purchase');
+    //   await _setPremiumStatus(true);
+    //   return PurchaseResult.success();
+    // }
 
     if (!_isAvailable) {
       debugPrint('💎 Store not available');
@@ -251,6 +289,17 @@ class PurchaseService {
       }
     }
 
+    // Cancel any existing purchase Completer
+    if (_purchaseCompleter != null && !_purchaseCompleter!.isCompleted) {
+      _purchaseCompleter!.complete(PurchaseResult.error(
+        PurchaseErrorType.purchaseCancelled,
+        'New purchase started',
+      ));
+    }
+
+    // Create new Completer to wait for actual purchase result
+    _purchaseCompleter = Completer<PurchaseResult>();
+
     try {
       // Create purchase param for non-consumable (one-time purchase)
       final purchaseParam = PurchaseParam(
@@ -258,22 +307,40 @@ class PurchaseService {
       );
 
       // Buy non-consumable (permanent purchase)
-      final success = await _inAppPurchase.buyNonConsumable(
+      // Note: This returns true if the purchase flow was INITIATED, not completed
+      final initiated = await _inAppPurchase.buyNonConsumable(
         purchaseParam: purchaseParam,
       );
 
-      debugPrint('💎 Purchase initiated: $success');
+      debugPrint('💎 Purchase flow initiated: $initiated');
 
-      if (success) {
-        return PurchaseResult.success();
-      } else {
+      if (!initiated) {
+        // Purchase flow failed to start
+        _purchaseCompleter = null;
         return PurchaseResult.error(
           PurchaseErrorType.purchaseFailed,
           'Could not start purchase. Please try again.',
         );
       }
+
+      // Wait for actual purchase result from the stream
+      // Timeout after 5 minutes (in case iOS bug where stream doesn't emit on cancel)
+      final result = await _purchaseCompleter!.future.timeout(
+        const Duration(minutes: 5),
+        onTimeout: () {
+          debugPrint('💎 Purchase timeout - user may have cancelled without stream emit');
+          return PurchaseResult.error(
+            PurchaseErrorType.purchaseCancelled,
+            'Purchase timed out. Please try again.',
+          );
+        },
+      );
+
+      _purchaseCompleter = null;
+      return result;
     } catch (e) {
       debugPrint('💎 Purchase failed: $e');
+      _purchaseCompleter = null;
 
       final errorString = e.toString().toLowerCase();
       if (errorString.contains('network') || errorString.contains('connection')) {
