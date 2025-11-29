@@ -107,8 +107,12 @@ GalleryScreen (홈)
 ## 테마 시스템
 
 ```dart
-// 간격
+// 간격 (EdgeInsets)
 AppSpacing.xs(4) / sm(8) / md(16) / lg(24) / xl(32) / xxl(48)
+
+// Gap (Row/Column 사이 간격)
+AppGap.vSm  // SizedBox(height: 8)
+AppGap.hMd  // SizedBox(width: 16)
 
 // Border Radius
 AppRadius.sm(4) / md(8) / lg(16) / xl(24) / round(999)
@@ -155,15 +159,29 @@ trans -b :hy "Document Scanner"  # 아르메니아어 번역
 ```dart
 import '../utils/app_toast.dart';
 
-AppToast.show(context, 'Message');
-AppToast.success(context, 'Success');
-AppToast.error(context, 'Error');
+AppToast.success(context, 'Success message');
+AppToast.error(context, 'Error message');
+AppToast.show(context, 'Message', isError: false);  // isError로 타입 결정
 ```
 
 ### 다이얼로그
 ```dart
-// 확인 다이얼로그
-ConfirmDialog.show(context: context, title: 'Delete?', onConfirm: () async { ... });
+// 확인 다이얼로그 (콜백 버전)
+ConfirmDialog.show(
+  context: context,
+  title: 'Delete?',
+  message: 'Are you sure?',
+  isDestructive: true,
+  onConfirm: () async { ... },
+);
+
+// 확인 다이얼로그 (async 버전 - 결과 반환)
+final confirmed = await ConfirmDialog.showAsync(
+  context: context,
+  title: 'Delete?',
+  message: 'Are you sure?',
+);
+if (confirmed) { ... }
 
 // 이름 변경
 RenameDialog.show(context: context, currentName: name, onSave: (newName) async { ... });
@@ -199,6 +217,21 @@ flutter clean && flutter pub get
 
 ### arguments가 null일 때
 `main.dart`의 `onGenerateRoute`에서 `settings: settings` 누락 확인
+
+## 스토어 업로드 스크립트
+
+```bash
+# iOS App Store Connect 업로드
+python3 scripts/upload_app_store.py --all              # 전체 언어 업로드
+python3 scripts/upload_app_store.py en-US              # 특정 언어만
+python3 scripts/upload_app_store.py --skip-screenshots # 메타데이터만
+
+# Google Play Store 업로드
+python3 scripts/upload_play_store.py --all
+python3 scripts/upload_play_store.py ko-KR
+```
+
+**필수 의존성**: `pip install pyjwt requests google-auth google-api-python-client`
 
 ## Git 컨벤션
 
