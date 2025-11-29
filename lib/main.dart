@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:toastification/toastification.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'theme/app_theme.dart';
 import 'theme/app_colors.dart';
 import 'screens/gallery_screen.dart';
@@ -18,8 +19,9 @@ final RouteObserver<ModalRoute<void>> routeObserver =
     RouteObserver<ModalRoute<void>>();
 
 void main() async {
-  // Ensure Flutter bindings are initialized
-  WidgetsFlutterBinding.ensureInitialized();
+  // Ensure Flutter bindings are initialized and preserve splash screen
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   // Initialize easy_localization
   await EasyLocalization.ensureInitialized();
@@ -32,6 +34,9 @@ void main() async {
 
   // Initialize In-App Purchase
   await PurchaseService.instance.initialize();
+
+  // Remove splash screen after initialization
+  FlutterNativeSplash.remove();
 
   runApp(
     EasyLocalization(
