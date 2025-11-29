@@ -210,12 +210,12 @@ class TagPreset {
     required this.color,
   });
 
-  /// Predefined tag presets
+  /// Predefined tag presets (label is translation key)
   static const List<TagPreset> presets = [
-    TagPreset(label: 'Working', color: 0xFFEF4444), // Red
-    TagPreset(label: 'To Do', color: 0xFFF97316), // Orange
-    TagPreset(label: 'In Review', color: 0xFF8B5CF6), // Purple
-    TagPreset(label: 'Done', color: 0xFF22C55E), // Green
+    TagPreset(label: 'tags.working', color: 0xFFEF4444), // Red
+    TagPreset(label: 'tags.todo', color: 0xFFF97316), // Orange
+    TagPreset(label: 'tags.review', color: 0xFF8B5CF6), // Purple
+    TagPreset(label: 'tags.done', color: 0xFF22C55E), // Green
   ];
 }
 

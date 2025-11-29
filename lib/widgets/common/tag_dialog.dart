@@ -163,7 +163,7 @@ class _TagContentState extends State<_TagContent> {
         return GestureDetector(
           onTap: () {
             setState(() {
-              widget.controller.text = preset.label;
+              widget.controller.text = preset.label.tr();
               _selectedColor = preset.color;
             });
           },
@@ -177,7 +177,7 @@ class _TagContentState extends State<_TagContent> {
               borderRadius: BorderRadius.circular(AppRadius.round),
             ),
             child: Text(
-              preset.label,
+              preset.label.tr(),
               style: AppTextStyles.bodySmall.copyWith(
                 color: contrastColor,
                 fontWeight: AppFontWeight.medium,
