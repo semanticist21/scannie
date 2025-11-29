@@ -7,11 +7,13 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:flutter_reorderable_grid_view/widgets/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/app_toast.dart';
 import '../models/scan_document.dart';
 import '../services/document_storage.dart';
 import '../services/pdf_settings_service.dart';
 import '../theme/app_theme.dart';
+import '../theme/app_text_styles.dart';
 import '../widgets/common/custom_app_bar.dart';
 import '../widgets/common/full_screen_image_viewer.dart';
 import '../widgets/edit/image_tile.dart';
@@ -33,6 +35,8 @@ class EditScreen extends StatefulWidget {
 }
 
 class _EditScreenState extends State<EditScreen> {
+  static const _hintShownKey = 'edit_tap_hint_shown';
+
   List<String> _imagePaths = [];
   final Set<String> _tempFilePaths = {}; // Track temp files for cleanup
   String? _existingDocumentId; // null = new scan, non-null = editing existing
@@ -40,10 +44,32 @@ class _EditScreenState extends State<EditScreen> {
   bool _isLoading = false;
   bool _hasInteracted = false; // Track if user made any changes
   bool _wasEmptyOnStart = false; // Track if document was empty when editing started (for ad logic)
+  bool _showHint = false; // Show tap hint banner
 
   // For ReorderableBuilder
   final _scrollController = ScrollController();
   final _gridViewKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    _checkAndShowHint();
+  }
+
+  Future<void> _checkAndShowHint() async {
+    final prefs = await SharedPreferences.getInstance();
+    final hintShown = prefs.getBool(_hintShownKey) ?? false;
+
+    if (!hintShown && mounted) {
+      setState(() => _showHint = true);
+      await prefs.setBool(_hintShownKey, true);
+
+      // Auto hide after 4 seconds
+      Future.delayed(const Duration(seconds: 4), () {
+        if (mounted) setState(() => _showHint = false);
+      });
+    }
+  }
 
   @override
   void didChangeDependencies() {
@@ -394,6 +420,38 @@ class _EditScreenState extends State<EditScreen> {
             ? const Center(child: CircularProgressIndicator())
             : Column(
                 children: [
+                  // Tap hint banner (shows once for new users)
+                  AnimatedSize(
+                    duration: const Duration(milliseconds: 300),
+                    child: _showHint
+                        ? Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppSpacing.md,
+                              vertical: AppSpacing.sm,
+                            ),
+                            color: AppColors.primary.withValues(alpha: 0.1),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  LucideIcons.info,
+                                  size: 16,
+                                  color: AppColors.primary,
+                                ),
+                                const SizedBox(width: AppSpacing.sm),
+                                Text(
+                                  'edit.tapImageHint'.tr(),
+                                  style: AppTextStyles.bodySmall.copyWith(
+                                    color: AppColors.primary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        : const SizedBox.shrink(),
+                  ),
+
                   // Image Grid (Reorderable)
                   Expanded(
                     child: _buildReorderableGrid(),

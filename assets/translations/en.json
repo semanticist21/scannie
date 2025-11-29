@@ -50,6 +50,7 @@
     "saveScanDesc": "Enter a name for this scan",
     "scanSaved": "Scan saved",
     "addAtLeastOneImage": "Please add at least one image to save",
+    "tapImageHint": "Tap image to adjust filters & rotate",
     "discardChangesTitle": "Discard Changes?",
     "discardNewScan": "Are you sure you want to discard this scan? All images will be lost.",
     "discardEditScan": "Are you sure you want to discard changes? Your changes will not be saved."

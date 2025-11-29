@@ -50,6 +50,7 @@
     "saveScanDesc": "스캔 이름을 입력해주세요",
     "scanSaved": "스캔을 저장했어요",
     "addAtLeastOneImage": "저장하려면 이미지를 1개 이상 추가해주세요",
+    "tapImageHint": "이미지를 탭해서 필터와 회전을 조정해보세요",
     "discardChangesTitle": "변경사항을 버릴까요?",
     "discardNewScan": "이 스캔을 버리시겠어요? 모든 이미지가 사라져요.",
     "discardEditScan": "변경사항을 버리시겠어요? 저장되지 않은 내용은 사라져요."
