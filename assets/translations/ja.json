@@ -52,7 +52,8 @@
     "addAtLeastOneImage": "保存するには画像を1枚以上追加してください",
     "discardChangesTitle": "変更を破棄しますか？",
     "discardNewScan": "このスキャンを破棄しますか？すべての画像が失われます。",
-    "discardEditScan": "変更を破棄しますか？保存されていない変更は失われます。"
+    "discardEditScan": "変更を破棄しますか？保存されていない変更は失われます。",
+    "tapImageHint": "画像をタップしてフィルターと回転を調整"
   },
   "viewer": {
     "listView": "リスト表示",

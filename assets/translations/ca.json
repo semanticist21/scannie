@@ -52,7 +52,8 @@
     "addAtLeastOneImage": "Afegeix almenys una imatge per desar",
     "discardChangesTitle": "Descartar els canvis?",
     "discardNewScan": "Vols descartar aquest escaneig? Es perdran totes les imatges.",
-    "discardEditScan": "Vols descartar els canvis? Es perdran els canvis no desats."
+    "discardEditScan": "Vols descartar els canvis? Es perdran els canvis no desats.",
+    "tapImageHint": "Toca la imatge per ajustar filtres i rotació"
   },
   "viewer": {
     "listView": "Vista de llista",

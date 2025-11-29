@@ -52,7 +52,8 @@
     "addAtLeastOneImage": "Pridėkite bent vieną vaizdą, kad išsaugotumėte",
     "discardChangesTitle": "Atmesti pakeitimus?",
     "discardNewScan": "Ar tikrai norite atmesti šį skenavimą? Visi vaizdai bus prarasti.",
-    "discardEditScan": "Ar tikrai norite atmesti pakeitimus? Jūsų pakeitimai nebus išsaugoti."
+    "discardEditScan": "Ar tikrai norite atmesti pakeitimus? Jūsų pakeitimai nebus išsaugoti.",
+    "tapImageHint": "Bakstelėkite vaizdą, kad pakoreguotumėte filtrus ir pasukimą"
   },
   "viewer": {
     "listView": "Sąrašo rodinys",

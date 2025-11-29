@@ -52,7 +52,8 @@
     "addAtLeastOneImage": "ለማስቀመጥ ቢያንስ አንድ ምስል ያክሉ",
     "discardChangesTitle": "ለውጦችን ጣል?",
     "discardNewScan": "ይህን ስካን መጣል ይፈልጋሉ? ሁሉም ምስሎች ይጠፋሉ።",
-    "discardEditScan": "ለውጦችን መጣል ይፈልጋሉ? ያልተቀመጡ ለውጦች ይጠፋሉ።"
+    "discardEditScan": "ለውጦችን መጣል ይፈልጋሉ? ያልተቀመጡ ለውጦች ይጠፋሉ።",
+    "tapImageHint": "ማጣሪያዎችን እና ማሽከርከርን ለማስተካከል ምስሉን መታ ያድርጉ"
   },
   "viewer": {
     "listView": "የዝርዝር እይታ",

@@ -63,11 +63,6 @@ class _EditScreenState extends State<EditScreen> {
     if (!hintShown && mounted) {
       setState(() => _showHint = true);
       await prefs.setBool(_hintShownKey, true);
-
-      // Auto hide after 4 seconds
-      Future.delayed(const Duration(seconds: 4), () {
-        if (mounted) setState(() => _showHint = false);
-      });
     }
   }
 
@@ -421,36 +416,32 @@ class _EditScreenState extends State<EditScreen> {
             : Column(
                 children: [
                   // Tap hint banner (shows once for new users)
-                  AnimatedSize(
-                    duration: const Duration(milliseconds: 300),
-                    child: _showHint
-                        ? Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: AppSpacing.md,
-                              vertical: AppSpacing.sm,
+                  if (_showHint)
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.md,
+                        vertical: AppSpacing.sm,
+                      ),
+                      color: AppColors.primary.withValues(alpha: 0.1),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            LucideIcons.info,
+                            size: 16,
+                            color: AppColors.primary,
+                          ),
+                          const SizedBox(width: AppSpacing.sm),
+                          Text(
+                            'edit.tapImageHint'.tr(),
+                            style: AppTextStyles.bodySmall.copyWith(
+                              color: AppColors.primary,
                             ),
-                            color: AppColors.primary.withValues(alpha: 0.1),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(
-                                  LucideIcons.info,
-                                  size: 16,
-                                  color: AppColors.primary,
-                                ),
-                                const SizedBox(width: AppSpacing.sm),
-                                Text(
-                                  'edit.tapImageHint'.tr(),
-                                  style: AppTextStyles.bodySmall.copyWith(
-                                    color: AppColors.primary,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )
-                        : const SizedBox.shrink(),
-                  ),
+                          ),
+                        ],
+                      ),
+                    ),
 
                   // Image Grid (Reorderable)
                   Expanded(

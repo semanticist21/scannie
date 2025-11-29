@@ -52,7 +52,8 @@
     "addAtLeastOneImage": "Vui lòng thêm ít nhất một hình ảnh để lưu",
     "discardChangesTitle": "Bỏ thay đổi?",
     "discardNewScan": "Bạn có muốn bỏ bản quét này không? Tất cả hình ảnh sẽ bị mất.",
-    "discardEditScan": "Bạn có muốn bỏ thay đổi không? Các thay đổi chưa lưu sẽ bị mất."
+    "discardEditScan": "Bạn có muốn bỏ thay đổi không? Các thay đổi chưa lưu sẽ bị mất.",
+    "tapImageHint": "Nhấn vào hình ảnh để điều chỉnh bộ lọc và xoay"
   },
   "viewer": {
     "listView": "Xem dạng danh sách",

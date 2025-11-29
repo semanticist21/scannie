@@ -52,7 +52,8 @@
     "addAtLeastOneImage": "Żid mill-inqas stampa waħda biex tissejvja",
     "discardChangesTitle": "Armi l-bidliet?",
     "discardNewScan": "Tarmi dan l-iskennjar? L-istampi kollha se jintilfu.",
-    "discardEditScan": "Armi l-bidliet? Il-bidliet li mhumiex issejvjati se jintilfu."
+    "discardEditScan": "Armi l-bidliet? Il-bidliet li mhumiex issejvjati se jintilfu.",
+    "tapImageHint": "Ittappja l-immaġni biex taġġusta l-filtri u r-rotazzjoni"
   },
   "viewer": {
     "listView": "Dehra ta' lista",

@@ -52,7 +52,8 @@
     "addAtLeastOneImage": "Adaugă cel puțin o imagine pentru a salva",
     "discardChangesTitle": "Renunți la modificări?",
     "discardNewScan": "Sigur vrei să renunți la această scanare? Toate imaginile vor fi pierdute.",
-    "discardEditScan": "Sigur vrei să renunți la modificări? Modificările tale nu vor fi salvate."
+    "discardEditScan": "Sigur vrei să renunți la modificări? Modificările tale nu vor fi salvate.",
+    "tapImageHint": "Atingeți imaginea pentru a ajusta filtrele și rotația"
   },
   "viewer": {
     "listView": "Vizualizare listă",

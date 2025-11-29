@@ -52,7 +52,8 @@
     "addAtLeastOneImage": "Tilføj mindst ét billede for at gemme",
     "discardChangesTitle": "Kassér ændringer?",
     "discardNewScan": "Er du sikker på, at du vil kassere denne scanning? Alle billeder vil gå tabt.",
-    "discardEditScan": "Er du sikker på, at du vil kassere ændringerne? Dine ændringer vil ikke blive gemt."
+    "discardEditScan": "Er du sikker på, at du vil kassere ændringerne? Dine ændringer vil ikke blive gemt.",
+    "tapImageHint": "Tryk på billedet for at justere filtre og rotation"
   },
   "viewer": {
     "listView": "Listevisning",

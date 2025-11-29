@@ -52,7 +52,8 @@
     "addAtLeastOneImage": "Magdagdag ng kahit isang larawan para ma-save",
     "discardChangesTitle": "Itapon ang mga pagbabago?",
     "discardNewScan": "Gusto mo bang itapon ang scan na ito? Mawawala ang lahat ng larawan.",
-    "discardEditScan": "Gusto mo bang itapon ang mga pagbabago? Mawawala ang mga hindi na-save na pagbabago."
+    "discardEditScan": "Gusto mo bang itapon ang mga pagbabago? Mawawala ang mga hindi na-save na pagbabago.",
+    "tapImageHint": "I-tap ang larawan para i-adjust ang mga filter at pag-ikot"
   },
   "viewer": {
     "listView": "List view",

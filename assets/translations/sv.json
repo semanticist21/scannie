@@ -52,7 +52,8 @@
     "addAtLeastOneImage": "Lägg till minst en bild för att spara",
     "discardChangesTitle": "Kasta ändringar?",
     "discardNewScan": "Vill du kasta denna skanning? Alla bilder kommer att förloras.",
-    "discardEditScan": "Vill du kasta ändringarna? Osparade ändringar kommer att förloras."
+    "discardEditScan": "Vill du kasta ändringarna? Osparade ändringar kommer att förloras.",
+    "tapImageHint": "Tryck på bilden för att justera filter och rotation"
   },
   "viewer": {
     "listView": "Listvy",

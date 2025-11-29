@@ -52,7 +52,8 @@
     "addAtLeastOneImage": "Lisää vähintään yksi kuva tallentaaksesi",
     "discardChangesTitle": "Hylätäänkö muutokset?",
     "discardNewScan": "Haluatko varmasti hylätä tämän skannauksen? Kaikki kuvat menetetään.",
-    "discardEditScan": "Haluatko varmasti hylätä muutokset? Muutoksiasi ei tallenneta."
+    "discardEditScan": "Haluatko varmasti hylätä muutokset? Muutoksiasi ei tallenneta.",
+    "tapImageHint": "Napauta kuvaa säätääksesi suodattimia ja kiertoa"
   },
   "viewer": {
     "listView": "Listanäkymä",

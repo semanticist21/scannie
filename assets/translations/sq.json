@@ -52,7 +52,8 @@
     "addAtLeastOneImage": "Shtoni të paktën një imazh për të ruajtur",
     "discardChangesTitle": "Hidhni ndryshimet?",
     "discardNewScan": "Hidhni këtë skanim? Të gjitha imazhet do të humbasin.",
-    "discardEditScan": "Hidhni ndryshimet? Ndryshimet e paruajtura do të humbasin."
+    "discardEditScan": "Hidhni ndryshimet? Ndryshimet e paruajtura do të humbasin.",
+    "tapImageHint": "Prekni imazhin për të rregulluar filtrat dhe rrotullimin"
   },
   "viewer": {
     "listView": "Pamja listë",

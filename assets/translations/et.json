@@ -52,7 +52,8 @@
     "addAtLeastOneImage": "Salvestamiseks lisage vähemalt üks pilt",
     "discardChangesTitle": "Loobuda muudatustest?",
     "discardNewScan": "Kas olete kindel, et soovite sellest skaneeringust loobuda? Kõik pildid lähevad kaotsi.",
-    "discardEditScan": "Kas olete kindel, et soovite muudatustest loobuda? Teie muudatusi ei salvestata."
+    "discardEditScan": "Kas olete kindel, et soovite muudatustest loobuda? Teie muudatusi ei salvestata.",
+    "tapImageHint": "Puudutage pilti filtrite ja pööramise reguleerimiseks"
   },
   "viewer": {
     "listView": "Loendivaade",

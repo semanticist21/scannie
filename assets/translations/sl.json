@@ -52,7 +52,8 @@
     "addAtLeastOneImage": "Dodajte vsaj eno sliko za shranjevanje",
     "discardChangesTitle": "Zavreči spremembe?",
     "discardNewScan": "Ali ste prepričani, da želite zavreči ta sken? Vse slike bodo izgubljene.",
-    "discardEditScan": "Ali ste prepričani, da želite zavreči spremembe? Vaše spremembe ne bodo shranjene."
+    "discardEditScan": "Ali ste prepričani, da želite zavreči spremembe? Vaše spremembe ne bodo shranjene.",
+    "tapImageHint": "Dotaknite se slike za prilagoditev filtrov in vrtenja"
   },
   "viewer": {
     "listView": "Pogled seznama",

@@ -52,7 +52,8 @@
     "addAtLeastOneImage": "Bættu við að minnsta kosti einni mynd til að vista",
     "discardChangesTitle": "Fleygja breytingum?",
     "discardNewScan": "Fleygja þessari skannun? Öllum myndum verður eytt.",
-    "discardEditScan": "Fleygja breytingum? Óvistaðar breytingar tapast."
+    "discardEditScan": "Fleygja breytingum? Óvistaðar breytingar tapast.",
+    "tapImageHint": "Pikkaðu á mynd til að stilla síur og snúning"
   },
   "viewer": {
     "listView": "Listayfirlit",

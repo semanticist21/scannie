@@ -52,7 +52,8 @@
     "addAtLeastOneImage": "Saxlamaq üçün ən azı bir şəkil əlavə edin",
     "discardChangesTitle": "Dəyişiklikləri ataq?",
     "discardNewScan": "Bu skanı ataq? Bütün şəkillər itiriləcək.",
-    "discardEditScan": "Dəyişiklikləri ataq? Saxlanılmamış dəyişikliklər itiriləcək."
+    "discardEditScan": "Dəyişiklikləri ataq? Saxlanılmamış dəyişikliklər itiriləcək.",
+    "tapImageHint": "Filtrləri və fırlanmanı tənzimləmək üçün şəkilə toxunun"
   },
   "viewer": {
     "listView": "Siyahı görünüşü",

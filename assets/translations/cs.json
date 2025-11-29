@@ -52,7 +52,8 @@
     "addAtLeastOneImage": "Pro uložení přidejte alespoň jeden obrázek",
     "discardChangesTitle": "Zahodit změny?",
     "discardNewScan": "Opravdu chcete zahodit tento sken? Všechny obrázky budou ztraceny.",
-    "discardEditScan": "Opravdu chcete zahodit změny? Vaše změny nebudou uloženy."
+    "discardEditScan": "Opravdu chcete zahodit změny? Vaše změny nebudou uloženy.",
+    "tapImageHint": "Klepnutím na obrázek upravíte filtry a otočení"
   },
   "viewer": {
     "listView": "Zobrazení seznamu",

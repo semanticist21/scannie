@@ -52,7 +52,8 @@
     "addAtLeastOneImage": "Bitte füge mindestens ein Bild hinzu, um zu speichern",
     "discardChangesTitle": "Änderungen verwerfen?",
     "discardNewScan": "Möchtest du diesen Scan verwerfen? Alle Bilder gehen verloren.",
-    "discardEditScan": "Möchtest du die Änderungen verwerfen? Nicht gespeicherte Änderungen gehen verloren."
+    "discardEditScan": "Möchtest du die Änderungen verwerfen? Nicht gespeicherte Änderungen gehen verloren.",
+    "tapImageHint": "Tippe auf das Bild, um Filter und Drehung anzupassen"
   },
   "viewer": {
     "listView": "Listenansicht",

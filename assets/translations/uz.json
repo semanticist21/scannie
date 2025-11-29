@@ -52,7 +52,8 @@
     "addAtLeastOneImage": "Saqlash uchun kamida bitta rasm qo'shing",
     "discardChangesTitle": "O'zgarishlarni tashlab yuborasizmi?",
     "discardNewScan": "Bu skanerni tashlab yuborasizmi? Barcha rasmlar yo'qoladi.",
-    "discardEditScan": "O'zgarishlarni tashlab yuborasizmi? Saqlanmagan o'zgarishlar yo'qoladi."
+    "discardEditScan": "O'zgarishlarni tashlab yuborasizmi? Saqlanmagan o'zgarishlar yo'qoladi.",
+    "tapImageHint": "Filtrlar va aylantirishni sozlash uchun rasmga bosing"
   },
   "viewer": {
     "listView": "Ro'yxat ko'rinishi",

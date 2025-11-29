@@ -52,7 +52,8 @@
     "addAtLeastOneImage": "Ongeza picha angalau moja ili kuhifadhi",
     "discardChangesTitle": "Tupa mabadiliko?",
     "discardNewScan": "Je, unataka kutupa skani hii? Picha zote zitapotea.",
-    "discardEditScan": "Je, unataka kutupa mabadiliko? Mabadiliko ambayo hayajahifadhiwa yatapotea."
+    "discardEditScan": "Je, unataka kutupa mabadiliko? Mabadiliko ambayo hayajahifadhiwa yatapotea.",
+    "tapImageHint": "Gusa picha ili kurekebisha vichujio na kuzungusha"
   },
   "viewer": {
     "listView": "Mwonekano wa orodha",

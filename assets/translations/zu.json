@@ -52,7 +52,8 @@
     "addAtLeastOneImage": "Engeza okungenani isithombe esisodwa ukuze ulondoloze",
     "discardChangesTitle": "Lahla izinguquko?",
     "discardNewScan": "Ufuna ukulahla lokhu okuskeniwe? Zonke izithombe zizolahleka.",
-    "discardEditScan": "Ufuna ukulahla izinguquko? Izinguquko ezingalondoloziwe zizolahleka."
+    "discardEditScan": "Ufuna ukulahla izinguquko? Izinguquko ezingalondoloziwe zizolahleka.",
+    "tapImageHint": "Thepha isithombe ukuze ulungise izihluzi nokuphenduka"
   },
   "viewer": {
     "listView": "Ukubuka uhlu",

@@ -52,7 +52,8 @@
     "addAtLeastOneImage": "Añade al menos una imagen para guardar",
     "discardChangesTitle": "¿Descartar cambios?",
     "discardNewScan": "¿Seguro que quieres descartar este escaneo? Se perderán todas las imágenes.",
-    "discardEditScan": "¿Seguro que quieres descartar los cambios? Los cambios no guardados se perderán."
+    "discardEditScan": "¿Seguro que quieres descartar los cambios? Los cambios no guardados se perderán.",
+    "tapImageHint": "Toca la imagen para ajustar filtros y rotar"
   },
   "viewer": {
     "listView": "Vista de lista",

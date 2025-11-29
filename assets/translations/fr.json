@@ -52,7 +52,8 @@
     "addAtLeastOneImage": "Veuillez ajouter au moins une image pour enregistrer",
     "discardChangesTitle": "Abandonner les modifications ?",
     "discardNewScan": "Voulez-vous abandonner ce scan ? Toutes les images seront perdues.",
-    "discardEditScan": "Voulez-vous abandonner les modifications ? Les modifications non enregistrées seront perdues."
+    "discardEditScan": "Voulez-vous abandonner les modifications ? Les modifications non enregistrées seront perdues.",
+    "tapImageHint": "Appuyez sur l'image pour ajuster les filtres et la rotation"
   },
   "viewer": {
     "listView": "Vue liste",

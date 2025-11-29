@@ -52,7 +52,8 @@
     "addAtLeastOneImage": "Kaydetmek için en az bir resim ekleyin",
     "discardChangesTitle": "Değişiklikler silinsin mi?",
     "discardNewScan": "Bu tarama silinsin mi? Tüm resimler kaybolacak.",
-    "discardEditScan": "Değişiklikler silinsin mi? Kaydedilmemiş değişiklikler kaybolacak."
+    "discardEditScan": "Değişiklikler silinsin mi? Kaydedilmemiş değişiklikler kaybolacak.",
+    "tapImageHint": "Filtreleri ve döndürmeyi ayarlamak için resme dokunun"
   },
   "viewer": {
     "listView": "Liste Görünümü",

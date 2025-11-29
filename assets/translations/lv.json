@@ -52,7 +52,8 @@
     "addAtLeastOneImage": "Pievienojiet vismaz vienu attēlu, lai saglabātu",
     "discardChangesTitle": "Atmest izmaiņas?",
     "discardNewScan": "Vai tiešām vēlaties atmest šo skenējumu? Visi attēli tiks zaudēti.",
-    "discardEditScan": "Vai tiešām vēlaties atmest izmaiņas? Jūsu izmaiņas netiks saglabātas."
+    "discardEditScan": "Vai tiešām vēlaties atmest izmaiņas? Jūsu izmaiņas netiks saglabātas.",
+    "tapImageHint": "Pieskarieties attēlam, lai pielāgotu filtrus un pagriešanu"
   },
   "viewer": {
     "listView": "Saraksta skats",

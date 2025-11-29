@@ -52,7 +52,8 @@
     "addAtLeastOneImage": "Dodajte barem jednu sliku za spremanje",
     "discardChangesTitle": "Odbaciti izmjene?",
     "discardNewScan": "Odbaciti ovo skeniranje? Sve slike će biti izgubljene.",
-    "discardEditScan": "Odbaciti izmjene? Nesačuvane izmjene će biti izgubljene."
+    "discardEditScan": "Odbaciti izmjene? Nesačuvane izmjene će biti izgubljene.",
+    "tapImageHint": "Dodirnite sliku da prilagodite filtere i rotaciju"
   },
   "viewer": {
     "listView": "Prikaz liste",

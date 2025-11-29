@@ -52,7 +52,8 @@
     "addAtLeastOneImage": "Tambahkan minimal satu gambar untuk menyimpan",
     "discardChangesTitle": "Buang perubahan?",
     "discardNewScan": "Buang pindaian ini? Semua gambar akan hilang.",
-    "discardEditScan": "Buang perubahan? Perubahan yang belum disimpan akan hilang."
+    "discardEditScan": "Buang perubahan? Perubahan yang belum disimpan akan hilang.",
+    "tapImageHint": "Ketuk gambar untuk menyesuaikan filter dan rotasi"
   },
   "viewer": {
     "listView": "Tampilan Daftar",

@@ -52,7 +52,8 @@
     "addAtLeastOneImage": "请至少添加一张图片后再保存",
     "discardChangesTitle": "放弃更改？",
     "discardNewScan": "确定要放弃此扫描吗？所有图片将会丢失。",
-    "discardEditScan": "确定要放弃更改吗？未保存的更改将会丢失。"
+    "discardEditScan": "确定要放弃更改吗？未保存的更改将会丢失。",
+    "tapImageHint": "点击图片调整滤镜和旋转"
   },
   "viewer": {
     "listView": "列表视图",
