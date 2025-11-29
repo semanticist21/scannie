@@ -10,6 +10,7 @@ class _BlurDialogType extends WoltDialogType {
       : super(
           shapeBorder: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(AppRadius.lg)),
+            side: BorderSide(color: AppColors.border, width: 1),
           ),
         );
 
@@ -39,6 +40,7 @@ class _BlurBottomSheetType extends WoltBottomSheetType {
       : super(
           shapeBorder: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
+            side: BorderSide(color: AppColors.border, width: 1),
           ),
           showDragHandle: false, // We draw our own drag handle in content
         );

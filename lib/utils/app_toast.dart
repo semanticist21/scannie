@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:elegant_notification/elegant_notification.dart';
+import 'package:elegant_notification/resources/arrays.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_theme.dart';
 
 /// Centralized toast notification utility for consistent app-wide messaging
 class AppToast {
@@ -24,9 +26,19 @@ class AppToast {
       icon: Icon(Icons.check_circle, color: colors.success),
       background: colors.surface,
       progressIndicatorColor: colors.success,
-      toastDuration: const Duration(seconds: 3),
+      toastDuration: const Duration(seconds: 2),
       showProgressIndicator: true,
       height: 75,
+      width: 300,
+      borderRadius: BorderRadius.circular(AppRadius.md),
+      shadow: BoxShadow(
+        color: Colors.black.withValues(alpha: 0.15),
+        spreadRadius: 1,
+        blurRadius: 8,
+        offset: const Offset(0, 2),
+      ),
+      position: Alignment.topCenter,
+      animation: AnimationType.fromTop,
     ).show(context);
   }
 
@@ -51,6 +63,16 @@ class AppToast {
       progressIndicatorColor: colors.error,
       toastDuration: const Duration(seconds: 3),
       showProgressIndicator: true,
+      width: 300,
+      borderRadius: BorderRadius.circular(AppRadius.md),
+      shadow: BoxShadow(
+        color: Colors.black.withValues(alpha: 0.15),
+        spreadRadius: 1,
+        blurRadius: 8,
+        offset: const Offset(0, 2),
+      ),
+      position: Alignment.topCenter,
+      animation: AnimationType.fromTop,
     ).show(context);
   }
 
@@ -74,8 +96,19 @@ class AppToast {
       icon: Icon(Icons.info, color: AppColors.primary),
       background: colors.surface,
       progressIndicatorColor: AppColors.primary,
-      toastDuration: const Duration(seconds: 30), // Long duration, will be dismissed manually
+      toastDuration: const Duration(
+          seconds: 30), // Long duration, will be dismissed manually
       showProgressIndicator: true,
+      width: 300,
+      borderRadius: BorderRadius.circular(AppRadius.md),
+      shadow: BoxShadow(
+        color: Colors.black.withValues(alpha: 0.15),
+        spreadRadius: 1,
+        blurRadius: 8,
+        offset: const Offset(0, 2),
+      ),
+      position: Alignment.topCenter,
+      animation: AnimationType.fromTop,
     );
     notification.show(context);
     return notification;
