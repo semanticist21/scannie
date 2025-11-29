@@ -649,6 +649,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
             // Page viewer with zoom (using photo_view for better gesture handling)
             Padding(
                 padding: EdgeInsets.only(
+                  top: 56, // Space for top control bar
                   bottom: widget.showFilters ? 160 : 0,
                 ),
                 child: GestureDetector(
@@ -716,13 +717,29 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      if (widget.showFilters)
+                      if (widget.showFilters) ...[
                         IconButton(
                           icon: const Icon(LucideIcons.crop,
                               color: AppColors.darkTextPrimary),
                           onPressed: _cropAndRotateImage,
                           tooltip: 'imageViewer.rotateImage'.tr(),
                         ),
+                        IconButton(
+                          icon: _isSaving
+                              ? const SizedBox(
+                                  width: 18,
+                                  height: 18,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: AppColors.darkTextPrimary,
+                                  ),
+                                )
+                              : const Icon(LucideIcons.check,
+                                  color: AppColors.darkTextPrimary),
+                          onPressed: _isSaving ? null : _saveFilteredImage,
+                          tooltip: 'common.save'.tr(),
+                        ),
+                      ],
                       // Hide download/share in edit mode (showFilters = true)
                       if (!widget.showFilters) ...[
                         IconButton(
