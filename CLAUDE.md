@@ -33,7 +33,12 @@ Scannie는 문서 스캔 Flutter 모바일 애플리케이션입니다. 네이�
 - ✅ **FullScreenImageViewer 필터** (Original, B&W, Contrast, Brighten, Document, Sepia, Invert, Warm, Cool)
 - ✅ **이미지 크롭/회전** (image_cropper - 네이티브 UI)
 - ✅ **광고 수익화** (AdMob 전면 광고 - 새 스캔 저장 시 표시)
-- ✅ **광고 제거 기능** ($2 일회성 구매)
+- ✅ **광고 제거 기능** ($2 일회성 구매 - Google Play In-App Purchase)
+
+**배포 정보**:
+- **Package Name**: `com.kobbokkom.scannie`
+- **Play Store**: 내부 테스트 트랙 활성화
+- **In-App Product ID**: `premium_remove_ads` (non-consumable)
 
 ## Quick Reference
 
@@ -369,7 +374,9 @@ lib/
 │   ├── document_storage.dart         # 문서 영구 저장/로드
 │   ├── pdf_generator.dart            # PDF 생성 (Isolate 지원)
 │   ├── pdf_settings_service.dart     # PDF 기본 설정 관리
-│   └── ad_service.dart               # AdMob 광고 관리 (싱글톤)
+│   ├── ad_service.dart               # AdMob 광고 관리 (싱글톤)
+│   ├── purchase_service.dart         # Google Play 인앱 결제 (싱글톤)
+│   └── theme_service.dart            # 테마 상태 관리 (싱글톤)
 ├── theme/                # 디자인 시스템
 │   ├── app_theme.dart        # M3 ThemeData 구성
 │   ├── app_colors.dart       # 색상 팔레트
@@ -1374,6 +1381,54 @@ await AdService.instance.showInterstitialAd();
 ```dart
 final prefs = await SharedPreferences.getInstance();
 final isPremium = prefs.getBool('isPremium') ?? false;
+```
+
+## In-App Purchase (PurchaseService)
+
+### 개요
+
+`PurchaseService`는 Google Play 인앱 결제를 관리하는 싱글톤 서비스입니다. 광고 제거 기능을 일회성 구매(non-consumable)로 제공합니다.
+
+### 사용 방법
+
+```dart
+import 'services/purchase_service.dart';
+
+// 앱 시작 시 초기화 (main.dart에서 호출됨)
+await PurchaseService.instance.initialize();
+
+// 프리미엄 구매
+await PurchaseService.instance.purchasePremium();
+
+// 구매 복원 (기기 변경/재설치 시)
+await PurchaseService.instance.restorePurchases();
+
+// 프리미엄 상태 확인
+final isPremium = await PurchaseService.instance.isPremium;
+
+// 스토어 가격 표시
+final price = PurchaseService.instance.priceString; // "$2.00" 또는 지역별 가격
+```
+
+### 주요 특징
+
+- **Non-consumable**: 한 번 구매하면 영구 소유
+- **자동 복원**: 앱 시작 시 `restorePurchases()` 자동 호출
+- **SharedPreferences 연동**: `isPremium` 키로 AdService와 상태 공유
+- **Product ID**: `premium_remove_ads`
+
+### PremiumDialog 연동
+
+```dart
+import '../widgets/gallery/premium_dialog.dart';
+
+PremiumDialog.show(
+  context: context,
+  onPurchaseComplete: () {
+    // 구매 완료 후 UI 업데이트
+    setState(() {});
+  },
+);
 ```
 
 ## 앱 아이콘 및 스플래시 스크린
