@@ -106,7 +106,7 @@
     "unlocked": "Hysbysebion wedi'u dileu",
     "unlock": "Dileu hysbysebion ($2)",
     "maybeLater": "Efallai'n hwyrach",
-    "unlockWithPrice": "Dileu hysbysebion ({0})",
+    "unlockWithPrice": "Dileu hysbysebion ({})",
     "restore": "Adfer pryniant",
     "restoreRequested": "Gwirio pryniadau blaenorol...",
     "restoreFailed": "Methu adfer pryniadau",

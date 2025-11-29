@@ -105,7 +105,7 @@
     "description": "Nauti Scanniesta ilman keskeytyksiä.\nPoista kaikki mainokset kertaostoksella.",
     "unlocked": "Mainokset poistettu",
     "unlock": "Poista mainokset ($2)",
-    "unlockWithPrice": "Poista mainokset ({0})",
+    "unlockWithPrice": "Poista mainokset ({})",
     "maybeLater": "Ehkä myöhemmin",
     "restore": "Palauta osto",
     "restoreRequested": "Tarkistetaan aiempia ostoja...",

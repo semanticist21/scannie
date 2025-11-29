@@ -105,7 +105,7 @@
     "description": "Užívejte si Scannie bez přerušení.\nOdstraňte všechny reklamy jednorázovým nákupem.",
     "unlocked": "Reklamy odstraněny",
     "unlock": "Odstranit reklamy ($2)",
-    "unlockWithPrice": "Odstranit reklamy ({0})",
+    "unlockWithPrice": "Odstranit reklamy ({})",
     "maybeLater": "Možná později",
     "restore": "Obnovit nákup",
     "restoreRequested": "Kontrola předchozích nákupů...",

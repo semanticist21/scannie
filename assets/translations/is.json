@@ -106,7 +106,7 @@
     "unlocked": "Auglýsingar fjarlægðar",
     "unlock": "Fjarlægja auglýsingar ($2)",
     "maybeLater": "Kannski seinna",
-    "unlockWithPrice": "Fjarlægja auglýsingar ({0})",
+    "unlockWithPrice": "Fjarlægja auglýsingar ({})",
     "restore": "Endurheimta kaup",
     "restoreRequested": "Athuga fyrri kaup...",
     "restoreFailed": "Ekki tókst að endurheimta kaup",

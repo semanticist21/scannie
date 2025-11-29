@@ -106,7 +106,7 @@
     "unlocked": "Anuncis eliminats",
     "unlock": "Elimina els anuncis ($2)",
     "maybeLater": "Potser més tard",
-    "unlockWithPrice": "Eliminar anuncis ({0})",
+    "unlockWithPrice": "Eliminar anuncis ({})",
     "restore": "Restaurar compra",
     "restoreRequested": "Comprovant compres anteriors...",
     "restoreFailed": "No s'han pogut restaurar les compres",

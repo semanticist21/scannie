@@ -105,7 +105,7 @@
     "description": "Nautige Scannie'd ilma katkestusteta.\nEemaldage kõik reklaamid ühekordse ostuga.",
     "unlocked": "Reklaamid eemaldatud",
     "unlock": "Eemalda reklaamid ($2)",
-    "unlockWithPrice": "Eemalda reklaamid ({0})",
+    "unlockWithPrice": "Eemalda reklaamid ({})",
     "maybeLater": "Võib-olla hiljem",
     "restore": "Taasta ost",
     "restoreRequested": "Varasemate ostude kontrollimine...",

@@ -106,7 +106,7 @@
     "unlocked": "Reklami mneħħija",
     "unlock": "Neħħi r-reklami ($2)",
     "maybeLater": "Forsi aktar tard",
-    "unlockWithPrice": "Neħħi r-reklami ({0})",
+    "unlockWithPrice": "Neħħi r-reklami ({})",
     "restore": "Irrestawra x-xiri",
     "restoreRequested": "Qed niċċekkja xiri preċedenti...",
     "restoreFailed": "Ma setax jiġi rrestawrat ix-xiri",

@@ -106,7 +106,7 @@
     "unlocked": "広告削除済み",
     "unlock": "広告を削除 ($2)",
     "maybeLater": "あとで",
-    "unlockWithPrice": "広告を削除 ({0})",
+    "unlockWithPrice": "広告を削除 ({})",
     "restore": "購入を復元",
     "restoreRequested": "以前の購入を確認中...",
     "restoreFailed": "購入を復元できませんでした",

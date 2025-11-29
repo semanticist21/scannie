@@ -106,7 +106,7 @@
     "unlocked": "Matangazo yameondolewa",
     "unlock": "Ondoa matangazo ($2)",
     "maybeLater": "Labda baadaye",
-    "unlockWithPrice": "Ondoa matangazo ({0})",
+    "unlockWithPrice": "Ondoa matangazo ({})",
     "restore": "Rejesha ununuzi",
     "restoreRequested": "Inakagua ununuzi uliopita...",
     "restoreFailed": "Haikuweza kurejesha ununuzi",

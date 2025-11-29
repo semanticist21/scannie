@@ -105,7 +105,7 @@
     "description": "Enjoy Scannie without interruptions.\nRemove all ads with a one-time purchase.",
     "unlocked": "Ads Removed",
     "unlock": "Remove Ads ($2)",
-    "unlockWithPrice": "Remove Ads ({0})",
+    "unlockWithPrice": "Remove Ads ({})",
     "maybeLater": "Maybe Later",
     "restore": "Restore Purchase",
     "restoreRequested": "Checking for previous purchases...",

@@ -106,7 +106,7 @@
     "unlocked": "Annonser fjernet",
     "unlock": "Fjern annonser ($2)",
     "maybeLater": "Kanskje senere",
-    "unlockWithPrice": "Fjern annonser ({0})",
+    "unlockWithPrice": "Fjern annonser ({})",
     "restore": "Gjenopprett kjøp",
     "restoreRequested": "Sjekker tidligere kjøp...",
     "restoreFailed": "Kunne ikke gjenopprette kjøp",

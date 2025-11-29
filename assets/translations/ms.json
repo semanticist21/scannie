@@ -106,7 +106,7 @@
     "unlocked": "Iklan dialih keluar",
     "unlock": "Alih keluar iklan ($2)",
     "maybeLater": "Mungkin nanti",
-    "unlockWithPrice": "Alih keluar iklan ({0})",
+    "unlockWithPrice": "Alih keluar iklan ({})",
     "restore": "Pulihkan pembelian",
     "restoreRequested": "Menyemak pembelian sebelumnya...",
     "restoreFailed": "Tidak dapat memulihkan pembelian",

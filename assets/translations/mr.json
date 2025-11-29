@@ -106,7 +106,7 @@
     "unlocked": "जाहिराती काढल्या",
     "unlock": "जाहिराती काढा ($2)",
     "maybeLater": "नंतर कदाचित",
-    "unlockWithPrice": "जाहिराती काढा ({0})",
+    "unlockWithPrice": "जाहिराती काढा ({})",
     "restore": "खरेदी पुनर्संचयित करा",
     "restoreRequested": "मागील खरेदी तपासत आहे...",
     "restoreFailed": "खरेदी पुनर्संचयित करता आली नाही",

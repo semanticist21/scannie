@@ -106,7 +106,7 @@
     "unlocked": "ลบโฆษณาแล้ว",
     "unlock": "ลบโฆษณา ($2)",
     "maybeLater": "ไว้ทีหลัง",
-    "unlockWithPrice": "ลบโฆษณา ({0})",
+    "unlockWithPrice": "ลบโฆษณา ({})",
     "restore": "กู้คืนการซื้อ",
     "restoreRequested": "กำลังตรวจสอบการซื้อก่อนหน้า...",
     "restoreFailed": "ไม่สามารถกู้คืนการซื้อได้",

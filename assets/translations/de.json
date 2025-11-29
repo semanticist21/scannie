@@ -106,7 +106,7 @@
     "unlocked": "Werbung entfernt",
     "unlock": "Werbung entfernen ($2)",
     "maybeLater": "Vielleicht später",
-    "unlockWithPrice": "Werbung entfernen ({0})",
+    "unlockWithPrice": "Werbung entfernen ({})",
     "restore": "Kauf wiederherstellen",
     "restoreRequested": "Frühere Käufe werden überprüft...",
     "restoreFailed": "Käufe konnten nicht wiederhergestellt werden",

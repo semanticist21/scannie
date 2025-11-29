@@ -106,7 +106,7 @@
     "unlocked": "ເອົາໂຄສະນາອອກແລ້ວ",
     "unlock": "ເອົາໂຄສະນາອອກ ($2)",
     "maybeLater": "ບາງທີພາຍຫຼັງ",
-    "unlockWithPrice": "ລຶບໂຄສະນາ ({0})",
+    "unlockWithPrice": "ລຶບໂຄສະນາ ({})",
     "restore": "ກູ້ຄືນການຊື້",
     "restoreRequested": "ກຳລັງກວດສອບການຊື້ກ່ອນໜ້າ...",
     "restoreFailed": "ບໍ່ສາມາດກູ້ຄືນການຊື້ໄດ້",

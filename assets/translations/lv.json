@@ -105,7 +105,7 @@
     "description": "Baudiet Scannie bez pārtraukumiem.\nNoņemiet visas reklāmas ar vienreizēju pirkumu.",
     "unlocked": "Reklāmas noņemtas",
     "unlock": "Noņemt reklāmas ($2)",
-    "unlockWithPrice": "Noņemt reklāmas ({0})",
+    "unlockWithPrice": "Noņemt reklāmas ({})",
     "maybeLater": "Varbūt vēlāk",
     "restore": "Atjaunot pirkumu",
     "restoreRequested": "Pārbauda iepriekšējos pirkumus...",

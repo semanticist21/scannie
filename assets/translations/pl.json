@@ -105,7 +105,7 @@
     "description": "Ciesz się Scannie bez przerw.\nUsuń wszystkie reklamy jednorazowym zakupem.",
     "unlocked": "Reklamy usunięte",
     "unlock": "Usuń reklamy ($2)",
-    "unlockWithPrice": "Usuń reklamy ({0})",
+    "unlockWithPrice": "Usuń reklamy ({})",
     "maybeLater": "Może później",
     "restore": "Przywróć zakup",
     "restoreRequested": "Sprawdzanie poprzednich zakupów...",

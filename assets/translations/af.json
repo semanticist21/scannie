@@ -106,7 +106,7 @@
     "unlocked": "Advertensies verwyder",
     "unlock": "Verwyder advertensies ($2)",
     "maybeLater": "Miskien later",
-    "unlockWithPrice": "Verwyder advertensies ({0})",
+    "unlockWithPrice": "Verwyder advertensies ({})",
     "restore": "Herstel aankoop",
     "restoreRequested": "Kyk vir vorige aankope...",
     "restoreFailed": "Kon nie aankope herstel nie",

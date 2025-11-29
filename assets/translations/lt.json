@@ -105,7 +105,7 @@
     "description": "Mėgaukitės Scannie be pertraukimų.\nPašalinkite visus skelbimus vienu pirkimu.",
     "unlocked": "Skelbimai pašalinti",
     "unlock": "Pašalinti skelbimus ($2)",
-    "unlockWithPrice": "Pašalinti skelbimus ({0})",
+    "unlockWithPrice": "Pašalinti skelbimus ({})",
     "maybeLater": "Gal vėliau",
     "restore": "Atkurti pirkimą",
     "restoreRequested": "Tikrinami ankstesni pirkimai...",

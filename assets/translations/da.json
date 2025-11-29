@@ -105,7 +105,7 @@
     "description": "Nyd Scannie uden afbrydelser.\nFjern alle reklamer med et engangskøb.",
     "unlocked": "Reklamer fjernet",
     "unlock": "Fjern reklamer ($2)",
-    "unlockWithPrice": "Fjern reklamer ({0})",
+    "unlockWithPrice": "Fjern reklamer ({})",
     "maybeLater": "Måske senere",
     "restore": "Gendan køb",
     "restoreRequested": "Tjekker tidligere køb...",

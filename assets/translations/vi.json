@@ -106,7 +106,7 @@
     "unlocked": "Đã xóa quảng cáo",
     "unlock": "Xóa quảng cáo ($2)",
     "maybeLater": "Để sau",
-    "unlockWithPrice": "Xóa quảng cáo ({0})",
+    "unlockWithPrice": "Xóa quảng cáo ({})",
     "restore": "Khôi phục mua hàng",
     "restoreRequested": "Đang kiểm tra các giao dịch trước...",
     "restoreFailed": "Không thể khôi phục giao dịch",

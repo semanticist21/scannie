@@ -106,7 +106,7 @@
     "unlocked": "Fógraí bainte",
     "unlock": "Bain fógraí ($2)",
     "maybeLater": "B'fhéidir níos déanaí",
-    "unlockWithPrice": "Bain fógraí ({0})",
+    "unlockWithPrice": "Bain fógraí ({})",
     "restore": "Athchóirigh ceannach",
     "restoreRequested": "Ag seiceáil ceannacháin roimhe seo...",
     "restoreFailed": "Níorbh fhéidir ceannacháin a athchóiriú",

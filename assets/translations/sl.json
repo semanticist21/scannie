@@ -105,7 +105,7 @@
     "description": "Uživajte v Scannie brez prekinitev.\nOdstranite vse oglase z enkratnim nakupom.",
     "unlocked": "Oglasi odstranjeni",
     "unlock": "Odstrani oglase ($2)",
-    "unlockWithPrice": "Odstrani oglase ({0})",
+    "unlockWithPrice": "Odstrani oglase ({})",
     "maybeLater": "Morda pozneje",
     "restore": "Obnovi nakup",
     "restoreRequested": "Preverjanje prejšnjih nakupov...",

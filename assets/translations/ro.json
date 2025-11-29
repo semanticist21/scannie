@@ -105,7 +105,7 @@
     "description": "Bucură-te de Scannie fără întreruperi.\nElimină toate reclamele cu o singură achiziție.",
     "unlocked": "Reclame eliminate",
     "unlock": "Elimină reclamele ($2)",
-    "unlockWithPrice": "Elimină reclamele ({0})",
+    "unlockWithPrice": "Elimină reclamele ({})",
     "maybeLater": "Poate mai târziu",
     "restore": "Restaurează achiziția",
     "restoreRequested": "Se verifică achizițiile anterioare...",

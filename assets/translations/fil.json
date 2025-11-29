@@ -106,7 +106,7 @@
     "unlocked": "Naalis na ang mga ad",
     "unlock": "Alisin ang mga ad ($2)",
     "maybeLater": "Mamaya na",
-    "unlockWithPrice": "Alisin ang mga ad ({0})",
+    "unlockWithPrice": "Alisin ang mga ad ({})",
     "restore": "Ibalik ang pagbili",
     "restoreRequested": "Sinusuri ang mga nakaraang pagbili...",
     "restoreFailed": "Hindi maibalik ang mga pagbili",

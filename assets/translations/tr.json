@@ -106,7 +106,7 @@
     "unlocked": "Reklamlar Kaldırıldı",
     "unlock": "Reklamları Kaldır ($2)",
     "maybeLater": "Belki Daha Sonra",
-    "unlockWithPrice": "Reklamları kaldır ({0})",
+    "unlockWithPrice": "Reklamları kaldır ({})",
     "restore": "Satın almayı geri yükle",
     "restoreRequested": "Önceki satın almalar kontrol ediliyor...",
     "restoreFailed": "Satın almalar geri yüklenemedi",

@@ -106,7 +106,7 @@
     "unlocked": "פרסומות הוסרו",
     "unlock": "הסר פרסומות ($2)",
     "maybeLater": "אולי אחר כך",
-    "unlockWithPrice": "הסר פרסומות ({0})",
+    "unlockWithPrice": "הסר פרסומות ({})",
     "restore": "שחזר רכישה",
     "restoreRequested": "בודק רכישות קודמות...",
     "restoreFailed": "לא ניתן לשחזר רכישות",

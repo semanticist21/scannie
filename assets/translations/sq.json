@@ -106,7 +106,7 @@
     "unlocked": "Reklamat u hoqën",
     "unlock": "Hiq reklamat ($2)",
     "maybeLater": "Ndoshta më vonë",
-    "unlockWithPrice": "Hiq reklamat ({0})",
+    "unlockWithPrice": "Hiq reklamat ({})",
     "restore": "Rivendos blerjen",
     "restoreRequested": "Duke kontrolluar blerjet e mëparshme...",
     "restoreFailed": "Nuk mund të rivendosen blerjet",

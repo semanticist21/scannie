@@ -105,7 +105,7 @@
     "description": "Geniet van Scannie zonder onderbrekingen.\nVerwijder alle advertenties met een eenmalige aankoop.",
     "unlocked": "Advertenties verwijderd",
     "unlock": "Advertenties verwijderen ($2)",
-    "unlockWithPrice": "Advertenties verwijderen ({0})",
+    "unlockWithPrice": "Advertenties verwijderen ({})",
     "maybeLater": "Misschien later",
     "restore": "Aankoop herstellen",
     "restoreRequested": "Controleren op eerdere aankopen...",

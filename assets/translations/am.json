@@ -106,7 +106,7 @@
     "unlocked": "ማስታወቂያዎች ተወግደዋል",
     "unlock": "ማስታወቂያዎችን አስወግድ ($2)",
     "maybeLater": "ምናልባት በኋላ",
-    "unlockWithPrice": "ማስታወቂያዎችን ያስወግዱ ({0})",
+    "unlockWithPrice": "ማስታወቂያዎችን ያስወግዱ ({})",
     "restore": "ግዢን ወደነበረበት መልስ",
     "restoreRequested": "ቀደም ያሉ ግዢዎችን በማጣራት ላይ...",
     "restoreFailed": "ግዢዎችን ወደነበረበት መመለስ አልተቻለም",

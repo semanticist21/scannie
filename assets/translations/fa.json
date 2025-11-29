@@ -106,7 +106,7 @@
     "unlocked": "تبلیغات حذف شده",
     "unlock": "حذف تبلیغات ($2)",
     "maybeLater": "شاید بعداً",
-    "unlockWithPrice": "حذف تبلیغات ({0})",
+    "unlockWithPrice": "حذف تبلیغات ({})",
     "restore": "بازیابی خرید",
     "restoreRequested": "در حال بررسی خریدهای قبلی...",
     "restoreFailed": "بازیابی خریدها امکان‌پذیر نبود",

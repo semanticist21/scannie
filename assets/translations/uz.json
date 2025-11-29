@@ -106,7 +106,7 @@
     "unlocked": "Reklamalar olib tashlandi",
     "unlock": "Reklamalarni olib tashlash ($2)",
     "maybeLater": "Keyinroq",
-    "unlockWithPrice": "Reklamalarni olib tashlash ({0})",
+    "unlockWithPrice": "Reklamalarni olib tashlash ({})",
     "restore": "Xaridni tiklash",
     "restoreRequested": "Oldingi xaridlar tekshirilmoqda...",
     "restoreFailed": "Xaridlarni tiklab bo'lmadi",

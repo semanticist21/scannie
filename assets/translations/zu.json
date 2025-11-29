@@ -106,7 +106,7 @@
     "unlocked": "Izikhangiso zisusiwe",
     "unlock": "Susa izikhangiso ($2)",
     "maybeLater": "Mhlawumbe kamuva",
-    "unlockWithPrice": "Susa izikhangiso ({0})",
+    "unlockWithPrice": "Susa izikhangiso ({})",
     "restore": "Buyisela ukuthenga",
     "restoreRequested": "Ihlola ukuthenga kwangaphambili...",
     "restoreFailed": "Ayikwazanga ukubuyisela ukuthenga",

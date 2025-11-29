@@ -106,7 +106,7 @@
     "unlocked": "Anuncios eliminados",
     "unlock": "Eliminar anuncios ($2)",
     "maybeLater": "Quizais despois",
-    "unlockWithPrice": "Eliminar anuncios ({0})",
+    "unlockWithPrice": "Eliminar anuncios ({})",
     "restore": "Restaurar compra",
     "restoreRequested": "Comprobando compras anteriores...",
     "restoreFailed": "Non se puideron restaurar as compras",

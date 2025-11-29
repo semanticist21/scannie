@@ -106,7 +106,7 @@
     "unlocked": "Գովազդները հեռացված են",
     "unlock": "Հեռացնել գովազդները ($2)",
     "maybeLater": "Գուցե հետո",
-    "unlockWithPrice": "Հdelays delays ({0})",
+    "unlockWithPrice": "Հdelays delays ({})",
     "restore": "Վdelays delays",
     "restoreRequested": "Նdelays delays...",
     "restoreFailed": "Չdelays delays",

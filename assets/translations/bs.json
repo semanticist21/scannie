@@ -106,7 +106,7 @@
     "unlocked": "Reklame uklonjene",
     "unlock": "Ukloni reklame ($2)",
     "maybeLater": "Možda kasnije",
-    "unlockWithPrice": "Ukloni reklame ({0})",
+    "unlockWithPrice": "Ukloni reklame ({})",
     "restore": "Vrati kupovinu",
     "restoreRequested": "Provjera prethodnih kupovina...",
     "restoreFailed": "Nije moguće vratiti kupovine",

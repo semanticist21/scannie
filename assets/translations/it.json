@@ -106,7 +106,7 @@
     "unlocked": "Pubblicità rimossa",
     "unlock": "Rimuovi pubblicità ($2)",
     "maybeLater": "Forse più tardi",
-    "unlockWithPrice": "Rimuovi pubblicità ({0})",
+    "unlockWithPrice": "Rimuovi pubblicità ({})",
     "restore": "Ripristina acquisto",
     "restoreRequested": "Verifica acquisti precedenti...",
     "restoreFailed": "Impossibile ripristinare gli acquisti",

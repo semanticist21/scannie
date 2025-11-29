@@ -106,7 +106,7 @@
     "unlocked": "Pubs supprimées",
     "unlock": "Supprimer les pubs ($2)",
     "maybeLater": "Plus tard",
-    "unlockWithPrice": "Supprimer les publicités ({0})",
+    "unlockWithPrice": "Supprimer les publicités ({})",
     "restore": "Restaurer l'achat",
     "restoreRequested": "Vérification des achats précédents...",
     "restoreFailed": "Impossible de restaurer les achats",

@@ -105,7 +105,7 @@
     "description": "Élvezze a Scannie-t megszakítás nélkül.\nTávolítsa el az összes hirdetést egyszeri vásárlással.",
     "unlocked": "Hirdetések eltávolítva",
     "unlock": "Hirdetések eltávolítása ($2)",
-    "unlockWithPrice": "Hirdetések eltávolítása ({0})",
+    "unlockWithPrice": "Hirdetések eltávolítása ({})",
     "maybeLater": "Talán később",
     "restore": "Vásárlás visszaállítása",
     "restoreRequested": "Korábbi vásárlások ellenőrzése...",

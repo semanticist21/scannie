@@ -106,7 +106,7 @@
     "unlocked": "Reklamlar silindi",
     "unlock": "Reklamları sil ($2)",
     "maybeLater": "Bəlkə sonra",
-    "unlockWithPrice": "Reklamları sil ({0})",
+    "unlockWithPrice": "Reklamları sil ({})",
     "restore": "Alışı bərpa et",
     "restoreRequested": "Əvvəlki alışlar yoxlanılır...",
     "restoreFailed": "Alışlar bərpa edilə bilmədi",

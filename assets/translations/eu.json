@@ -106,7 +106,7 @@
     "unlocked": "Iragarkiak kenduta",
     "unlock": "Kendu iragarkiak ($2)",
     "maybeLater": "Agian geroago",
-    "unlockWithPrice": "Kendu iragarkiak ({0})",
+    "unlockWithPrice": "Kendu iragarkiak ({})",
     "restore": "Berrezarri erosketa",
     "restoreRequested": "Aurreko erosketak egiaztatzen...",
     "restoreFailed": "Ezin izan dira erosketak berrezarri",
