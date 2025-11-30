@@ -80,7 +80,7 @@ class ExportService {
       final savedPath = await FileSaver.instance.saveAs(
         name: fileName,
         bytes: pdfBytes,
-        ext: 'pdf',
+        fileExtension: 'pdf',
         mimeType: MimeType.pdf,
       );
 
@@ -127,7 +127,7 @@ class ExportService {
       final savedPath = await FileSaver.instance.saveAs(
         name: fileName,
         bytes: Uint8List.fromList(zipData),
-        ext: 'zip',
+        fileExtension: 'zip',
         mimeType: MimeType.zip,
       );
 
