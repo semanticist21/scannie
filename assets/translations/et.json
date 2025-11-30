@@ -53,7 +53,7 @@
     "discardChangesTitle": "Loobuda muudatustest?",
     "discardNewScan": "Kas olete kindel, et soovite sellest skaneeringust loobuda? Kõik pildid lähevad kaotsi.",
     "discardEditScan": "Kas olete kindel, et soovite muudatustest loobuda? Teie muudatusi ei salvestata.",
-    "tapImageHint": "Puudutage pilti filtrite ja pööramise reguleerimiseks"
+    "tapImageHint": "Puudutage voi lohistage pilte redigeerimiseks"
   },
   "viewer": {
     "listView": "Loendivaade",

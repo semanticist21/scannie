@@ -53,7 +53,7 @@
     "discardChangesTitle": "Buang perubahan?",
     "discardNewScan": "Buang pindaian ini? Semua gambar akan hilang.",
     "discardEditScan": "Buang perubahan? Perubahan yang belum disimpan akan hilang.",
-    "tapImageHint": "Ketuk gambar untuk menyesuaikan filter dan rotasi"
+    "tapImageHint": "Ketuk atau seret gambar untuk mengedit"
   },
   "viewer": {
     "listView": "Tampilan Daftar",

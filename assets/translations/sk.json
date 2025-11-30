@@ -53,7 +53,7 @@
     "discardChangesTitle": "Zahodiť zmeny?",
     "discardNewScan": "Naozaj chcete zahodiť tento sken? Všetky obrázky budú stratené.",
     "discardEditScan": "Naozaj chcete zahodiť zmeny? Vaše zmeny nebudú uložené.",
-    "tapImageHint": "Klepnutím na obrázok upravíte filtre a otočenie"
+    "tapImageHint": "Klepnutím alebo potiahnutím obrázkov upravte"
   },
   "viewer": {
     "listView": "Zobrazenie zoznamu",

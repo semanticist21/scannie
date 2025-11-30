@@ -53,7 +53,7 @@
     "discardChangesTitle": "Hylätäänkö muutokset?",
     "discardNewScan": "Haluatko varmasti hylätä tämän skannauksen? Kaikki kuvat menetetään.",
     "discardEditScan": "Haluatko varmasti hylätä muutokset? Muutoksiasi ei tallenneta.",
-    "tapImageHint": "Napauta kuvaa säätääksesi suodattimia ja kiertoa"
+    "tapImageHint": "Muokkaa napauttamalla tai vetämällä kuvia"
   },
   "viewer": {
     "listView": "Listanäkymä",

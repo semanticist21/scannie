@@ -53,7 +53,7 @@
     "discardChangesTitle": "Elveti a módosításokat?",
     "discardNewScan": "Biztosan elveti ezt a szkennelést? Minden kép elvész.",
     "discardEditScan": "Biztosan elveti a módosításokat? A módosítások nem lesznek mentve.",
-    "tapImageHint": "Érintse meg a képet a szűrők és forgatás beállításához"
+    "tapImageHint": "Érintse meg vagy húzza a képeket a szerkesztéshez"
   },
   "viewer": {
     "listView": "Lista nézet",

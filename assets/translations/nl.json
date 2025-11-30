@@ -53,7 +53,7 @@
     "discardChangesTitle": "Wijzigingen weggooien?",
     "discardNewScan": "Weet je zeker dat je deze scan wilt weggooien? Alle afbeeldingen gaan verloren.",
     "discardEditScan": "Weet je zeker dat je de wijzigingen wilt weggooien? Je wijzigingen worden niet opgeslagen.",
-    "tapImageHint": "Tik op de afbeelding om filters en rotatie aan te passen"
+    "tapImageHint": "Tik of sleep afbeeldingen om te bewerken"
   },
   "viewer": {
     "listView": "Lijstweergave",

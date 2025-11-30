@@ -53,7 +53,7 @@
     "discardChangesTitle": "Descartar alterações?",
     "discardNewScan": "Deseja descartar este escaneamento? Todas as imagens serão perdidas.",
     "discardEditScan": "Deseja descartar as alterações? As alterações não salvas serão perdidas.",
-    "tapImageHint": "Toque na imagem para ajustar filtros e rotação"
+    "tapImageHint": "Toque ou arraste imagens para editar"
   },
   "viewer": {
     "listView": "Visualização em lista",

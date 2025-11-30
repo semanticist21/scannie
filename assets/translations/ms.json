@@ -53,7 +53,7 @@
     "discardChangesTitle": "Buang perubahan?",
     "discardNewScan": "Adakah anda mahu membuang imbasan ini? Semua imej akan hilang.",
     "discardEditScan": "Adakah anda mahu membuang perubahan? Perubahan yang tidak disimpan akan hilang.",
-    "tapImageHint": "Ketik imej untuk melaraskan penapis dan putaran"
+    "tapImageHint": "Ketik atau seret imej untuk mengedit"
   },
   "viewer": {
     "listView": "Paparan senarai",

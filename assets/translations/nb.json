@@ -53,7 +53,7 @@
     "discardChangesTitle": "Forkast endringer?",
     "discardNewScan": "Vil du forkaste denne skanningen? Alle bilder vil gå tapt.",
     "discardEditScan": "Vil du forkaste endringene? Ulagrede endringer vil gå tapt.",
-    "tapImageHint": "Trykk på bildet for å justere filtre og rotasjon"
+    "tapImageHint": "Trykk eller dra bilder for å redigere"
   },
   "viewer": {
     "listView": "Listevisning",

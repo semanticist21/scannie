@@ -53,7 +53,7 @@
     "discardChangesTitle": "Kassér ændringer?",
     "discardNewScan": "Er du sikker på, at du vil kassere denne scanning? Alle billeder vil gå tabt.",
     "discardEditScan": "Er du sikker på, at du vil kassere ændringerne? Dine ændringer vil ikke blive gemt.",
-    "tapImageHint": "Tryk på billedet for at justere filtre og rotation"
+    "tapImageHint": "Tryk eller træk billeder for at redigere"
   },
   "viewer": {
     "listView": "Listevisning",

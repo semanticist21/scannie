@@ -53,7 +53,7 @@
     "discardChangesTitle": "Baztertu aldaketak?",
     "discardNewScan": "Baztertu eskaneatze hau? Irudi guztiak galduko dira.",
     "discardEditScan": "Baztertu aldaketak? Gorde gabeko aldaketak galduko dira.",
-    "tapImageHint": "Sakatu irudia iragazkiak eta biraketa doitzeko"
+    "tapImageHint": "Sakatu edo arrastatu irudiak editatzeko"
   },
   "viewer": {
     "listView": "Zerrenda ikuspegia",

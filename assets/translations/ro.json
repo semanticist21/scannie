@@ -53,7 +53,7 @@
     "discardChangesTitle": "Renunți la modificări?",
     "discardNewScan": "Sigur vrei să renunți la această scanare? Toate imaginile vor fi pierdute.",
     "discardEditScan": "Sigur vrei să renunți la modificări? Modificările tale nu vor fi salvate.",
-    "tapImageHint": "Atingeți imaginea pentru a ajusta filtrele și rotația"
+    "tapImageHint": "Atingeți sau trageți imaginile pentru a edita"
   },
   "viewer": {
     "listView": "Vizualizare listă",

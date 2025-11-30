@@ -53,7 +53,7 @@
     "discardChangesTitle": "Değişiklikler silinsin mi?",
     "discardNewScan": "Bu tarama silinsin mi? Tüm resimler kaybolacak.",
     "discardEditScan": "Değişiklikler silinsin mi? Kaydedilmemiş değişiklikler kaybolacak.",
-    "tapImageHint": "Filtreleri ve döndürmeyi ayarlamak için resme dokunun"
+    "tapImageHint": "Düzenlemek için resimlere dokunun veya sürükleyin"
   },
   "viewer": {
     "listView": "Liste Görünümü",

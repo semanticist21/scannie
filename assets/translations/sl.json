@@ -53,7 +53,7 @@
     "discardChangesTitle": "Zavreči spremembe?",
     "discardNewScan": "Ali ste prepričani, da želite zavreči ta sken? Vse slike bodo izgubljene.",
     "discardEditScan": "Ali ste prepričani, da želite zavreči spremembe? Vaše spremembe ne bodo shranjene.",
-    "tapImageHint": "Dotaknite se slike za prilagoditev filtrov in vrtenja"
+    "tapImageHint": "Dotaknite se ali povlecite slike za urejanje"
   },
   "viewer": {
     "listView": "Pogled seznama",

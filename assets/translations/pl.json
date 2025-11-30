@@ -53,7 +53,7 @@
     "discardChangesTitle": "Odrzucić zmiany?",
     "discardNewScan": "Czy na pewno chcesz odrzucić ten skan? Wszystkie obrazy zostaną utracone.",
     "discardEditScan": "Czy na pewno chcesz odrzucić zmiany? Twoje zmiany nie zostaną zapisane.",
-    "tapImageHint": "Dotknij obraz, aby dostosować filtry i obrót"
+    "tapImageHint": "Dotknij lub przeciągnij obrazy, aby edytować"
   },
   "viewer": {
     "listView": "Widok listy",

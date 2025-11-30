@@ -538,10 +538,14 @@ class _EditScreenState extends State<EditScreen> {
                             color: AppColors.primary,
                           ),
                           const SizedBox(width: AppSpacing.sm),
-                          Text(
-                            'edit.tapImageHint'.tr(),
-                            style: AppTextStyles.bodySmall.copyWith(
-                              color: AppColors.primary,
+                          Flexible(
+                            child: Text(
+                              'edit.tapImageHint'.tr(),
+                              style: AppTextStyles.bodySmall.copyWith(
+                                color: AppColors.primary,
+                              ),
+                              textAlign: TextAlign.center,
+                              softWrap: true,
                             ),
                           ),
                         ],

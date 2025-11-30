@@ -53,7 +53,7 @@
     "discardChangesTitle": "O'zgarishlarni tashlab yuborasizmi?",
     "discardNewScan": "Bu skanerni tashlab yuborasizmi? Barcha rasmlar yo'qoladi.",
     "discardEditScan": "O'zgarishlarni tashlab yuborasizmi? Saqlanmagan o'zgarishlar yo'qoladi.",
-    "tapImageHint": "Filtrlar va aylantirishni sozlash uchun rasmga bosing"
+    "tapImageHint": "Tahrirlash uchun rasmlarni bosing yoki torting"
   },
   "viewer": {
     "listView": "Ro'yxat ko'rinishi",

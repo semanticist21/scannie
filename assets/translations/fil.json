@@ -53,7 +53,7 @@
     "discardChangesTitle": "Itapon ang mga pagbabago?",
     "discardNewScan": "Gusto mo bang itapon ang scan na ito? Mawawala ang lahat ng larawan.",
     "discardEditScan": "Gusto mo bang itapon ang mga pagbabago? Mawawala ang mga hindi na-save na pagbabago.",
-    "tapImageHint": "I-tap ang larawan para i-adjust ang mga filter at pag-ikot"
+    "tapImageHint": "I-tap o i-drag ang mga larawan para i-edit"
   },
   "viewer": {
     "listView": "List view",

@@ -53,7 +53,7 @@
     "discardChangesTitle": "Atmesti pakeitimus?",
     "discardNewScan": "Ar tikrai norite atmesti šį skenavimą? Visi vaizdai bus prarasti.",
     "discardEditScan": "Ar tikrai norite atmesti pakeitimus? Jūsų pakeitimai nebus išsaugoti.",
-    "tapImageHint": "Bakstelėkite vaizdą, kad pakoreguotumėte filtrus ir pasukimą"
+    "tapImageHint": "Bakstelekite arba vilkite vaizdus redaguoti"
   },
   "viewer": {
     "listView": "Sąrašo rodinys",
