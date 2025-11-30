@@ -129,7 +129,34 @@ def upload_language(service, edit_id: str, lang_code: str) -> bool:
     else:
         print(f"     ⚠️  No metadata")
 
-    # 2. Upload phone screenshots (promo_1~4.svg → PNG)
+    # 2. Upload feature graphic (same image for all languages)
+    if FEATURE_GRAPHIC.exists():
+        try:
+            # Delete existing
+            try:
+                service.edits().images().deleteall(
+                    packageName=PACKAGE_NAME,
+                    editId=edit_id,
+                    language=lang_code,
+                    imageType='featureGraphic'
+                ).execute()
+            except Exception:
+                pass
+
+            media = MediaFileUpload(str(FEATURE_GRAPHIC), mimetype='image/png')
+            service.edits().images().upload(
+                packageName=PACKAGE_NAME,
+                editId=edit_id,
+                language=lang_code,
+                imageType='featureGraphic',
+                media_body=media
+            ).execute()
+            print(f"     ✅ Feature Graphic")
+        except Exception as e:
+            print(f"     ❌ Feature Graphic: {e}")
+            success = False
+
+    # 3. Upload phone screenshots (promo_1~4.svg → PNG)
     promo_dir = PROMO_DIR / lang_code
     if promo_dir.exists():
         # Delete existing phone screenshots
@@ -199,11 +226,7 @@ def upload_batch(languages: list):
     edit_id = edit_request['id']
     print(f"✅ Edit ID: {edit_id}")
 
-    # Upload feature graphic (en-US only, shared)
-    print(f"\n🖼️  Feature Graphic 업로드...")
-    upload_feature_graphic(service, edit_id)
-
-    # Upload all languages
+    # Upload all languages (metadata + feature graphic + screenshots)
     print(f"\n📤 언어별 업로드 중...")
     success_count = 0
     fail_count = 0

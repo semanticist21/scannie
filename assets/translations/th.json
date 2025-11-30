@@ -164,8 +164,8 @@
     "imageNotFound": "ไม่พบไฟล์รูปภาพ",
     "imageSavedToPhotos": "บันทึกรูปภาพไปยังรูปภาพแล้ว",
     "scanFailed": "การสแกนล้มเหลว: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} ภาพบันทึกไปยังรูปภาพแล้ว",
+    "noImagesToExport": "ไม่มีภาพสำหรับส่งออก"
   },
   "filters": {
     "original": "ต้นฉบับ",

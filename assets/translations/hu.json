@@ -164,8 +164,8 @@
     "imageNotFound": "A képfájl nem található",
     "imageSavedToPhotos": "Kép mentve a Fotókba",
     "scanFailed": "Szkennelés sikertelen: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} kép mentve a Fotókba",
+    "noImagesToExport": "Nincsenek exportálható képek"
   },
   "filters": {
     "original": "Eredeti",

@@ -164,8 +164,8 @@
     "imageNotFound": "Bilddatei nicht gefunden",
     "imageSavedToPhotos": "Bild in Fotos gespeichert",
     "scanFailed": "Scan fehlgeschlagen: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} Bilder in Fotos gespeichert",
+    "noImagesToExport": "Keine Bilder zum Exportieren"
   },
   "filters": {
     "original": "Original",

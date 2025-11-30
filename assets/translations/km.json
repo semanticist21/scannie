@@ -164,8 +164,8 @@
     "imageNotFound": "រកមិនឃើញឯកសាររូបភាព",
     "imageSavedToPhotos": "បានរក្សាទុករូបភាពទៅរូបថត",
     "scanFailed": "ការស្កេនបរាជ័យ: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} រូបភាពត្រូវបានរក្សាទុកក្នុង Photos",
+    "noImagesToExport": "គ្មានរូបភាពដើម្បីនាំចេញ"
   },
   "filters": {
     "original": "ដើម",

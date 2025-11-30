@@ -164,8 +164,8 @@
     "imageNotFound": "Rasm fayli topilmadi",
     "imageSavedToPhotos": "Rasm rasmlarga saqlandi",
     "scanFailed": "Skanerlash amalga oshmadi: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} ta rasm Rasmlarga saqlandi",
+    "noImagesToExport": "Eksport qilish uchun rasm yo'q"
   },
   "filters": {
     "original": "Asl",

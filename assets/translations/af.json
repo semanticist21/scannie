@@ -164,8 +164,8 @@
     "imageNotFound": "Beeldlêer nie gevind nie",
     "imageSavedToPhotos": "Beeld gestoor na Foto's",
     "scanFailed": "Skandering het misluk: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} beelde gestoor in Foto's",
+    "noImagesToExport": "Geen beelde om uit te voer nie"
   },
   "filters": {
     "original": "Oorspronklik",

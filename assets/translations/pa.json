@@ -164,8 +164,8 @@
     "imageNotFound": "ਤਸਵੀਰ ਫਾਈਲ ਨਹੀਂ ਮਿਲੀ",
     "imageSavedToPhotos": "ਤਸਵੀਰ ਫੋਟੋਆਂ ਵਿੱਚ ਸੇਵ ਹੋਈ",
     "scanFailed": "ਸਕੈਨ ਫੇਲ: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} ਤਸਵੀਰਾਂ ਫੋਟੋਆਂ ਵਿੱਚ ਸੁਰੱਖਿਅਤ ਕੀਤੀਆਂ ਗਈਆਂ",
+    "noImagesToExport": "ਨਿਰਯਾਤ ਕਰਨ ਲਈ ਕੋਈ ਤਸਵੀਰ ਨਹੀਂ"
   },
   "filters": {
     "original": "ਅਸਲੀ",

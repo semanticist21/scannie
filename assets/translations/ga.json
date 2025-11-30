@@ -164,8 +164,8 @@
     "imageNotFound": "Comhad íomhá gan aimsiú",
     "imageSavedToPhotos": "Íomhá sábháilte i ngrianghraif",
     "scanFailed": "Theip ar scanadh: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} íomhá sábháilte i bhFotaí",
+    "noImagesToExport": "Níl aon íomhánna le heaspórtáil"
   },
   "filters": {
     "original": "Bunaidh",

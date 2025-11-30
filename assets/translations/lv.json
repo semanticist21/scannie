@@ -164,8 +164,8 @@
     "imageNotFound": "Attēla fails nav atrasts",
     "imageSavedToPhotos": "Attēls saglabāts Fotoattēlos",
     "scanFailed": "Skenēšana neizdevās: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} attēli saglabāti Fotoattēlos",
+    "noImagesToExport": "Nav attēlu eksportēšanai"
   },
   "filters": {
     "original": "Oriģināls",

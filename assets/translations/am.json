@@ -164,8 +164,8 @@
     "imageNotFound": "የምስል ፋይል አልተገኘም",
     "imageSavedToPhotos": "ምስል ወደ ፎቶዎች ተቀምጧል",
     "scanFailed": "ስካን አልተሳካም: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} ምስሎች ወደ ፎቶዎች ተቀምጠዋል",
+    "noImagesToExport": "ለመላክ ምስሎች የሉም"
   },
   "filters": {
     "original": "ዋናው",

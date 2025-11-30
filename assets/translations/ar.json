@@ -164,8 +164,8 @@
     "imageNotFound": "لم يتم العثور على ملف الصورة",
     "imageSavedToPhotos": "تم حفظ الصورة في الصور",
     "scanFailed": "فشل المسح: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "تم حفظ {count}/{total} صورة في الصور",
+    "noImagesToExport": "لا توجد صور للتصدير"
   },
   "filters": {
     "original": "أصلي",

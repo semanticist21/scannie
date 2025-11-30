@@ -164,8 +164,8 @@
     "imageNotFound": "No s'ha trobat el fitxer d'imatge",
     "imageSavedToPhotos": "Imatge desada a Fotos",
     "scanFailed": "L'escaneig ha fallat: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} imatges desades a Fotos",
+    "noImagesToExport": "No hi ha imatges per exportar"
   },
   "filters": {
     "original": "Original",

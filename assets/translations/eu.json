@@ -164,8 +164,8 @@
     "imageNotFound": "Irudi fitxategia ez da aurkitu",
     "imageSavedToPhotos": "Irudia argazkietan gordeta",
     "scanFailed": "Eskaneatzea huts egin du: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} irudi Argazkietan gorde dira",
+    "noImagesToExport": "Ez dago irudirik esportatzeko"
   },
   "filters": {
     "original": "Jatorrizkoa",

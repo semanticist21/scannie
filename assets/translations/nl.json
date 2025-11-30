@@ -164,8 +164,8 @@
     "imageNotFound": "Afbeeldingsbestand niet gevonden",
     "imageSavedToPhotos": "Afbeelding opgeslagen in Foto's",
     "scanFailed": "Scannen mislukt: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} afbeeldingen opgeslagen in Foto's",
+    "noImagesToExport": "Geen afbeeldingen om te exporteren"
   },
   "filters": {
     "original": "Origineel",

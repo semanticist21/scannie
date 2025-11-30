@@ -164,8 +164,8 @@
     "imageNotFound": "Soubor obrázku nenalezen",
     "imageSavedToPhotos": "Obrázek uložen do Fotek",
     "scanFailed": "Skenování selhalo: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} obrázků uloženo do Fotek",
+    "noImagesToExport": "Žádné obrázky k exportu"
   },
   "filters": {
     "original": "Originál",

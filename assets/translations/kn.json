@@ -164,8 +164,8 @@
     "imageNotFound": "ಚಿತ್ರ ಫೈಲ್ ಕಂಡುಬಂದಿಲ್ಲ",
     "imageSavedToPhotos": "ಚಿತ್ರವನ್ನು ಫೋಟೋಗಳಿಗೆ ಉಳಿಸಲಾಗಿದೆ",
     "scanFailed": "ಸ್ಕ್ಯಾನ್ ವಿಫಲವಾಯಿತು: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} ಚಿತ್ರಗಳನ್ನು ಫೋಟೋಗಳಿಗೆ ಉಳಿಸಲಾಗಿದೆ",
+    "noImagesToExport": "ರಫ್ತು ಮಾಡಲು ಚಿತ್ರಗಳಿಲ್ಲ"
   },
   "filters": {
     "original": "ಮೂಲ",

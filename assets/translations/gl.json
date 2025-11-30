@@ -164,8 +164,8 @@
     "imageNotFound": "Ficheiro de imaxe non atopado",
     "imageSavedToPhotos": "Imaxe gardada en fotos",
     "scanFailed": "O escaneo fallou: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} imaxes gardadas en Fotos",
+    "noImagesToExport": "Non hai imaxes para exportar"
   },
   "filters": {
     "original": "Orixinal",

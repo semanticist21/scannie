@@ -164,8 +164,8 @@
     "imageNotFound": "Plik obrazu nie został znaleziony",
     "imageSavedToPhotos": "Obraz zapisany w Zdjęciach",
     "scanFailed": "Skanowanie nie powiodło się: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} obrazów zapisano w Zdjęciach",
+    "noImagesToExport": "Brak obrazów do eksportu"
   },
   "filters": {
     "original": "Oryginał",

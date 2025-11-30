@@ -164,8 +164,8 @@
     "imageNotFound": "Pildifaili ei leitud",
     "imageSavedToPhotos": "Pilt salvestatud Fotodesse",
     "scanFailed": "Skaneerimine ebaõnnestus: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} pilti salvestatud Fotodesse",
+    "noImagesToExport": "Pole pilte eksportimiseks"
   },
   "filters": {
     "original": "Originaal",

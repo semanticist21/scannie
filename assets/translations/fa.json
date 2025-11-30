@@ -164,8 +164,8 @@
     "imageNotFound": "فایل تصویر یافت نشد",
     "imageSavedToPhotos": "تصویر در عکس‌ها ذخیره شد",
     "scanFailed": "اسکن ناموفق بود: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} تصویر در عکس‌ها ذخیره شد",
+    "noImagesToExport": "تصویری برای صادرات وجود ندارد"
   },
   "filters": {
     "original": "اصلی",

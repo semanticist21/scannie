@@ -164,8 +164,8 @@
     "imageNotFound": "Fail imej tidak dijumpai",
     "imageSavedToPhotos": "Imej disimpan ke Foto",
     "scanFailed": "Imbasan gagal: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} imej disimpan ke Foto",
+    "noImagesToExport": "Tiada imej untuk dieksport"
   },
   "filters": {
     "original": "Asal",

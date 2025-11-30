@@ -164,8 +164,8 @@
     "imageNotFound": "Myndaskrá fannst ekki",
     "imageSavedToPhotos": "Mynd vistuð í myndir",
     "scanFailed": "Skannun mistókst: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} myndir vistaðar í Myndir",
+    "noImagesToExport": "Engar myndir til að flytja út"
   },
   "filters": {
     "original": "Upprunalegt",

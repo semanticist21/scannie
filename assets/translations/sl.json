@@ -164,8 +164,8 @@
     "imageNotFound": "Datoteka slike ni bila najdena",
     "imageSavedToPhotos": "Slika shranjena v Fotografije",
     "scanFailed": "Skeniranje ni uspelo: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} slik shranjenih v Fotografije",
+    "noImagesToExport": "Ni slik za izvoz"
   },
   "filters": {
     "original": "Izvirnik",

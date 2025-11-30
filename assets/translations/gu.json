@@ -164,8 +164,8 @@
     "imageNotFound": "ઇમેજ ફાઇલ મળી નહીં",
     "imageSavedToPhotos": "ઇમેજ ફોટામાં સેવ થઈ",
     "scanFailed": "સ્કેન નિષ્ફળ: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} છબીઓ ફોટોઝમાં સાચવાઈ",
+    "noImagesToExport": "નિકાસ કરવા માટે કોઈ છબીઓ નથી"
   },
   "filters": {
     "original": "મૂળ",

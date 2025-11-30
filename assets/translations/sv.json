@@ -164,8 +164,8 @@
     "imageNotFound": "Bildfilen hittades inte",
     "imageSavedToPhotos": "Bild sparad till Foton",
     "scanFailed": "Skanning misslyckades: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} bilder sparade i Bilder",
+    "noImagesToExport": "Inga bilder att exportera"
   },
   "filters": {
     "original": "Original",

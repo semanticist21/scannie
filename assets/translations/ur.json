@@ -164,8 +164,8 @@
     "imageNotFound": "تصویر فائل نہیں ملی",
     "imageSavedToPhotos": "تصویر فوٹوز میں محفوظ ہو گئی",
     "scanFailed": "اسکین ناکام: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} تصاویر تصاویر میں محفوظ ہو گئیں",
+    "noImagesToExport": "برآمد کرنے کے لیے کوئی تصویر نہیں"
   },
   "filters": {
     "original": "اصل",

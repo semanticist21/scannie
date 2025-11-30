@@ -164,8 +164,8 @@
     "imageNotFound": "ছবি ফাইল পাওয়া যায়নি",
     "imageSavedToPhotos": "ছবি ফটোতে সেভ হয়েছে",
     "scanFailed": "স্ক্যান ব্যর্থ: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total}টি ছবি ফটোতে সংরক্ষণ করা হয়েছে",
+    "noImagesToExport": "রপ্তানি করার জন্য কোনো ছবি নেই"
   },
   "filters": {
     "original": "অরিজিনাল",

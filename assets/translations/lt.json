@@ -164,8 +164,8 @@
     "imageNotFound": "Vaizdo failas nerastas",
     "imageSavedToPhotos": "Vaizdas išsaugotas į Nuotraukas",
     "scanFailed": "Skenavimas nepavyko: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} vaizdų išsaugota Nuotraukose",
+    "noImagesToExport": "Nėra vaizdų eksportavimui"
   },
   "filters": {
     "original": "Originalus",

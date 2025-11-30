@@ -164,8 +164,8 @@
     "imageNotFound": "קובץ תמונה לא נמצא",
     "imageSavedToPhotos": "התמונה נשמרה לתמונות",
     "scanFailed": "הסריקה נכשלה: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} תמונות נשמרו בתמונות",
+    "noImagesToExport": "אין תמונות לייצוא"
   },
   "filters": {
     "original": "מקורי",

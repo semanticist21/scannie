@@ -164,8 +164,8 @@
     "imageNotFound": "Պատկերի ֆայլը չի գտնվել",
     "imageSavedToPhotos": "Պատկերը պահվել է պատկերասրահում",
     "scanFailed": "Սկանավորումը ձախողվեց՝ {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} պատկեր պահված է Լուսանկարներում",
+    "noImagesToExport": "Արտահանման պատկերներ չկան"
   },
   "filters": {
     "original": "Բնօրինակ",

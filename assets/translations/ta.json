@@ -164,8 +164,8 @@
     "imageNotFound": "பட கோப்பு கிடைக்கவில்லை",
     "imageSavedToPhotos": "படம் புகைப்படங்களில் சேமிக்கப்பட்டது",
     "scanFailed": "ஸ்கேன் தோல்வி: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} படங்கள் புகைப்படங்களில் சேமிக்கப்பட்டன",
+    "noImagesToExport": "ஏற்றுமதி செய்ய படங்கள் இல்லை"
   },
   "filters": {
     "original": "அசல்",

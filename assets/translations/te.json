@@ -164,8 +164,8 @@
     "imageNotFound": "చిత్ర ఫైల్ కనుగొనబడలేదు",
     "imageSavedToPhotos": "చిత్రం ఫోటోలకు సేవ్ చేయబడింది",
     "scanFailed": "స్కాన్ విఫలమైంది: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} చిత్రాలు ఫోటోలలో సేవ్ చేయబడ్డాయి",
+    "noImagesToExport": "ఎగుమతి చేయడానికి చిత్రాలు లేవు"
   },
   "filters": {
     "original": "అసలు",

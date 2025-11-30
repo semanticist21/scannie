@@ -164,8 +164,8 @@
     "imageNotFound": "Зургийн файл олдсонгүй",
     "imageSavedToPhotos": "Зураг зурагт хадгалагдлаа",
     "scanFailed": "Скан амжилтгүй боллоо: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} зураг Зургууд руу хадгалагдлаа",
+    "noImagesToExport": "Экспортлох зураг байхгүй"
   },
   "filters": {
     "original": "Эх",

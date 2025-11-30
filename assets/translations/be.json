@@ -164,8 +164,8 @@
     "imageNotFound": "Файл малюнка не знойдзены",
     "imageSavedToPhotos": "Малюнак захаваны ў фота",
     "scanFailed": "Сканаванне не ўдалося: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} відарысаў захавана ў Фота",
+    "noImagesToExport": "Няма відарысаў для экспарту"
   },
   "filters": {
     "original": "Арыгінал",

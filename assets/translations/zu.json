@@ -164,8 +164,8 @@
     "imageNotFound": "Ifayela lesithombe alitholakali",
     "imageSavedToPhotos": "Isithombe silondoloziwe Ezithombeni",
     "scanFailed": "Ukuskena kuhlulekile: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "Izithombe {count}/{total} zigciniwe ezithombeni",
+    "noImagesToExport": "Azikho izithombe zokuthumela"
   },
   "filters": {
     "original": "Okwangempela",

@@ -164,8 +164,8 @@
     "imageNotFound": "未找到图片文件",
     "imageSavedToPhotos": "图片已保存到相册",
     "scanFailed": "扫描失败：{error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} 张图片已保存到照片",
+    "noImagesToExport": "没有可导出的图片"
   },
   "filters": {
     "original": "原图",

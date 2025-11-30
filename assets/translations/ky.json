@@ -164,8 +164,8 @@
     "imageNotFound": "Сүрөт файлы табылган жок",
     "imageSavedToPhotos": "Сүрөт сүрөттөргө сакталды",
     "scanFailed": "Скандоо ишке ашкан жок: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} сүрөт Сүрөттөргө сакталды",
+    "noImagesToExport": "Экспорттоого сүрөттөр жок"
   },
   "filters": {
     "original": "Түпнуска",

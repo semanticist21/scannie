@@ -164,8 +164,8 @@
     "imageNotFound": "छवि फ़ाइल नहीं मिली",
     "imageSavedToPhotos": "छवि फोटो में सहेजी गई",
     "scanFailed": "स्कैन विफल: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} छवियाँ फ़ोटो में सहेजी गईं",
+    "noImagesToExport": "निर्यात करने के लिए कोई छवि नहीं"
   },
   "filters": {
     "original": "मूल",

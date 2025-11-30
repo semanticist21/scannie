@@ -164,8 +164,8 @@
     "imageNotFound": "ບໍ່ພົບໄຟລ໌ຮູບ",
     "imageSavedToPhotos": "ບັນທຶກຮູບໄປຮູບແລ້ວ",
     "scanFailed": "ການສະແກນລົ້ມເຫຼວ: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} ຮູບພາບບັນທຶກໄວ້ໃນຮູບພາບ",
+    "noImagesToExport": "ບໍ່ມີຮູບພາບເພື່ອສົ່ງອອກ"
   },
   "filters": {
     "original": "ຕົ້ນສະບັບ",

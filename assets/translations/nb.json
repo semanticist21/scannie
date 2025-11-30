@@ -164,8 +164,8 @@
     "imageNotFound": "Bildefilen ble ikke funnet",
     "imageSavedToPhotos": "Bilde lagret til Bilder",
     "scanFailed": "Skanning mislyktes: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} bilder lagret i Bilder",
+    "noImagesToExport": "Ingen bilder å eksportere"
   },
   "filters": {
     "original": "Original",

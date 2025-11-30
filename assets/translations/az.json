@@ -164,8 +164,8 @@
     "imageNotFound": "Şəkil faylı tapılmadı",
     "imageSavedToPhotos": "Şəkil fotolara saxlandı",
     "scanFailed": "Skan uğursuz oldu: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} şəkil Şəkillərə saxlanıldı",
+    "noImagesToExport": "İxrac etmək üçün şəkil yoxdur"
   },
   "filters": {
     "original": "Orijinal",

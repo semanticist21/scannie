@@ -164,8 +164,8 @@
     "imageNotFound": "Billedfil ikke fundet",
     "imageSavedToPhotos": "Billede gemt i Fotos",
     "scanFailed": "Scanning mislykkedes: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} billeder gemt i Fotos",
+    "noImagesToExport": "Ingen billeder at eksportere"
   },
   "filters": {
     "original": "Original",

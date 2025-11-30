@@ -164,8 +164,8 @@
     "imageNotFound": "Không tìm thấy tệp hình ảnh",
     "imageSavedToPhotos": "Đã lưu hình ảnh vào Ảnh",
     "scanFailed": "Quét thất bại: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} ảnh đã lưu vào Ảnh",
+    "noImagesToExport": "Không có ảnh để xuất"
   },
   "filters": {
     "original": "Gốc",

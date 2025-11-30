@@ -164,8 +164,8 @@
     "imageNotFound": "तस्बिर फाइल भेटिएन",
     "imageSavedToPhotos": "तस्बिर फोटोमा सेभ भयो",
     "scanFailed": "स्क्यान असफल: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} छविहरू फोटोमा सुरक्षित गरियो",
+    "noImagesToExport": "निर्यात गर्न कुनै छवि छैन"
   },
   "filters": {
     "original": "मूल",

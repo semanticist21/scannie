@@ -164,8 +164,8 @@
     "imageNotFound": "Το αρχείο εικόνας δεν βρέθηκε",
     "imageSavedToPhotos": "Η εικόνα αποθηκεύτηκε στις Φωτογραφίες",
     "scanFailed": "Αποτυχία σάρωσης: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} εικόνες αποθηκεύτηκαν στις Φωτογραφίες",
+    "noImagesToExport": "Δεν υπάρχουν εικόνες για εξαγωγή"
   },
   "filters": {
     "original": "Πρωτότυπο",

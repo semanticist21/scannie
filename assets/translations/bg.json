@@ -164,8 +164,8 @@
     "imageNotFound": "Файлът с изображение не е намерен",
     "imageSavedToPhotos": "Изображението е запазено в Снимки",
     "scanFailed": "Сканирането е неуспешно: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} изображения запазени в Снимки",
+    "noImagesToExport": "Няма изображения за експортиране"
   },
   "filters": {
     "original": "Оригинал",

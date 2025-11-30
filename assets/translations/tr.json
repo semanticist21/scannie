@@ -164,8 +164,8 @@
     "imageNotFound": "Resim dosyası bulunamadı",
     "imageSavedToPhotos": "Resim Fotoğraflar'a kaydedildi",
     "scanFailed": "Tarama başarısız: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} görsel Fotoğraflar'a kaydedildi",
+    "noImagesToExport": "Dışa aktarılacak görsel yok"
   },
   "filters": {
     "original": "Orijinal",

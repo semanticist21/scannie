@@ -164,8 +164,8 @@
     "imageNotFound": "ပုံဖိုင် မတွေ့ပါ",
     "imageSavedToPhotos": "ပုံကို ဓာတ်ပုံများသို့ သိမ်းပြီးပါပြီ",
     "scanFailed": "စကင်န် မအောင်မြင်ပါ: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} ပုံများကို ဓာတ်ပုံများတွင် သိမ်းဆည်းပြီးပါပြီ",
+    "noImagesToExport": "တင်ပို့ရန် ပုံမရှိပါ"
   },
   "filters": {
     "original": "မူရင်း",

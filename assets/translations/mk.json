@@ -164,8 +164,8 @@
     "imageNotFound": "Датотека со слика не е пронајдена",
     "imageSavedToPhotos": "Сликата е зачувана во фотографии",
     "scanFailed": "Скенирањето не успеа: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} слики зачувани во Фотографии",
+    "noImagesToExport": "Нема слики за извоз"
   },
   "filters": {
     "original": "Оригинал",

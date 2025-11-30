@@ -164,8 +164,8 @@
     "imageNotFound": "Сурет файлы табылмады",
     "imageSavedToPhotos": "Сурет фотоларға сақталды",
     "scanFailed": "Сканерлеу сәтсіз: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} сурет Фотоларға сақталды",
+    "noImagesToExport": "Экспорттауға суреттер жоқ"
   },
   "filters": {
     "original": "Түпнұсқа",

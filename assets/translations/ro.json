@@ -164,8 +164,8 @@
     "imageNotFound": "Fișierul imagine nu a fost găsit",
     "imageSavedToPhotos": "Imagine salvată în Fotografii",
     "scanFailed": "Scanarea a eșuat: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} imagini salvate în Fotografii",
+    "noImagesToExport": "Nu există imagini de exportat"
   },
   "filters": {
     "original": "Original",

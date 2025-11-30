@@ -164,8 +164,8 @@
     "imageNotFound": "File immagine non trovato",
     "imageSavedToPhotos": "Immagine salvata in Foto",
     "scanFailed": "Scansione non riuscita: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} immagini salvate in Foto",
+    "noImagesToExport": "Nessuna immagine da esportare"
   },
   "filters": {
     "original": "Originale",

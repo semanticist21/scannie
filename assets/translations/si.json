@@ -164,8 +164,8 @@
     "imageNotFound": "පින්තූර ගොනුව හමු නොවීය",
     "imageSavedToPhotos": "පින්තූරය ඡායාරූපවලට සුරකින ලදී",
     "scanFailed": "ස්කෑන් අසාර්ථකයි: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} රූප ඡායාරූපවලට සුරකින ලදී",
+    "noImagesToExport": "අපනයනය කිරීමට රූප නැත"
   },
   "filters": {
     "original": "මුල්",

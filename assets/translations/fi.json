@@ -164,8 +164,8 @@
     "imageNotFound": "Kuvatiedostoa ei löytynyt",
     "imageSavedToPhotos": "Kuva tallennettu Kuvat-kansioon",
     "scanFailed": "Skannaus epäonnistui: {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} kuvaa tallennettu Kuviin",
+    "noImagesToExport": "Ei kuvia vietäväksi"
   },
   "filters": {
     "original": "Alkuperäinen",

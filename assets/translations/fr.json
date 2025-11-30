@@ -164,8 +164,8 @@
     "imageNotFound": "Fichier image introuvable",
     "imageSavedToPhotos": "Image enregistrée dans Photos",
     "scanFailed": "Échec du scan : {error}",
-    "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "imagesSaved": "{count}/{total} images enregistrées dans Photos",
+    "noImagesToExport": "Aucune image à exporter"
   },
   "filters": {
     "original": "Original",
