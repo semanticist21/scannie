@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "This will permanently delete \"{name}\" and all its pages. This action cannot be undone.",
     "downloadImagesTitle": "Download Images",
     "downloadImagesMessage": "Download {count} images to gallery?",
-    "pageOf": "Page {current} of {total}"
+    "pageOf": "Page {current} of {total}",
+    "downloadingImages": "Downloading images..."
   },
   "settings": {
     "title": "Settings",

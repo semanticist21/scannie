@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" અને તેના બધા પાના કાયમ માટે ડિલીટ થશે. આ ક્રિયા પાછી લઈ શકાશે નહીં.",
     "downloadImagesTitle": "ઇમેજ ડાઉનલોડ",
     "downloadImagesMessage": "ગેલેરીમાં {count} ઇમેજ ડાઉનલોડ કરવી?",
-    "pageOf": "પાનું {current} / {total}"
+    "pageOf": "પાનું {current} / {total}",
+    "downloadingImages": "છબીઓ ડાઉનલોડ થઈ રહી છે..."
   },
   "settings": {
     "title": "સેટિંગ્સ",

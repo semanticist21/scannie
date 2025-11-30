@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" и сите страници ќе бидат трајно избришани. Оваа акција не може да се врати.",
     "downloadImagesTitle": "Преземи слики",
     "downloadImagesMessage": "Преземи {count} слики во галерија?",
-    "pageOf": "Страница {current} / {total}"
+    "pageOf": "Страница {current} / {total}",
+    "downloadingImages": "Преземање слики..."
   },
   "settings": {
     "title": "Поставки",

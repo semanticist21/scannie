@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" жана анын бардык барактары биротоло өчүрүлөт. Бул аракетти артка кайтаруу мүмкүн эмес.",
     "downloadImagesTitle": "Сүрөттөрдү жүктөп алуу",
     "downloadImagesMessage": "Галереяга {count} сүрөттү жүктөп алуу керекпи?",
-    "pageOf": "{current} / {total} барак"
+    "pageOf": "{current} / {total} барак",
+    "downloadingImages": "Сүрөттөр жүктөлүүдө..."
   },
   "settings": {
     "title": "Параметрлер",

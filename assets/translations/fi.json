@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "Tämä poistaa pysyvästi \"{name}\" ja kaikki sen sivut. Tätä toimintoa ei voi kumota.",
     "downloadImagesTitle": "Lataa kuvat",
     "downloadImagesMessage": "Ladataanko {count} kuvaa galleriaan?",
-    "pageOf": "Sivu {current} / {total}"
+    "pageOf": "Sivu {current} / {total}",
+    "downloadingImages": "Ladataan kuvia..."
   },
   "settings": {
     "title": "Asetukset",

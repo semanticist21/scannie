@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "Ovo će trajno obrisati \"{name}\" i sve njegove stranice. Ova radnja se ne može poništiti.",
     "downloadImagesTitle": "Preuzmi slike",
     "downloadImagesMessage": "Preuzeti {count} slika u galeriju?",
-    "pageOf": "Stranica {current} od {total}"
+    "pageOf": "Stranica {current} od {total}",
+    "downloadingImages": "Preuzimanje slika..."
   },
   "settings": {
     "title": "Postavke",

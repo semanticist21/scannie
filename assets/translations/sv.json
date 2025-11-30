@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" och alla dess sidor kommer att raderas permanent. Denna åtgärd kan inte ångras.",
     "downloadImagesTitle": "Ladda ner bilder",
     "downloadImagesMessage": "Ladda ner {count} bilder till galleriet?",
-    "pageOf": "Sida {current} av {total}"
+    "pageOf": "Sida {current} av {total}",
+    "downloadingImages": "Laddar ner bilder..."
   },
   "settings": {
     "title": "Inställningar",

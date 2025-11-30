@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "سيتم حذف \"{name}\" وجميع صفحاته نهائيًا. لا يمكن التراجع عن هذا الإجراء.",
     "downloadImagesTitle": "تنزيل الصور",
     "downloadImagesMessage": "تنزيل {count} صورة إلى المعرض؟",
-    "pageOf": "صفحة {current} من {total}"
+    "pageOf": "صفحة {current} من {total}",
+    "downloadingImages": "جارٍ تنزيل الصور..."
   },
   "settings": {
     "title": "الإعدادات",

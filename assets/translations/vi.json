@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" và tất cả các trang sẽ bị xóa vĩnh viễn. Hành động này không thể hoàn tác.",
     "downloadImagesTitle": "Tải hình ảnh",
     "downloadImagesMessage": "Tải {count} hình ảnh vào thư viện?",
-    "pageOf": "Trang {current} / {total}"
+    "pageOf": "Trang {current} / {total}",
+    "downloadingImages": "Đang tải hình ảnh..."
   },
   "settings": {
     "title": "Cài đặt",

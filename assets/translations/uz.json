@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" va barcha sahifalari butunlay o'chiriladi. Bu amalni qaytarib bo'lmaydi.",
     "downloadImagesTitle": "Rasmlarni yuklab olish",
     "downloadImagesMessage": "Galereyaga {count} rasm yuklab olinsinmi?",
-    "pageOf": "Sahifa {current} / {total}"
+    "pageOf": "Sahifa {current} / {total}",
+    "downloadingImages": "Rasmlar yuklanmoqda..."
   },
   "settings": {
     "title": "Sozlamalar",

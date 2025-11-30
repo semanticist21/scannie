@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "Το \"{name}\" και όλες οι σελίδες του θα διαγραφούν μόνιμα. Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.",
     "downloadImagesTitle": "Λήψη εικόνων",
     "downloadImagesMessage": "Λήψη {count} εικόνων στη συλλογή;",
-    "pageOf": "Σελίδα {current} από {total}"
+    "pageOf": "Σελίδα {current} από {total}",
+    "downloadingImages": "Λήψη εικόνων..."
   },
   "settings": {
     "title": "Ρυθμίσεις",

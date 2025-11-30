@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "「{name}」及其所有页面将被永久删除。此操作无法撤销。",
     "downloadImagesTitle": "下载图片",
     "downloadImagesMessage": "是否将 {count} 张图片保存到相册？",
-    "pageOf": "第 {current} / {total} 页"
+    "pageOf": "第 {current} / {total} 页",
+    "downloadingImages": "正在下载图片..."
   },
   "settings": {
     "title": "设置",

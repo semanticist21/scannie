@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" і ўсе старонкі будуць назаўжды выдалены. Гэта дзеянне нельга адмяніць.",
     "downloadImagesTitle": "Спампаваць малюнкі",
     "downloadImagesMessage": "Спампаваць {count} малюнкаў у галерэю?",
-    "pageOf": "Старонка {current} / {total}"
+    "pageOf": "Старонка {current} / {total}",
+    "downloadingImages": "Спампоўка малюнкаў..."
   },
   "settings": {
     "title": "Налады",

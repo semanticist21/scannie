@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "یہ \"{name}\" اور اس کے تمام صفحات کو مستقل طور پر حذف کر دے گا۔ یہ عمل واپس نہیں کیا جا سکتا۔",
     "downloadImagesTitle": "تصاویر ڈاؤن لوڈ",
     "downloadImagesMessage": "{count} تصاویر گیلری میں ڈاؤن لوڈ کریں؟",
-    "pageOf": "صفحہ {current} از {total}"
+    "pageOf": "صفحہ {current} از {total}",
+    "downloadingImages": "تصاویر ڈاؤن لوڈ ہو رہی ہیں..."
   },
   "settings": {
     "title": "ترتیبات",

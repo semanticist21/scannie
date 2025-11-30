@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "Tas neatgriezeniski dzēsīs \"{name}\" un visas tā lapas. Šo darbību nevar atsaukt.",
     "downloadImagesTitle": "Lejupielādēt attēlus",
     "downloadImagesMessage": "Lejupielādēt {count} attēlus galerijā?",
-    "pageOf": "Lapa {current} no {total}"
+    "pageOf": "Lapa {current} no {total}",
+    "downloadingImages": "Lejupielādē attēlus..."
   },
   "settings": {
     "title": "Iestatījumi",

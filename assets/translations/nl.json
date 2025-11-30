@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "Dit verwijdert permanent \"{name}\" en alle pagina's. Deze actie kan niet ongedaan worden gemaakt.",
     "downloadImagesTitle": "Afbeeldingen downloaden",
     "downloadImagesMessage": "{count} afbeeldingen downloaden naar galerij?",
-    "pageOf": "Pagina {current} van {total}"
+    "pageOf": "Pagina {current} van {total}",
+    "downloadingImages": "Afbeeldingen downloaden..."
   },
   "settings": {
     "title": "Instellingen",

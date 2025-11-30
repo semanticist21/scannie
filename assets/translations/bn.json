@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" এবং এর সব পৃষ্ঠা স্থায়ীভাবে মুছে যাবে। এই কাজটি পূর্বাবস্থায় ফেরানো যাবে না।",
     "downloadImagesTitle": "ছবি ডাউনলোড",
     "downloadImagesMessage": "গ্যালারিতে {count}টি ছবি ডাউনলোড করবেন?",
-    "pageOf": "পৃষ্ঠা {current} / {total}"
+    "pageOf": "পৃষ্ঠা {current} / {total}",
+    "downloadingImages": "ছবি ডাউনলোড হচ্ছে..."
   },
   "settings": {
     "title": "সেটিংস",

@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "Aceasta va șterge permanent \"{name}\" și toate paginile sale. Această acțiune nu poate fi anulată.",
     "downloadImagesTitle": "Descarcă imagini",
     "downloadImagesMessage": "Descarci {count} imagini în galerie?",
-    "pageOf": "Pagina {current} din {total}"
+    "pageOf": "Pagina {current} din {total}",
+    "downloadingImages": "Se descarcă imaginile..."
   },
   "settings": {
     "title": "Setări",

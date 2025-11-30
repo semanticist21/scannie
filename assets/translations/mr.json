@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" आणि त्यातील सर्व पृष्ठे कायमचे हटवले जातील. ही क्रिया पूर्ववत करता येणार नाही.",
     "downloadImagesTitle": "इमेज डाउनलोड",
     "downloadImagesMessage": "गॅलरीमध्ये {count} इमेज डाउनलोड करायच्या?",
-    "pageOf": "पृष्ठ {current} / {total}"
+    "pageOf": "पृष्ठ {current} / {total}",
+    "downloadingImages": "प्रतिमा डाउनलोड होत आहेत..."
   },
   "settings": {
     "title": "सेटिंग्ज",

@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" og allar síður þess verður eytt varanlega. Þessa aðgerð er ekki hægt að afturkalla.",
     "downloadImagesTitle": "Sækja myndir",
     "downloadImagesMessage": "Sækja {count} myndir í myndageymslu?",
-    "pageOf": "Síða {current} / {total}"
+    "pageOf": "Síða {current} / {total}",
+    "downloadingImages": "Sæki myndir..."
   },
   "settings": {
     "title": "Stillingar",

@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" ಮತ್ತು ಅದರ ಎಲ್ಲಾ ಪುಟಗಳನ್ನು ಶಾಶ್ವತವಾಗಿ ಅಳಿಸಲಾಗುತ್ತದೆ. ಈ ಕ್ರಿಯೆಯನ್ನು ರದ್ದುಮಾಡಲಾಗುವುದಿಲ್ಲ.",
     "downloadImagesTitle": "ಚಿತ್ರಗಳನ್ನು ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ",
     "downloadImagesMessage": "ಗ್ಯಾಲರಿಗೆ {count} ಚಿತ್ರಗಳನ್ನು ಡೌನ್‌ಲೋಡ್ ಮಾಡಬೇಕೇ?",
-    "pageOf": "ಪುಟ {current} / {total}"
+    "pageOf": "ಪುಟ {current} / {total}",
+    "downloadingImages": "ಚಿತ್ರಗಳನ್ನು ಡೌನ್‌ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ..."
   },
   "settings": {
     "title": "ಸೆಟ್ಟಿಂಗ್‌ಗಳು",

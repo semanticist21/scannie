@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "Se eliminará permanentemente \"{name}\" y todas sus páginas. Esta acción no se puede deshacer.",
     "downloadImagesTitle": "Descargar imágenes",
     "downloadImagesMessage": "¿Descargar {count} imágenes a la galería?",
-    "pageOf": "Página {current} de {total}"
+    "pageOf": "Página {current} de {total}",
+    "downloadingImages": "Descargando imágenes..."
   },
   "settings": {
     "title": "Ajustes",

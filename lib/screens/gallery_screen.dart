@@ -24,6 +24,8 @@ import '../widgets/common/rename_dialog.dart';
 import '../widgets/common/tag_dialog.dart';
 import '../widgets/common/confirm_dialog.dart';
 import '../widgets/common/text_input_dialog.dart';
+import '../utils/app_modal.dart';
+import 'package:wolt_modal_sheet/wolt_modal_sheet.dart';
 import '../widgets/gallery/premium_dialog.dart';
 import '../widgets/gallery/settings_sheet.dart';
 import '../main.dart' show routeObserver;
@@ -929,23 +931,90 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
   }
 
   /// Save individual images to gallery
-  void _saveImagesDocument(ScanDocument document) {
+  void _saveImagesDocument(ScanDocument document) async {
     final imageCount = document.imagePaths.length;
 
-    ConfirmDialog.show(
+    final confirmed = await ConfirmDialog.showAsync(
       context: context,
       title: 'viewer.downloadImagesTitle'.tr(),
       message: 'viewer.downloadImagesMessage'
           .tr(namedArgs: {'count': imageCount.toString()}),
       cancelText: 'common.cancel'.tr(),
       confirmText: 'common.download'.tr(),
-      onConfirm: () async {
-        final result = await ExportService.instance
-            .saveImagesToGallery(document.imagePaths);
+    );
 
-        if (!mounted) return;
-        AppToast.showExportResult(context, result);
+    if (!confirmed || !mounted) return;
+
+    // Create cancellation token
+    final cancelToken = ValueNotifier<bool>(false);
+    ExportResult? result;
+
+    // Show loading dialog with cancel button
+    AppModal.showDialog(
+      context: context,
+      barrierDismissible: false,
+      pageListBuilder: (modalContext) {
+        final colors = ThemedColors.of(modalContext);
+        return [
+          WoltModalSheetPage(
+            backgroundColor: colors.surface,
+            hasSabGradient: false,
+            hasTopBarLayer: false,
+            isTopBarLayerAlwaysVisible: false,
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.lg),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(
+                    width: 48,
+                    height: 48,
+                    child: CircularProgressIndicator(strokeWidth: 3),
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  Text(
+                    'viewer.downloadingImages'.tr(),
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      color: colors.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  ShadButton.outline(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(LucideIcons.x, size: 16),
+                        const SizedBox(width: AppSpacing.xs),
+                        Text('common.cancel'.tr()),
+                      ],
+                    ),
+                    onPressed: () {
+                      cancelToken.value = true;
+                      Navigator.of(modalContext).pop();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ];
       },
     );
+
+    // Run save operation
+    result = await ExportService.instance.saveImagesToGalleryCancellable(
+      document.imagePaths,
+      cancelToken,
+    );
+
+    // Close loading dialog if still open and not cancelled
+    if (mounted && !cancelToken.value) {
+      Navigator.of(context).pop();
+    }
+
+    // Show result toast
+    if (mounted) {
+      AppToast.showExportResult(context, result);
+    }
   }
 }

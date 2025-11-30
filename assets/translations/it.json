@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "«{name}» e tutte le sue pagine verranno eliminati definitivamente. Questa azione non può essere annullata.",
     "downloadImagesTitle": "Scarica immagini",
     "downloadImagesMessage": "Scaricare {count} immagini nella galleria?",
-    "pageOf": "Pagina {current} di {total}"
+    "pageOf": "Pagina {current} di {total}",
+    "downloadingImages": "Download immagini in corso..."
   },
   "settings": {
     "title": "Impostazioni",

@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" dan semua halamannya akan dipadam secara kekal. Tindakan ini tidak boleh dibuat asal.",
     "downloadImagesTitle": "Muat turun imej",
     "downloadImagesMessage": "Muat turun {count} imej ke galeri?",
-    "pageOf": "Halaman {current} daripada {total}"
+    "pageOf": "Halaman {current} daripada {total}",
+    "downloadingImages": "Memuat turun imej..."
   },
   "settings": {
     "title": "Tetapan",

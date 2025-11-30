@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" i totes les seves pàgines se suprimiran permanentment. Aquesta acció no es pot desfer.",
     "downloadImagesTitle": "Baixa les imatges",
     "downloadImagesMessage": "Baixar {count} imatges a la galeria?",
-    "pageOf": "Pàgina {current} de {total}"
+    "pageOf": "Pàgina {current} de {total}",
+    "downloadingImages": "Descarregant imatges..."
   },
   "settings": {
     "title": "Configuració",

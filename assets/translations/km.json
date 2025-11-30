@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" និងទំព័រទាំងអស់នឹងត្រូវលុបជារៀងរហូត។ សកម្មភាពនេះមិនអាចត្រឡប់វិញបានទេ។",
     "downloadImagesTitle": "ទាញយករូបភាព",
     "downloadImagesMessage": "ទាញយករូបភាព {count} ទៅវិចិត្រសាល?",
-    "pageOf": "ទំព័រ {current} / {total}"
+    "pageOf": "ទំព័រ {current} / {total}",
+    "downloadingImages": "កំពុងទាញយករូបភាព..."
   },
   "settings": {
     "title": "ការកំណត់",

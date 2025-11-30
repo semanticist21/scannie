@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" e todas as páxinas eliminaranse permanentemente. Esta acción non se pode desfacer.",
     "downloadImagesTitle": "Descargar imaxes",
     "downloadImagesMessage": "Descargar {count} imaxes á galería?",
-    "pageOf": "Páxina {current} / {total}"
+    "pageOf": "Páxina {current} / {total}",
+    "downloadingImages": "Descargando imaxes..."
   },
   "settings": {
     "title": "Axustes",

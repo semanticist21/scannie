@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" და ყველა მისი გვერდი სამუდამოდ წაიშლება. ეს მოქმედება ვერ გაუქმდება.",
     "downloadImagesTitle": "სურათების ჩამოტვირთვა",
     "downloadImagesMessage": "გალერეაში {count} სურათის ჩამოტვირთვა?",
-    "pageOf": "გვერდი {current} / {total}"
+    "pageOf": "გვერდი {current} / {total}",
+    "downloadingImages": "სურათების ჩამოტვირთვა..."
   },
   "settings": {
     "title": "პარამეტრები",

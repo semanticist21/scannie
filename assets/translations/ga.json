@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "Scriosfar \"{name}\" agus gach leathanach go buan. Ní féidir an gníomh seo a chealú.",
     "downloadImagesTitle": "Íoslódáil íomhánna",
     "downloadImagesMessage": "Íoslódáil {count} íomhá go dtí an ghailearaí?",
-    "pageOf": "Leathanach {current} / {total}"
+    "pageOf": "Leathanach {current} / {total}",
+    "downloadingImages": "Íoslódáil íomhánna..."
   },
   "settings": {
     "title": "Socruithe",

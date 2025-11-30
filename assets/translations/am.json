@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" እና ሁሉም ገጾቹ እስከመጨረሻው ይሰረዛሉ። ይህ እርምጃ መቀልበስ አይችልም።",
     "downloadImagesTitle": "ምስሎችን አውርድ",
     "downloadImagesMessage": "{count} ምስሎችን ወደ ጋለሪ ያውርዱ?",
-    "pageOf": "ገጽ {current} ከ {total}"
+    "pageOf": "ገጽ {current} ከ {total}",
+    "downloadingImages": "ምስሎችን በማውረድ ላይ..."
   },
   "settings": {
     "title": "ቅንብሮች",

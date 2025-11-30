@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" और इसके सभी पृष्ठ स्थायी रूप से हटा दिए जाएंगे। यह क्रिया वापस नहीं की जा सकती।",
     "downloadImagesTitle": "छवियां डाउनलोड करें",
     "downloadImagesMessage": "गैलरी में {count} छवियां डाउनलोड करें?",
-    "pageOf": "पृष्ठ {current} / {total}"
+    "pageOf": "पृष्ठ {current} / {total}",
+    "downloadingImages": "छवियाँ डाउनलोड हो रही हैं..."
   },
   "settings": {
     "title": "सेटिंग्स",

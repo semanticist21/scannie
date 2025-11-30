@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" ແລະທຸກໜ້າຈະຖືກລຶບຖາວອນ. ການກະທຳນີ້ບໍ່ສາມາດຍ້ອນກັບໄດ້.",
     "downloadImagesTitle": "ດາວໂຫລດຮູບ",
     "downloadImagesMessage": "ດາວໂຫລດ {count} ຮູບໄປຫໍສະໝຸດ?",
-    "pageOf": "ໜ້າ {current} / {total}"
+    "pageOf": "ໜ້າ {current} / {total}",
+    "downloadingImages": "ກຳລັງດາວໂຫຼດຮູບພາບ..."
   },
   "settings": {
     "title": "ການຕັ້ງຄ່າ",

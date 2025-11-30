@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" u l-paġni kollha se jiġu mħassra għal dejjem. Din l-azzjoni ma tistax tiġi riversa.",
     "downloadImagesTitle": "Niżżel stampi",
     "downloadImagesMessage": "Niżżel {count} stampi fil-gallerija?",
-    "pageOf": "Paġna {current} / {total}"
+    "pageOf": "Paġna {current} / {total}",
+    "downloadingImages": "Tniżżil ta' immaġini..."
   },
   "settings": {
     "title": "Settings",

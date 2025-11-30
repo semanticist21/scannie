@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "I-\"{name}\" nawo wonke amakhasi ayo izosuswa unomphela. Lesi senzo asikwazi ukuhlehliswa.",
     "downloadImagesTitle": "Landa izithombe",
     "downloadImagesMessage": "Landa izithombe ezingu-{count} egelerini?",
-    "pageOf": "Ikhasi {current} kweziyi-{total}"
+    "pageOf": "Ikhasi {current} kweziyi-{total}",
+    "downloadingImages": "Ilanda izithombe..."
   },
   "settings": {
     "title": "Izilungiselelo",

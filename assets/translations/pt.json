@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" e todas as suas páginas serão excluídos permanentemente. Esta ação não pode ser desfeita.",
     "downloadImagesTitle": "Baixar imagens",
     "downloadImagesMessage": "Baixar {count} imagens para a galeria?",
-    "pageOf": "Página {current} de {total}"
+    "pageOf": "Página {current} de {total}",
+    "downloadingImages": "Baixando imagens..."
   },
   "settings": {
     "title": "Configurações",

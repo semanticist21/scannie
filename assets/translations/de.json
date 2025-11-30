@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" und alle Seiten werden dauerhaft gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.",
     "downloadImagesTitle": "Bilder herunterladen",
     "downloadImagesMessage": "{count} Bilder in die Galerie herunterladen?",
-    "pageOf": "Seite {current} von {total}"
+    "pageOf": "Seite {current} von {total}",
+    "downloadingImages": "Bilder werden heruntergeladen..."
   },
   "settings": {
     "title": "Einstellungen",

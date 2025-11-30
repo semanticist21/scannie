@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "Bydd \"{name}\" a'r holl dudalennau yn cael eu dileu'n barhaol. Ni ellir dadwneud y weithred hon.",
     "downloadImagesTitle": "Lawrlwytho delweddau",
     "downloadImagesMessage": "Lawrlwytho {count} delwedd i'r oriel?",
-    "pageOf": "Tudalen {current} / {total}"
+    "pageOf": "Tudalen {current} / {total}",
+    "downloadingImages": "Llwytho delweddau i lawr..."
   },
   "settings": {
     "title": "Gosodiadau",

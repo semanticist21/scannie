@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "Ez véglegesen törli a \"{name}\" dokumentumot és annak összes oldalát. Ez a művelet nem vonható vissza.",
     "downloadImagesTitle": "Képek letöltése",
     "downloadImagesMessage": "Letölt {count} képet a galériába?",
-    "pageOf": "{current}. oldal / {total}"
+    "pageOf": "{current}. oldal / {total}",
+    "downloadingImages": "Képek letöltése..."
   },
   "settings": {
     "title": "Beállítások",

@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "Permanenteng mabubura ang \"{name}\" at lahat ng mga pahina nito. Hindi na mababawi ang aksyon na ito.",
     "downloadImagesTitle": "I-download ang mga larawan",
     "downloadImagesMessage": "I-download ang {count} larawan sa gallery?",
-    "pageOf": "Pahina {current} ng {total}"
+    "pageOf": "Pahina {current} ng {total}",
+    "downloadingImages": "Nagda-download ng mga larawan..."
   },
   "settings": {
     "title": "Mga setting",

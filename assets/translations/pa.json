@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" ਅਤੇ ਇਸਦੇ ਸਾਰੇ ਪੰਨੇ ਹਮੇਸ਼ਾ ਲਈ ਮਿਟ ਜਾਣਗੇ। ਇਹ ਕਾਰਵਾਈ ਵਾਪਸ ਨਹੀਂ ਹੋ ਸਕਦੀ।",
     "downloadImagesTitle": "ਤਸਵੀਰਾਂ ਡਾਊਨਲੋਡ",
     "downloadImagesMessage": "ਗੈਲਰੀ ਵਿੱਚ {count} ਤਸਵੀਰਾਂ ਡਾਊਨਲੋਡ ਕਰਨੀਆਂ?",
-    "pageOf": "ਪੰਨਾ {current} / {total}"
+    "pageOf": "ਪੰਨਾ {current} / {total}",
+    "downloadingImages": "ਤਸਵੀਰਾਂ ਡਾਊਨਲੋਡ ਹੋ ਰਹੀਆਂ ਹਨ..."
   },
   "settings": {
     "title": "ਸੈਟਿੰਗਾਂ",

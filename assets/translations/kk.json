@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" және оның барлық беттері біржолата жойылады. Бұл әрекетті болдырмау мүмкін емес.",
     "downloadImagesTitle": "Суреттерді жүктеу",
     "downloadImagesMessage": "Галереяға {count} суретті жүктеу керек пе?",
-    "pageOf": "{current} / {total} бет"
+    "pageOf": "{current} / {total} бет",
+    "downloadingImages": "Суреттер жүктелуде..."
   },
   "settings": {
     "title": "Параметрлер",

@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "To bo trajno izbrisalo \"{name}\" in vse njegove strani. Tega dejanja ni mogoče razveljaviti.",
     "downloadImagesTitle": "Prenesi slike",
     "downloadImagesMessage": "Prenesti {count} slik v galerijo?",
-    "pageOf": "Stran {current} od {total}"
+    "pageOf": "Stran {current} od {total}",
+    "downloadingImages": "Prenašanje slik..."
   },
   "settings": {
     "title": "Nastavitve",

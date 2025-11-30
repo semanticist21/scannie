@@ -196,6 +196,15 @@ class ExportService {
 
   /// Save images to photo gallery
   Future<ExportResult> saveImagesToGallery(List<String> imagePaths) async {
+    return saveImagesToGalleryCancellable(imagePaths, null);
+  }
+
+  /// Save images to photo gallery with cancellation support.
+  /// Pass a `ValueNotifier<bool>` as cancelToken - set value to true to cancel.
+  Future<ExportResult> saveImagesToGalleryCancellable(
+    List<String> imagePaths,
+    ValueNotifier<bool>? cancelToken,
+  ) async {
     if (imagePaths.isEmpty) {
       return const ExportResult(type: ExportResultType.errorNoImages);
     }
@@ -210,6 +219,15 @@ class ExportService {
       int savedCount = 0;
 
       for (final imagePath in imagePaths) {
+        // Check cancellation before each save
+        if (cancelToken?.value == true) {
+          return ExportResult(
+            type: ExportResultType.cancelled,
+            savedCount: savedCount,
+            totalCount: imagePaths.length,
+          );
+        }
+
         final imageFile = File(imagePath);
         if (!await imageFile.exists()) continue;
 

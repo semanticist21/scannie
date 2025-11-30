@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" և բոլոր էջերը ընդմիշտ կջնջվեն։ Այս գործողությունը հնարավոր չէ հետ վերադարձնել։",
     "downloadImagesTitle": "Ներբեռնել պատկերները",
     "downloadImagesMessage": "Ներբեռնե՞լ {count} պատկեր պատկերասրահ՞",
-    "pageOf": "Էջ {current} / {total}"
+    "pageOf": "Էջ {current} / {total}",
+    "downloadingImages": "Ներբեռնել պատկերները..."
   },
   "settings": {
     "title": "Կարգավորումներ",

@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\"과 모든 페이지가 영구적으로 삭제돼요. 이 작업은 되돌릴 수 없어요.",
     "downloadImagesTitle": "이미지 다운로드",
     "downloadImagesMessage": "{count}개 이미지를 갤러리에 저장할까요?",
-    "pageOf": "{current} / {total} 페이지"
+    "pageOf": "{current} / {total} 페이지",
+    "downloadingImages": "이미지 다운로드 중..."
   },
   "settings": {
     "title": "설정",

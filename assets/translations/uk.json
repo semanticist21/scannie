@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "«{name}» та всі його сторінки буде видалено назавжди. Цю дію не можна скасувати.",
     "downloadImagesTitle": "Завантажити зображення",
     "downloadImagesMessage": "Завантажити {count} зображень до галереї?",
-    "pageOf": "Сторінка {current} з {total}"
+    "pageOf": "Сторінка {current} з {total}",
+    "downloadingImages": "Завантаження зображень..."
   },
   "settings": {
     "title": "Налаштування",

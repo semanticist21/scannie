@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "Tai visam laikui ištrins \"{name}\" ir visus jo puslapius. Šio veiksmo negalima atšaukti.",
     "downloadImagesTitle": "Atsisiųsti vaizdus",
     "downloadImagesMessage": "Atsisiųsti {count} vaizdų į galeriją?",
-    "pageOf": "Puslapis {current} iš {total}"
+    "pageOf": "Puslapis {current} iš {total}",
+    "downloadingImages": "Atsisiunčiami vaizdai..."
   },
   "settings": {
     "title": "Nustatymai",

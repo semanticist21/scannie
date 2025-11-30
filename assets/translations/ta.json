@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" மற்றும் அதன் அனைத்து பக்கங்களும் நிரந்தரமாக நீக்கப்படும். இந்த செயலை மாற்ற முடியாது.",
     "downloadImagesTitle": "படங்களைப் பதிவிறக்கு",
     "downloadImagesMessage": "கேலரியில் {count} படங்களைப் பதிவிறக்கவா?",
-    "pageOf": "பக்கம் {current} / {total}"
+    "pageOf": "பக்கம் {current} / {total}",
+    "downloadingImages": "படங்களைப் பதிவிறக்குகிறது..."
   },
   "settings": {
     "title": "அமைப்புகள்",

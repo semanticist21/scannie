@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "Toto natrvalo odstráni \"{name}\" a všetky jeho strany. Túto akciu nie je možné vrátiť späť.",
     "downloadImagesTitle": "Stiahnuť obrázky",
     "downloadImagesMessage": "Stiahnuť {count} obrázkov do galérie?",
-    "pageOf": "Strana {current} z {total}"
+    "pageOf": "Strana {current} z {total}",
+    "downloadingImages": "Sťahovanie obrázkov..."
   },
   "settings": {
     "title": "Nastavenia",

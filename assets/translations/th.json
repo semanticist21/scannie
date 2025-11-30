@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" และทุกหน้าจะถูกลบถาวร การดำเนินการนี้ไม่สามารถย้อนกลับได้",
     "downloadImagesTitle": "ดาวน์โหลดรูปภาพ",
     "downloadImagesMessage": "ดาวน์โหลด {count} รูปภาพไปยังแกลเลอรี?",
-    "pageOf": "หน้า {current} จาก {total}"
+    "pageOf": "หน้า {current} จาก {total}",
+    "downloadingImages": "กำลังดาวน์โหลดรูปภาพ..."
   },
   "settings": {
     "title": "การตั้งค่า",

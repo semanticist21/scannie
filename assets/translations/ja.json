@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "「{name}」とすべてのページが完全に削除されます。この操作は元に戻せません。",
     "downloadImagesTitle": "画像をダウンロード",
     "downloadImagesMessage": "{count}枚の画像をギャラリーに保存しますか？",
-    "pageOf": "{current} / {total} ページ"
+    "pageOf": "{current} / {total} ページ",
+    "downloadingImages": "画像をダウンロード中..."
   },
   "settings": {
     "title": "設定",

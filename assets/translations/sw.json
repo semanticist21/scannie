@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" na kurasa zake zote zitafutwa kabisa. Kitendo hiki hakiwezi kutenduliwa.",
     "downloadImagesTitle": "Pakua picha",
     "downloadImagesMessage": "Pakua picha {count} kwenye galari?",
-    "pageOf": "Ukurasa {current} wa {total}"
+    "pageOf": "Ukurasa {current} wa {total}",
+    "downloadingImages": "Inapakua picha..."
   },
   "settings": {
     "title": "Mipangilio",

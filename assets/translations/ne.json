@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" र यसका सबै पृष्ठहरू सधैंका लागि मेटिनेछन्। यो कार्य पूर्ववत गर्न सकिँदैन।",
     "downloadImagesTitle": "तस्बिर डाउनलोड",
     "downloadImagesMessage": "ग्यालेरीमा {count} तस्बिर डाउनलोड गर्ने?",
-    "pageOf": "पृष्ठ {current} / {total}"
+    "pageOf": "पृष्ठ {current} / {total}",
+    "downloadingImages": "छविहरू डाउनलोड गर्दै..."
   },
   "settings": {
     "title": "सेटिङहरू",

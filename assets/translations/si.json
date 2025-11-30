@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" සහ එහි සියලු පිටු ස්ථිරවම මකනු ඇත. මෙම ක්‍රියාව ආපසු හැරවිය නොහැක.",
     "downloadImagesTitle": "පින්තූර බාගන්න",
     "downloadImagesMessage": "ගැලරියට පින්තූර {count}ක් බාගන්නද?",
-    "pageOf": "පිටුව {current} / {total}"
+    "pageOf": "පිටුව {current} / {total}",
+    "downloadingImages": "පින්තූර බාගත වෙමින්..."
   },
   "settings": {
     "title": "සැකසුම්",

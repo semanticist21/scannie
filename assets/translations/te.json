@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" మరియు దాని అన్ని పేజీలు శాశ్వతంగా తొలగించబడతాయి. ఈ చర్యను రద్దు చేయలేరు.",
     "downloadImagesTitle": "చిత్రాలు డౌన్‌లోడ్",
     "downloadImagesMessage": "గ్యాలరీకి {count} చిత్రాలు డౌన్‌లోడ్ చేయాలా?",
-    "pageOf": "పేజీ {current} / {total}"
+    "pageOf": "పేజీ {current} / {total}",
+    "downloadingImages": "చిత్రాలు డౌన్‌లోడ్ అవుతున్నాయి..."
   },
   "settings": {
     "title": "సెట్టింగ్‌లు",

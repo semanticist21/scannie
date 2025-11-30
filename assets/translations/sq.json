@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" dhe të gjitha faqet do të fshihen përgjithmonë. Ky veprim nuk mund të zhbëhet.",
     "downloadImagesTitle": "Shkarko imazhe",
     "downloadImagesMessage": "Shkarko {count} imazhe në galeri?",
-    "pageOf": "Faqja {current} / {total}"
+    "pageOf": "Faqja {current} / {total}",
+    "downloadingImages": "Po shkarkohen imazhet..."
   },
   "settings": {
     "title": "Cilësimet",

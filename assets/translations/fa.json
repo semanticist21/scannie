@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" و همه صفحات آن برای همیشه حذف خواهند شد. این عمل قابل بازگشت نیست.",
     "downloadImagesTitle": "دانلود تصاویر",
     "downloadImagesMessage": "{count} تصویر به گالری دانلود شود؟",
-    "pageOf": "صفحه {current} از {total}"
+    "pageOf": "صفحه {current} از {total}",
+    "downloadingImages": "در حال دانلود تصاویر..."
   },
   "settings": {
     "title": "تنظیمات",

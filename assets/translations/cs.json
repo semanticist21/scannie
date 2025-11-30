@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "Trvale se smaže \"{name}\" a všechny jeho stránky. Tuto akci nelze vrátit zpět.",
     "downloadImagesTitle": "Stáhnout obrázky",
     "downloadImagesMessage": "Stáhnout {count} obrázků do galerie?",
-    "pageOf": "Stránka {current} z {total}"
+    "pageOf": "Stránka {current} z {total}",
+    "downloadingImages": "Stahování obrázků..."
   },
   "settings": {
     "title": "Nastavení",

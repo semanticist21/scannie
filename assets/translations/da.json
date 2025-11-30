@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "Dette vil permanent slette \"{name}\" og alle dens sider. Denne handling kan ikke fortrydes.",
     "downloadImagesTitle": "Download billeder",
     "downloadImagesMessage": "Download {count} billeder til galleri?",
-    "pageOf": "Side {current} af {total}"
+    "pageOf": "Side {current} af {total}",
+    "downloadingImages": "Downloader billeder..."
   },
   "settings": {
     "title": "Indstillinger",

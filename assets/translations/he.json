@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" וכל העמודים שלו יימחקו לצמיתות. לא ניתן לבטל פעולה זו.",
     "downloadImagesTitle": "הורד תמונות",
     "downloadImagesMessage": "להוריד {count} תמונות לגלריה?",
-    "pageOf": "עמוד {current} מתוך {total}"
+    "pageOf": "עמוד {current} מתוך {total}",
+    "downloadingImages": "מוריד תמונות..."
   },
   "settings": {
     "title": "הגדרות",

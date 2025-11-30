@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "Това ще изтрие завинаги \"{name}\" и всички негови страници. Това действие не може да бъде отменено.",
     "downloadImagesTitle": "Изтегли изображенията",
     "downloadImagesMessage": "Изтегляне на {count} изображения в галерията?",
-    "pageOf": "Страница {current} от {total}"
+    "pageOf": "Страница {current} от {total}",
+    "downloadingImages": "Изтегляне на изображения..."
   },
   "settings": {
     "title": "Настройки",

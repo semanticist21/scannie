@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" နှင့် စာမျက်နှာအားလုံးကို အပြီးအပိုင် ဖျက်ပါမည်။ ဤလုပ်ဆောင်ချက်ကို ပြန်ပြင်၍မရပါ။",
     "downloadImagesTitle": "ပုံများ ဒေါင်းလုဒ်",
     "downloadImagesMessage": "ဂယ်လရီသို့ ပုံ {count} ပုံ ဒေါင်းလုဒ်မည်လား?",
-    "pageOf": "စာမျက်နှာ {current} / {total}"
+    "pageOf": "စာမျက်နှာ {current} / {total}",
+    "downloadingImages": "ပုံများ ဒေါင်းလုဒ်လုပ်နေသည်..."
   },
   "settings": {
     "title": "ဆက်တင်များ",

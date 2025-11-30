@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" eta orrialde guztiak betiko ezabatuko dira. Ekintza hau ezin da desegin.",
     "downloadImagesTitle": "Deskargatu irudiak",
     "downloadImagesMessage": "Deskargatu {count} irudi galeriara?",
-    "pageOf": "{current} / {total} orrialdea"
+    "pageOf": "{current} / {total} orrialdea",
+    "downloadingImages": "Irudiak deskargatzen..."
   },
   "settings": {
     "title": "Ezarpenak",

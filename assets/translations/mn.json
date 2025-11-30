@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" болон бүх хуудас бүрмөсөн устах болно. Энэ үйлдлийг буцаах боломжгүй.",
     "downloadImagesTitle": "Зураг татах",
     "downloadImagesMessage": "Галерейд {count} зураг татах уу?",
-    "pageOf": "Хуудас {current} / {total}"
+    "pageOf": "Хуудас {current} / {total}",
+    "downloadingImages": "Зургуудыг татаж байна..."
   },
   "settings": {
     "title": "Тохиргоо",

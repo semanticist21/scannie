@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\"-ഉം അതിന്റെ എല്ലാ പേജുകളും ശാശ്വതമായി ഇല്ലാതാക്കും. ഈ പ്രവൃത്തി പഴയപടിയാക്കാൻ കഴിയില്ല.",
     "downloadImagesTitle": "ചിത്രങ്ങൾ ഡൗൺലോഡ് ചെയ്യുക",
     "downloadImagesMessage": "ഗാലറിയിലേക്ക് {count} ചിത്രങ്ങൾ ഡൗൺലോഡ് ചെയ്യണോ?",
-    "pageOf": "പേജ് {current} / {total}"
+    "pageOf": "പേജ് {current} / {total}",
+    "downloadingImages": "ചിത്രങ്ങൾ ഡൗൺലോഡ് ചെയ്യുന്നു..."
   },
   "settings": {
     "title": "ക്രമീകരണങ്ങൾ",

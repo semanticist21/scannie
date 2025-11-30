@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" və bütün səhifələri həmişəlik silinəcək. Bu əməliyyatı geri qaytarmaq olmaz.",
     "downloadImagesTitle": "Şəkilləri yüklə",
     "downloadImagesMessage": "Qalereyaya {count} şəkil yüklənsin?",
-    "pageOf": "Səhifə {current} / {total}"
+    "pageOf": "Səhifə {current} / {total}",
+    "downloadingImages": "Şəkillər yüklənir..."
   },
   "settings": {
     "title": "Parametrlər",

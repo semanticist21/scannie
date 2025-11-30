@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" ve tüm sayfaları kalıcı olarak silinecek. Bu işlem geri alınamaz.",
     "downloadImagesTitle": "Resimleri İndir",
     "downloadImagesMessage": "{count} resim galeriye indirilsin mi?",
-    "pageOf": "Sayfa {current} / {total}"
+    "pageOf": "Sayfa {current} / {total}",
+    "downloadingImages": "Resimler indiriliyor..."
   },
   "settings": {
     "title": "Ayarlar",

@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "\"{name}\" en al sy bladsye sal permanent geskrap word. Hierdie aksie kan nie ongedaan gemaak word nie.",
     "downloadImagesTitle": "Laai beelde af",
     "downloadImagesMessage": "Laai {count} beelde na galery af?",
-    "pageOf": "Bladsy {current} van {total}"
+    "pageOf": "Bladsy {current} van {total}",
+    "downloadingImages": "Laai prente af..."
   },
   "settings": {
     "title": "Instellings",

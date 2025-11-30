@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "To trwale usunie \"{name}\" i wszystkie jego strony. Tej akcji nie można cofnąć.",
     "downloadImagesTitle": "Pobierz obrazy",
     "downloadImagesMessage": "Pobrać {count} obrazów do galerii?",
-    "pageOf": "Strona {current} z {total}"
+    "pageOf": "Strona {current} z {total}",
+    "downloadingImages": "Pobieranie obrazów..."
   },
   "settings": {
     "title": "Ustawienia",

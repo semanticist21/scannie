@@ -74,7 +74,8 @@
     "deleteDocumentMessage": "See kustutab jäädavalt \"{name}\" ja kõik selle leheküljed. Seda toimingut ei saa tagasi võtta.",
     "downloadImagesTitle": "Laadi pildid alla",
     "downloadImagesMessage": "Laadida galeriisse {count} pilti?",
-    "pageOf": "Lehekülg {current} / {total}"
+    "pageOf": "Lehekülg {current} / {total}",
+    "downloadingImages": "Piltide allalaadimine..."
   },
   "settings": {
     "title": "Seaded",
