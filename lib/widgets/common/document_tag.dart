@@ -1,3 +1,4 @@
+import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/app_colors.dart';
@@ -5,7 +6,7 @@ import '../../theme/app_text_styles.dart';
 
 /// Size variants for DocumentTag
 enum DocumentTagSize {
-  small,  // For grid cards
+  small, // For grid cards
   medium, // For list cards and viewer
 }
 
@@ -28,9 +29,8 @@ class DocumentTag extends StatelessWidget {
     final backgroundColor = Color(color);
     final textColor = _getContrastColor(backgroundColor);
 
-    final fontSize = size == DocumentTagSize.small
-        ? AppFontSize.xxs
-        : AppFontSize.xs;
+    final fontSize =
+        size == DocumentTagSize.small ? AppFontSize.xxs : AppFontSize.xs;
 
     final verticalPadding = size == DocumentTagSize.small ? 2.0 : 3.0;
 
@@ -44,7 +44,7 @@ class DocumentTag extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppRadius.sm),
       ),
       child: Transform.translate(
-        offset: const Offset(0, -1),
+        offset: Offset(0, Platform.isAndroid ? -1 : 0),
         child: Text(
           text,
           style: TextStyle(
