@@ -357,14 +357,31 @@ flutter clean && flutter pub get
 ## 스토어 업로드
 
 ```bash
-# iOS App Store Connect
+# iOS App Store Connect (메타데이터/스크린샷)
 python3 scripts/upload_app_store.py --all
 python3 scripts/upload_app_store.py en-US
 python3 scripts/upload_app_store.py --skip-screenshots
 
-# Google Play Store
+# Google Play Store (메타데이터/스크린샷)
 python3 scripts/upload_play_store.py --all
 python3 scripts/upload_play_store.py ko-KR
+
+# Google Play Alpha/Beta 트랙 (AAB 직접 업로드)
+python3 scripts/upload_aab_alpha.py --track alpha    # 비공개 테스트
+python3 scripts/upload_aab_alpha.py --track internal # 내부 테스트
+python3 scripts/upload_aab_alpha.py --track beta     # 공개 테스트
+```
+
+**전체 릴리즈 플로우** (버전 수동 변경 후):
+```bash
+# iOS 빌드 + 업로드
+flutter build ipa --release && \
+xcrun altool --upload-app --type ios -f build/ios/ipa/Scannie.ipa \
+  --apiKey 74HC92L9NA --apiIssuer a7524762-b1db-463b-84a8-bbee51a37cc2
+
+# Android 빌드 + Alpha 트랙 업로드
+flutter build appbundle --release && \
+python3 scripts/upload_aab_alpha.py --track alpha
 ```
 
 **필수 의존성**: `pip install pyjwt requests google-auth google-api-python-client`
