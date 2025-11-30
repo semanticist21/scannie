@@ -494,7 +494,7 @@ class _EditScreenState extends State<EditScreen> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: false,
+      canPop: _existingDocumentId != null && !_hasInteracted,
       onPopInvokedWithResult: (bool didPop, dynamic result) async {
         debugPrint('🔙 onPopInvoked: didPop=$didPop, result=$result');
 
