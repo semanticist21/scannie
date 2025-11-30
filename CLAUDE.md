@@ -19,6 +19,7 @@ Scannie는 문서 스캔 Flutter 모바일 애플리케이션입니다. 네이�
 **배포 정보**:
 - Package Name / Bundle ID: `com.kobbokkom.scannie`
 - In-App Product ID: `premium` (non-consumable)
+- 버전 넘버링: 스토어 제출 시 항상 증가 필수 (pubspec.yaml)
 
 ## Quick Reference
 
@@ -118,6 +119,8 @@ await PurchaseService.instance.initialize();  // 마지막
 - `AdService.instance` - AdMob 광고 관리
 - `PurchaseService.instance` - 인앱 결제 관리
 - `ThemeService` - 테마 상태 관리
+- `ExportService.instance` - PDF/ZIP/이미지 내보내기 (권한 처리 포함)
+- `DocumentStorage.instance` - 문서 CRUD 및 영속화
 
 ## 인앱 결제 (IAP)
 
@@ -277,12 +280,32 @@ AppModal.showBottomSheet(
 );
 ```
 
+### 내보내기 (ExportService)
+```dart
+import '../services/export_service.dart';
+
+// PDF 저장 (파일 선택기)
+final result = await ExportService.instance.savePdfWithPicker(document);
+
+// ZIP 저장 (파일 선택기)
+final result = await ExportService.instance.saveZipWithPicker(document);
+
+// 이미지 갤러리 저장 (권한 자동 처리)
+final result = await ExportService.instance.saveImagesToGallery(imagePaths);
+
+// PDF 공유
+final result = await ExportService.instance.sharePdf(document);
+
+// 결과 처리 - 성공/실패/취소/권한거부 모두 자동 처리
+AppToast.showExportResult(context, result);
+```
+
 ### RouteAware (화면 복귀 시 리로드)
 GalleryScreen은 `RouteAware`로 다른 화면에서 돌아올 때 문서 목록 자동 리로드
 
 ### 권한 처리 패턴
 ```dart
-// 카메라/사진 라이브러리 권한 체크 후 다이얼로그 표시
+// 카메라 권한 - 직접 처리
 final status = await Permission.camera.status;
 if (status.isDenied) {
   status = await Permission.camera.request();
@@ -299,6 +322,11 @@ if (status.isPermanentlyDenied || status.isDenied) {
   }
   return;
 }
+
+// 사진 저장 권한 - ExportService가 자동 처리
+// ExportResult.permissionDenied 반환 시 AppToast.showExportResult()가 다이얼로그 표시
+final result = await ExportService.instance.saveImagesToGallery(imagePaths);
+AppToast.showExportResult(context, result);
 ```
 
 ### 경로 저장 패턴 (iOS 샌드박스 대응)
@@ -351,3 +379,5 @@ python3 scripts/upload_play_store.py ko-KR
 - `fix:` 버그 수정
 - `refactor:` 리팩토링
 - `docs:` 문서 수정
+- `i18n:` 번역 추가/수정
+- `chore:` 버전 범프, 의존성 업데이트
