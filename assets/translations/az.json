@@ -163,7 +163,9 @@
     "failedToShareImage": "Şəkil paylaşılmadı: {error}",
     "imageNotFound": "Şəkil faylı tapılmadı",
     "imageSavedToPhotos": "Şəkil fotolara saxlandı",
-    "scanFailed": "Skan uğursuz oldu: {error}"
+    "scanFailed": "Skan uğursuz oldu: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "Orijinal",

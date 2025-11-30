@@ -163,7 +163,9 @@
     "failedToShareImage": "Ma rnexxiex taqsam stampa: {error}",
     "imageNotFound": "Fajl tal-istampa ma nstabx",
     "imageSavedToPhotos": "Stampa ssejvjata fir-ritratti",
-    "scanFailed": "Skennjar ma rnexxiex: {error}"
+    "scanFailed": "Skennjar ma rnexxiex: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "Oriġinali",

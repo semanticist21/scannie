@@ -4,6 +4,7 @@ import 'package:file_saver/file_saver.dart';
 import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import 'package:archive/archive.dart';
 import 'package:printing/printing.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../models/scan_document.dart';
 import 'pdf_generator.dart';
 
@@ -16,6 +17,7 @@ enum ExportResultType {
   errorSavingFile,
   errorSavingImages,
   errorNoImages,
+  permissionDenied,
 }
 
 /// Result of an export operation
@@ -152,10 +154,32 @@ class ExportService {
     }
   }
 
+  /// Check and request photo library permission
+  /// Returns true if permission granted, false otherwise
+  Future<bool> _checkPhotoPermission() async {
+    final permission = Platform.isIOS
+        ? Permission.photosAddOnly
+        : Permission.photos;
+
+    var status = await permission.status;
+
+    if (status.isDenied) {
+      status = await permission.request();
+    }
+
+    return status.isGranted || status.isLimited;
+  }
+
   /// Save images to photo gallery
   Future<ExportResult> saveImagesToGallery(List<String> imagePaths) async {
     if (imagePaths.isEmpty) {
       return const ExportResult(type: ExportResultType.errorNoImages);
+    }
+
+    // Check permission first
+    final hasPermission = await _checkPhotoPermission();
+    if (!hasPermission) {
+      return const ExportResult(type: ExportResultType.permissionDenied);
     }
 
     try {

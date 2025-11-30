@@ -163,7 +163,9 @@
     "failedToShareImage": "Không thể chia sẻ hình ảnh: {error}",
     "imageNotFound": "Không tìm thấy tệp hình ảnh",
     "imageSavedToPhotos": "Đã lưu hình ảnh vào Ảnh",
-    "scanFailed": "Quét thất bại: {error}"
+    "scanFailed": "Quét thất bại: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "Gốc",

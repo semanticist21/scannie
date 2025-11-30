@@ -163,7 +163,9 @@
     "failedToShareImage": "Kunde inte dela bild: {error}",
     "imageNotFound": "Bildfilen hittades inte",
     "imageSavedToPhotos": "Bild sparad till Foton",
-    "scanFailed": "Skanning misslyckades: {error}"
+    "scanFailed": "Skanning misslyckades: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "Original",

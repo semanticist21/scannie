@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:toastification/toastification.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../services/export_service.dart';
+import '../widgets/common/confirm_dialog.dart';
 
 /// Centralized toast notification utility for consistent app-wide messaging
 /// Uses toastification with flat style, max 1 toast at a time
@@ -125,6 +127,23 @@ class AppToast {
       case ExportResultType.errorSavingImages:
         error(context, 'toast.failedToSaveImages'.tr());
         return false;
+
+      case ExportResultType.permissionDenied:
+        _showPhotoPermissionDialog(context);
+        return false;
     }
+  }
+
+  /// Show photo permission dialog with settings link
+  static void _showPhotoPermissionDialog(BuildContext context) {
+    ConfirmDialog.show(
+      context: context,
+      title: 'permission.photosRequired'.tr(),
+      message: 'permission.photosRequiredMessage'.tr(),
+      confirmText: 'permission.openSettings'.tr(),
+      onConfirm: () async {
+        await openAppSettings();
+      },
+    );
   }
 }

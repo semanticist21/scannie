@@ -163,7 +163,9 @@
     "failedToShareImage": "පින්තූරය බෙදාගැනීම අසාර්ථකයි: {error}",
     "imageNotFound": "පින්තූර ගොනුව හමු නොවීය",
     "imageSavedToPhotos": "පින්තූරය ඡායාරූපවලට සුරකින ලදී",
-    "scanFailed": "ස්කෑන් අසාර්ථකයි: {error}"
+    "scanFailed": "ස්කෑන් අසාර්ථකයි: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "මුල්",

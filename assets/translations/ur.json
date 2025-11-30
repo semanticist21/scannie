@@ -163,7 +163,9 @@
     "failedToShareImage": "تصویر شیئر نہیں ہو سکی: {error}",
     "imageNotFound": "تصویر فائل نہیں ملی",
     "imageSavedToPhotos": "تصویر فوٹوز میں محفوظ ہو گئی",
-    "scanFailed": "اسکین ناکام: {error}"
+    "scanFailed": "اسکین ناکام: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "اصل",

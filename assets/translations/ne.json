@@ -163,7 +163,9 @@
     "failedToShareImage": "तस्बिर साझा हुन सकेन: {error}",
     "imageNotFound": "तस्बिर फाइल भेटिएन",
     "imageSavedToPhotos": "तस्बिर फोटोमा सेभ भयो",
-    "scanFailed": "स्क्यान असफल: {error}"
+    "scanFailed": "स्क्यान असफल: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "मूल",

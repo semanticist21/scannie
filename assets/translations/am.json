@@ -163,7 +163,9 @@
     "failedToShareImage": "ምስል ማጋራት አልተሳካም: {error}",
     "imageNotFound": "የምስል ፋይል አልተገኘም",
     "imageSavedToPhotos": "ምስል ወደ ፎቶዎች ተቀምጧል",
-    "scanFailed": "ስካን አልተሳካም: {error}"
+    "scanFailed": "ስካን አልተሳካም: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "ዋናው",

@@ -163,7 +163,9 @@
     "failedToShareImage": "Mistókst að deila mynd: {error}",
     "imageNotFound": "Myndaskrá fannst ekki",
     "imageSavedToPhotos": "Mynd vistuð í myndir",
-    "scanFailed": "Skannun mistókst: {error}"
+    "scanFailed": "Skannun mistókst: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "Upprunalegt",

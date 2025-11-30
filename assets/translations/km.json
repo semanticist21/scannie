@@ -163,7 +163,9 @@
     "failedToShareImage": "ចែករំលែករូបភាពមិនបានសម្រេច: {error}",
     "imageNotFound": "រកមិនឃើញឯកសាររូបភាព",
     "imageSavedToPhotos": "បានរក្សាទុករូបភាពទៅរូបថត",
-    "scanFailed": "ការស្កេនបរាជ័យ: {error}"
+    "scanFailed": "ការស្កេនបរាជ័យ: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "ដើម",

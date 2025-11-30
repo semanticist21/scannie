@@ -163,7 +163,9 @@
     "failedToShareImage": "ပုံ မျှဝေ၍မရပါ: {error}",
     "imageNotFound": "ပုံဖိုင် မတွေ့ပါ",
     "imageSavedToPhotos": "ပုံကို ဓာတ်ပုံများသို့ သိမ်းပြီးပါပြီ",
-    "scanFailed": "စကင်န် မအောင်မြင်ပါ: {error}"
+    "scanFailed": "စကင်န် မအောင်မြင်ပါ: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "မူရင်း",

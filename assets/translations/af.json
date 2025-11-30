@@ -163,7 +163,9 @@
     "failedToShareImage": "Kon nie beeld deel nie: {error}",
     "imageNotFound": "Beeldlêer nie gevind nie",
     "imageSavedToPhotos": "Beeld gestoor na Foto's",
-    "scanFailed": "Skandering het misluk: {error}"
+    "scanFailed": "Skandering het misluk: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "Oorspronklik",

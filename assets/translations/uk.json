@@ -163,7 +163,9 @@
     "failedToShareImage": "Не вдалося поділитися зображенням: {error}",
     "imageNotFound": "Файл зображення не знайдено",
     "imageSavedToPhotos": "Зображення збережено у Фото",
-    "scanFailed": "Помилка сканування: {error}"
+    "scanFailed": "Помилка сканування: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "Оригінал",

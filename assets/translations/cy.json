@@ -163,7 +163,9 @@
     "failedToShareImage": "Methwyd rhannu delwedd: {error}",
     "imageNotFound": "Ffeil delwedd heb ei chanfod",
     "imageSavedToPhotos": "Delwedd wedi'i chadw i luniau",
-    "scanFailed": "Methwyd sganio: {error}"
+    "scanFailed": "Methwyd sganio: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "Gwreiddiol",

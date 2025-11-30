@@ -163,7 +163,9 @@
     "failedToShareImage": "Αποτυχία κοινοποίησης εικόνας: {error}",
     "imageNotFound": "Το αρχείο εικόνας δεν βρέθηκε",
     "imageSavedToPhotos": "Η εικόνα αποθηκεύτηκε στις Φωτογραφίες",
-    "scanFailed": "Αποτυχία σάρωσης: {error}"
+    "scanFailed": "Αποτυχία σάρωσης: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "Πρωτότυπο",

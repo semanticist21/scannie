@@ -163,7 +163,9 @@
     "failedToShareImage": "Theip ar íomhá a chomhroinnt: {error}",
     "imageNotFound": "Comhad íomhá gan aimsiú",
     "imageSavedToPhotos": "Íomhá sábháilte i ngrianghraif",
-    "scanFailed": "Theip ar scanadh: {error}"
+    "scanFailed": "Theip ar scanadh: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "Bunaidh",

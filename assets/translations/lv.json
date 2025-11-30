@@ -163,7 +163,9 @@
     "failedToShareImage": "Neizdevās dalīties ar attēlu: {error}",
     "imageNotFound": "Attēla fails nav atrasts",
     "imageSavedToPhotos": "Attēls saglabāts Fotoattēlos",
-    "scanFailed": "Skenēšana neizdevās: {error}"
+    "scanFailed": "Skenēšana neizdevās: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "Oriģināls",

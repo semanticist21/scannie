@@ -163,7 +163,9 @@
     "failedToShareImage": "Imeshindwa kushiriki picha: {error}",
     "imageNotFound": "Faili ya picha haijapatikana",
     "imageSavedToPhotos": "Picha imehifadhiwa kwenye Picha",
-    "scanFailed": "Skani imeshindwa: {error}"
+    "scanFailed": "Skani imeshindwa: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "Asili",

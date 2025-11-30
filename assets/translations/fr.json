@@ -163,7 +163,9 @@
     "failedToShareImage": "Échec du partage de l'image : {error}",
     "imageNotFound": "Fichier image introuvable",
     "imageSavedToPhotos": "Image enregistrée dans Photos",
-    "scanFailed": "Échec du scan : {error}"
+    "scanFailed": "Échec du scan : {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "Original",

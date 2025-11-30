@@ -163,7 +163,9 @@
     "failedToShareImage": "Ndarja e imazhit dështoi: {error}",
     "imageNotFound": "Skedari i imazhit nuk u gjet",
     "imageSavedToPhotos": "Imazhi u ruajt në foto",
-    "scanFailed": "Skanimi dështoi: {error}"
+    "scanFailed": "Skanimi dështoi: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "Origjinal",

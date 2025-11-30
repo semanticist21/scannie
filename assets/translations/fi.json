@@ -163,7 +163,9 @@
     "failedToShareImage": "Kuvan jakaminen epäonnistui: {error}",
     "imageNotFound": "Kuvatiedostoa ei löytynyt",
     "imageSavedToPhotos": "Kuva tallennettu Kuvat-kansioon",
-    "scanFailed": "Skannaus epäonnistui: {error}"
+    "scanFailed": "Skannaus epäonnistui: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "Alkuperäinen",

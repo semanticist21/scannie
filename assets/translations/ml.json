@@ -163,7 +163,9 @@
     "failedToShareImage": "ചിത്രം പങ്കിടുന്നതിൽ പരാജയപ്പെട്ടു: {error}",
     "imageNotFound": "ചിത്ര ഫയൽ കണ്ടെത്തിയില്ല",
     "imageSavedToPhotos": "ചിത്രം ഫോട്ടോസിൽ സേവ് ചെയ്തു",
-    "scanFailed": "സ്കാൻ പരാജയപ്പെട്ടു: {error}"
+    "scanFailed": "സ്കാൻ പരാജയപ്പെട്ടു: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "ഒറിജിനൽ",

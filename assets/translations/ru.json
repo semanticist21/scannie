@@ -163,7 +163,9 @@
     "failedToShareImage": "Не удалось поделиться изображением: {error}",
     "imageNotFound": "Файл изображения не найден",
     "imageSavedToPhotos": "Изображение сохранено в Фото",
-    "scanFailed": "Ошибка сканирования: {error}"
+    "scanFailed": "Ошибка сканирования: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "Оригинал",

@@ -163,7 +163,9 @@
     "failedToShareImage": "Kunne ikke dele bilde: {error}",
     "imageNotFound": "Bildefilen ble ikke funnet",
     "imageSavedToPhotos": "Bilde lagret til Bilder",
-    "scanFailed": "Skanning mislyktes: {error}"
+    "scanFailed": "Skanning mislyktes: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "Original",

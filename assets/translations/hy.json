@@ -163,7 +163,9 @@
     "failedToShareImage": "Պատկերի կիսումը ձախողվեց՝ {error}",
     "imageNotFound": "Պատկերի ֆայլը չի գտնվել",
     "imageSavedToPhotos": "Պատկերը պահվել է պատկերասրահում",
-    "scanFailed": "Սկանավորումը ձախողվեց՝ {error}"
+    "scanFailed": "Սկանավորումը ձախողվեց՝ {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "Բնօրինակ",

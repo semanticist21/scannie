@@ -163,7 +163,9 @@
     "failedToShareImage": "Nem sikerült megosztani a képet: {error}",
     "imageNotFound": "A képfájl nem található",
     "imageSavedToPhotos": "Kép mentve a Fotókba",
-    "scanFailed": "Szkennelés sikertelen: {error}"
+    "scanFailed": "Szkennelés sikertelen: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "Eredeti",

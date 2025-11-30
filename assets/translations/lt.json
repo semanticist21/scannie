@@ -163,7 +163,9 @@
     "failedToShareImage": "Nepavyko dalintis vaizdu: {error}",
     "imageNotFound": "Vaizdo failas nerastas",
     "imageSavedToPhotos": "Vaizdas išsaugotas į Nuotraukas",
-    "scanFailed": "Skenavimas nepavyko: {error}"
+    "scanFailed": "Skenavimas nepavyko: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "Originalus",

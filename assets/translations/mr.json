@@ -163,7 +163,9 @@
     "failedToShareImage": "इमेज शेअर करता आली नाही: {error}",
     "imageNotFound": "इमेज फाइल सापडली नाही",
     "imageSavedToPhotos": "इमेज फोटोमध्ये सेव्ह झाली",
-    "scanFailed": "स्कॅन अयशस्वी: {error}"
+    "scanFailed": "स्कॅन अयशस्वी: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "मूळ",

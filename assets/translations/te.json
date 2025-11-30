@@ -163,7 +163,9 @@
     "failedToShareImage": "చిత్రం షేర్ చేయడం విఫలమైంది: {error}",
     "imageNotFound": "చిత్ర ఫైల్ కనుగొనబడలేదు",
     "imageSavedToPhotos": "చిత్రం ఫోటోలకు సేవ్ చేయబడింది",
-    "scanFailed": "స్కాన్ విఫలమైంది: {error}"
+    "scanFailed": "స్కాన్ విఫలమైంది: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "అసలు",

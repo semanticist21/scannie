@@ -163,7 +163,9 @@
     "failedToShareImage": "Slike ni bilo mogoče deliti: {error}",
     "imageNotFound": "Datoteka slike ni bila najdena",
     "imageSavedToPhotos": "Slika shranjena v Fotografije",
-    "scanFailed": "Skeniranje ni uspelo: {error}"
+    "scanFailed": "Skeniranje ni uspelo: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "Izvirnik",

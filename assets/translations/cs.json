@@ -163,7 +163,9 @@
     "failedToShareImage": "Nepodařilo se sdílet obrázek: {error}",
     "imageNotFound": "Soubor obrázku nenalezen",
     "imageSavedToPhotos": "Obrázek uložen do Fotek",
-    "scanFailed": "Skenování selhalo: {error}"
+    "scanFailed": "Skenování selhalo: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "Originál",

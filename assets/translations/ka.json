@@ -163,7 +163,9 @@
     "failedToShareImage": "სურათის გაზიარება ვერ მოხერხდა: {error}",
     "imageNotFound": "სურათის ფაილი ვერ მოიძებნა",
     "imageSavedToPhotos": "სურათი შეინახა ფოტოებში",
-    "scanFailed": "სკანირება ვერ მოხერხდა: {error}"
+    "scanFailed": "სკანირება ვერ მოხერხდა: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "ორიგინალი",

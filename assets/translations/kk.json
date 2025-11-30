@@ -163,7 +163,9 @@
     "failedToShareImage": "Суретпен бөлісу сәтсіз: {error}",
     "imageNotFound": "Сурет файлы табылмады",
     "imageSavedToPhotos": "Сурет фотоларға сақталды",
-    "scanFailed": "Сканерлеу сәтсіз: {error}"
+    "scanFailed": "Сканерлеу сәтсіз: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "Түпнұсқа",

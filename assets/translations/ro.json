@@ -163,7 +163,9 @@
     "failedToShareImage": "Nu s-a putut distribui imaginea: {error}",
     "imageNotFound": "Fișierul imagine nu a fost găsit",
     "imageSavedToPhotos": "Imagine salvată în Fotografii",
-    "scanFailed": "Scanarea a eșuat: {error}"
+    "scanFailed": "Scanarea a eșuat: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "Original",

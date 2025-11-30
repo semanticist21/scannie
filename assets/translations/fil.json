@@ -163,7 +163,9 @@
     "failedToShareImage": "Hindi naibahagi ang larawan: {error}",
     "imageNotFound": "Hindi nahanap ang image file",
     "imageSavedToPhotos": "Na-save ang larawan sa Photos",
-    "scanFailed": "Nabigo ang pag-scan: {error}"
+    "scanFailed": "Nabigo ang pag-scan: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "Original",

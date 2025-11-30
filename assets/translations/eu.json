@@ -163,7 +163,9 @@
     "failedToShareImage": "Ezin izan da irudia partekatu: {error}",
     "imageNotFound": "Irudi fitxategia ez da aurkitu",
     "imageSavedToPhotos": "Irudia argazkietan gordeta",
-    "scanFailed": "Eskaneatzea huts egin du: {error}"
+    "scanFailed": "Eskaneatzea huts egin du: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "Jatorrizkoa",

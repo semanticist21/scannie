@@ -163,7 +163,9 @@
     "failedToShareImage": "ไม่สามารถแชร์รูปภาพ: {error}",
     "imageNotFound": "ไม่พบไฟล์รูปภาพ",
     "imageSavedToPhotos": "บันทึกรูปภาพไปยังรูปภาพแล้ว",
-    "scanFailed": "การสแกนล้มเหลว: {error}"
+    "scanFailed": "การสแกนล้มเหลว: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "ต้นฉบับ",

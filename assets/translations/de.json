@@ -163,7 +163,9 @@
     "failedToShareImage": "Bild konnte nicht geteilt werden: {error}",
     "imageNotFound": "Bilddatei nicht gefunden",
     "imageSavedToPhotos": "Bild in Fotos gespeichert",
-    "scanFailed": "Scan fehlgeschlagen: {error}"
+    "scanFailed": "Scan fehlgeschlagen: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "Original",

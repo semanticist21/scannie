@@ -163,7 +163,9 @@
     "failedToShareImage": "Rasm ulashilmadi: {error}",
     "imageNotFound": "Rasm fayli topilmadi",
     "imageSavedToPhotos": "Rasm rasmlarga saqlandi",
-    "scanFailed": "Skanerlash amalga oshmadi: {error}"
+    "scanFailed": "Skanerlash amalga oshmadi: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "Asl",

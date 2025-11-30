@@ -24,6 +24,7 @@ SERVICE_ACCOUNT_JSON = "/Users/semanticist/Documents/API/simple-anzan-3e199a55a5
 PROJECT_ROOT = Path(__file__).parent.parent
 METADATA_DIR = PROJECT_ROOT / "store" / "metadata" / "android"
 PROMO_DIR = PROJECT_ROOT / "store" / "screenshots" / "promotions" / "android" / "lang"
+FEATURE_GRAPHIC = PROJECT_ROOT / "store" / "screenshots" / "graphic" / "feature_graphic.png"
 
 # Google Play API scopes
 SCOPES = ['https://www.googleapis.com/auth/androidpublisher']
@@ -63,6 +64,39 @@ def convert_svg_to_png(svg_path: Path, output_path: Path, width: int = 1024, hei
     ], check=True)
 
 
+def upload_feature_graphic(service, edit_id: str) -> bool:
+    """Upload feature graphic for en-US only (shared across all languages)."""
+    if not FEATURE_GRAPHIC.exists():
+        print("     ⚠️  No feature_graphic.png")
+        return False
+
+    try:
+        # Delete existing
+        try:
+            service.edits().images().deleteall(
+                packageName=PACKAGE_NAME,
+                editId=edit_id,
+                language='en-US',
+                imageType='featureGraphic'
+            ).execute()
+        except Exception:
+            pass
+
+        media = MediaFileUpload(str(FEATURE_GRAPHIC), mimetype='image/png')
+        service.edits().images().upload(
+            packageName=PACKAGE_NAME,
+            editId=edit_id,
+            language='en-US',
+            imageType='featureGraphic',
+            media_body=media
+        ).execute()
+        print("     ✅ Feature Graphic (en-US)")
+        return True
+    except Exception as e:
+        print(f"     ❌ Feature Graphic: {e}")
+        return False
+
+
 def upload_language(service, edit_id: str, lang_code: str) -> bool:
     """Upload metadata and image for a single language within an existing edit."""
     print(f"\n  📌 {lang_code}")
@@ -95,45 +129,54 @@ def upload_language(service, edit_id: str, lang_code: str) -> bool:
     else:
         print(f"     ⚠️  No metadata")
 
-    # 2. Upload feature graphic
-    promo_svg = PROMO_DIR / lang_code / "promo_1.svg"
-    if promo_svg.exists():
-        with tempfile.NamedTemporaryFile(suffix='.png', delete=False) as tmp:
-            png_path = Path(tmp.name)
-
+    # 2. Upload phone screenshots (promo_1~4.svg → PNG)
+    promo_dir = PROMO_DIR / lang_code
+    if promo_dir.exists():
+        # Delete existing phone screenshots
         try:
-            convert_svg_to_png(promo_svg, png_path)
-
-            # Delete existing
-            try:
-                service.edits().images().deleteall(
-                    packageName=PACKAGE_NAME,
-                    editId=edit_id,
-                    language=lang_code,
-                    imageType='featureGraphic'
-                ).execute()
-            except Exception:
-                pass
-
-            # Upload
-            media = MediaFileUpload(str(png_path), mimetype='image/png')
-            service.edits().images().upload(
+            service.edits().images().deleteall(
                 packageName=PACKAGE_NAME,
                 editId=edit_id,
                 language=lang_code,
-                imageType='featureGraphic',
-                media_body=media
+                imageType='phoneScreenshots'
             ).execute()
-            print(f"     ✅ Image")
+        except Exception:
+            pass
 
-        except Exception as e:
-            print(f"     ❌ Image: {e}")
-            success = False
-        finally:
-            if png_path.exists():
-                png_path.unlink()
+        screenshot_count = 0
+        for i in range(1, 5):  # promo_1 ~ promo_4
+            promo_svg = promo_dir / f"promo_{i}.svg"
+            if promo_svg.exists():
+                with tempfile.NamedTemporaryFile(suffix='.png', delete=False) as tmp:
+                    png_path = Path(tmp.name)
+
+                try:
+                    # Phone screenshots: 1080x1920 (9:16 ratio)
+                    convert_svg_to_png(promo_svg, png_path, width=1080, height=1920)
+
+                    media = MediaFileUpload(str(png_path), mimetype='image/png')
+                    service.edits().images().upload(
+                        packageName=PACKAGE_NAME,
+                        editId=edit_id,
+                        language=lang_code,
+                        imageType='phoneScreenshots',
+                        media_body=media
+                    ).execute()
+                    screenshot_count += 1
+
+                except Exception as e:
+                    print(f"     ❌ Screenshot {i}: {e}")
+                    success = False
+                finally:
+                    if png_path.exists():
+                        png_path.unlink()
+
+        if screenshot_count > 0:
+            print(f"     ✅ Screenshots ({screenshot_count})")
+        else:
+            print(f"     ⚠️  No screenshots")
     else:
-        print(f"     ⚠️  No image")
+        print(f"     ⚠️  No promo dir")
 
     return success
 
@@ -156,8 +199,12 @@ def upload_batch(languages: list):
     edit_id = edit_request['id']
     print(f"✅ Edit ID: {edit_id}")
 
+    # Upload feature graphic (en-US only, shared)
+    print(f"\n🖼️  Feature Graphic 업로드...")
+    upload_feature_graphic(service, edit_id)
+
     # Upload all languages
-    print(f"\n📤 업로드 중...")
+    print(f"\n📤 언어별 업로드 중...")
     success_count = 0
     fail_count = 0
 
@@ -200,6 +247,11 @@ def upload_single_language(lang_code: str):
     ).execute()
     edit_id = edit_request['id']
     print(f"✅ Edit ID: {edit_id}")
+
+    # Upload feature graphic if en-US
+    if lang_code == 'en-US':
+        print(f"\n🖼️  Feature Graphic 업로드...")
+        upload_feature_graphic(service, edit_id)
 
     upload_language(service, edit_id, lang_code)
 

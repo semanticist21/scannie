@@ -163,7 +163,9 @@
     "failedToShareImage": "Дељење слике није успело: {error}",
     "imageNotFound": "Датотека слике није пронађена",
     "imageSavedToPhotos": "Слика сачувана у Фотографије",
-    "scanFailed": "Скенирање није успело: {error}"
+    "scanFailed": "Скенирање није успело: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "Оригинал",

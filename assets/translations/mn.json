@@ -163,7 +163,9 @@
     "failedToShareImage": "Зураг хуваалцаж чадсангүй: {error}",
     "imageNotFound": "Зургийн файл олдсонгүй",
     "imageSavedToPhotos": "Зураг зурагт хадгалагдлаа",
-    "scanFailed": "Скан амжилтгүй боллоо: {error}"
+    "scanFailed": "Скан амжилтгүй боллоо: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "Эх",

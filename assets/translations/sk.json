@@ -163,7 +163,9 @@
     "failedToShareImage": "Nepodarilo sa zdieľať obrázok: {error}",
     "imageNotFound": "Súbor obrázka sa nenašiel",
     "imageSavedToPhotos": "Obrázok uložený do Fotiek",
-    "scanFailed": "Skenovanie zlyhalo: {error}"
+    "scanFailed": "Skenovanie zlyhalo: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "Originál",

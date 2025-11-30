@@ -163,7 +163,9 @@
     "failedToShareImage": "छवि शेयर करने में विफल: {error}",
     "imageNotFound": "छवि फ़ाइल नहीं मिली",
     "imageSavedToPhotos": "छवि फोटो में सहेजी गई",
-    "scanFailed": "स्कैन विफल: {error}"
+    "scanFailed": "स्कैन विफल: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "मूल",

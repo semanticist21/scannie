@@ -163,7 +163,9 @@
     "failedToShareImage": "画像の共有に失敗しました: {error}",
     "imageNotFound": "画像ファイルが見つかりません",
     "imageSavedToPhotos": "画像を写真に保存しました",
-    "scanFailed": "スキャンに失敗しました: {error}"
+    "scanFailed": "スキャンに失敗しました: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "オリジナル",

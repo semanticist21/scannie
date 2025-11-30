@@ -163,7 +163,9 @@
     "failedToShareImage": "Gagal membagikan gambar: {error}",
     "imageNotFound": "File gambar tidak ditemukan",
     "imageSavedToPhotos": "Gambar disimpan ke Foto",
-    "scanFailed": "Pindaian gagal: {error}"
+    "scanFailed": "Pindaian gagal: {error}",
+    "imagesSaved": "{count}/{total} images saved to Photos",
+    "noImagesToExport": "No images to export"
   },
   "filters": {
     "original": "Asli",
