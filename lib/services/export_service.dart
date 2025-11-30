@@ -157,17 +157,41 @@ class ExportService {
   /// Check and request photo library permission
   /// Returns true if permission granted, false otherwise
   Future<bool> _checkPhotoPermission() async {
-    final permission = Platform.isIOS
-        ? Permission.photosAddOnly
-        : Permission.photos;
+    if (Platform.isIOS) {
+      // Try photosAddOnly first (write-only, less intrusive)
+      var status = await Permission.photosAddOnly.status;
 
-    var status = await permission.status;
+      if (status.isDenied) {
+        status = await Permission.photosAddOnly.request();
+      }
 
-    if (status.isDenied) {
-      status = await permission.request();
+      // If photosAddOnly works, we're done
+      if (status.isGranted || status.isLimited) {
+        return true;
+      }
+
+      // Fallback: Some iOS versions return permanentlyDenied for photosAddOnly
+      // without showing dialog. Try full photos permission as fallback.
+      // See: https://github.com/Baseflow/flutter-permission-handler/issues/1325
+      if (status.isPermanentlyDenied) {
+        var photosStatus = await Permission.photos.status;
+        if (photosStatus.isDenied) {
+          photosStatus = await Permission.photos.request();
+        }
+        return photosStatus.isGranted || photosStatus.isLimited;
+      }
+
+      return false;
+    } else {
+      // Android
+      var status = await Permission.photos.status;
+
+      if (status.isDenied) {
+        status = await Permission.photos.request();
+      }
+
+      return status.isGranted || status.isLimited;
     }
-
-    return status.isGranted || status.isLimited;
   }
 
   /// Save images to photo gallery

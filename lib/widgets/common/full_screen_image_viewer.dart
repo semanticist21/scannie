@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
-import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -10,10 +9,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
-import 'package:permission_handler/permission_handler.dart';
 import '../../models/image_filter_type.dart';
+import '../../services/export_service.dart';
 import '../../utils/app_toast.dart';
-import '../../widgets/common/confirm_dialog.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/app_text_styles.dart';
@@ -415,74 +413,18 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
     }
   }
 
-  /// Show photo library permission dialog
-  void _showPhotoPermissionDialog() {
-    ConfirmDialog.show(
-      context: context,
-      title: 'permission.photosRequired'.tr(),
-      message: 'permission.photosRequiredMessage'.tr(),
-      confirmText: 'permission.openSettings'.tr(),
-      onConfirm: () async {
-        await openAppSettings();
-      },
-    );
-  }
-
   /// Download current image to device
   Future<void> _downloadCurrentImage() async {
-    // Check photo library permission first
-    final permission = Platform.isIOS
-        ? Permission.photosAddOnly
-        : Permission.photos;
+    final imagePath = widget.imagePaths[_currentPage];
+    final result = await ExportService.instance.saveImagesToGallery([imagePath]);
 
-    var status = await permission.status;
+    if (!mounted) return;
 
-    if (status.isDenied) {
-      status = await permission.request();
-    }
-
-    if (status.isPermanentlyDenied || status.isDenied) {
-      if (mounted) {
-        _showPhotoPermissionDialog();
-      }
-      return;
-    }
-
-    try {
-      final imagePath = widget.imagePaths[_currentPage];
-      final imageFile = File(imagePath);
-
-      if (!imageFile.existsSync()) {
-        if (mounted) {
-          AppToast.show(context, 'toast.imageNotFound'.tr(), isError: true);
-        }
-        return;
-      }
-
-      // Save to gallery using image_gallery_saver (works on iOS & Android)
-      final result = await ImageGallerySaverPlus.saveFile(
-        imagePath,
-        name: 'Scannie_${DateTime.now().millisecondsSinceEpoch}',
-      );
-
-      final success = result['isSuccess'] == true;
-      if (mounted) {
-        if (success) {
-          AppToast.show(context, 'toast.imageSavedToPhotos'.tr());
-        } else {
-          AppToast.show(context, 'toast.failedToSaveImages'.tr(),
-              isError: true);
-        }
-      }
-
-      debugPrint('Image saved to gallery: $result');
-    } catch (e) {
-      debugPrint('Error saving image: $e');
-      if (mounted) {
-        AppToast.show(context,
-            'toast.failedToSaveImage'.tr(namedArgs: {'error': e.toString()}),
-            isError: true);
-      }
+    // Show appropriate feedback based on result
+    if (result.isSuccess) {
+      AppToast.show(context, 'toast.imageSavedToPhotos'.tr());
+    } else {
+      AppToast.showExportResult(context, result);
     }
   }
 
