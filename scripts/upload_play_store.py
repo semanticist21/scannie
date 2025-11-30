@@ -64,6 +64,41 @@ def convert_svg_to_png(svg_path: Path, output_path: Path, width: int = 1024, hei
     ], check=True)
 
 
+def ensure_24bit_png(input_path: Path, output_path: Path = None):
+    """Convert PNG to 24-bit RGB (no alpha) for Google Play compatibility.
+
+    Google Play requires 24-bit PNG (no alpha) for screenshots and feature graphics.
+    This removes alpha channel and converts to 8-bit/channel RGB.
+    """
+    if output_path is None:
+        output_path = input_path
+
+    # Use sips (macOS built-in) to convert to RGB without alpha
+    subprocess.run([
+        'sips',
+        '-s', 'format', 'png',
+        '-s', 'formatOptions', 'best',
+        '--setProperty', 'format', 'png',
+        str(input_path),
+        '--out', str(output_path)
+    ], check=True, capture_output=True)
+
+    # Flatten to remove alpha and ensure 24-bit using ImageMagick if available
+    try:
+        subprocess.run([
+            'convert',
+            str(output_path),
+            '-background', 'white',
+            '-alpha', 'remove',
+            '-alpha', 'off',
+            '-depth', '8',
+            str(output_path)
+        ], check=True, capture_output=True)
+    except FileNotFoundError:
+        # ImageMagick not installed, try with sips only
+        pass
+
+
 def delete_feature_graphic_for_language(service, edit_id: str, lang_code: str) -> bool:
     """Delete feature graphic for a specific language."""
     try:
@@ -79,7 +114,10 @@ def delete_feature_graphic_for_language(service, edit_id: str, lang_code: str) -
 
 
 def upload_feature_graphic(service, edit_id: str) -> bool:
-    """Upload feature graphic for en-US only (shared across all languages)."""
+    """Upload feature graphic for en-US only (shared across all languages).
+
+    Requirements: 1024 x 500 pixels, 24-bit PNG (no alpha), max 1MB
+    """
     if not FEATURE_GRAPHIC.exists():
         print("     ⚠️  No feature_graphic.png")
         return False
@@ -88,16 +126,25 @@ def upload_feature_graphic(service, edit_id: str) -> bool:
         # Delete existing
         delete_feature_graphic_for_language(service, edit_id, 'en-US')
 
-        media = MediaFileUpload(str(FEATURE_GRAPHIC), mimetype='image/png')
-        service.edits().images().upload(
-            packageName=PACKAGE_NAME,
-            editId=edit_id,
-            language='en-US',
-            imageType='featureGraphic',
-            media_body=media
-        ).execute()
-        print("     ✅ Feature Graphic (en-US)")
-        return True
+        # Convert to 24-bit PNG for Google Play compatibility
+        with tempfile.NamedTemporaryFile(suffix='.png', delete=False) as tmp:
+            tmp_path = Path(tmp.name)
+
+        try:
+            ensure_24bit_png(FEATURE_GRAPHIC, tmp_path)
+            media = MediaFileUpload(str(tmp_path), mimetype='image/png')
+            service.edits().images().upload(
+                packageName=PACKAGE_NAME,
+                editId=edit_id,
+                language='en-US',
+                imageType='featureGraphic',
+                media_body=media
+            ).execute()
+            print("     ✅ Feature Graphic (en-US)")
+            return True
+        finally:
+            if tmp_path.exists():
+                tmp_path.unlink()
     except Exception as e:
         print(f"     ❌ Feature Graphic: {e}")
         return False
