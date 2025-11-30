@@ -64,6 +64,20 @@ def convert_svg_to_png(svg_path: Path, output_path: Path, width: int = 1024, hei
     ], check=True)
 
 
+def delete_feature_graphic_for_language(service, edit_id: str, lang_code: str) -> bool:
+    """Delete feature graphic for a specific language."""
+    try:
+        service.edits().images().deleteall(
+            packageName=PACKAGE_NAME,
+            editId=edit_id,
+            language=lang_code,
+            imageType='featureGraphic'
+        ).execute()
+        return True
+    except Exception:
+        return False
+
+
 def upload_feature_graphic(service, edit_id: str) -> bool:
     """Upload feature graphic for en-US only (shared across all languages)."""
     if not FEATURE_GRAPHIC.exists():
@@ -72,15 +86,7 @@ def upload_feature_graphic(service, edit_id: str) -> bool:
 
     try:
         # Delete existing
-        try:
-            service.edits().images().deleteall(
-                packageName=PACKAGE_NAME,
-                editId=edit_id,
-                language='en-US',
-                imageType='featureGraphic'
-            ).execute()
-        except Exception:
-            pass
+        delete_feature_graphic_for_language(service, edit_id, 'en-US')
 
         media = MediaFileUpload(str(FEATURE_GRAPHIC), mimetype='image/png')
         service.edits().images().upload(
@@ -97,7 +103,7 @@ def upload_feature_graphic(service, edit_id: str) -> bool:
         return False
 
 
-def upload_language(service, edit_id: str, lang_code: str) -> bool:
+def upload_language(service, edit_id: str, lang_code: str, skip_screenshots: bool = False) -> bool:
     """Upload metadata and image for a single language within an existing edit."""
     print(f"\n  📌 {lang_code}")
     success = True
@@ -129,34 +135,17 @@ def upload_language(service, edit_id: str, lang_code: str) -> bool:
     else:
         print(f"     ⚠️  No metadata")
 
-    # 2. Upload feature graphic (same image for all languages)
-    if FEATURE_GRAPHIC.exists():
-        try:
-            # Delete existing
-            try:
-                service.edits().images().deleteall(
-                    packageName=PACKAGE_NAME,
-                    editId=edit_id,
-                    language=lang_code,
-                    imageType='featureGraphic'
-                ).execute()
-            except Exception:
-                pass
-
-            media = MediaFileUpload(str(FEATURE_GRAPHIC), mimetype='image/png')
-            service.edits().images().upload(
-                packageName=PACKAGE_NAME,
-                editId=edit_id,
-                language=lang_code,
-                imageType='featureGraphic',
-                media_body=media
-            ).execute()
-            print(f"     ✅ Feature Graphic")
-        except Exception as e:
-            print(f"     ❌ Feature Graphic: {e}")
-            success = False
+    # 2. Delete feature graphic for this language (en-US will be the only one with it)
+    #    This cleans up any incorrectly uploaded graphics per language
+    if lang_code != 'en-US':
+        if delete_feature_graphic_for_language(service, edit_id, lang_code):
+            print(f"     🗑️  Feature Graphic deleted (using en-US fallback)")
 
     # 3. Upload phone screenshots (promo_1~4.svg → PNG)
+    if skip_screenshots:
+        print(f"     ⏭️  Screenshots skipped")
+        return success
+
     promo_dir = PROMO_DIR / lang_code
     if promo_dir.exists():
         # Delete existing phone screenshots
@@ -208,10 +197,12 @@ def upload_language(service, edit_id: str, lang_code: str) -> bool:
     return success
 
 
-def upload_batch(languages: list):
+def upload_batch(languages: list, skip_screenshots: bool = False):
     """Upload multiple languages in a single edit (1 quota usage)."""
     print(f"\n{'='*60}")
     print(f"🚀 배치 업로드: {len(languages)}개 언어")
+    if skip_screenshots:
+        print(f"📷 스크린샷 업로드 건너뜀 (메타데이터만)")
     print(f"💡 할당량 1개만 사용합니다!")
     print(f"{'='*60}")
 
@@ -226,14 +217,18 @@ def upload_batch(languages: list):
     edit_id = edit_request['id']
     print(f"✅ Edit ID: {edit_id}")
 
-    # Upload all languages (metadata + feature graphic + screenshots)
+    # Upload Feature Graphic for en-US only (fallback for all languages)
+    print(f"\n🖼️  Feature Graphic 업로드 (en-US만)...")
+    upload_feature_graphic(service, edit_id)
+
+    # Upload all languages (metadata + delete feature graphic + screenshots)
     print(f"\n📤 언어별 업로드 중...")
     success_count = 0
     fail_count = 0
 
     for i, lang in enumerate(languages, 1):
         print(f"\n[{i}/{len(languages)}]", end="")
-        if upload_language(service, edit_id, lang):
+        if upload_language(service, edit_id, lang, skip_screenshots=skip_screenshots):
             success_count += 1
         else:
             fail_count += 1
@@ -293,6 +288,28 @@ def upload_single_language(lang_code: str):
 
 def main():
     """Main entry point."""
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description='Google Play Store Metadata and Image Uploader',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+예시:
+  python upload_play_store.py --all                    # 모든 언어 (메타데이터 + 스크린샷)
+  python upload_play_store.py --all --skip-screenshots # 모든 언어 (메타데이터만)
+  python upload_play_store.py ko-KR                    # 단일 언어
+  python upload_play_store.py --batch ko-KR en-US      # 특정 언어들만
+  python upload_play_store.py --list                   # 언어 목록
+        """
+    )
+    parser.add_argument('language', nargs='?', help='업로드할 언어 코드 (예: ko-KR)')
+    parser.add_argument('--all', action='store_true', help='모든 언어 배치 업로드 (할당량 1개)')
+    parser.add_argument('--batch', nargs='+', metavar='LANG', help='특정 언어들 배치 업로드')
+    parser.add_argument('--list', action='store_true', help='사용 가능한 언어 목록')
+    parser.add_argument('--skip-screenshots', action='store_true', help='스크린샷 업로드 건너뜀 (메타데이터만)')
+
+    args = parser.parse_args()
+
     print("🚀 Google Play Store Uploader")
     print(f"📱 Package: {PACKAGE_NAME}")
 
@@ -300,60 +317,37 @@ def main():
     languages = sorted([f.stem for f in METADATA_DIR.glob("*.xml")])
     print(f"📋 {len(languages)}개 언어 발견")
 
-    if len(sys.argv) > 1:
-        arg = sys.argv[1]
+    if args.list:
+        print("\n사용 가능한 언어:")
+        for i, lang in enumerate(languages, 1):
+            print(f"  {i:2}. {lang}")
+        return
 
-        if arg == "--list":
-            print("\n사용 가능한 언어:")
-            for i, l in enumerate(languages, 1):
-                print(f"  {i:2}. {l}")
+    if args.all:
+        upload_batch(languages, skip_screenshots=args.skip_screenshots)
+        return
 
-        elif arg == "--all":
-            # 배치 모드: 모든 언어를 한 번에 (할당량 1개)
-            upload_batch(languages)
-
-        elif arg == "--batch":
-            # 특정 언어들만 배치로
-            if len(sys.argv) > 2:
-                batch_langs = sys.argv[2:]
-                valid_langs = [l for l in batch_langs if l in languages]
-                if valid_langs:
-                    upload_batch(valid_langs)
-                else:
-                    print("❌ 유효한 언어가 없습니다")
-            else:
-                print("❌ 언어를 지정해주세요")
-                print("예: python upload_play_store.py --batch ko-KR en-US ja-JP")
-
-        elif arg == "--remaining":
-            # upload_remaining.sh에 있는 남은 언어들 배치로
-            remaining = [
-                "ky-KG", "lo-LA", "lt", "lv", "mk-MK", "ml-IN", "mn-MN", "mr-IN",
-                "ms-MY", "my-MM", "ne-NP", "nl-NL", "no-NO", "pa", "pl-PL", "pt-BR",
-                "ro", "ru-RU", "si-LK", "sk", "sl", "sq", "sr", "sv-SE", "sw",
-                "ta-IN", "te-IN", "th", "tr-TR", "uk", "ur", "uz", "vi", "zh-CN", "zu"
-            ]
-            # 실제 존재하는 언어만 필터링
-            valid_remaining = [l for l in remaining if l in languages]
-            print(f"⏳ 남은 언어: {len(valid_remaining)}개")
-            upload_batch(valid_remaining)
-
-        elif arg in languages:
-            # 단일 언어 업로드
-            upload_single_language(arg)
+    if args.batch:
+        valid_langs = [l for l in args.batch if l in languages]
+        invalid_langs = [l for l in args.batch if l not in languages]
+        if invalid_langs:
+            print(f"⚠️  유효하지 않은 언어: {', '.join(invalid_langs)}")
+        if valid_langs:
+            upload_batch(valid_langs, skip_screenshots=args.skip_screenshots)
         else:
-            print(f"❌ 알 수 없는 옵션/언어: {arg}")
+            print("❌ 유효한 언어가 없습니다")
+        return
+
+    if args.language:
+        if args.language in languages:
+            upload_single_language(args.language)
+        else:
+            print(f"❌ 알 수 없는 언어: {args.language}")
             print("--list로 언어 목록 확인")
-    else:
-        print("\n사용법:")
-        print("  python upload_play_store.py <lang>       # 단일 언어 (할당량 1개)")
-        print("  python upload_play_store.py --all        # 모든 언어 배치 (할당량 1개)")
-        print("  python upload_play_store.py --remaining  # 남은 36개 배치 (할당량 1개)")
-        print("  python upload_play_store.py --batch <언어들>  # 특정 언어들 배치")
-        print("  python upload_play_store.py --list       # 언어 목록")
-        print("\n예:")
-        print("  python upload_play_store.py ko-KR")
-        print("  python upload_play_store.py --remaining")
+        return
+
+    # No arguments - show help
+    parser.print_help()
 
 
 if __name__ == "__main__":
