@@ -3,10 +3,9 @@
     <uses-feature android:name="android.hardware.camera" android:required="false"/>
 
     <!-- Storage permissions for saving images to gallery (Android 12 and below) -->
+    <!-- Android 13+ uses MediaStore API which requires no permissions for writing -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
-    <!-- Android 13+ granular media permissions -->
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <!-- In-app billing permission -->
     <uses-permission android:name="com.android.vending.BILLING" />
 
