@@ -788,32 +788,6 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                             ],
                           ),
                         ),
-                        const SizedBox(height: AppSpacing.md),
-                        // Save button
-                        SizedBox(
-                          width: double.infinity,
-                          child: ShadButton(
-                            onPressed: _isSaving ? null : _saveFilteredImage,
-                            height: 48,
-                            backgroundColor: AppColors.white,
-                            foregroundColor: AppColors.black,
-                            hoverBackgroundColor: AppColors.hoverLight,
-                            pressedBackgroundColor: AppColors.pressedLight,
-                            leading: _isSaving
-                                ? null
-                                : const Icon(LucideIcons.check, size: 18),
-                            child: _isSaving
-                                ? const SizedBox(
-                                    width: 20,
-                                    height: 20,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      color: AppColors.black,
-                                    ),
-                                  )
-                                : Text('common.save'.tr()),
-                          ),
-                        ),
                       ],
                     ),
                   ),
