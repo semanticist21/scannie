@@ -25,6 +25,7 @@ import '../widgets/common/text_input_dialog.dart';
 import '../widgets/common/empty_state.dart';
 import 'package:uuid/uuid.dart';
 import '../services/ad_service.dart';
+import '../services/pdf_import_service.dart';
 import '../theme/app_colors.dart';
 
 /// Edit screen for managing scanned images
@@ -171,6 +172,58 @@ class _EditScreenState extends State<EditScreen> {
       debugPrint('❌ Error adding photos: $e');
       if (mounted) {
         AppToast.show(context, 'toast.failedToAddPhotos'.tr(), isError: true);
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  /// Add pages from PDF file
+  Future<void> _addFromPdf() async {
+    setState(() => _isLoading = true);
+
+    try {
+      final result = await PdfImportService.instance.importPdfAsImages(
+        onProgress: (current, total) {
+          debugPrint('📄 PDF import progress: $current/$total');
+        },
+      );
+
+      if (result.cancelled) {
+        debugPrint('📄 PDF import cancelled');
+        return;
+      }
+
+      if (!result.success) {
+        if (mounted) {
+          AppToast.show(
+            context,
+            'toast.failedToImportPdf'.tr(),
+            isError: true,
+          );
+        }
+        debugPrint('❌ PDF import error: ${result.error}');
+        return;
+      }
+
+      if (result.imagePaths.isNotEmpty) {
+        setState(() {
+          _imagePaths.addAll(result.imagePaths);
+          _imageIds.addAll(
+            List.generate(result.imagePaths.length, (_) => const Uuid().v4()),
+          );
+          // Track temp files for cleanup on discard
+          _tempFilePaths.addAll(result.imagePaths);
+          _hasInteracted = true;
+        });
+        debugPrint('📄 Added ${result.imagePaths.length} pages from PDF');
+      }
+    } catch (e) {
+      debugPrint('❌ Error importing PDF: $e');
+      if (mounted) {
+        AppToast.show(context, 'toast.failedToImportPdf'.tr(), isError: true);
       }
     } finally {
       if (mounted) {
@@ -522,6 +575,13 @@ class _EditScreenState extends State<EditScreen> {
             icon: const Icon(LucideIcons.arrowLeft),
             onPressed: _handleBackPress, // Custom back handler
           ),
+          actions: [
+            IconButton(
+              icon: const Icon(LucideIcons.check),
+              onPressed: _saveScan,
+              tooltip: 'common.save'.tr(),
+            ),
+          ],
         ),
         body: _isLoading
             ? const Center(child: CircularProgressIndicator())
@@ -567,7 +627,7 @@ class _EditScreenState extends State<EditScreen> {
                   EditBottomActions(
                     onAddScan: _addMoreScans,
                     onAddPhoto: _addFromGallery,
-                    onSave: _saveScan,
+                    onAddPdf: _addFromPdf,
                   ),
                 ],
               ),

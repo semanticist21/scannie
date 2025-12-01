@@ -173,7 +173,8 @@
     "imageSavedToPhotos": "이미지를 사진에 저장했어요",
     "scanFailed": "스캔에 실패했어요: {error}",
     "imagesSaved": "{count}/{total}개 이미지를 사진에 저장했어요",
-    "noImagesToExport": "내보낼 이미지가 없어요"
+    "noImagesToExport": "내보낼 이미지가 없어요",
+    "failedToImportPdf": "PDF를 가져오지 못했어요"
   },
   "filters": {
     "original": "원본",

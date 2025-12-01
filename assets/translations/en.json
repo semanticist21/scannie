@@ -173,7 +173,8 @@
     "imageSavedToPhotos": "Image saved to Photos",
     "scanFailed": "Scan failed: {error}",
     "imagesSaved": "{count}/{total} images saved to Photos",
-    "noImagesToExport": "No images to export"
+    "noImagesToExport": "No images to export",
+    "failedToImportPdf": "Failed to import PDF"
   },
   "filters": {
     "original": "Original",

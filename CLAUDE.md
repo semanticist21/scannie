@@ -13,6 +13,7 @@ Scannie는 문서 스캔 Flutter 모바일 애플리케이션입니다. 네이�
 - `shadcn_ui` - UI 컴포넌트 (ShadButton, ShadBadge, LucideIcons)
 - `flutter_reorderable_grid_view` - 드래그앤드롭 순서 변경
 - `pdf` + `printing` - PDF 생성/공유
+- `pdfx` + `file_picker` - PDF 파일에서 페이지 이미지 추출
 - `easy_localization` - 75개 언어 지원
 - `google_mobile_ads` + `in_app_purchase` - 수익화
 
@@ -121,6 +122,7 @@ await PurchaseService.instance.initialize();  // 마지막
 - `ThemeService` - 테마 상태 관리
 - `ExportService.instance` - PDF/ZIP/이미지 내보내기 (권한 처리 포함)
 - `DocumentStorage.instance` - 문서 CRUD 및 영속화
+- `PdfImportService.instance` - PDF 파일에서 페이지 이미지 추출
 
 ## 인앱 결제 (IAP)
 
@@ -337,6 +339,30 @@ final relativePath = await PathHelper.toRelativePath(absolutePath);
 // 로드 시: 상대경로 → 절대경로로 변환
 final absolutePath = await PathHelper.toAbsolutePath(storedPath);
 ```
+
+### PDF 가져오기 (PdfImportService)
+```dart
+import '../services/pdf_import_service.dart';
+
+// PDF 파일 선택 + 페이지별 이미지 추출
+final result = await PdfImportService.instance.importPdfAsImages(
+  onProgress: (current, total) => debugPrint('$current/$total'),
+);
+
+if (result.cancelled) return;
+if (!result.success) {
+  AppToast.error(context, result.error ?? 'Failed');
+  return;
+}
+
+// result.imagePaths - 추출된 이미지 파일 경로 목록
+```
+
+**안전 기능**:
+- PDF 매직바이트 검증 (`%PDF-`)
+- 파일 크기 제한 (100MB)
+- 타임아웃 (문서 30초, 페이지 10초, 렌더링 30초)
+- 개별 페이지 에러 처리 (한 페이지 실패해도 계속 진행)
 
 ## 문제 해결
 

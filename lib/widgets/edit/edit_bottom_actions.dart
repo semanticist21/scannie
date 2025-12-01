@@ -8,13 +8,13 @@ import '../../theme/app_theme.dart';
 class EditBottomActions extends StatelessWidget {
   final VoidCallback onAddScan;
   final VoidCallback onAddPhoto;
-  final VoidCallback onSave;
+  final VoidCallback onAddPdf;
 
   const EditBottomActions({
     super.key,
     required this.onAddScan,
     required this.onAddPhoto,
-    required this.onSave,
+    required this.onAddPdf,
   });
 
   @override
@@ -62,13 +62,13 @@ class EditBottomActions extends StatelessWidget {
             ),
           ),
           const SizedBox(width: AppSpacing.sm),
-          // Save button (primary)
+          // PDF import button (outline)
           Expanded(
-            child: ShadButton(
-              onPressed: onSave,
+            child: ShadButton.outline(
+              onPressed: onAddPdf,
               height: 48,
-              leading: const Icon(LucideIcons.check, size: 18),
-              child: Text('common.save'.tr()),
+              leading: const Icon(LucideIcons.fileText, size: 18),
+              child: const Text('PDF'),
             ),
           ),
         ],
