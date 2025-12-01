@@ -25,7 +25,6 @@ class ImageTile extends StatelessWidget {
     final colors = ThemedColors.of(context);
 
     return Container(
-      key: ValueKey(imagePath),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppRadius.md),
         border: Border.all(color: colors.border),
@@ -46,6 +45,7 @@ class ImageTile extends StatelessWidget {
                     File(imagePath),
                     fit: BoxFit.cover,
                     cacheWidth: (constraints.maxWidth * pixelRatio).round(),
+                    gaplessPlayback: true, // Prevent flicker during drag
                   );
                 },
               ),

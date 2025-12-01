@@ -38,6 +38,7 @@ class EditScreen extends StatefulWidget {
 
 class _EditScreenState extends State<EditScreen> {
   List<String> _imagePaths = [];
+  List<String> _imageIds = []; // Unique ID for each image (prevents duplicate key errors)
   final Set<String> _tempFilePaths = {}; // Track temp files for cleanup
   String? _existingDocumentId; // null = new scan, non-null = editing existing
   String? _existingDocumentName; // Preserve name when editing
@@ -70,6 +71,8 @@ class _EditScreenState extends State<EditScreen> {
         // Track if document was empty (for showing ad when first images are added)
         _wasEmptyOnStart = arguments.imagePaths.isEmpty;
       }
+      // Generate unique IDs for each image
+      _imageIds = List.generate(_imagePaths.length, (_) => const Uuid().v4());
       debugPrint('📸 EditScreen loaded ${_imagePaths.length} images');
       if (_existingDocumentId != null) {
         debugPrint('✏️ Editing existing scan: $_existingDocumentName');
@@ -115,6 +118,7 @@ class _EditScreenState extends State<EditScreen> {
       if (newImages.isNotEmpty) {
         setState(() {
           _imagePaths.addAll(newImages);
+          _imageIds.addAll(List.generate(newImages.length, (_) => const Uuid().v4()));
           _hasInteracted = true;
         });
         // Success toast removed - visual feedback is the grid update itself
@@ -158,6 +162,7 @@ class _EditScreenState extends State<EditScreen> {
         debugPrint('📷 Photo paths: $newPaths');
         setState(() {
           _imagePaths.addAll(newPaths);
+          _imageIds.addAll(List.generate(newPaths.length, (_) => const Uuid().v4()));
           _hasInteracted = true;
         });
         // Success toast removed - visual feedback is the grid update itself
@@ -182,6 +187,7 @@ class _EditScreenState extends State<EditScreen> {
 
     setState(() {
       _imagePaths.removeAt(index);
+      _imageIds.removeAt(index);
       _hasInteracted = true;
     });
     // No toast for successful deletion
@@ -583,7 +589,7 @@ class _EditScreenState extends State<EditScreen> {
       final index = entry.key;
       final imagePath = entry.value;
       return ImageTile(
-        key: ValueKey(imagePath),
+        key: ValueKey(_imageIds[index]),
         index: index,
         imagePath: imagePath,
         onTap: () => _viewImage(imagePath, index),
@@ -596,6 +602,7 @@ class _EditScreenState extends State<EditScreen> {
       onReorder: (ReorderedListFunction reorderedListFunction) {
         setState(() {
           _imagePaths = reorderedListFunction(_imagePaths) as List<String>;
+          _imageIds = reorderedListFunction(_imageIds) as List<String>;
           _hasInteracted = true;
         });
       },
