@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -47,7 +48,7 @@ enum PurchaseErrorType {
 /// // Restore purchases
 /// await PurchaseService.instance.restorePurchases();
 /// ```
-class PurchaseService {
+class PurchaseService with WidgetsBindingObserver {
   static final PurchaseService _instance = PurchaseService._internal();
   static PurchaseService get instance => _instance;
 
@@ -65,6 +66,10 @@ class PurchaseService {
 
   // Completer for waiting on restore result
   Completer<PurchaseResult>? _restoreCompleter;
+
+  // Track if purchase flow is active (user is in payment sheet)
+  bool _isPurchaseFlowActive = false;
+  Timer? _resumeTimeoutTimer;
 
   // Premium product ID (matches Play Console configuration)
   static const String premiumProductId = 'premium';
@@ -92,6 +97,32 @@ class PurchaseService {
     }
   }
 
+  /// Handle app lifecycle changes
+  /// When app resumes after purchase sheet was shown, we wait briefly for purchase events.
+  /// If no event comes (iOS doesn't always emit cancel), we treat it as cancelled.
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && _isPurchaseFlowActive) {
+      debugPrint('💎 App resumed while purchase flow was active');
+
+      // Cancel any existing timer
+      _resumeTimeoutTimer?.cancel();
+
+      // Wait briefly for purchase events to come through
+      // iOS may send events shortly after app resumes
+      _resumeTimeoutTimer = Timer(const Duration(seconds: 3), () {
+        if (_isPurchaseFlowActive) {
+          debugPrint('💎 No purchase event received after resume, treating as cancelled');
+          _isPurchaseFlowActive = false;
+          _completePurchaseCompleter(PurchaseResult.error(
+            PurchaseErrorType.purchaseCancelled,
+            'Purchase was cancelled',
+          ));
+        }
+      });
+    }
+  }
+
   /// Initialize the purchase service
   Future<void> initialize() async {
     if (_isInitialized) {
@@ -101,6 +132,9 @@ class PurchaseService {
 
     try {
       debugPrint('💎 Initializing PurchaseService...');
+
+      // Register lifecycle observer
+      WidgetsBinding.instance.addObserver(this);
 
       // Check if in-app purchases are available
       _isAvailable = await _inAppPurchase.isAvailable();
@@ -264,6 +298,11 @@ class PurchaseService {
 
   /// Safely complete the purchase Completer
   void _completePurchaseCompleter(PurchaseResult result) {
+    // Reset purchase flow state
+    _isPurchaseFlowActive = false;
+    _resumeTimeoutTimer?.cancel();
+    _resumeTimeoutTimer = null;
+
     if (_purchaseCompleter != null && !_purchaseCompleter!.isCompleted) {
       _purchaseCompleter!.complete(result);
       debugPrint('💎 Purchase Completer completed with: ${result.success ? "success" : result.errorType}');
@@ -367,6 +406,10 @@ class PurchaseService {
       );
 
       debugPrint('💎 Calling buyNonConsumable...');
+
+      // Mark purchase flow as active for lifecycle detection
+      _isPurchaseFlowActive = true;
+
       final initiated = await _inAppPurchase.buyNonConsumable(
         purchaseParam: purchaseParam,
       );
@@ -375,6 +418,7 @@ class PurchaseService {
 
       if (!initiated) {
         debugPrint('💎 Purchase flow failed to start');
+        _isPurchaseFlowActive = false;
         _purchaseCompleter = null;
         return PurchaseResult.error(
           PurchaseErrorType.purchaseFailed,
@@ -385,11 +429,13 @@ class PurchaseService {
       debugPrint('💎 Waiting for purchase result from stream...');
 
       // Wait for actual purchase result from the stream
-      // Timeout after 2 minutes - iOS may not emit cancel event
+      // Lifecycle observer will handle quick cancellation when user dismisses payment sheet
+      // This timeout is a fallback for edge cases
       final result = await _purchaseCompleter!.future.timeout(
         const Duration(minutes: 2),
         onTimeout: () async {
           debugPrint('💎 Purchase timeout after 2 minutes');
+          _isPurchaseFlowActive = false;
           // Check if premium was granted during the wait
           final isPremiumNow = await isPremium;
           if (isPremiumNow) {
@@ -405,10 +451,14 @@ class PurchaseService {
       );
 
       debugPrint('💎 Purchase result received: ${result.success ? "success" : result.errorType}');
+      _isPurchaseFlowActive = false;
+      _resumeTimeoutTimer?.cancel();
       _purchaseCompleter = null;
       return result;
     } catch (e) {
       debugPrint('💎 Purchase exception: $e');
+      _isPurchaseFlowActive = false;
+      _resumeTimeoutTimer?.cancel();
       _purchaseCompleter = null;
 
       final errorString = e.toString().toLowerCase();
@@ -505,6 +555,9 @@ class PurchaseService {
 
   /// Dispose resources
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _resumeTimeoutTimer?.cancel();
+    _resumeTimeoutTimer = null;
     _subscription?.cancel();
     _subscription = null;
   }
