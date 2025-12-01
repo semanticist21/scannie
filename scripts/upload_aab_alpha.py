@@ -23,15 +23,11 @@ SCOPES = ['https://www.googleapis.com/auth/androidpublisher']
 
 # Release notes (multi-language)
 RELEASE_NOTES = {
-    'en-US': """What's New in v1.0.2:
-- Fixed duplicate image download issue with loading indicator
-- Improved photo permission handling for iOS
-- Updated translations for 75 languages
+    'en-US': """What's New:
+- Import pages from PDF files
 - Bug fixes and performance improvements""",
-    'ko-KR': """v1.0.2 업데이트:
-- 이미지 중복 다운로드 문제 수정 및 로딩 표시 추가
-- iOS 사진 권한 처리 개선
-- 75개 언어 번역 업데이트
+    'ko-KR': """업데이트 내용:
+- PDF 파일에서 페이지 가져오기 기능 추가
 - 버그 수정 및 성능 개선"""
 }
 
@@ -115,12 +111,9 @@ def upload_aab_to_alpha(track_name: str = 'alpha'):
 
     # 4. Commit
     print(f"\n📤 Committing changes...")
-    # For production track, changes cannot be sent for review automatically
-    # Use changesNotSentForReview=True, then manually send for review from Play Console
     service.edits().commit(
         packageName=PACKAGE_NAME,
-        editId=edit_id,
-        changesNotSentForReview=(track_name == 'production')
+        editId=edit_id
     ).execute()
 
     print(f"\n{'='*60}")
