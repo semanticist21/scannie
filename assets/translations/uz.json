@@ -186,7 +186,8 @@
     "rotateImage": "Aylantirish",
     "imageNotFound": "Rasm topilmadi",
     "failedToLoadImage": "Rasm yuklanmadi",
-    "filters": "Filtrlar"
+    "filters": "Filtrlar",
+    "applyChanges": "O'zgarishlarni qo'llash"
   },
   "pdfQuality": {
     "title": "PDF sifati",

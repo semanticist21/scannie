@@ -186,7 +186,8 @@
     "rotateImage": "කරකවන්න",
     "imageNotFound": "පින්තූරය හමු නොවීය",
     "failedToLoadImage": "පින්තූරය පූරණය අසාර්ථකයි",
-    "filters": "පෙරහන්"
+    "filters": "පෙරහන්",
+    "applyChanges": "වෙනස්කම් අදාළ කරන්න"
   },
   "pdfQuality": {
     "title": "PDF ගුණත්වය",

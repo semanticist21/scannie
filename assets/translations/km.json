@@ -186,7 +186,8 @@
     "rotateImage": "បង្វិល",
     "imageNotFound": "រកមិនឃើញរូបភាព",
     "failedToLoadImage": "ផ្ទុករូបភាពមិនបានសម្រេច",
-    "filters": "តម្រង"
+    "filters": "តម្រង",
+    "applyChanges": "អនុវត្តការផ្លាស់ប្តូរ"
   },
   "pdfQuality": {
     "title": "គុណភាព PDF",

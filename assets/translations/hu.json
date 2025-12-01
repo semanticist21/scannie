@@ -186,7 +186,8 @@
     "rotateImage": "Forgatás",
     "imageNotFound": "Kép nem található",
     "failedToLoadImage": "Nem sikerült betölteni a képet",
-    "filters": "Szűrők"
+    "filters": "Szűrők",
+    "applyChanges": "Változások alkalmazása"
   },
   "pdfQuality": {
     "title": "PDF minőség",

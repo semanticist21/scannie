@@ -186,7 +186,8 @@
     "rotateImage": "Περιστροφή",
     "imageNotFound": "Η εικόνα δεν βρέθηκε",
     "failedToLoadImage": "Αποτυχία φόρτωσης εικόνας",
-    "filters": "Φίλτρα"
+    "filters": "Φίλτρα",
+    "applyChanges": "Εφαρμογή αλλαγών"
   },
   "pdfQuality": {
     "title": "Ποιότητα PDF",

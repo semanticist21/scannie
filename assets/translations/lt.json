@@ -186,7 +186,8 @@
     "rotateImage": "Pasukti",
     "imageNotFound": "Vaizdas nerastas",
     "failedToLoadImage": "Nepavyko įkelti vaizdo",
-    "filters": "Filtrai"
+    "filters": "Filtrai",
+    "applyChanges": "Taikyti pakeitimus"
   },
   "pdfQuality": {
     "title": "PDF kokybė",

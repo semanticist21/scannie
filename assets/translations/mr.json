@@ -186,7 +186,8 @@
     "rotateImage": "फिरवा",
     "imageNotFound": "इमेज सापडली नाही",
     "failedToLoadImage": "इमेज लोड करता आली नाही",
-    "filters": "फिल्टर्स"
+    "filters": "फिल्टर्स",
+    "applyChanges": "बदल लागू करा"
   },
   "pdfQuality": {
     "title": "PDF गुणवत्ता",

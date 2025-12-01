@@ -186,7 +186,8 @@
     "rotateImage": "I-rotate",
     "imageNotFound": "Hindi nahanap ang larawan",
     "failedToLoadImage": "Hindi na-load ang larawan",
-    "filters": "Mga Filter"
+    "filters": "Mga Filter",
+    "applyChanges": "Ilapat ang mga pagbabago"
   },
   "pdfQuality": {
     "title": "Kalidad ng PDF",

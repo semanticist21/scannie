@@ -186,7 +186,8 @@
     "rotateImage": "ਘੁਮਾਓ",
     "imageNotFound": "ਤਸਵੀਰ ਨਹੀਂ ਮਿਲੀ",
     "failedToLoadImage": "ਤਸਵੀਰ ਲੋਡ ਨਹੀਂ ਹੋਈ",
-    "filters": "ਫਿਲਟਰ"
+    "filters": "ਫਿਲਟਰ",
+    "applyChanges": "ਬਦਲਾਅ ਲਾਗੂ ਕਰੋ"
   },
   "pdfQuality": {
     "title": "PDF ਗੁਣਵੱਤਾ",

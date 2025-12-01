@@ -186,7 +186,8 @@
     "rotateImage": "Biratu",
     "imageNotFound": "Irudia ez da aurkitu",
     "failedToLoadImage": "Ezin izan da irudia kargatu",
-    "filters": "Iragazkiak"
+    "filters": "Iragazkiak",
+    "applyChanges": "Aldaketak aplikatu"
   },
   "pdfQuality": {
     "title": "PDF kalitatea",

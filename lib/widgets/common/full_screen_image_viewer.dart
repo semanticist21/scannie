@@ -564,12 +564,12 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
               color: isSelected
                   ? AppColors.darkTextPrimary
                   : AppColors.darkTextSecondary,
-              size: 32,
+              size: 24,
             ),
-            AppGap.vSm,
+            AppGap.vXs,
             Text(
               label,
-              style: AppTextStyles.label.copyWith(
+              style: AppTextStyles.labelCompact.copyWith(
                 color: isSelected
                     ? AppColors.darkTextPrimary
                     : AppColors.darkTextSecondary,
@@ -593,7 +593,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
             Padding(
                 padding: EdgeInsets.only(
                   top: 56, // Space for top control bar
-                  bottom: widget.showFilters ? 180 : 0,
+                  bottom: widget.showFilters ? 130 : 0,
                 ),
                 child: GestureDetector(
                   onTap: () {
@@ -712,7 +712,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                   child: Container(
                     padding: const EdgeInsets.fromLTRB(
                       AppSpacing.md,
-                      AppSpacing.lg,
+                      AppSpacing.sm,
                       AppSpacing.md,
                       AppSpacing.lg,
                     ),
@@ -722,7 +722,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                         end: Alignment.topCenter,
                         colors: [
                           AppColors.shadowDarkest,
-                          AppColors.shadowDarkest.withOpacity(0.9),
+                          AppColors.shadowDarkest.withValues(alpha: 0.9),
                           AppColors.transparent,
                         ],
                         stops: const [0.0, 0.7, 1.0],

@@ -186,7 +186,8 @@
     "rotateImage": "Roteer",
     "imageNotFound": "Beeld nie gevind nie",
     "failedToLoadImage": "Kon nie beeld laai nie",
-    "filters": "Filters"
+    "filters": "Filters",
+    "applyChanges": "Pas veranderinge toe"
   },
   "pdfQuality": {
     "title": "PDF-kwaliteit",

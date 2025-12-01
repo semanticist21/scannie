@@ -186,7 +186,8 @@
     "rotateImage": "Putar",
     "imageNotFound": "Imej tidak dijumpai",
     "failedToLoadImage": "Gagal memuatkan imej",
-    "filters": "Penapis"
+    "filters": "Penapis",
+    "applyChanges": "Gunakan perubahan"
   },
   "pdfQuality": {
     "title": "Kualiti PDF",

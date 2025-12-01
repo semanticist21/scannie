@@ -186,7 +186,8 @@
     "rotateImage": "घुमाएं",
     "imageNotFound": "छवि नहीं मिली",
     "failedToLoadImage": "छवि लोड करने में विफल",
-    "filters": "फ़िल्टर"
+    "filters": "फ़िल्टर",
+    "applyChanges": "परिवर्तन लागू करें"
   },
   "pdfQuality": {
     "title": "PDF गुणवत्ता",

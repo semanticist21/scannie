@@ -186,7 +186,8 @@
     "rotateImage": "Повернуть",
     "imageNotFound": "Изображение не найдено",
     "failedToLoadImage": "Не удалось загрузить изображение",
-    "filters": "Фильтры"
+    "filters": "Фильтры",
+    "applyChanges": "Применить изменения"
   },
   "pdfQuality": {
     "title": "Качество PDF",

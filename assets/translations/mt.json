@@ -186,7 +186,8 @@
     "rotateImage": "Dawwar",
     "imageNotFound": "Stampa ma nstabx",
     "failedToLoadImage": "Ma rnexxiex jillowdja stampa",
-    "filters": "Filtri"
+    "filters": "Filtri",
+    "applyChanges": "Applika l-bidliet"
   },
   "pdfQuality": {
     "title": "Kwalità PDF",

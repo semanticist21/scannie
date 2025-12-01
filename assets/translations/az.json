@@ -186,7 +186,8 @@
     "rotateImage": "Döndər",
     "imageNotFound": "Şəkil tapılmadı",
     "failedToLoadImage": "Şəkil yüklənmədi",
-    "filters": "Filtrlər"
+    "filters": "Filtrlər",
+    "applyChanges": "Dəyişiklikləri tətbiq et"
   },
   "pdfQuality": {
     "title": "PDF keyfiyyəti",

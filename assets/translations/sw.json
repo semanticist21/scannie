@@ -186,7 +186,8 @@
     "rotateImage": "Zungusha",
     "imageNotFound": "Picha haijapatikana",
     "failedToLoadImage": "Imeshindwa kupakia picha",
-    "filters": "Vichujio"
+    "filters": "Vichujio",
+    "applyChanges": "Tumia mabadiliko"
   },
   "pdfQuality": {
     "title": "Ubora wa PDF",

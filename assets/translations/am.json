@@ -186,7 +186,8 @@
     "rotateImage": "አሽከርክር",
     "imageNotFound": "ምስል አልተገኘም",
     "failedToLoadImage": "ምስል መጫን አልተሳካም",
-    "filters": "ማጣሪያዎች"
+    "filters": "ማጣሪያዎች",
+    "applyChanges": "ለውጦችን ተግብር"
   },
   "pdfQuality": {
     "title": "የPDF ጥራት",

@@ -186,7 +186,8 @@
     "rotateImage": "လှည့်မည်",
     "imageNotFound": "ပုံ မတွေ့ပါ",
     "failedToLoadImage": "ပုံ ဖွင့်၍မရပါ",
-    "filters": "စစ်ထုတ်မှုများ"
+    "filters": "စစ်ထုတ်မှုများ",
+    "applyChanges": "အပြောင်းအလဲများကို အသုံးပြုပါ"
   },
   "pdfQuality": {
     "title": "PDF အရည်အသွေး",

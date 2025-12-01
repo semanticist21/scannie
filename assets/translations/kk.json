@@ -186,7 +186,8 @@
     "rotateImage": "Айналдыру",
     "imageNotFound": "Сурет табылмады",
     "failedToLoadImage": "Суретті жүктеу сәтсіз",
-    "filters": "Сүзгілер"
+    "filters": "Сүзгілер",
+    "applyChanges": "Өзгерістерді қолдану"
   },
   "pdfQuality": {
     "title": "PDF сапасы",

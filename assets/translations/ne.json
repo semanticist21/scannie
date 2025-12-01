@@ -186,7 +186,8 @@
     "rotateImage": "घुमाउनुहोस्",
     "imageNotFound": "तस्बिर भेटिएन",
     "failedToLoadImage": "तस्बिर लोड हुन सकेन",
-    "filters": "फिल्टरहरू"
+    "filters": "फिल्टरहरू",
+    "applyChanges": "परिवर्तनहरू लागू गर्नुहोस्"
   },
   "pdfQuality": {
     "title": "PDF गुणस्तर",

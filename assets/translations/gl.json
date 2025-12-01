@@ -186,7 +186,8 @@
     "rotateImage": "Rotar",
     "imageNotFound": "Imaxe non atopada",
     "failedToLoadImage": "Non se puido cargar a imaxe",
-    "filters": "Filtros"
+    "filters": "Filtros",
+    "applyChanges": "Aplicar cambios"
   },
   "pdfQuality": {
     "title": "Calidade do PDF",

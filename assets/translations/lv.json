@@ -186,7 +186,8 @@
     "rotateImage": "Pagriezt",
     "imageNotFound": "Attēls nav atrasts",
     "failedToLoadImage": "Neizdevās ielādēt attēlu",
-    "filters": "Filtri"
+    "filters": "Filtri",
+    "applyChanges": "Lietot izmaiņas"
   },
   "pdfQuality": {
     "title": "PDF kvalitāte",

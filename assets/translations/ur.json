@@ -186,7 +186,8 @@
     "rotateImage": "گھمائیں",
     "imageNotFound": "تصویر نہیں ملی",
     "failedToLoadImage": "تصویر لوڈ نہیں ہو سکی",
-    "filters": "فلٹرز"
+    "filters": "فلٹرز",
+    "applyChanges": "تبدیلیاں لاگو کریں"
   },
   "pdfQuality": {
     "title": "PDF کوالٹی",

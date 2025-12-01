@@ -186,7 +186,8 @@
     "rotateImage": "Kierrä",
     "imageNotFound": "Kuvaa ei löytynyt",
     "failedToLoadImage": "Kuvan lataaminen epäonnistui",
-    "filters": "Suodattimet"
+    "filters": "Suodattimet",
+    "applyChanges": "Ota muutokset käyttöön"
   },
   "pdfQuality": {
     "title": "PDF-laatu",

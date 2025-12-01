@@ -186,7 +186,8 @@
     "rotateImage": "Айландыруу",
     "imageNotFound": "Сүрөт табылган жок",
     "failedToLoadImage": "Сүрөттү жүктөө ишке ашкан жок",
-    "filters": "Чыпкалар"
+    "filters": "Чыпкалар",
+    "applyChanges": "Өзгөртүүлөрдү колдонуу"
   },
   "pdfQuality": {
     "title": "PDF сапаты",

@@ -186,7 +186,8 @@
     "rotateImage": "Rothlaigh",
     "imageNotFound": "Íomhá gan aimsiú",
     "failedToLoadImage": "Theip ar íomhá a lódáil",
-    "filters": "Scagairí"
+    "filters": "Scagairí",
+    "applyChanges": "Cuir athruithe i bhfeidhm"
   },
   "pdfQuality": {
     "title": "Cáilíocht PDF",

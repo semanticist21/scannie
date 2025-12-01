@@ -186,7 +186,8 @@
     "rotateImage": "סובב",
     "imageNotFound": "תמונה לא נמצאה",
     "failedToLoadImage": "טעינת תמונה נכשלה",
-    "filters": "מסננים"
+    "filters": "מסננים",
+    "applyChanges": "החל שינויים"
   },
   "pdfQuality": {
     "title": "איכות PDF",

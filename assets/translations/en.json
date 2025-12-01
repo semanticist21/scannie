@@ -193,7 +193,8 @@
     "rotateImage": "Rotate",
     "imageNotFound": "Image not found",
     "failedToLoadImage": "Failed to load image",
-    "filters": "Filters"
+    "filters": "Filters",
+    "applyChanges": "Apply Changes"
   },
   "pdfQuality": {
     "title": "PDF Quality",

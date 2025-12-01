@@ -186,7 +186,8 @@
     "rotateImage": "تدوير",
     "imageNotFound": "الصورة غير موجودة",
     "failedToLoadImage": "فشل تحميل الصورة",
-    "filters": "الفلاتر"
+    "filters": "الفلاتر",
+    "applyChanges": "تطبيق التغييرات"
   },
   "pdfQuality": {
     "title": "جودة PDF",

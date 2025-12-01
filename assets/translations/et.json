@@ -186,7 +186,8 @@
     "rotateImage": "Pööra",
     "imageNotFound": "Pilti ei leitud",
     "failedToLoadImage": "Pildi laadimine ebaõnnestus",
-    "filters": "Filtrid"
+    "filters": "Filtrid",
+    "applyChanges": "Rakenda muudatused"
   },
   "pdfQuality": {
     "title": "PDF kvaliteet",

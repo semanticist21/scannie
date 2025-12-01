@@ -186,7 +186,8 @@
     "rotateImage": "Döndür",
     "imageNotFound": "Resim bulunamadı",
     "failedToLoadImage": "Resim yüklenemedi",
-    "filters": "Filtreler"
+    "filters": "Filtreler",
+    "applyChanges": "Değişiklikleri uygula"
   },
   "pdfQuality": {
     "title": "PDF Kalitesi",

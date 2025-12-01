@@ -186,7 +186,8 @@
     "rotateImage": "چرخاندن",
     "imageNotFound": "تصویر یافت نشد",
     "failedToLoadImage": "بارگذاری تصویر ناموفق بود",
-    "filters": "فیلترها"
+    "filters": "فیلترها",
+    "applyChanges": "اعمال تغییرات"
   },
   "pdfQuality": {
     "title": "کیفیت PDF",

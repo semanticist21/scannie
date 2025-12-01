@@ -186,7 +186,8 @@
     "rotateImage": "Ruota",
     "imageNotFound": "Immagine non trovata",
     "failedToLoadImage": "Caricamento immagine non riuscito",
-    "filters": "Filtri"
+    "filters": "Filtri",
+    "applyChanges": "Applica modifiche"
   },
   "pdfQuality": {
     "title": "Qualità PDF",

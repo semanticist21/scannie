@@ -186,7 +186,8 @@
     "rotateImage": "Rrotullo",
     "imageNotFound": "Imazhi nuk u gjet",
     "failedToLoadImage": "Ngarkimi i imazhit dështoi",
-    "filters": "Filtrat"
+    "filters": "Filtrat",
+    "applyChanges": "Apliko ndryshimet"
   },
   "pdfQuality": {
     "title": "Cilësia e PDF",

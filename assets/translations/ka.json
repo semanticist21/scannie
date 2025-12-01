@@ -186,7 +186,8 @@
     "rotateImage": "მობრუნება",
     "imageNotFound": "სურათი ვერ მოიძებნა",
     "failedToLoadImage": "სურათის ჩატვირთვა ვერ მოხერხდა",
-    "filters": "ფილტრები"
+    "filters": "ფილტრები",
+    "applyChanges": "ცვლილებების გამოყენება"
   },
   "pdfQuality": {
     "title": "PDF ხარისხი",

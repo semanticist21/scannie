@@ -186,7 +186,8 @@
     "rotateImage": "Jikeleza",
     "imageNotFound": "Isithombe asitholakali",
     "failedToLoadImage": "Yehlulekile ukulayisha isithombe",
-    "filters": "Amafilitha"
+    "filters": "Amafilitha",
+    "applyChanges": "Sebenzisa izinguquko"
   },
   "pdfQuality": {
     "title": "Ikhwalithi ye-PDF",

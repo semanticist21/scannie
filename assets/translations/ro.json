@@ -186,7 +186,8 @@
     "rotateImage": "Rotește",
     "imageNotFound": "Imaginea nu a fost găsită",
     "failedToLoadImage": "Nu s-a putut încărca imaginea",
-    "filters": "Filtre"
+    "filters": "Filtre",
+    "applyChanges": "Aplică modificările"
   },
   "pdfQuality": {
     "title": "Calitate PDF",

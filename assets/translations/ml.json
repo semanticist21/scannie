@@ -186,7 +186,8 @@
     "rotateImage": "തിരിക്കുക",
     "imageNotFound": "ചിത്രം കണ്ടെത്തിയില്ല",
     "failedToLoadImage": "ചിത്രം ലോഡ് ചെയ്യുന്നതിൽ പരാജയപ്പെട്ടു",
-    "filters": "ഫിൽട്ടറുകൾ"
+    "filters": "ഫിൽട്ടറുകൾ",
+    "applyChanges": "മാറ്റങ്ങൾ പ്രയോഗിക്കുക"
   },
   "pdfQuality": {
     "title": "PDF ഗുണനിലവാരം",

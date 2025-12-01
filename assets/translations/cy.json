@@ -186,7 +186,8 @@
     "rotateImage": "Cylchdroi",
     "imageNotFound": "Delwedd heb ei chanfod",
     "failedToLoadImage": "Methwyd llwytho delwedd",
-    "filters": "Hidlyddion"
+    "filters": "Hidlyddion",
+    "applyChanges": "Cymhwyso newidiadau"
   },
   "pdfQuality": {
     "title": "Ansawdd PDF",

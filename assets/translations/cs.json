@@ -186,7 +186,8 @@
     "rotateImage": "Otočit",
     "imageNotFound": "Obrázek nenalezen",
     "failedToLoadImage": "Nepodařilo se načíst obrázek",
-    "filters": "Filtry"
+    "filters": "Filtry",
+    "applyChanges": "Použít změny"
   },
   "pdfQuality": {
     "title": "Kvalita PDF",

@@ -186,7 +186,8 @@
     "rotateImage": "తిప్పు",
     "imageNotFound": "చిత్రం కనుగొనబడలేదు",
     "failedToLoadImage": "చిత్రం లోడ్ చేయడం విఫలమైంది",
-    "filters": "ఫిల్టర్లు"
+    "filters": "ఫిల్టర్లు",
+    "applyChanges": "మార్పులను వర్తింపజేయండి"
   },
   "pdfQuality": {
     "title": "PDF నాణ్యత",

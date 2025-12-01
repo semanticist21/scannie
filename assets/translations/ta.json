@@ -186,7 +186,8 @@
     "rotateImage": "சுழற்று",
     "imageNotFound": "படம் கிடைக்கவில்லை",
     "failedToLoadImage": "படத்தை ஏற்ற முடியவில்லை",
-    "filters": "வடிகட்டிகள்"
+    "filters": "வடிகட்டிகள்",
+    "applyChanges": "மாற்றங்களைப் பயன்படுத்து"
   },
   "pdfQuality": {
     "title": "PDF தரம்",

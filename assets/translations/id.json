@@ -186,7 +186,8 @@
     "rotateImage": "Putar",
     "imageNotFound": "Gambar tidak ditemukan",
     "failedToLoadImage": "Gagal memuat gambar",
-    "filters": "Filter"
+    "filters": "Filter",
+    "applyChanges": "Terapkan perubahan"
   },
   "pdfQuality": {
     "title": "Kualitas PDF",

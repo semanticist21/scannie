@@ -186,7 +186,8 @@
     "rotateImage": "Завъртане",
     "imageNotFound": "Изображението не е намерено",
     "failedToLoadImage": "Неуспешно зареждане на изображение",
-    "filters": "Филтри"
+    "filters": "Филтри",
+    "applyChanges": "Приложи промените"
   },
   "pdfQuality": {
     "title": "Качество на PDF",

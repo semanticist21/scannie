@@ -186,7 +186,8 @@
     "rotateImage": "Павярнуць",
     "imageNotFound": "Малюнак не знойдзены",
     "failedToLoadImage": "Не ўдалося загрузіць малюнак",
-    "filters": "Фільтры"
+    "filters": "Фільтры",
+    "applyChanges": "Прымяніць змены"
   },
   "pdfQuality": {
     "title": "Якасць PDF",

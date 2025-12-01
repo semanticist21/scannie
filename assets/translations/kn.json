@@ -186,7 +186,8 @@
     "rotateImage": "ತಿರುಗಿಸಿ",
     "imageNotFound": "ಚಿತ್ರ ಕಂಡುಬಂದಿಲ್ಲ",
     "failedToLoadImage": "ಚಿತ್ರ ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಯಿತು",
-    "filters": "ಫಿಲ್ಟರ್‌ಗಳು"
+    "filters": "ಫಿಲ್ಟರ್‌ಗಳು",
+    "applyChanges": "ಬದಲಾವಣೆಗಳನ್ನು ಅನ್ವಯಿಸಿ"
   },
   "pdfQuality": {
     "title": "PDF ಗುಣಮಟ್ಟ",

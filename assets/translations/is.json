@@ -186,7 +186,8 @@
     "rotateImage": "Snúa",
     "imageNotFound": "Mynd fannst ekki",
     "failedToLoadImage": "Mistókst að hlaða mynd",
-    "filters": "Síur"
+    "filters": "Síur",
+    "applyChanges": "Nota breytingar"
   },
   "pdfQuality": {
     "title": "PDF gæði",

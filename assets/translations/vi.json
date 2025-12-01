@@ -186,7 +186,8 @@
     "rotateImage": "Xoay",
     "imageNotFound": "Không tìm thấy hình ảnh",
     "failedToLoadImage": "Không thể tải hình ảnh",
-    "filters": "Bộ lọc"
+    "filters": "Bộ lọc",
+    "applyChanges": "Áp dụng thay đổi"
   },
   "pdfQuality": {
     "title": "Chất lượng PDF",

@@ -186,7 +186,8 @@
     "rotateImage": "Պտտել",
     "imageNotFound": "Պատկերը չի գտնվել",
     "failedToLoadImage": "Պատկերի բեռնումը ձախողվեց",
-    "filters": "Ֆիլտրեր"
+    "filters": "Ֆիլտրեր",
+    "applyChanges": "Apply Changes"
   },
   "pdfQuality": {
     "title": "PDF որակ",

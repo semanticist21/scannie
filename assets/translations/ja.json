@@ -186,7 +186,8 @@
     "rotateImage": "回転",
     "imageNotFound": "画像が見つかりません",
     "failedToLoadImage": "画像の読み込みに失敗しました",
-    "filters": "フィルター"
+    "filters": "フィルター",
+    "applyChanges": "変更を適用"
   },
   "pdfQuality": {
     "title": "PDF品質",

@@ -186,7 +186,8 @@
     "rotateImage": "หมุน",
     "imageNotFound": "ไม่พบรูปภาพ",
     "failedToLoadImage": "ไม่สามารถโหลดรูปภาพ",
-    "filters": "ฟิลเตอร์"
+    "filters": "ฟิลเตอร์",
+    "applyChanges": "ใช้การเปลี่ยนแปลง"
   },
   "pdfQuality": {
     "title": "คุณภาพ PDF",

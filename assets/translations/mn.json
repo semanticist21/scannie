@@ -186,7 +186,8 @@
     "rotateImage": "Эргүүлэх",
     "imageNotFound": "Зураг олдсонгүй",
     "failedToLoadImage": "Зураг ачаалж чадсангүй",
-    "filters": "Шүүлтүүрүүд"
+    "filters": "Шүүлтүүрүүд",
+    "applyChanges": "Өөрчлөлтийг хэрэглэх"
   },
   "pdfQuality": {
     "title": "PDF чанар",

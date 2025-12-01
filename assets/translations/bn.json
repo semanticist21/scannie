@@ -186,7 +186,8 @@
     "rotateImage": "ঘোরান",
     "imageNotFound": "ছবি পাওয়া যায়নি",
     "failedToLoadImage": "ছবি লোড করা যায়নি",
-    "filters": "ফিল্টার"
+    "filters": "ফিল্টার",
+    "applyChanges": "পরিবর্তন প্রয়োগ করুন"
   },
   "pdfQuality": {
     "title": "PDF মান",

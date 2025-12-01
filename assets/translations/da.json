@@ -186,7 +186,8 @@
     "rotateImage": "Roter",
     "imageNotFound": "Billede ikke fundet",
     "failedToLoadImage": "Kunne ikke indlæse billede",
-    "filters": "Filtre"
+    "filters": "Filtre",
+    "applyChanges": "Anvend ændringer"
   },
   "pdfQuality": {
     "title": "PDF-kvalitet",

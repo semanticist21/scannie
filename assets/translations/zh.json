@@ -186,7 +186,8 @@
     "rotateImage": "旋转",
     "imageNotFound": "未找到图片",
     "failedToLoadImage": "加载图片失败",
-    "filters": "滤镜"
+    "filters": "滤镜",
+    "applyChanges": "应用更改"
   },
   "pdfQuality": {
     "title": "PDF质量",

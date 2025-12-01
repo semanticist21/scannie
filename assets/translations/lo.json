@@ -186,7 +186,8 @@
     "rotateImage": "ໝູນ",
     "imageNotFound": "ບໍ່ພົບຮູບ",
     "failedToLoadImage": "ໂຫລດຮູບບໍ່ສຳເລັດ",
-    "filters": "ຕົວກອງ"
+    "filters": "ຕົວກອງ",
+    "applyChanges": "ນຳໃຊ້ການປ່ຽນແປງ"
   },
   "pdfQuality": {
     "title": "ຄຸນນະພາບ PDF",
