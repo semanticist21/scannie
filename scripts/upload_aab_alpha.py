@@ -115,9 +115,12 @@ def upload_aab_to_alpha(track_name: str = 'alpha'):
 
     # 4. Commit
     print(f"\n📤 Committing changes...")
+    # For production track, changes cannot be sent for review automatically
+    # Use changesNotSentForReview=True, then manually send for review from Play Console
     service.edits().commit(
         packageName=PACKAGE_NAME,
-        editId=edit_id
+        editId=edit_id,
+        changesNotSentForReview=(track_name == 'production')
     ).execute()
 
     print(f"\n{'='*60}")
