@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "បានរក្សាទុករូបភាពទៅរូបថត",
     "scanFailed": "ការស្កេនបរាជ័យ: {error}",
     "imagesSaved": "{count}/{total} រូបភាពត្រូវបានរក្សាទុកក្នុង Photos",
-    "noImagesToExport": "គ្មានរូបភាពដើម្បីនាំចេញ"
+    "noImagesToExport": "គ្មានរូបភាពដើម្បីនាំចេញ",
+    "failedToImportPdf": "នាំចូល PDF បរាជ័យ"
   },
   "filters": {
     "original": "ដើម",
@@ -184,7 +185,8 @@
     "shareImage": "ចែករំលែករូបភាព",
     "rotateImage": "បង្វិល",
     "imageNotFound": "រកមិនឃើញរូបភាព",
-    "failedToLoadImage": "ផ្ទុករូបភាពមិនបានសម្រេច"
+    "failedToLoadImage": "ផ្ទុករូបភាពមិនបានសម្រេច",
+    "filters": "តម្រង"
   },
   "pdfQuality": {
     "title": "គុណភាព PDF",

@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Kép mentve a Fotókba",
     "scanFailed": "Szkennelés sikertelen: {error}",
     "imagesSaved": "{count}/{total} kép mentve a Fotókba",
-    "noImagesToExport": "Nincsenek exportálható képek"
+    "noImagesToExport": "Nincsenek exportálható képek",
+    "failedToImportPdf": "PDF importálása sikertelen"
   },
   "filters": {
     "original": "Eredeti",
@@ -184,7 +185,8 @@
     "shareImage": "Kép megosztása",
     "rotateImage": "Forgatás",
     "imageNotFound": "Kép nem található",
-    "failedToLoadImage": "Nem sikerült betölteni a képet"
+    "failedToLoadImage": "Nem sikerült betölteni a képet",
+    "filters": "Szűrők"
   },
   "pdfQuality": {
     "title": "PDF minőség",

@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "చిత్రం ఫోటోలకు సేవ్ చేయబడింది",
     "scanFailed": "స్కాన్ విఫలమైంది: {error}",
     "imagesSaved": "{count}/{total} చిత్రాలు ఫోటోలలో సేవ్ చేయబడ్డాయి",
-    "noImagesToExport": "ఎగుమతి చేయడానికి చిత్రాలు లేవు"
+    "noImagesToExport": "ఎగుమతి చేయడానికి చిత్రాలు లేవు",
+    "failedToImportPdf": "PDF దిగుమతి విఫలమైంది"
   },
   "filters": {
     "original": "అసలు",
@@ -184,7 +185,8 @@
     "shareImage": "చిత్రం షేర్ చేయి",
     "rotateImage": "తిప్పు",
     "imageNotFound": "చిత్రం కనుగొనబడలేదు",
-    "failedToLoadImage": "చిత్రం లోడ్ చేయడం విఫలమైంది"
+    "failedToLoadImage": "చిత్రం లోడ్ చేయడం విఫలమైంది",
+    "filters": "ఫిల్టర్లు"
   },
   "pdfQuality": {
     "title": "PDF నాణ్యత",

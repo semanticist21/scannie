@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Isithombe silondoloziwe Ezithombeni",
     "scanFailed": "Ukuskena kuhlulekile: {error}",
     "imagesSaved": "Izithombe {count}/{total} zigciniwe ezithombeni",
-    "noImagesToExport": "Azikho izithombe zokuthumela"
+    "noImagesToExport": "Azikho izithombe zokuthumela",
+    "failedToImportPdf": "Yehlulekile ukungenisa i-PDF"
   },
   "filters": {
     "original": "Okwangempela",
@@ -184,7 +185,8 @@
     "shareImage": "Yabelana ngesithombe",
     "rotateImage": "Jikeleza",
     "imageNotFound": "Isithombe asitholakali",
-    "failedToLoadImage": "Yehlulekile ukulayisha isithombe"
+    "failedToLoadImage": "Yehlulekile ukulayisha isithombe",
+    "filters": "Amafilitha"
   },
   "pdfQuality": {
     "title": "Ikhwalithi ye-PDF",

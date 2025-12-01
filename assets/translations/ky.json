@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Сүрөт сүрөттөргө сакталды",
     "scanFailed": "Скандоо ишке ашкан жок: {error}",
     "imagesSaved": "{count}/{total} сүрөт Сүрөттөргө сакталды",
-    "noImagesToExport": "Экспорттоого сүрөттөр жок"
+    "noImagesToExport": "Экспорттоого сүрөттөр жок",
+    "failedToImportPdf": "PDF импорттоо ишке ашкан жок"
   },
   "filters": {
     "original": "Түпнуска",
@@ -184,7 +185,8 @@
     "shareImage": "Сүрөт менен бөлүшүү",
     "rotateImage": "Айландыруу",
     "imageNotFound": "Сүрөт табылган жок",
-    "failedToLoadImage": "Сүрөттү жүктөө ишке ашкан жок"
+    "failedToLoadImage": "Сүрөттү жүктөө ишке ашкан жок",
+    "filters": "Чыпкалар"
   },
   "pdfQuality": {
     "title": "PDF сапаты",

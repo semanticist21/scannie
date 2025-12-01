@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "התמונה נשמרה לתמונות",
     "scanFailed": "הסריקה נכשלה: {error}",
     "imagesSaved": "{count}/{total} תמונות נשמרו בתמונות",
-    "noImagesToExport": "אין תמונות לייצוא"
+    "noImagesToExport": "אין תמונות לייצוא",
+    "failedToImportPdf": "ייבוא PDF נכשל"
   },
   "filters": {
     "original": "מקורי",
@@ -184,7 +185,8 @@
     "shareImage": "שתף תמונה",
     "rotateImage": "סובב",
     "imageNotFound": "תמונה לא נמצאה",
-    "failedToLoadImage": "טעינת תמונה נכשלה"
+    "failedToLoadImage": "טעינת תמונה נכשלה",
+    "filters": "מסננים"
   },
   "pdfQuality": {
     "title": "איכות PDF",

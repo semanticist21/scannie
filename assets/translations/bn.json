@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "ছবি ফটোতে সেভ হয়েছে",
     "scanFailed": "স্ক্যান ব্যর্থ: {error}",
     "imagesSaved": "{count}/{total}টি ছবি ফটোতে সংরক্ষণ করা হয়েছে",
-    "noImagesToExport": "রপ্তানি করার জন্য কোনো ছবি নেই"
+    "noImagesToExport": "রপ্তানি করার জন্য কোনো ছবি নেই",
+    "failedToImportPdf": "PDF আমদানি ব্যর্থ"
   },
   "filters": {
     "original": "অরিজিনাল",
@@ -184,7 +185,8 @@
     "shareImage": "ছবি শেয়ার করুন",
     "rotateImage": "ঘোরান",
     "imageNotFound": "ছবি পাওয়া যায়নি",
-    "failedToLoadImage": "ছবি লোড করা যায়নি"
+    "failedToLoadImage": "ছবি লোড করা যায়নি",
+    "filters": "ফিল্টার"
   },
   "pdfQuality": {
     "title": "PDF মান",

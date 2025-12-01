@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Kuva tallennettu Kuvat-kansioon",
     "scanFailed": "Skannaus epäonnistui: {error}",
     "imagesSaved": "{count}/{total} kuvaa tallennettu Kuviin",
-    "noImagesToExport": "Ei kuvia vietäväksi"
+    "noImagesToExport": "Ei kuvia vietäväksi",
+    "failedToImportPdf": "PDF:n tuonti epäonnistui"
   },
   "filters": {
     "original": "Alkuperäinen",
@@ -184,7 +185,8 @@
     "shareImage": "Jaa kuva",
     "rotateImage": "Kierrä",
     "imageNotFound": "Kuvaa ei löytynyt",
-    "failedToLoadImage": "Kuvan lataaminen epäonnistui"
+    "failedToLoadImage": "Kuvan lataaminen epäonnistui",
+    "filters": "Suodattimet"
   },
   "pdfQuality": {
     "title": "PDF-laatu",

@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Stampa ssejvjata fir-ritratti",
     "scanFailed": "Skennjar ma rnexxiex: {error}",
     "imagesSaved": "{count}/{total} stampi ffrankati fil-Fotografi",
-    "noImagesToExport": "L-ebda stampi biex jesportaw"
+    "noImagesToExport": "L-ebda stampi biex jesportaw",
+    "failedToImportPdf": "Ma rnexxiex timporta PDF"
   },
   "filters": {
     "original": "Oriġinali",
@@ -184,7 +185,8 @@
     "shareImage": "Aqsam stampa",
     "rotateImage": "Dawwar",
     "imageNotFound": "Stampa ma nstabx",
-    "failedToLoadImage": "Ma rnexxiex jillowdja stampa"
+    "failedToLoadImage": "Ma rnexxiex jillowdja stampa",
+    "filters": "Filtri"
   },
   "pdfQuality": {
     "title": "Kwalità PDF",

@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "تصویر در عکس‌ها ذخیره شد",
     "scanFailed": "اسکن ناموفق بود: {error}",
     "imagesSaved": "{count}/{total} تصویر در عکس‌ها ذخیره شد",
-    "noImagesToExport": "تصویری برای صادرات وجود ندارد"
+    "noImagesToExport": "تصویری برای صادرات وجود ندارد",
+    "failedToImportPdf": "وارد کردن PDF ناموفق بود"
   },
   "filters": {
     "original": "اصلی",
@@ -184,7 +185,8 @@
     "shareImage": "اشتراک‌گذاری تصویر",
     "rotateImage": "چرخاندن",
     "imageNotFound": "تصویر یافت نشد",
-    "failedToLoadImage": "بارگذاری تصویر ناموفق بود"
+    "failedToLoadImage": "بارگذاری تصویر ناموفق بود",
+    "filters": "فیلترها"
   },
   "pdfQuality": {
     "title": "کیفیت PDF",

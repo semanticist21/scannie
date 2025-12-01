@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Irudia argazkietan gordeta",
     "scanFailed": "Eskaneatzea huts egin du: {error}",
     "imagesSaved": "{count}/{total} irudi Argazkietan gorde dira",
-    "noImagesToExport": "Ez dago irudirik esportatzeko"
+    "noImagesToExport": "Ez dago irudirik esportatzeko",
+    "failedToImportPdf": "Ezin izan da PDFa inportatu"
   },
   "filters": {
     "original": "Jatorrizkoa",
@@ -184,7 +185,8 @@
     "shareImage": "Partekatu irudia",
     "rotateImage": "Biratu",
     "imageNotFound": "Irudia ez da aurkitu",
-    "failedToLoadImage": "Ezin izan da irudia kargatu"
+    "failedToLoadImage": "Ezin izan da irudia kargatu",
+    "filters": "Iragazkiak"
   },
   "pdfQuality": {
     "title": "PDF kalitatea",

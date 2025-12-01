@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Slika shranjena v Fotografije",
     "scanFailed": "Skeniranje ni uspelo: {error}",
     "imagesSaved": "{count}/{total} slik shranjenih v Fotografije",
-    "noImagesToExport": "Ni slik za izvoz"
+    "noImagesToExport": "Ni slik za izvoz",
+    "failedToImportPdf": "Uvoz PDF ni uspel"
   },
   "filters": {
     "original": "Izvirnik",
@@ -184,7 +185,8 @@
     "shareImage": "Deli sliko",
     "rotateImage": "Zavrti",
     "imageNotFound": "Slika ni bila najdena",
-    "failedToLoadImage": "Slike ni bilo mogoče naložiti"
+    "failedToLoadImage": "Slike ni bilo mogoče naložiti",
+    "filters": "Filtri"
   },
   "pdfQuality": {
     "title": "Kakovost PDF",

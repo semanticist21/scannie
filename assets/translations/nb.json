@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Bilde lagret til Bilder",
     "scanFailed": "Skanning mislyktes: {error}",
     "imagesSaved": "{count}/{total} bilder lagret i Bilder",
-    "noImagesToExport": "Ingen bilder å eksportere"
+    "noImagesToExport": "Ingen bilder å eksportere",
+    "failedToImportPdf": "Kunne ikke importere PDF"
   },
   "filters": {
     "original": "Original",
@@ -184,7 +185,8 @@
     "shareImage": "Del bilde",
     "rotateImage": "Roter",
     "imageNotFound": "Bildet ble ikke funnet",
-    "failedToLoadImage": "Kunne ikke laste bilde"
+    "failedToLoadImage": "Kunne ikke laste bilde",
+    "filters": "Filtre"
   },
   "pdfQuality": {
     "title": "PDF-kvalitet",

@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "ပုံကို ဓာတ်ပုံများသို့ သိမ်းပြီးပါပြီ",
     "scanFailed": "စကင်န် မအောင်မြင်ပါ: {error}",
     "imagesSaved": "{count}/{total} ပုံများကို ဓာတ်ပုံများတွင် သိမ်းဆည်းပြီးပါပြီ",
-    "noImagesToExport": "တင်ပို့ရန် ပုံမရှိပါ"
+    "noImagesToExport": "တင်ပို့ရန် ပုံမရှိပါ",
+    "failedToImportPdf": "PDF တင်သွင်းမှု မအောင်မြင်ပါ"
   },
   "filters": {
     "original": "မူရင်း",
@@ -184,7 +185,8 @@
     "shareImage": "ပုံ မျှဝေမည်",
     "rotateImage": "လှည့်မည်",
     "imageNotFound": "ပုံ မတွေ့ပါ",
-    "failedToLoadImage": "ပုံ ဖွင့်၍မရပါ"
+    "failedToLoadImage": "ပုံ ဖွင့်၍မရပါ",
+    "filters": "စစ်ထုတ်မှုများ"
   },
   "pdfQuality": {
     "title": "PDF အရည်အသွေး",

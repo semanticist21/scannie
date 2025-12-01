@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Imej disimpan ke Foto",
     "scanFailed": "Imbasan gagal: {error}",
     "imagesSaved": "{count}/{total} imej disimpan ke Foto",
-    "noImagesToExport": "Tiada imej untuk dieksport"
+    "noImagesToExport": "Tiada imej untuk dieksport",
+    "failedToImportPdf": "Gagal mengimport PDF"
   },
   "filters": {
     "original": "Asal",
@@ -184,7 +185,8 @@
     "shareImage": "Kongsi imej",
     "rotateImage": "Putar",
     "imageNotFound": "Imej tidak dijumpai",
-    "failedToLoadImage": "Gagal memuatkan imej"
+    "failedToLoadImage": "Gagal memuatkan imej",
+    "filters": "Penapis"
   },
   "pdfQuality": {
     "title": "Kualiti PDF",

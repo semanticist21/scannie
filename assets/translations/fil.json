@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Na-save ang larawan sa Photos",
     "scanFailed": "Nabigo ang pag-scan: {error}",
     "imagesSaved": "{count}/{total} na larawan ang na-save sa Photos",
-    "noImagesToExport": "Walang larawang i-e-export"
+    "noImagesToExport": "Walang larawang i-e-export",
+    "failedToImportPdf": "Hindi na-import ang PDF"
   },
   "filters": {
     "original": "Original",
@@ -184,7 +185,8 @@
     "shareImage": "Ibahagi ang larawan",
     "rotateImage": "I-rotate",
     "imageNotFound": "Hindi nahanap ang larawan",
-    "failedToLoadImage": "Hindi na-load ang larawan"
+    "failedToLoadImage": "Hindi na-load ang larawan",
+    "filters": "Mga Filter"
   },
   "pdfQuality": {
     "title": "Kalidad ng PDF",

@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "ບັນທຶກຮູບໄປຮູບແລ້ວ",
     "scanFailed": "ການສະແກນລົ້ມເຫຼວ: {error}",
     "imagesSaved": "{count}/{total} ຮູບພາບບັນທຶກໄວ້ໃນຮູບພາບ",
-    "noImagesToExport": "ບໍ່ມີຮູບພາບເພື່ອສົ່ງອອກ"
+    "noImagesToExport": "ບໍ່ມີຮູບພາບເພື່ອສົ່ງອອກ",
+    "failedToImportPdf": "ນຳເຂົ້າ PDF ລົ້ມເຫລວ"
   },
   "filters": {
     "original": "ຕົ້ນສະບັບ",
@@ -184,7 +185,8 @@
     "shareImage": "ແບ່ງປັນຮູບ",
     "rotateImage": "ໝູນ",
     "imageNotFound": "ບໍ່ພົບຮູບ",
-    "failedToLoadImage": "ໂຫລດຮູບບໍ່ສຳເລັດ"
+    "failedToLoadImage": "ໂຫລດຮູບບໍ່ສຳເລັດ",
+    "filters": "ຕົວກອງ"
   },
   "pdfQuality": {
     "title": "ຄຸນນະພາບ PDF",

@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Imagem salva em Fotos",
     "scanFailed": "Falha no escaneamento: {error}",
     "imagesSaved": "{count}/{total} imagens salvas em Fotos",
-    "noImagesToExport": "Nenhuma imagem para exportar"
+    "noImagesToExport": "Nenhuma imagem para exportar",
+    "failedToImportPdf": "Falha ao importar PDF"
   },
   "filters": {
     "original": "Original",
@@ -184,7 +185,8 @@
     "shareImage": "Compartilhar imagem",
     "rotateImage": "Girar",
     "imageNotFound": "Imagem não encontrada",
-    "failedToLoadImage": "Falha ao carregar imagem"
+    "failedToLoadImage": "Falha ao carregar imagem",
+    "filters": "Filtros"
   },
   "pdfQuality": {
     "title": "Qualidade do PDF",

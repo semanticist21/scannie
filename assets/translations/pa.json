@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "ਤਸਵੀਰ ਫੋਟੋਆਂ ਵਿੱਚ ਸੇਵ ਹੋਈ",
     "scanFailed": "ਸਕੈਨ ਫੇਲ: {error}",
     "imagesSaved": "{count}/{total} ਤਸਵੀਰਾਂ ਫੋਟੋਆਂ ਵਿੱਚ ਸੁਰੱਖਿਅਤ ਕੀਤੀਆਂ ਗਈਆਂ",
-    "noImagesToExport": "ਨਿਰਯਾਤ ਕਰਨ ਲਈ ਕੋਈ ਤਸਵੀਰ ਨਹੀਂ"
+    "noImagesToExport": "ਨਿਰਯਾਤ ਕਰਨ ਲਈ ਕੋਈ ਤਸਵੀਰ ਨਹੀਂ",
+    "failedToImportPdf": "PDF ਆਯਾਤ ਅਸਫਲ"
   },
   "filters": {
     "original": "ਅਸਲੀ",
@@ -184,7 +185,8 @@
     "shareImage": "ਤਸਵੀਰ ਸਾਂਝੀ ਕਰੋ",
     "rotateImage": "ਘੁਮਾਓ",
     "imageNotFound": "ਤਸਵੀਰ ਨਹੀਂ ਮਿਲੀ",
-    "failedToLoadImage": "ਤਸਵੀਰ ਲੋਡ ਨਹੀਂ ਹੋਈ"
+    "failedToLoadImage": "ਤਸਵੀਰ ਲੋਡ ਨਹੀਂ ਹੋਈ",
+    "filters": "ਫਿਲਟਰ"
   },
   "pdfQuality": {
     "title": "PDF ਗੁਣਵੱਤਾ",

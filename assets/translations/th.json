@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "บันทึกรูปภาพไปยังรูปภาพแล้ว",
     "scanFailed": "การสแกนล้มเหลว: {error}",
     "imagesSaved": "{count}/{total} ภาพบันทึกไปยังรูปภาพแล้ว",
-    "noImagesToExport": "ไม่มีภาพสำหรับส่งออก"
+    "noImagesToExport": "ไม่มีภาพสำหรับส่งออก",
+    "failedToImportPdf": "นำเข้า PDF ไม่สำเร็จ"
   },
   "filters": {
     "original": "ต้นฉบับ",
@@ -184,7 +185,8 @@
     "shareImage": "แชร์รูปภาพ",
     "rotateImage": "หมุน",
     "imageNotFound": "ไม่พบรูปภาพ",
-    "failedToLoadImage": "ไม่สามารถโหลดรูปภาพ"
+    "failedToLoadImage": "ไม่สามารถโหลดรูปภาพ",
+    "filters": "ฟิลเตอร์"
   },
   "pdfQuality": {
     "title": "คุณภาพ PDF",

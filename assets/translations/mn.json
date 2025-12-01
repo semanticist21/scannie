@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Зураг зурагт хадгалагдлаа",
     "scanFailed": "Скан амжилтгүй боллоо: {error}",
     "imagesSaved": "{count}/{total} зураг Зургууд руу хадгалагдлаа",
-    "noImagesToExport": "Экспортлох зураг байхгүй"
+    "noImagesToExport": "Экспортлох зураг байхгүй",
+    "failedToImportPdf": "PDF импортлох амжилтгүй"
   },
   "filters": {
     "original": "Эх",
@@ -184,7 +185,8 @@
     "shareImage": "Зураг хуваалцах",
     "rotateImage": "Эргүүлэх",
     "imageNotFound": "Зураг олдсонгүй",
-    "failedToLoadImage": "Зураг ачаалж чадсангүй"
+    "failedToLoadImage": "Зураг ачаалж чадсангүй",
+    "filters": "Шүүлтүүрүүд"
   },
   "pdfQuality": {
     "title": "PDF чанар",

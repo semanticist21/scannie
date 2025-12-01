@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Attēls saglabāts Fotoattēlos",
     "scanFailed": "Skenēšana neizdevās: {error}",
     "imagesSaved": "{count}/{total} attēli saglabāti Fotoattēlos",
-    "noImagesToExport": "Nav attēlu eksportēšanai"
+    "noImagesToExport": "Nav attēlu eksportēšanai",
+    "failedToImportPdf": "Neizdevās importēt PDF"
   },
   "filters": {
     "original": "Oriģināls",
@@ -184,7 +185,8 @@
     "shareImage": "Dalīties ar attēlu",
     "rotateImage": "Pagriezt",
     "imageNotFound": "Attēls nav atrasts",
-    "failedToLoadImage": "Neizdevās ielādēt attēlu"
+    "failedToLoadImage": "Neizdevās ielādēt attēlu",
+    "filters": "Filtri"
   },
   "pdfQuality": {
     "title": "PDF kvalitāte",

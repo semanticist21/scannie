@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Beeld gestoor na Foto's",
     "scanFailed": "Skandering het misluk: {error}",
     "imagesSaved": "{count}/{total} beelde gestoor in Foto's",
-    "noImagesToExport": "Geen beelde om uit te voer nie"
+    "noImagesToExport": "Geen beelde om uit te voer nie",
+    "failedToImportPdf": "Kon nie PDF invoer nie"
   },
   "filters": {
     "original": "Oorspronklik",
@@ -184,7 +185,8 @@
     "shareImage": "Deel beeld",
     "rotateImage": "Roteer",
     "imageNotFound": "Beeld nie gevind nie",
-    "failedToLoadImage": "Kon nie beeld laai nie"
+    "failedToLoadImage": "Kon nie beeld laai nie",
+    "filters": "Filters"
   },
   "pdfQuality": {
     "title": "PDF-kwaliteit",

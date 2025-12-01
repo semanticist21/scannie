@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Сурет фотоларға сақталды",
     "scanFailed": "Сканерлеу сәтсіз: {error}",
     "imagesSaved": "{count}/{total} сурет Фотоларға сақталды",
-    "noImagesToExport": "Экспорттауға суреттер жоқ"
+    "noImagesToExport": "Экспорттауға суреттер жоқ",
+    "failedToImportPdf": "PDF импорттау сәтсіз"
   },
   "filters": {
     "original": "Түпнұсқа",
@@ -184,7 +185,8 @@
     "shareImage": "Суретпен бөлісу",
     "rotateImage": "Айналдыру",
     "imageNotFound": "Сурет табылмады",
-    "failedToLoadImage": "Суретті жүктеу сәтсіз"
+    "failedToLoadImage": "Суретті жүктеу сәтсіз",
+    "filters": "Сүзгілер"
   },
   "pdfQuality": {
     "title": "PDF сапасы",

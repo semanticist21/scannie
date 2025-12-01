@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Bild sparad till Foton",
     "scanFailed": "Skanning misslyckades: {error}",
     "imagesSaved": "{count}/{total} bilder sparade i Bilder",
-    "noImagesToExport": "Inga bilder att exportera"
+    "noImagesToExport": "Inga bilder att exportera",
+    "failedToImportPdf": "Kunde inte importera PDF"
   },
   "filters": {
     "original": "Original",
@@ -184,7 +185,8 @@
     "shareImage": "Dela bild",
     "rotateImage": "Rotera",
     "imageNotFound": "Bilden hittades inte",
-    "failedToLoadImage": "Kunde inte ladda bild"
+    "failedToLoadImage": "Kunde inte ladda bild",
+    "filters": "Filter"
   },
   "pdfQuality": {
     "title": "PDF-kvalitet",

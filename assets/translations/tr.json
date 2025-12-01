@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Resim Fotoğraflar'a kaydedildi",
     "scanFailed": "Tarama başarısız: {error}",
     "imagesSaved": "{count}/{total} görsel Fotoğraflar'a kaydedildi",
-    "noImagesToExport": "Dışa aktarılacak görsel yok"
+    "noImagesToExport": "Dışa aktarılacak görsel yok",
+    "failedToImportPdf": "PDF içe aktarılamadı"
   },
   "filters": {
     "original": "Orijinal",
@@ -184,7 +185,8 @@
     "shareImage": "Resmi Paylaş",
     "rotateImage": "Döndür",
     "imageNotFound": "Resim bulunamadı",
-    "failedToLoadImage": "Resim yüklenemedi"
+    "failedToLoadImage": "Resim yüklenemedi",
+    "filters": "Filtreler"
   },
   "pdfQuality": {
     "title": "PDF Kalitesi",

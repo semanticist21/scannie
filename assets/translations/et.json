@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Pilt salvestatud Fotodesse",
     "scanFailed": "Skaneerimine ebaõnnestus: {error}",
     "imagesSaved": "{count}/{total} pilti salvestatud Fotodesse",
-    "noImagesToExport": "Pole pilte eksportimiseks"
+    "noImagesToExport": "Pole pilte eksportimiseks",
+    "failedToImportPdf": "PDF-i importimine ebaõnnestus"
   },
   "filters": {
     "original": "Originaal",
@@ -184,7 +185,8 @@
     "shareImage": "Jaga pilti",
     "rotateImage": "Pööra",
     "imageNotFound": "Pilti ei leitud",
-    "failedToLoadImage": "Pildi laadimine ebaõnnestus"
+    "failedToLoadImage": "Pildi laadimine ebaõnnestus",
+    "filters": "Filtrid"
   },
   "pdfQuality": {
     "title": "PDF kvaliteet",

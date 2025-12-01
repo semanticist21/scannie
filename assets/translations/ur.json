@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "تصویر فوٹوز میں محفوظ ہو گئی",
     "scanFailed": "اسکین ناکام: {error}",
     "imagesSaved": "{count}/{total} تصاویر تصاویر میں محفوظ ہو گئیں",
-    "noImagesToExport": "برآمد کرنے کے لیے کوئی تصویر نہیں"
+    "noImagesToExport": "برآمد کرنے کے لیے کوئی تصویر نہیں",
+    "failedToImportPdf": "PDF درآمد ناکام"
   },
   "filters": {
     "original": "اصل",
@@ -184,7 +185,8 @@
     "shareImage": "تصویر شیئر کریں",
     "rotateImage": "گھمائیں",
     "imageNotFound": "تصویر نہیں ملی",
-    "failedToLoadImage": "تصویر لوڈ نہیں ہو سکی"
+    "failedToLoadImage": "تصویر لوڈ نہیں ہو سکی",
+    "filters": "فلٹرز"
   },
   "pdfQuality": {
     "title": "PDF کوالٹی",

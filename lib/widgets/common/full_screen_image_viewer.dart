@@ -545,14 +545,15 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
       onTap: () => setState(() => _currentFilter = filter),
       child: Container(
         padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.sm,
-          vertical: AppSpacing.xs,
+          horizontal: AppSpacing.ms,
+          vertical: AppSpacing.sm,
         ),
         decoration: BoxDecoration(
           color: isSelected ? AppColors.darkOverlay : AppColors.transparent,
-          borderRadius: BorderRadius.circular(AppRadius.sm),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           border: Border.all(
             color: isSelected ? AppColors.darkOverlayLight : AppColors.transparent,
+            width: isSelected ? 1.5 : 1,
           ),
         ),
         child: Column(
@@ -563,16 +564,16 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
               color: isSelected
                   ? AppColors.darkTextPrimary
                   : AppColors.darkTextSecondary,
-              size: 20,
+              size: 32,
             ),
-            AppGap.vXs,
+            AppGap.vSm,
             Text(
               label,
-              style: AppTextStyles.overline.copyWith(
+              style: AppTextStyles.label.copyWith(
                 color: isSelected
                     ? AppColors.darkTextPrimary
                     : AppColors.darkTextSecondary,
-                fontWeight: isSelected ? AppFontWeight.semiBold : AppFontWeight.normal,
+                fontWeight: isSelected ? AppFontWeight.semiBold : AppFontWeight.medium,
               ),
             ),
           ],
@@ -592,7 +593,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
             Padding(
                 padding: EdgeInsets.only(
                   top: 56, // Space for top control bar
-                  bottom: widget.showFilters ? 160 : 0,
+                  bottom: widget.showFilters ? 180 : 0,
                 ),
                 child: GestureDetector(
                   onTap: () {
@@ -709,25 +710,46 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                   left: 0,
                   right: 0,
                   child: Container(
-                    padding: const EdgeInsets.all(AppSpacing.md),
+                    padding: const EdgeInsets.fromLTRB(
+                      AppSpacing.md,
+                      AppSpacing.lg,
+                      AppSpacing.md,
+                      AppSpacing.lg,
+                    ),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         begin: Alignment.bottomCenter,
                         end: Alignment.topCenter,
                         colors: [
                           AppColors.shadowDarkest,
+                          AppColors.shadowDarkest.withOpacity(0.9),
                           AppColors.transparent,
                         ],
+                        stops: const [0.0, 0.7, 1.0],
                       ),
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // Section header
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: AppSpacing.xs,
+                            bottom: AppSpacing.ms,
+                          ),
+                          child: Text(
+                            'imageViewer.filters'.tr(),
+                            style: AppTextStyles.labelSemiBold.copyWith(
+                              color: AppColors.darkTextSecondary,
+                            ),
+                          ),
+                        ),
                         // Filter options
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           padding: const EdgeInsets.symmetric(
-                            vertical: AppSpacing.sm,
+                            vertical: AppSpacing.xs,
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -737,49 +759,49 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                                 'filters.original'.tr(),
                                 LucideIcons.image,
                               ),
-                              const SizedBox(width: AppSpacing.sm),
+                              const SizedBox(width: AppSpacing.ms),
                               _buildFilterButton(
                                 ImageFilterType.grayscale,
                                 'filters.bw'.tr(),
                                 LucideIcons.contrast,
                               ),
-                              const SizedBox(width: AppSpacing.sm),
+                              const SizedBox(width: AppSpacing.ms),
                               _buildFilterButton(
                                 ImageFilterType.highContrast,
                                 'filters.contrast'.tr(),
                                 LucideIcons.sunDim,
                               ),
-                              const SizedBox(width: AppSpacing.sm),
+                              const SizedBox(width: AppSpacing.ms),
                               _buildFilterButton(
                                 ImageFilterType.brighten,
                                 'filters.brighten'.tr(),
                                 LucideIcons.sun,
                               ),
-                              const SizedBox(width: AppSpacing.sm),
+                              const SizedBox(width: AppSpacing.ms),
                               _buildFilterButton(
                                 ImageFilterType.document,
                                 'filters.document'.tr(),
                                 LucideIcons.fileText,
                               ),
-                              const SizedBox(width: AppSpacing.sm),
+                              const SizedBox(width: AppSpacing.ms),
                               _buildFilterButton(
                                 ImageFilterType.sepia,
                                 'filters.sepia'.tr(),
                                 LucideIcons.palette,
                               ),
-                              const SizedBox(width: AppSpacing.sm),
+                              const SizedBox(width: AppSpacing.ms),
                               _buildFilterButton(
                                 ImageFilterType.invert,
                                 'filters.invert'.tr(),
                                 LucideIcons.flipVertical,
                               ),
-                              const SizedBox(width: AppSpacing.sm),
+                              const SizedBox(width: AppSpacing.ms),
                               _buildFilterButton(
                                 ImageFilterType.warm,
                                 'filters.warm'.tr(),
                                 LucideIcons.flame,
                               ),
-                              const SizedBox(width: AppSpacing.sm),
+                              const SizedBox(width: AppSpacing.ms),
                               _buildFilterButton(
                                 ImageFilterType.cool,
                                 'filters.cool'.tr(),

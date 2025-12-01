@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Gambar disimpan ke Foto",
     "scanFailed": "Pindaian gagal: {error}",
     "imagesSaved": "{count}/{total} gambar disimpan ke Foto",
-    "noImagesToExport": "Tidak ada gambar untuk diekspor"
+    "noImagesToExport": "Tidak ada gambar untuk diekspor",
+    "failedToImportPdf": "Gagal mengimpor PDF"
   },
   "filters": {
     "original": "Asli",
@@ -184,7 +185,8 @@
     "shareImage": "Bagikan Gambar",
     "rotateImage": "Putar",
     "imageNotFound": "Gambar tidak ditemukan",
-    "failedToLoadImage": "Gagal memuat gambar"
+    "failedToLoadImage": "Gagal memuat gambar",
+    "filters": "Filter"
   },
   "pdfQuality": {
     "title": "Kualitas PDF",

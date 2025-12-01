@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Bild in Fotos gespeichert",
     "scanFailed": "Scan fehlgeschlagen: {error}",
     "imagesSaved": "{count}/{total} Bilder in Fotos gespeichert",
-    "noImagesToExport": "Keine Bilder zum Exportieren"
+    "noImagesToExport": "Keine Bilder zum Exportieren",
+    "failedToImportPdf": "PDF-Import fehlgeschlagen"
   },
   "filters": {
     "original": "Original",
@@ -184,7 +185,8 @@
     "shareImage": "Bild teilen",
     "rotateImage": "Drehen",
     "imageNotFound": "Bild nicht gefunden",
-    "failedToLoadImage": "Bild konnte nicht geladen werden"
+    "failedToLoadImage": "Bild konnte nicht geladen werden",
+    "filters": "Filter"
   },
   "pdfQuality": {
     "title": "PDF-Qualität",

@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "පින්තූරය ඡායාරූපවලට සුරකින ලදී",
     "scanFailed": "ස්කෑන් අසාර්ථකයි: {error}",
     "imagesSaved": "{count}/{total} රූප ඡායාරූපවලට සුරකින ලදී",
-    "noImagesToExport": "අපනයනය කිරීමට රූප නැත"
+    "noImagesToExport": "අපනයනය කිරීමට රූප නැත",
+    "failedToImportPdf": "PDF ආයාත අසාර්ථකයි"
   },
   "filters": {
     "original": "මුල්",
@@ -184,7 +185,8 @@
     "shareImage": "පින්තූරය බෙදාගන්න",
     "rotateImage": "කරකවන්න",
     "imageNotFound": "පින්තූරය හමු නොවීය",
-    "failedToLoadImage": "පින්තූරය පූරණය අසාර්ථකයි"
+    "failedToLoadImage": "පින්තූරය පූරණය අසාර්ථකයි",
+    "filters": "පෙරහන්"
   },
   "pdfQuality": {
     "title": "PDF ගුණත්වය",

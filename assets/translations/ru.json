@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Изображение сохранено в Фото",
     "scanFailed": "Ошибка сканирования: {error}",
     "imagesSaved": "{count}/{total} изображений сохранено в Фото",
-    "noImagesToExport": "Нет изображений для экспорта"
+    "noImagesToExport": "Нет изображений для экспорта",
+    "failedToImportPdf": "Не удалось импортировать PDF"
   },
   "filters": {
     "original": "Оригинал",
@@ -184,7 +185,8 @@
     "shareImage": "Поделиться",
     "rotateImage": "Повернуть",
     "imageNotFound": "Изображение не найдено",
-    "failedToLoadImage": "Не удалось загрузить изображение"
+    "failedToLoadImage": "Не удалось загрузить изображение",
+    "filters": "Фильтры"
   },
   "pdfQuality": {
     "title": "Качество PDF",

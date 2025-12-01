@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "ಚಿತ್ರವನ್ನು ಫೋಟೋಗಳಿಗೆ ಉಳಿಸಲಾಗಿದೆ",
     "scanFailed": "ಸ್ಕ್ಯಾನ್ ವಿಫಲವಾಯಿತು: {error}",
     "imagesSaved": "{count}/{total} ಚಿತ್ರಗಳನ್ನು ಫೋಟೋಗಳಿಗೆ ಉಳಿಸಲಾಗಿದೆ",
-    "noImagesToExport": "ರಫ್ತು ಮಾಡಲು ಚಿತ್ರಗಳಿಲ್ಲ"
+    "noImagesToExport": "ರಫ್ತು ಮಾಡಲು ಚಿತ್ರಗಳಿಲ್ಲ",
+    "failedToImportPdf": "PDF ಆಮದು ವಿಫಲವಾಯಿತು"
   },
   "filters": {
     "original": "ಮೂಲ",
@@ -184,7 +185,8 @@
     "shareImage": "ಚಿತ್ರ ಹಂಚಿಕೊಳ್ಳಿ",
     "rotateImage": "ತಿರುಗಿಸಿ",
     "imageNotFound": "ಚಿತ್ರ ಕಂಡುಬಂದಿಲ್ಲ",
-    "failedToLoadImage": "ಚಿತ್ರ ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಯಿತು"
+    "failedToLoadImage": "ಚಿತ್ರ ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಯಿತು",
+    "filters": "ಫಿಲ್ಟರ್‌ಗಳು"
   },
   "pdfQuality": {
     "title": "PDF ಗುಣಮಟ್ಟ",

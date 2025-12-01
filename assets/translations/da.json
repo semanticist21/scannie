@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Billede gemt i Fotos",
     "scanFailed": "Scanning mislykkedes: {error}",
     "imagesSaved": "{count}/{total} billeder gemt i Fotos",
-    "noImagesToExport": "Ingen billeder at eksportere"
+    "noImagesToExport": "Ingen billeder at eksportere",
+    "failedToImportPdf": "Kunne ikke importere PDF"
   },
   "filters": {
     "original": "Original",
@@ -184,7 +185,8 @@
     "shareImage": "Del billede",
     "rotateImage": "Roter",
     "imageNotFound": "Billede ikke fundet",
-    "failedToLoadImage": "Kunne ikke indlæse billede"
+    "failedToLoadImage": "Kunne ikke indlæse billede",
+    "filters": "Filtre"
   },
   "pdfQuality": {
     "title": "PDF-kvalitet",

@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Şəkil fotolara saxlandı",
     "scanFailed": "Skan uğursuz oldu: {error}",
     "imagesSaved": "{count}/{total} şəkil Şəkillərə saxlanıldı",
-    "noImagesToExport": "İxrac etmək üçün şəkil yoxdur"
+    "noImagesToExport": "İxrac etmək üçün şəkil yoxdur",
+    "failedToImportPdf": "PDF idxal edilə bilmədi"
   },
   "filters": {
     "original": "Orijinal",
@@ -184,7 +185,8 @@
     "shareImage": "Şəkli paylaş",
     "rotateImage": "Döndər",
     "imageNotFound": "Şəkil tapılmadı",
-    "failedToLoadImage": "Şəkil yüklənmədi"
+    "failedToLoadImage": "Şəkil yüklənmədi",
+    "filters": "Filtrlər"
   },
   "pdfQuality": {
     "title": "PDF keyfiyyəti",

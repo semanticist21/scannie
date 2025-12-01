@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Vaizdas išsaugotas į Nuotraukas",
     "scanFailed": "Skenavimas nepavyko: {error}",
     "imagesSaved": "{count}/{total} vaizdų išsaugota Nuotraukose",
-    "noImagesToExport": "Nėra vaizdų eksportavimui"
+    "noImagesToExport": "Nėra vaizdų eksportavimui",
+    "failedToImportPdf": "Nepavyko importuoti PDF"
   },
   "filters": {
     "original": "Originalus",
@@ -184,7 +185,8 @@
     "shareImage": "Dalintis vaizdu",
     "rotateImage": "Pasukti",
     "imageNotFound": "Vaizdas nerastas",
-    "failedToLoadImage": "Nepavyko įkelti vaizdo"
+    "failedToLoadImage": "Nepavyko įkelti vaizdo",
+    "filters": "Filtrai"
   },
   "pdfQuality": {
     "title": "PDF kokybė",

@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "तस्बिर फोटोमा सेभ भयो",
     "scanFailed": "स्क्यान असफल: {error}",
     "imagesSaved": "{count}/{total} छविहरू फोटोमा सुरक्षित गरियो",
-    "noImagesToExport": "निर्यात गर्न कुनै छवि छैन"
+    "noImagesToExport": "निर्यात गर्न कुनै छवि छैन",
+    "failedToImportPdf": "PDF आयात असफल"
   },
   "filters": {
     "original": "मूल",
@@ -184,7 +185,8 @@
     "shareImage": "तस्बिर साझा गर्नुहोस्",
     "rotateImage": "घुमाउनुहोस्",
     "imageNotFound": "तस्बिर भेटिएन",
-    "failedToLoadImage": "तस्बिर लोड हुन सकेन"
+    "failedToLoadImage": "तस्बिर लोड हुन सकेन",
+    "filters": "फिल्टरहरू"
   },
   "pdfQuality": {
     "title": "PDF गुणस्तर",

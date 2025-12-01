@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Imagine salvată în Fotografii",
     "scanFailed": "Scanarea a eșuat: {error}",
     "imagesSaved": "{count}/{total} imagini salvate în Fotografii",
-    "noImagesToExport": "Nu există imagini de exportat"
+    "noImagesToExport": "Nu există imagini de exportat",
+    "failedToImportPdf": "Importul PDF a eșuat"
   },
   "filters": {
     "original": "Original",
@@ -184,7 +185,8 @@
     "shareImage": "Distribuie imaginea",
     "rotateImage": "Rotește",
     "imageNotFound": "Imaginea nu a fost găsită",
-    "failedToLoadImage": "Nu s-a putut încărca imaginea"
+    "failedToLoadImage": "Nu s-a putut încărca imaginea",
+    "filters": "Filtre"
   },
   "pdfQuality": {
     "title": "Calitate PDF",

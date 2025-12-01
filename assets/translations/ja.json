@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "画像を写真に保存しました",
     "scanFailed": "スキャンに失敗しました: {error}",
     "imagesSaved": "{count}/{total}枚の画像を写真に保存しました",
-    "noImagesToExport": "エクスポートする画像がありません"
+    "noImagesToExport": "エクスポートする画像がありません",
+    "failedToImportPdf": "PDFのインポートに失敗しました"
   },
   "filters": {
     "original": "オリジナル",
@@ -184,7 +185,8 @@
     "shareImage": "画像を共有",
     "rotateImage": "回転",
     "imageNotFound": "画像が見つかりません",
-    "failedToLoadImage": "画像の読み込みに失敗しました"
+    "failedToLoadImage": "画像の読み込みに失敗しました",
+    "filters": "フィルター"
   },
   "pdfQuality": {
     "title": "PDF品質",

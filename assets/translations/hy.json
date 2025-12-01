@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Պատկերը պահվել է պատկերասրահում",
     "scanFailed": "Սկանավորումը ձախողվեց՝ {error}",
     "imagesSaved": "{count}/{total} պատկեր պահված է Լուսանկարներում",
-    "noImagesToExport": "Արտահանման պատկերներ չկան"
+    "noImagesToExport": "Արտահանման պատկերներ չկան",
+    "failedToImportPdf": "PDF-ի ներմողելը ձախողվեց"
   },
   "filters": {
     "original": "Բնօրինակ",
@@ -184,7 +185,8 @@
     "shareImage": "Կիսվել պատկերը",
     "rotateImage": "Պտտել",
     "imageNotFound": "Պատկերը չի գտնվել",
-    "failedToLoadImage": "Պատկերի բեռնումը ձախողվեց"
+    "failedToLoadImage": "Պատկերի բեռնումը ձախողվեց",
+    "filters": "Ֆիլտրեր"
   },
   "pdfQuality": {
     "title": "PDF որակ",

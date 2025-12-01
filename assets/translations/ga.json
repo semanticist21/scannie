@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Íomhá sábháilte i ngrianghraif",
     "scanFailed": "Theip ar scanadh: {error}",
     "imagesSaved": "{count}/{total} íomhá sábháilte i bhFotaí",
-    "noImagesToExport": "Níl aon íomhánna le heaspórtáil"
+    "noImagesToExport": "Níl aon íomhánna le heaspórtáil",
+    "failedToImportPdf": "Theip ar iompórtáil PDF"
   },
   "filters": {
     "original": "Bunaidh",
@@ -184,7 +185,8 @@
     "shareImage": "Comhroinn íomhá",
     "rotateImage": "Rothlaigh",
     "imageNotFound": "Íomhá gan aimsiú",
-    "failedToLoadImage": "Theip ar íomhá a lódáil"
+    "failedToLoadImage": "Theip ar íomhá a lódáil",
+    "filters": "Scagairí"
   },
   "pdfQuality": {
     "title": "Cáilíocht PDF",

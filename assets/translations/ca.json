@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Imatge desada a Fotos",
     "scanFailed": "L'escaneig ha fallat: {error}",
     "imagesSaved": "{count}/{total} imatges desades a Fotos",
-    "noImagesToExport": "No hi ha imatges per exportar"
+    "noImagesToExport": "No hi ha imatges per exportar",
+    "failedToImportPdf": "No s'ha pogut importar el PDF"
   },
   "filters": {
     "original": "Original",
@@ -184,7 +185,8 @@
     "shareImage": "Comparteix la imatge",
     "rotateImage": "Gira",
     "imageNotFound": "No s'ha trobat la imatge",
-    "failedToLoadImage": "No s'ha pogut carregar la imatge"
+    "failedToLoadImage": "No s'ha pogut carregar la imatge",
+    "filters": "Filtres"
   },
   "pdfQuality": {
     "title": "Qualitat del PDF",

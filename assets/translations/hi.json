@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "छवि फोटो में सहेजी गई",
     "scanFailed": "स्कैन विफल: {error}",
     "imagesSaved": "{count}/{total} छवियाँ फ़ोटो में सहेजी गईं",
-    "noImagesToExport": "निर्यात करने के लिए कोई छवि नहीं"
+    "noImagesToExport": "निर्यात करने के लिए कोई छवि नहीं",
+    "failedToImportPdf": "PDF आयात विफल"
   },
   "filters": {
     "original": "मूल",
@@ -184,7 +185,8 @@
     "shareImage": "छवि शेयर करें",
     "rotateImage": "घुमाएं",
     "imageNotFound": "छवि नहीं मिली",
-    "failedToLoadImage": "छवि लोड करने में विफल"
+    "failedToLoadImage": "छवि लोड करने में विफल",
+    "filters": "फ़िल्टर"
   },
   "pdfQuality": {
     "title": "PDF गुणवत्ता",

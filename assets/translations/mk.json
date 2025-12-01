@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Сликата е зачувана во фотографии",
     "scanFailed": "Скенирањето не успеа: {error}",
     "imagesSaved": "{count}/{total} слики зачувани во Фотографии",
-    "noImagesToExport": "Нема слики за извоз"
+    "noImagesToExport": "Нема слики за извоз",
+    "failedToImportPdf": "Неуспешно увезување на PDF"
   },
   "filters": {
     "original": "Оригинал",
@@ -184,7 +185,8 @@
     "shareImage": "Сподели слика",
     "rotateImage": "Ротирај",
     "imageNotFound": "Сликата не е пронајдена",
-    "failedToLoadImage": "Неуспешно вчитување на слика"
+    "failedToLoadImage": "Неуспешно вчитување на слика",
+    "filters": "Филтри"
   },
   "pdfQuality": {
     "title": "Квалитет на PDF",

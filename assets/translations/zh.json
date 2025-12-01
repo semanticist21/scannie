@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "图片已保存到相册",
     "scanFailed": "扫描失败：{error}",
     "imagesSaved": "{count}/{total} 张图片已保存到照片",
-    "noImagesToExport": "没有可导出的图片"
+    "noImagesToExport": "没有可导出的图片",
+    "failedToImportPdf": "PDF导入失败"
   },
   "filters": {
     "original": "原图",
@@ -184,7 +185,8 @@
     "shareImage": "分享图片",
     "rotateImage": "旋转",
     "imageNotFound": "未找到图片",
-    "failedToLoadImage": "加载图片失败"
+    "failedToLoadImage": "加载图片失败",
+    "filters": "滤镜"
   },
   "pdfQuality": {
     "title": "PDF质量",

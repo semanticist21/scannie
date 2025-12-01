@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "ምስል ወደ ፎቶዎች ተቀምጧል",
     "scanFailed": "ስካን አልተሳካም: {error}",
     "imagesSaved": "{count}/{total} ምስሎች ወደ ፎቶዎች ተቀምጠዋል",
-    "noImagesToExport": "ለመላክ ምስሎች የሉም"
+    "noImagesToExport": "ለመላክ ምስሎች የሉም",
+    "failedToImportPdf": "PDF ማስመጣት አልተሳካም"
   },
   "filters": {
     "original": "ዋናው",
@@ -184,7 +185,8 @@
     "shareImage": "ምስል አጋራ",
     "rotateImage": "አሽከርክር",
     "imageNotFound": "ምስል አልተገኘም",
-    "failedToLoadImage": "ምስል መጫን አልተሳካም"
+    "failedToLoadImage": "ምስል መጫን አልተሳካም",
+    "filters": "ማጣሪያዎች"
   },
   "pdfQuality": {
     "title": "የPDF ጥራት",

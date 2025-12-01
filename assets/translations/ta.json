@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "படம் புகைப்படங்களில் சேமிக்கப்பட்டது",
     "scanFailed": "ஸ்கேன் தோல்வி: {error}",
     "imagesSaved": "{count}/{total} படங்கள் புகைப்படங்களில் சேமிக்கப்பட்டன",
-    "noImagesToExport": "ஏற்றுமதி செய்ய படங்கள் இல்லை"
+    "noImagesToExport": "ஏற்றுமதி செய்ய படங்கள் இல்லை",
+    "failedToImportPdf": "PDF இறக்குமதி தோல்வி"
   },
   "filters": {
     "original": "அசல்",
@@ -184,7 +185,8 @@
     "shareImage": "படம் பகிர்",
     "rotateImage": "சுழற்று",
     "imageNotFound": "படம் கிடைக்கவில்லை",
-    "failedToLoadImage": "படத்தை ஏற்ற முடியவில்லை"
+    "failedToLoadImage": "படத்தை ஏற்ற முடியவில்லை",
+    "filters": "வடிகட்டிகள்"
   },
   "pdfQuality": {
     "title": "PDF தரம்",

@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Зображення збережено у Фото",
     "scanFailed": "Помилка сканування: {error}",
     "imagesSaved": "{count}/{total} зображень збережено у Фото",
-    "noImagesToExport": "Немає зображень для експорту"
+    "noImagesToExport": "Немає зображень для експорту",
+    "failedToImportPdf": "Не вдалося імпортувати PDF"
   },
   "filters": {
     "original": "Оригінал",
@@ -184,7 +185,8 @@
     "shareImage": "Поділитися",
     "rotateImage": "Повернути",
     "imageNotFound": "Зображення не знайдено",
-    "failedToLoadImage": "Не вдалося завантажити зображення"
+    "failedToLoadImage": "Не вдалося завантажити зображення",
+    "filters": "Фільтри"
   },
   "pdfQuality": {
     "title": "Якість PDF",

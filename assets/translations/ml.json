@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "ചിത്രം ഫോട്ടോസിൽ സേവ് ചെയ്തു",
     "scanFailed": "സ്കാൻ പരാജയപ്പെട്ടു: {error}",
     "imagesSaved": "{count}/{total} ചിത്രങ്ങൾ ഫോട്ടോസിൽ സംരക്ഷിച്ചു",
-    "noImagesToExport": "എക്സ്പോർട്ട് ചെയ്യാൻ ചിത്രങ്ങൾ ഇല്ല"
+    "noImagesToExport": "എക്സ്പോർട്ട് ചെയ്യാൻ ചിത്രങ്ങൾ ഇല്ല",
+    "failedToImportPdf": "PDF ഇമ്പോർട്ട് പരാജയപ്പെട്ടു"
   },
   "filters": {
     "original": "ഒറിജിനൽ",
@@ -184,7 +185,8 @@
     "shareImage": "ചിത്രം പങ്കിടുക",
     "rotateImage": "തിരിക്കുക",
     "imageNotFound": "ചിത്രം കണ്ടെത്തിയില്ല",
-    "failedToLoadImage": "ചിത്രം ലോഡ് ചെയ്യുന്നതിൽ പരാജയപ്പെട്ടു"
+    "failedToLoadImage": "ചിത്രം ലോഡ് ചെയ്യുന്നതിൽ പരാജയപ്പെട്ടു",
+    "filters": "ഫിൽട്ടറുകൾ"
   },
   "pdfQuality": {
     "title": "PDF ഗുണനിലവാരം",

@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Đã lưu hình ảnh vào Ảnh",
     "scanFailed": "Quét thất bại: {error}",
     "imagesSaved": "{count}/{total} ảnh đã lưu vào Ảnh",
-    "noImagesToExport": "Không có ảnh để xuất"
+    "noImagesToExport": "Không có ảnh để xuất",
+    "failedToImportPdf": "Không thể nhập PDF"
   },
   "filters": {
     "original": "Gốc",
@@ -184,7 +185,8 @@
     "shareImage": "Chia sẻ hình ảnh",
     "rotateImage": "Xoay",
     "imageNotFound": "Không tìm thấy hình ảnh",
-    "failedToLoadImage": "Không thể tải hình ảnh"
+    "failedToLoadImage": "Không thể tải hình ảnh",
+    "filters": "Bộ lọc"
   },
   "pdfQuality": {
     "title": "Chất lượng PDF",

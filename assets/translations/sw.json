@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Picha imehifadhiwa kwenye Picha",
     "scanFailed": "Skani imeshindwa: {error}",
     "imagesSaved": "Picha {count}/{total} zimehifadhiwa kwenye Picha",
-    "noImagesToExport": "Hakuna picha za kuhamisha"
+    "noImagesToExport": "Hakuna picha za kuhamisha",
+    "failedToImportPdf": "Imeshindwa kuingiza PDF"
   },
   "filters": {
     "original": "Asili",
@@ -184,7 +185,8 @@
     "shareImage": "Shiriki picha",
     "rotateImage": "Zungusha",
     "imageNotFound": "Picha haijapatikana",
-    "failedToLoadImage": "Imeshindwa kupakia picha"
+    "failedToLoadImage": "Imeshindwa kupakia picha",
+    "filters": "Vichujio"
   },
   "pdfQuality": {
     "title": "Ubora wa PDF",

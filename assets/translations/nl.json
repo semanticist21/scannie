@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Afbeelding opgeslagen in Foto's",
     "scanFailed": "Scannen mislukt: {error}",
     "imagesSaved": "{count}/{total} afbeeldingen opgeslagen in Foto's",
-    "noImagesToExport": "Geen afbeeldingen om te exporteren"
+    "noImagesToExport": "Geen afbeeldingen om te exporteren",
+    "failedToImportPdf": "PDF importeren mislukt"
   },
   "filters": {
     "original": "Origineel",
@@ -184,7 +185,8 @@
     "shareImage": "Afbeelding delen",
     "rotateImage": "Draaien",
     "imageNotFound": "Afbeelding niet gevonden",
-    "failedToLoadImage": "Kon afbeelding niet laden"
+    "failedToLoadImage": "Kon afbeelding niet laden",
+    "filters": "Filters"
   },
   "pdfQuality": {
     "title": "PDF-kwaliteit",

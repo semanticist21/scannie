@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "ઇમેજ ફોટામાં સેવ થઈ",
     "scanFailed": "સ્કેન નિષ્ફળ: {error}",
     "imagesSaved": "{count}/{total} છબીઓ ફોટોઝમાં સાચવાઈ",
-    "noImagesToExport": "નિકાસ કરવા માટે કોઈ છબીઓ નથી"
+    "noImagesToExport": "નિકાસ કરવા માટે કોઈ છબીઓ નથી",
+    "failedToImportPdf": "PDF આયાત નિષ્ફળ"
   },
   "filters": {
     "original": "મૂળ",
@@ -184,7 +185,8 @@
     "shareImage": "ઇમેજ શેર કરો",
     "rotateImage": "ફેરવો",
     "imageNotFound": "ઇમેજ મળી નહીં",
-    "failedToLoadImage": "ઇમેજ લોડ થઈ નહીં"
+    "failedToLoadImage": "ઇમેજ લોડ થઈ નહીં",
+    "filters": "ફિલ્ટર્સ"
   },
   "pdfQuality": {
     "title": "PDF ગુણવત્તા",

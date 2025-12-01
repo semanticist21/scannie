@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "इमेज फोटोमध्ये सेव्ह झाली",
     "scanFailed": "स्कॅन अयशस्वी: {error}",
     "imagesSaved": "{count}/{total} प्रतिमा फोटोंमध्ये जतन केल्या",
-    "noImagesToExport": "निर्यात करण्यासाठी प्रतिमा नाहीत"
+    "noImagesToExport": "निर्यात करण्यासाठी प्रतिमा नाहीत",
+    "failedToImportPdf": "PDF आयात अयशस्वी"
   },
   "filters": {
     "original": "मूळ",
@@ -184,7 +185,8 @@
     "shareImage": "इमेज शेअर करा",
     "rotateImage": "फिरवा",
     "imageNotFound": "इमेज सापडली नाही",
-    "failedToLoadImage": "इमेज लोड करता आली नाही"
+    "failedToLoadImage": "इमेज लोड करता आली नाही",
+    "filters": "फिल्टर्स"
   },
   "pdfQuality": {
     "title": "PDF गुणवत्ता",

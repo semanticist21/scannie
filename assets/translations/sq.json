@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Imazhi u ruajt në foto",
     "scanFailed": "Skanimi dështoi: {error}",
     "imagesSaved": "{count}/{total} imazhe u ruajtën në Foto",
-    "noImagesToExport": "Nuk ka imazhe për të eksportuar"
+    "noImagesToExport": "Nuk ka imazhe për të eksportuar",
+    "failedToImportPdf": "Importimi i PDF dështoi"
   },
   "filters": {
     "original": "Origjinal",
@@ -184,7 +185,8 @@
     "shareImage": "Ndaj imazhin",
     "rotateImage": "Rrotullo",
     "imageNotFound": "Imazhi nuk u gjet",
-    "failedToLoadImage": "Ngarkimi i imazhit dështoi"
+    "failedToLoadImage": "Ngarkimi i imazhit dështoi",
+    "filters": "Filtrat"
   },
   "pdfQuality": {
     "title": "Cilësia e PDF",

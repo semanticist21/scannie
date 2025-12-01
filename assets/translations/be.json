@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Малюнак захаваны ў фота",
     "scanFailed": "Сканаванне не ўдалося: {error}",
     "imagesSaved": "{count}/{total} відарысаў захавана ў Фота",
-    "noImagesToExport": "Няма відарысаў для экспарту"
+    "noImagesToExport": "Няма відарысаў для экспарту",
+    "failedToImportPdf": "Не ўдалося імпартаваць PDF"
   },
   "filters": {
     "original": "Арыгінал",
@@ -184,7 +185,8 @@
     "shareImage": "Падзяліцца малюнкам",
     "rotateImage": "Павярнуць",
     "imageNotFound": "Малюнак не знойдзены",
-    "failedToLoadImage": "Не ўдалося загрузіць малюнак"
+    "failedToLoadImage": "Не ўдалося загрузіць малюнак",
+    "filters": "Фільтры"
   },
   "pdfQuality": {
     "title": "Якасць PDF",

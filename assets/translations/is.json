@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Mynd vistuð í myndir",
     "scanFailed": "Skannun mistókst: {error}",
     "imagesSaved": "{count}/{total} myndir vistaðar í Myndir",
-    "noImagesToExport": "Engar myndir til að flytja út"
+    "noImagesToExport": "Engar myndir til að flytja út",
+    "failedToImportPdf": "Mistókst að flytja inn PDF"
   },
   "filters": {
     "original": "Upprunalegt",
@@ -184,7 +185,8 @@
     "shareImage": "Deila mynd",
     "rotateImage": "Snúa",
     "imageNotFound": "Mynd fannst ekki",
-    "failedToLoadImage": "Mistókst að hlaða mynd"
+    "failedToLoadImage": "Mistókst að hlaða mynd",
+    "filters": "Síur"
   },
   "pdfQuality": {
     "title": "PDF gæði",

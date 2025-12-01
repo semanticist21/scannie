@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "تم حفظ الصورة في الصور",
     "scanFailed": "فشل المسح: {error}",
     "imagesSaved": "تم حفظ {count}/{total} صورة في الصور",
-    "noImagesToExport": "لا توجد صور للتصدير"
+    "noImagesToExport": "لا توجد صور للتصدير",
+    "failedToImportPdf": "فشل استيراد PDF"
   },
   "filters": {
     "original": "أصلي",
@@ -184,7 +185,8 @@
     "shareImage": "مشاركة الصورة",
     "rotateImage": "تدوير",
     "imageNotFound": "الصورة غير موجودة",
-    "failedToLoadImage": "فشل تحميل الصورة"
+    "failedToLoadImage": "فشل تحميل الصورة",
+    "filters": "الفلاتر"
   },
   "pdfQuality": {
     "title": "جودة PDF",

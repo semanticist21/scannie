@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Rasm rasmlarga saqlandi",
     "scanFailed": "Skanerlash amalga oshmadi: {error}",
     "imagesSaved": "{count}/{total} ta rasm Rasmlarga saqlandi",
-    "noImagesToExport": "Eksport qilish uchun rasm yo'q"
+    "noImagesToExport": "Eksport qilish uchun rasm yo'q",
+    "failedToImportPdf": "PDF import qilinmadi"
   },
   "filters": {
     "original": "Asl",
@@ -184,7 +185,8 @@
     "shareImage": "Rasmni ulashish",
     "rotateImage": "Aylantirish",
     "imageNotFound": "Rasm topilmadi",
-    "failedToLoadImage": "Rasm yuklanmadi"
+    "failedToLoadImage": "Rasm yuklanmadi",
+    "filters": "Filtrlar"
   },
   "pdfQuality": {
     "title": "PDF sifati",

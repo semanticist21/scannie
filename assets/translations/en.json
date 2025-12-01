@@ -192,7 +192,8 @@
     "shareImage": "Share Image",
     "rotateImage": "Rotate",
     "imageNotFound": "Image not found",
-    "failedToLoadImage": "Failed to load image"
+    "failedToLoadImage": "Failed to load image",
+    "filters": "Filters"
   },
   "pdfQuality": {
     "title": "PDF Quality",

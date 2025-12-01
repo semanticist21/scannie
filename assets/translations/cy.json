@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Delwedd wedi'i chadw i luniau",
     "scanFailed": "Methwyd sganio: {error}",
     "imagesSaved": "{count}/{total} delwedd wedi'u cadw i Ffotograffau",
-    "noImagesToExport": "Dim delweddau i'w hallforio"
+    "noImagesToExport": "Dim delweddau i'w hallforio",
+    "failedToImportPdf": "Methodd fewnforio PDF"
   },
   "filters": {
     "original": "Gwreiddiol",
@@ -184,7 +185,8 @@
     "shareImage": "Rhannu delwedd",
     "rotateImage": "Cylchdroi",
     "imageNotFound": "Delwedd heb ei chanfod",
-    "failedToLoadImage": "Methwyd llwytho delwedd"
+    "failedToLoadImage": "Methwyd llwytho delwedd",
+    "filters": "Hidlyddion"
   },
   "pdfQuality": {
     "title": "Ansawdd PDF",

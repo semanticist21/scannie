@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Obrázek uložen do Fotek",
     "scanFailed": "Skenování selhalo: {error}",
     "imagesSaved": "{count}/{total} obrázků uloženo do Fotek",
-    "noImagesToExport": "Žádné obrázky k exportu"
+    "noImagesToExport": "Žádné obrázky k exportu",
+    "failedToImportPdf": "Import PDF selhal"
   },
   "filters": {
     "original": "Originál",
@@ -184,7 +185,8 @@
     "shareImage": "Sdílet obrázek",
     "rotateImage": "Otočit",
     "imageNotFound": "Obrázek nenalezen",
-    "failedToLoadImage": "Nepodařilo se načíst obrázek"
+    "failedToLoadImage": "Nepodařilo se načíst obrázek",
+    "filters": "Filtry"
   },
   "pdfQuality": {
     "title": "Kvalita PDF",

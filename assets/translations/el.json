@@ -166,7 +166,8 @@
     "imageSavedToPhotos": "Η εικόνα αποθηκεύτηκε στις Φωτογραφίες",
     "scanFailed": "Αποτυχία σάρωσης: {error}",
     "imagesSaved": "{count}/{total} εικόνες αποθηκεύτηκαν στις Φωτογραφίες",
-    "noImagesToExport": "Δεν υπάρχουν εικόνες για εξαγωγή"
+    "noImagesToExport": "Δεν υπάρχουν εικόνες για εξαγωγή",
+    "failedToImportPdf": "Αποτυχία εισαγωγής PDF"
   },
   "filters": {
     "original": "Πρωτότυπο",
@@ -184,7 +185,8 @@
     "shareImage": "Κοινοποίηση εικόνας",
     "rotateImage": "Περιστροφή",
     "imageNotFound": "Η εικόνα δεν βρέθηκε",
-    "failedToLoadImage": "Αποτυχία φόρτωσης εικόνας"
+    "failedToLoadImage": "Αποτυχία φόρτωσης εικόνας",
+    "filters": "Φίλτρα"
   },
   "pdfQuality": {
     "title": "Ποιότητα PDF",
