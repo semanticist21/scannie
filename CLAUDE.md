@@ -147,7 +147,9 @@ _completePurchaseCompleter(result);
 - `restored` 상태에서 `_purchaseCompleter`도 complete 해야 함
 - 디버깅: 콘솔에서 `💎` 로그 확인
 
-### iOS 결제 취소 처리
+### 결제 취소 처리
+
+#### iOS
 iOS는 결제 시트에서 취소 시 `PurchaseStatus.canceled` 이벤트를 안정적으로 발생시키지 않음.
 
 **해결책**: `WidgetsBindingObserver`로 앱 라이프사이클 감지
@@ -155,7 +157,7 @@ iOS는 결제 시트에서 취소 시 `PurchaseStatus.canceled` 이벤트를 안
 // _PurchaseButton에서 사용
 @override
 void didChangeAppLifecycleState(AppLifecycleState state) {
-  if (!Platform.isIOS) return;  // Android는 취소 이벤트 정상 발생
+  if (!Platform.isIOS) return;
 
   if (state == AppLifecycleState.resumed && _isPurchaseFlowActive) {
     // 결제 시트 닫힘 감지 → 3초 후 취소 처리
@@ -168,8 +170,20 @@ void didChangeAppLifecycleState(AppLifecycleState state) {
 }
 ```
 
-- `PurchaseService.cancelPurchase()` - 진행 중인 구매 취소 + iOS stuck 트랜잭션 정리
-- Android는 Google Play가 `BillingResponse.userCanceled` 정상 발생
+#### Android
+Android는 `BillingResponse.userCanceled` 발생하지만, [Flutter Issue #96775](https://github.com/flutter/flutter/issues/96775) 버그로 **취소 시 `productID`가 빈 값**으로 올 수 있음.
+
+**해결책**: `_handlePurchaseUpdates()`에서 빈 productID + cancel/error 상태 특별 처리
+```dart
+// 빈 productID여도 취소/에러면 처리
+if (isEmptyProductId && isCancelOrError && isPurchaseInProgress) {
+  _completePurchaseCompleter(cancelResult);
+}
+```
+
+#### 공통
+- `PurchaseService.cancelPurchase()` - 진행 중인 구매 **및 복원** 모두 취소
+- 모달 닫힐 때 (외부 클릭, 나중에 버튼) 자동 호출됨
 
 ## 테마 시스템
 

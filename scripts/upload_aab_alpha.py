@@ -24,11 +24,8 @@ SCOPES = ['https://www.googleapis.com/auth/androidpublisher']
 # Release notes (multi-language)
 RELEASE_NOTES = {
     'en-US': """What's New:
-- Import pages from PDF files
-- Bug fixes and performance improvements""",
-    'ko-KR': """업데이트 내용:
-- PDF 파일에서 페이지 가져오기 기능 추가
-- 버그 수정 및 성능 개선"""
+- Fixed an issue where the purchase screen could get stuck after canceling
+- Bug fixes and stability improvements"""
 }
 
 
