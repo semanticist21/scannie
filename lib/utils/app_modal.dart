@@ -81,10 +81,12 @@ class AppModal {
     required BuildContext context,
     required List<WoltModalSheetPage> Function(BuildContext) pageListBuilder,
     bool barrierDismissible = true,
+    VoidCallback? onModalDismissedWithBarrierTap,
   }) {
     return WoltModalSheet.show<T>(
       context: context,
       barrierDismissible: barrierDismissible,
+      onModalDismissedWithBarrierTap: onModalDismissedWithBarrierTap,
       modalTypeBuilder: (ctx) => _BlurDialogType(ctx),
       pageListBuilder: pageListBuilder,
     );

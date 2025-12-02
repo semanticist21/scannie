@@ -1,7 +1,7 @@
 name: scannie
 description: "A new Flutter project."
 publish_to: 'none'
-version: 1.0.4+43
+version: 1.0.5+44
 
 environment:
   sdk: '>=3.5.0-236.0.dev <4.0.0'
@@ -38,6 +38,7 @@ dependencies:
   app_tracking_transparency: ^2.0.6
   uuid: ^4.5.2
   in_app_purchase: ^3.2.3
+  in_app_purchase_storekit: ^0.4.6  # iOS-specific features (SKPaymentQueueWrapper)
   package_info_plus: ^9.0.0
   flutter_native_splash: ^2.4.7
 

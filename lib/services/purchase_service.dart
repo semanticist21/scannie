@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Purchase result with error details
@@ -385,24 +387,9 @@ class PurchaseService {
       debugPrint('💎 Waiting for purchase result from stream...');
 
       // Wait for actual purchase result from the stream
-      // Timeout after 2 minutes - iOS may not emit cancel event
-      final result = await _purchaseCompleter!.future.timeout(
-        const Duration(minutes: 2),
-        onTimeout: () async {
-          debugPrint('💎 Purchase timeout after 2 minutes');
-          // Check if premium was granted during the wait
-          final isPremiumNow = await isPremium;
-          if (isPremiumNow) {
-            debugPrint('💎 Premium was granted during wait, returning success');
-            return PurchaseResult.success();
-          }
-          debugPrint('💎 No purchase detected, treating as cancellation');
-          return PurchaseResult.error(
-            PurchaseErrorType.purchaseCancelled,
-            'Purchase was cancelled or timed out.',
-          );
-        },
-      );
+      // No timeout - user may take time for Face ID, card input, bank authentication, etc.
+      // If iOS doesn't emit cancel event, user can close the modal which calls cancelPurchase()
+      final result = await _purchaseCompleter!.future;
 
       debugPrint('💎 Purchase result received: ${result.success ? "success" : result.errorType}');
       _purchaseCompleter = null;
@@ -503,8 +490,85 @@ class PurchaseService {
     }
   }
 
+  /// Cancel any ongoing purchase operation
+  /// Call this when the user closes the purchase modal without completing
+  ///
+  /// Best Practice (iOS):
+  /// - iOS doesn't always emit PurchaseStatus.canceled when user dismisses payment sheet
+  /// - This method ensures the completer is properly completed
+  /// - Clears any stuck transactions from the payment queue
+  void cancelPurchase() {
+    debugPrint('💎 cancelPurchase() called');
+
+    // Complete the purchase completer with cancelled status
+    if (_purchaseCompleter != null && !_purchaseCompleter!.isCompleted) {
+      debugPrint('💎 Completing pending purchase completer as cancelled');
+      _purchaseCompleter!.complete(PurchaseResult.error(
+        PurchaseErrorType.purchaseCancelled,
+        'Purchase was cancelled by user',
+      ));
+    }
+    _purchaseCompleter = null;
+
+    // Clear stuck iOS transactions asynchronously
+    if (Platform.isIOS) {
+      _clearPendingIOSTransactions();
+    }
+  }
+
+  /// Clear pending iOS transactions that may be stuck
+  /// This is necessary because iOS sometimes doesn't emit cancel events
+  ///
+  /// Reference: https://github.com/flutter/flutter/issues/66886
+  Future<void> _clearPendingIOSTransactions() async {
+    if (!Platform.isIOS) return;
+
+    try {
+      debugPrint('💎 Checking for stuck iOS transactions...');
+      final transactions = await SKPaymentQueueWrapper().transactions();
+
+      if (transactions.isEmpty) {
+        debugPrint('💎 No pending iOS transactions found');
+        return;
+      }
+
+      debugPrint('💎 Found ${transactions.length} pending iOS transactions');
+
+      for (final transaction in transactions) {
+        // Don't finish transactions that are still being processed
+        if (transaction.transactionState ==
+            SKPaymentTransactionStateWrapper.purchasing) {
+          debugPrint('💎 Skipping transaction in purchasing state');
+          continue;
+        }
+
+        // Only clear transactions for our product
+        if (transaction.payment.productIdentifier != premiumProductId) {
+          debugPrint('💎 Skipping transaction for other product: ${transaction.payment.productIdentifier}');
+          continue;
+        }
+
+        try {
+          debugPrint('💎 Finishing stuck transaction: ${transaction.transactionIdentifier} (state: ${transaction.transactionState})');
+          await SKPaymentQueueWrapper().finishTransaction(transaction);
+          debugPrint('💎 Successfully finished transaction');
+        } catch (e) {
+          // Log but don't throw - we want to continue clearing other transactions
+          debugPrint('💎 Error finishing transaction: $e');
+        }
+      }
+    } catch (e) {
+      debugPrint('💎 Error clearing pending iOS transactions: $e');
+    }
+  }
+
+  /// Check if a purchase is currently in progress
+  bool get isPurchaseInProgress =>
+      _purchaseCompleter != null && !_purchaseCompleter!.isCompleted;
+
   /// Dispose resources
   void dispose() {
+    cancelPurchase(); // Cancel any pending purchase before disposing
     _subscription?.cancel();
     _subscription = null;
   }

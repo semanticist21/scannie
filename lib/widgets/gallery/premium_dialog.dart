@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -17,6 +18,11 @@ class PremiumDialog {
   static void show(BuildContext context, {VoidCallback? onPurchaseComplete, bool isPremium = false}) {
     AppModal.showDialog(
       context: context,
+      onModalDismissedWithBarrierTap: () {
+        // Cancel any pending purchase when modal is dismissed by tapping barrier
+        PurchaseService.instance.cancelPurchase();
+        Navigator.of(context).pop();
+      },
       pageListBuilder: (modalContext) {
         final colors = ThemedColors.of(modalContext);
         final purchaseService = PurchaseService.instance;
@@ -94,7 +100,11 @@ class PremiumDialog {
                   SizedBox(
                     width: double.infinity,
                     child: ShadButton.outline(
-                      onPressed: () => Navigator.of(modalContext).pop(),
+                      onPressed: () {
+                        // Cancel any pending purchase operation
+                        PurchaseService.instance.cancelPurchase();
+                        Navigator.of(modalContext).pop();
+                      },
                       backgroundColor: colors.surface,
                       child: Text('common.close'.tr()),
                     ),
@@ -115,7 +125,11 @@ class PremiumDialog {
                   SizedBox(
                     width: double.infinity,
                     child: ShadButton.outline(
-                      onPressed: () => Navigator.of(modalContext).pop(),
+                      onPressed: () {
+                        // Cancel any pending purchase operation
+                        PurchaseService.instance.cancelPurchase();
+                        Navigator.of(modalContext).pop();
+                      },
                       backgroundColor: colors.surface,
                       child: Text('premium.maybeLater'.tr()),
                     ),
@@ -165,6 +179,8 @@ class PremiumDialog {
 }
 
 /// Purchase button with loading state
+/// Uses WidgetsBindingObserver to detect when payment sheet is dismissed
+/// Reference: https://medium.com/@bhupenrathore11/understanding-widgetsbindingobserver-in-flutter-8327fa6c75a3
 class _PurchaseButton extends StatefulWidget {
   final String priceString;
   final ThemedColors colors;
@@ -180,13 +196,61 @@ class _PurchaseButton extends StatefulWidget {
   State<_PurchaseButton> createState() => _PurchaseButtonState();
 }
 
-class _PurchaseButtonState extends State<_PurchaseButton> {
+class _PurchaseButtonState extends State<_PurchaseButton>
+    with WidgetsBindingObserver {
   bool _isLoading = false;
+  bool _isPurchaseFlowActive = false; // Track if we're waiting for payment sheet
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  /// Detect when app resumes after payment sheet is dismissed (iOS only)
+  ///
+  /// iOS: Payment sheet is full-screen, app goes inactive → resumed when dismissed
+  ///      iOS doesn't always emit PurchaseStatus.canceled, so we need lifecycle detection
+  ///
+  /// Android: Payment sheet is overlay, app stays active
+  ///          Google Play reliably emits BillingResponse.userCanceled
+  ///
+  /// Reference: https://stackoverflow.com/questions/66382781/flutter-in-app-purchase-handle-user-cancel-in-ios
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // Only apply lifecycle detection on iOS
+    // Android's Google Play Billing reliably sends cancel events
+    if (!Platform.isIOS) return;
+
+    if (state == AppLifecycleState.resumed && _isPurchaseFlowActive) {
+      debugPrint('💎 [iOS] App resumed while purchase flow active - payment sheet likely dismissed');
+      // Wait a short time to see if purchase completes
+      // If iOS emits the purchase event, it will complete the Completer
+      // If not, we cancel after the delay
+      Future.delayed(const Duration(seconds: 3), () {
+        if (mounted && _isLoading && _isPurchaseFlowActive) {
+          debugPrint('💎 [iOS] No purchase event after 3s - treating as cancelled');
+          PurchaseService.instance.cancelPurchase();
+          // The cancelPurchase() will complete the Completer with cancelled status
+          // which will be handled by _handlePurchase() and stop the loading
+        }
+      });
+    }
+  }
 
   Future<void> _handlePurchase() async {
     if (_isLoading) return;
 
-    setState(() => _isLoading = true);
+    setState(() {
+      _isLoading = true;
+      _isPurchaseFlowActive = true;
+    });
 
     try {
       final purchaseService = PurchaseService.instance;
@@ -218,7 +282,10 @@ class _PurchaseButtonState extends State<_PurchaseButton> {
       }
     } finally {
       if (mounted) {
-        setState(() => _isLoading = false);
+        setState(() {
+          _isLoading = false;
+          _isPurchaseFlowActive = false;
+        });
       }
     }
   }
