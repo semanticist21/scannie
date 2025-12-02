@@ -309,6 +309,16 @@ class PurchaseService with WidgetsBindingObserver {
     }
   }
 
+  /// Cancel pending purchase (call when user dismisses modal)
+  /// This only resets the app's internal waiting state.
+  void cancelPendingPurchase() {
+    debugPrint('💎 cancelPendingPurchase() called');
+    _completePurchaseCompleter(PurchaseResult.error(
+      PurchaseErrorType.purchaseCancelled,
+      'Purchase cancelled by user',
+    ));
+  }
+
   /// Safely complete the restore Completer
   void _completeRestoreCompleter(PurchaseResult result) {
     if (_restoreCompleter != null && !_restoreCompleter!.isCompleted) {

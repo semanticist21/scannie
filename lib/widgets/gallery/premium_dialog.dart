@@ -115,7 +115,11 @@ class PremiumDialog {
                   SizedBox(
                     width: double.infinity,
                     child: ShadButton.outline(
-                      onPressed: () => Navigator.of(modalContext).pop(),
+                      onPressed: () {
+                        // Cancel any pending purchase to stop loading spinner
+                        PurchaseService.instance.cancelPendingPurchase();
+                        Navigator.of(modalContext).pop();
+                      },
                       backgroundColor: colors.surface,
                       child: Text('premium.maybeLater'.tr()),
                     ),
