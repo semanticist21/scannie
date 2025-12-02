@@ -179,7 +179,28 @@ class PurchaseService {
       debugPrint('💎 Purchase update: ${purchaseDetails.productID} - ${purchaseDetails.status}');
       debugPrint('💎   pendingCompletePurchase: ${purchaseDetails.pendingCompletePurchase}');
 
-      // Only handle our product
+      // Android bug (Flutter issue #96775): canceled/error purchases may have empty productID
+      // Handle cancel/error even with empty productID if we have a pending purchase
+      final isEmptyProductId = purchaseDetails.productID.isEmpty;
+      final isCancelOrError = purchaseDetails.status == PurchaseStatus.canceled ||
+          purchaseDetails.status == PurchaseStatus.error;
+
+      if (isEmptyProductId && isCancelOrError && isPurchaseInProgress) {
+        debugPrint('💎 Android bug workaround: handling cancel/error with empty productID');
+        // Complete the transaction to clear it
+        if (purchaseDetails.pendingCompletePurchase) {
+          await _inAppPurchase.completePurchase(purchaseDetails);
+        }
+        // Handle as cancel
+        final cancelResult = PurchaseResult.error(
+          PurchaseErrorType.purchaseCancelled,
+          'Purchase was cancelled',
+        );
+        _completePurchaseCompleter(cancelResult);
+        continue;
+      }
+
+      // Only handle our product for non-cancel/error states
       if (purchaseDetails.productID != premiumProductId) {
         debugPrint('💎 Ignoring unknown product: ${purchaseDetails.productID}');
         // Still need to complete unknown transactions to clear them
@@ -490,13 +511,14 @@ class PurchaseService {
     }
   }
 
-  /// Cancel any ongoing purchase operation
+  /// Cancel any ongoing purchase or restore operation
   /// Call this when the user closes the purchase modal without completing
   ///
-  /// Best Practice (iOS):
+  /// Best Practice:
   /// - iOS doesn't always emit PurchaseStatus.canceled when user dismisses payment sheet
-  /// - This method ensures the completer is properly completed
-  /// - Clears any stuck transactions from the payment queue
+  /// - Android may also fail to emit cancel events in some cases (Flutter issue #96775)
+  /// - This method ensures all completers are properly completed
+  /// - Clears any stuck transactions from the payment queue (iOS)
   void cancelPurchase() {
     debugPrint('💎 cancelPurchase() called');
 
@@ -509,6 +531,16 @@ class PurchaseService {
       ));
     }
     _purchaseCompleter = null;
+
+    // Also cancel any pending restore operation
+    if (_restoreCompleter != null && !_restoreCompleter!.isCompleted) {
+      debugPrint('💎 Completing pending restore completer as cancelled');
+      _restoreCompleter!.complete(PurchaseResult.error(
+        PurchaseErrorType.purchaseCancelled,
+        'Restore was cancelled by user',
+      ));
+    }
+    _restoreCompleter = null;
 
     // Clear stuck iOS transactions asynchronously
     if (Platform.isIOS) {
