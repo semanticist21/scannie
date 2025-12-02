@@ -110,7 +110,7 @@ class PurchaseService with WidgetsBindingObserver {
 
       // Wait briefly for purchase events to come through
       // iOS may send events shortly after app resumes
-      _resumeTimeoutTimer = Timer(const Duration(seconds: 3), () {
+      _resumeTimeoutTimer = Timer(const Duration(seconds: 1), () {
         if (_isPurchaseFlowActive) {
           debugPrint('💎 No purchase event received after resume, treating as cancelled');
           _isPurchaseFlowActive = false;
