@@ -130,6 +130,7 @@ await PurchaseService.instance.initialize();  // 마지막
 - `PurchaseService.instance` - 싱글톤
 - `purchaseStream` 기반 비동기 처리 (Completer로 Future 변환)
 - `buyNonConsumable()` → 구매 시작만 반환, 실제 결과는 스트림으로
+- `in_app_purchase_storekit` - iOS용 `SKPaymentQueueWrapper` (stuck 트랜잭션 정리)
 
 ### 핵심 주의사항
 ```dart
@@ -145,6 +146,30 @@ _completePurchaseCompleter(result);
 - iOS에서 이미 구매한 non-consumable 재구매 시 `restored` 상태 반환 (not `purchased`)
 - `restored` 상태에서 `_purchaseCompleter`도 complete 해야 함
 - 디버깅: 콘솔에서 `💎` 로그 확인
+
+### iOS 결제 취소 처리
+iOS는 결제 시트에서 취소 시 `PurchaseStatus.canceled` 이벤트를 안정적으로 발생시키지 않음.
+
+**해결책**: `WidgetsBindingObserver`로 앱 라이프사이클 감지
+```dart
+// _PurchaseButton에서 사용
+@override
+void didChangeAppLifecycleState(AppLifecycleState state) {
+  if (!Platform.isIOS) return;  // Android는 취소 이벤트 정상 발생
+
+  if (state == AppLifecycleState.resumed && _isPurchaseFlowActive) {
+    // 결제 시트 닫힘 감지 → 3초 후 취소 처리
+    Future.delayed(const Duration(seconds: 3), () {
+      if (mounted && _isLoading) {
+        PurchaseService.instance.cancelPurchase();
+      }
+    });
+  }
+}
+```
+
+- `PurchaseService.cancelPurchase()` - 진행 중인 구매 취소 + iOS stuck 트랜잭션 정리
+- Android는 Google Play가 `BillingResponse.userCanceled` 정상 발생
 
 ## 테마 시스템
 
