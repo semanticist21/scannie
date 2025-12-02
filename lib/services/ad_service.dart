@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -48,6 +49,11 @@ class AdService {
     if (_isInitialized) return;
 
     try {
+      // Request ATT permission on iOS before initializing ads
+      if (Platform.isIOS) {
+        await _requestTrackingAuthorization();
+      }
+
       await MobileAds.instance.initialize();
       _isInitialized = true;
       debugPrint('📺 AdMob initialized successfully');
@@ -56,6 +62,29 @@ class AdService {
       await _loadInterstitialAd();
     } catch (e) {
       debugPrint('📺 AdMob initialization failed: $e');
+    }
+  }
+
+  /// Request App Tracking Transparency (ATT) authorization on iOS
+  /// This is required for personalized ads on iOS 14.5+
+  Future<void> _requestTrackingAuthorization() async {
+    try {
+      // Check current status first
+      final status = await AppTrackingTransparency.trackingAuthorizationStatus;
+      debugPrint('📺 ATT current status: $status');
+
+      // Only request if not determined yet
+      if (status == TrackingStatus.notDetermined) {
+        // Small delay to avoid conflicts with other permission dialogs
+        // (e.g., notification permission on first launch)
+        await Future.delayed(const Duration(milliseconds: 500));
+
+        final newStatus =
+            await AppTrackingTransparency.requestTrackingAuthorization();
+        debugPrint('📺 ATT new status after request: $newStatus');
+      }
+    } catch (e) {
+      debugPrint('📺 ATT request failed: $e');
     }
   }
 
