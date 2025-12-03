@@ -4,5 +4,5 @@
         "Scannier"
     ],
     "java.configuration.updateBuildConfiguration": "automatic",
-    "cmake.sourceDirectory": "/Users/semanticist/Documents/code/scannie/linux"
+    "cmake.configureOnOpen": false
 }
