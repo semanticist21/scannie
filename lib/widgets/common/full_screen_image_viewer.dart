@@ -747,6 +747,19 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // Section header
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: AppSpacing.xs,
+                            bottom: AppSpacing.ms,
+                          ),
+                          child: Text(
+                            'imageViewer.filters'.tr(),
+                            style: AppTextStyles.labelSemiBold.copyWith(
+                              color: AppColors.darkTextSecondary,
+                            ),
+                          ),
+                        ),
                         // Filter options
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
