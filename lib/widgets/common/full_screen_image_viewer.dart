@@ -386,7 +386,8 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
       final tempDir = await getTemporaryDirectory();
       final timestamp = DateTime.now().millisecondsSinceEpoch;
       final extension = path.extension(originalPath);
-      final tempFilePath = path.join(tempDir.path, 'edited_$timestamp$extension');
+      final tempFilePath =
+          path.join(tempDir.path, 'edited_$timestamp$extension');
       await File(tempFilePath).writeAsBytes(imageBytes);
 
       // Clean up intermediate temp file (from cropper)
@@ -416,7 +417,8 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
   /// Download current image to device
   Future<void> _downloadCurrentImage() async {
     final imagePath = widget.imagePaths[_currentPage];
-    final result = await ExportService.instance.saveImagesToGallery([imagePath]);
+    final result =
+        await ExportService.instance.saveImagesToGallery([imagePath]);
 
     if (!mounted) return;
 
@@ -474,7 +476,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
             children: [
               const Icon(
                 LucideIcons.imageOff,
-                size: 120,
+                size: 100,
                 color: AppColors.textHint,
               ),
               const SizedBox(height: AppSpacing.lg),
@@ -552,7 +554,8 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
           color: isSelected ? AppColors.darkOverlay : AppColors.transparent,
           borderRadius: BorderRadius.circular(AppRadius.md),
           border: Border.all(
-            color: isSelected ? AppColors.darkOverlayLight : AppColors.transparent,
+            color:
+                isSelected ? AppColors.darkOverlayLight : AppColors.transparent,
             width: isSelected ? 1.5 : 1,
           ),
         ),
@@ -573,7 +576,8 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                 color: isSelected
                     ? AppColors.darkTextPrimary
                     : AppColors.darkTextSecondary,
-                fontWeight: isSelected ? AppFontWeight.semiBold : AppFontWeight.medium,
+                fontWeight:
+                    isSelected ? AppFontWeight.semiBold : AppFontWeight.medium,
               ),
             ),
           ],
@@ -591,35 +595,35 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
           children: [
             // Page viewer with zoom (using photo_view for better gesture handling)
             Padding(
-                padding: EdgeInsets.only(
-                  top: 56, // Space for top control bar
-                  bottom: widget.showFilters ? 130 : 0,
-                ),
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() => _showControls = !_showControls);
+              padding: EdgeInsets.only(
+                top: 56, // Space for top control bar
+                bottom: widget.showFilters ? 80 : 0, // Filters only
+              ),
+              child: GestureDetector(
+                onTap: () {
+                  setState(() => _showControls = !_showControls);
+                },
+                child: PhotoViewGallery.builder(
+                  scrollPhysics: const BouncingScrollPhysics(),
+                  pageController: _pageController,
+                  onPageChanged: (index) {
+                    setState(() => _currentPage = index);
                   },
-                  child: PhotoViewGallery.builder(
-                    scrollPhysics: const BouncingScrollPhysics(),
-                    pageController: _pageController,
-                    onPageChanged: (index) {
-                      setState(() => _currentPage = index);
-                    },
-                    itemCount: widget.imagePaths.length,
-                    backgroundDecoration: const BoxDecoration(
-                      color: AppColors.darkBackground,
-                    ),
-                    builder: (context, index) {
-                      return PhotoViewGalleryPageOptions.customChild(
-                        child: _buildFullScreenImage(index),
-                        minScale: PhotoViewComputedScale.contained,
-                        maxScale: PhotoViewComputedScale.covered * 4.0,
-                        initialScale: PhotoViewComputedScale.contained,
-                      );
-                    },
+                  itemCount: widget.imagePaths.length,
+                  backgroundDecoration: const BoxDecoration(
+                    color: AppColors.darkBackground,
                   ),
+                  builder: (context, index) {
+                    return PhotoViewGalleryPageOptions.customChild(
+                      child: _buildFullScreenImage(index),
+                      minScale: PhotoViewComputedScale.contained,
+                      maxScale: PhotoViewComputedScale.covered * 4.0,
+                      initialScale: PhotoViewComputedScale.contained,
+                    );
+                  },
                 ),
               ),
+            ),
 
             // Controls overlay
             if (_showControls) ...[
@@ -667,20 +671,31 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                           onPressed: _cropAndRotateImage,
                           tooltip: 'imageViewer.rotateImage'.tr(),
                         ),
-                        IconButton(
-                          icon: _isSaving
-                              ? const SizedBox(
-                                  width: 18,
-                                  height: 18,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: AppColors.darkTextPrimary,
+                        const SizedBox(width: AppSpacing.xs),
+                        // Save button (circle)
+                        GestureDetector(
+                          onTap: _isSaving ? null : _saveFilteredImage,
+                          child: Container(
+                            width: 36,
+                            height: 36,
+                            decoration: const BoxDecoration(
+                              color: AppColors.primary,
+                              shape: BoxShape.circle,
+                            ),
+                            child: _isSaving
+                                ? const Padding(
+                                    padding: EdgeInsets.all(8),
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                : const Icon(
+                                    LucideIcons.check,
+                                    color: Colors.white,
+                                    size: 20,
                                   ),
-                                )
-                              : const Icon(LucideIcons.check,
-                                  color: AppColors.darkTextPrimary),
-                          onPressed: _isSaving ? null : _saveFilteredImage,
-                          tooltip: 'common.save'.tr(),
+                          ),
                         ),
                       ],
                       // Hide download/share in edit mode (showFilters = true)
@@ -714,7 +729,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                       AppSpacing.md,
                       AppSpacing.sm,
                       AppSpacing.md,
-                      AppSpacing.lg,
+                      AppSpacing.md,
                     ),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
@@ -732,19 +747,6 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Section header
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            left: AppSpacing.xs,
-                            bottom: AppSpacing.ms,
-                          ),
-                          child: Text(
-                            'imageViewer.filters'.tr(),
-                            style: AppTextStyles.labelSemiBold.copyWith(
-                              color: AppColors.darkTextSecondary,
-                            ),
-                          ),
-                        ),
                         // Filter options
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,

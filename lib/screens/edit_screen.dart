@@ -576,10 +576,24 @@ class _EditScreenState extends State<EditScreen> {
             onPressed: _handleBackPress, // Custom back handler
           ),
           actions: [
-            IconButton(
-              icon: const Icon(LucideIcons.check),
-              onPressed: _saveScan,
-              tooltip: 'common.save'.tr(),
+            Padding(
+              padding: const EdgeInsets.only(right: AppSpacing.sm),
+              child: GestureDetector(
+                onTap: _saveScan,
+                child: Container(
+                  width: 36,
+                  height: 36,
+                  decoration: const BoxDecoration(
+                    color: AppColors.primary,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    LucideIcons.check,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                ),
+              ),
             ),
           ],
         ),

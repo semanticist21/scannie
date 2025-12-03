@@ -462,7 +462,10 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
                       tooltip: 'tooltips.search'.tr(),
                     ),
                     IconButton(
-                      icon: const Icon(LucideIcons.plus),
+                      icon: Icon(
+                        LucideIcons.plus,
+                        color: ShadTheme.of(context).colorScheme.primary,
+                      ),
                       onPressed: _createEmptyDocument,
                       tooltip: 'tooltips.createEmptyDocument'.tr(),
                     ),

@@ -143,7 +143,10 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
             ),
           if (_imagePaths.isNotEmpty)
             IconButton(
-              icon: const Icon(LucideIcons.download),
+              icon: Icon(
+                LucideIcons.download,
+                color: ShadTheme.of(context).colorScheme.primary,
+              ),
               onPressed: _showExportOptions,
               tooltip: 'viewer.exportPdf'.tr(),
             ),
