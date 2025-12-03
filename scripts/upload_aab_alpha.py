@@ -24,8 +24,11 @@ SCOPES = ['https://www.googleapis.com/auth/androidpublisher']
 # Release notes (multi-language)
 RELEASE_NOTES = {
     'en-US': """What's New:
-- Fixed an issue where the purchase screen could get stuck after canceling
-- Bug fixes and stability improvements"""
+- UI improvements and visual enhancements
+- Bug fixes and stability improvements""",
+    'ko-KR': """새로운 기능:
+- UI 개선 및 시각적 향상
+- 버그 수정 및 안정성 개선"""
 }
 
 
