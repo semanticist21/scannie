@@ -173,6 +173,7 @@
     "failedToShareImage": "Failed to share image: {error}",
     "imageNotFound": "Image file not found",
     "imageSavedToPhotos": "Image saved to Photos",
+    "imageUpdated": "Image updated",
     "scanFailed": "Scan failed: {error}",
     "imagesSaved": "{count}/{total} images saved to Photos",
     "noImagesToExport": "No images to export",

@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
-import 'package:cunning_document_scanner_plus/cunning_document_scanner_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:flutter_reorderable_grid_view/widgets/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:cunning_document_scanner_plus/cunning_document_scanner_plus.dart';
 import 'package:path/path.dart' as path;
 import '../utils/app_toast.dart';
 import '../utils/path_helper.dart';
@@ -17,7 +17,7 @@ import '../services/pdf_settings_service.dart';
 import '../theme/app_theme.dart';
 import '../theme/app_text_styles.dart';
 import '../widgets/common/custom_app_bar.dart';
-import '../widgets/common/full_screen_image_viewer.dart';
+import '../widgets/common/pro_image_editor_screen.dart';
 import '../widgets/edit/image_tile.dart';
 import '../widgets/edit/edit_bottom_actions.dart';
 import '../widgets/common/confirm_dialog.dart';
@@ -246,15 +246,13 @@ class _EditScreenState extends State<EditScreen> {
     // No toast for successful deletion
   }
 
-  /// View image in full screen
+  /// View image in full screen with editor
   Future<void> _viewImage(String imagePath, int index) async {
     final navigator = Navigator.of(context);
     final result = await navigator.push<String?>(
       MaterialPageRoute(
-        builder: (context) => FullScreenImageViewer(
-          imagePaths: _imagePaths,
-          initialPage: index,
-          showFilters: true,
+        builder: (context) => ProImageEditorScreen(
+          imagePath: imagePath,
         ),
       ),
     );
@@ -663,7 +661,7 @@ class _EditScreenState extends State<EditScreen> {
       final index = entry.key;
       final imagePath = entry.value;
       return ImageTile(
-        key: ValueKey(_imageIds[index]),
+        key: ValueKey(imagePath), // Use imagePath as key to force rebuild on change
         index: index,
         imagePath: imagePath,
         onTap: () => _viewImage(imagePath, index),

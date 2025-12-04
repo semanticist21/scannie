@@ -536,13 +536,13 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
   }
 
   void _viewFullScreen(int index) {
+    // Open read-only full screen viewer (no editing)
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => FullScreenImageViewer(
           imagePaths: _imagePaths,
           initialPage: index,
-          showFilters: false,
         ),
       ),
     );
