@@ -403,6 +403,43 @@ if (!result.success) {
 - 타임아웃 (문서 30초, 페이지 10초, 렌더링 30초)
 - 개별 페이지 에러 처리 (한 페이지 실패해도 계속 진행)
 
+### ProImageEditor 중복 Pop 방지
+`pro_image_editor` 패키지는 `onImageEditingComplete`와 `onCloseEditor` **둘 다** 호출하는 버그가 있습니다.
+
+**문제**: 저장 완료 시 두 콜백이 순차 호출되어 **두 번 pop** 발생
+- 1차 pop: ProImageEditor → 이전 화면 (정상)
+- 2차 pop: 이전 화면 → 그 이전 화면 (의도하지 않음)
+
+**해결책**: StatefulWidget + `_hasPopped` 플래그로 중복 방지
+```dart
+class _ProImageEditorScreenState extends State<ProImageEditorScreen> {
+  bool _hasPopped = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return ProImageEditor.file(
+      File(widget.imagePath),
+      callbacks: ProImageEditorCallbacks(
+        onImageEditingComplete: (bytes) async {
+          if (_hasPopped) return;  // 중복 방지
+          _hasPopped = true;
+
+          // 이미지 저장 로직...
+
+          if (mounted) Navigator.of(context).pop(resultPath);
+        },
+        onCloseEditor: (editorMode) {
+          if (_hasPopped) return;  // 중복 방지
+          _hasPopped = true;
+
+          if (mounted) Navigator.of(context).pop();
+        },
+      ),
+    );
+  }
+}
+```
+
 ## 문제 해결
 
 ### 빌드 실패

@@ -551,7 +551,7 @@ class _EditScreenState extends State<EditScreen> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: _existingDocumentId != null && !_hasInteracted,
+      canPop: false, // Always prevent automatic pop
       onPopInvokedWithResult: (bool didPop, dynamic result) async {
         debugPrint('🔙 onPopInvoked: didPop=$didPop, result=$result');
 
@@ -561,7 +561,14 @@ class _EditScreenState extends State<EditScreen> {
           return;
         }
 
-        // System back button pressed
+        // For existing documents with no changes, pop immediately
+        if (_existingDocumentId != null && !_hasInteracted) {
+          debugPrint('🔙 No changes detected, popping immediately');
+          Navigator.of(context).pop();
+          return;
+        }
+
+        // System back button pressed - ask user
         debugPrint('🔙 System back button, asking user...');
         await _handleBackPress();
       },
