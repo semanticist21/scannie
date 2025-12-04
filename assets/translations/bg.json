@@ -63,6 +63,7 @@
     "preparingPdf": "Подготовка на PDF...",
     "noPagesTitle": "Няма страници",
     "noPagesSubtitle": "Този документ е празен.\nОпитайте да редактирате, за да добавите нови сканове.",
+    "noPagesAction": "Редактиране на документ",
     "downloadPdf": "Изтегли PDF",
     "sharePdf": "Сподели PDF",
     "downloadAsZip": "Изтегли като ZIP",

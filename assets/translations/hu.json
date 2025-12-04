@@ -63,6 +63,7 @@
     "preparingPdf": "PDF előkészítése...",
     "noPagesTitle": "Nincsenek oldalak",
     "noPagesSubtitle": "Ez a dokumentum üres.\nPróbálja szerkeszteni új szkennelések hozzáadásához.",
+    "noPagesAction": "Dokumentum szerkesztése",
     "downloadPdf": "PDF letöltése",
     "sharePdf": "PDF megosztása",
     "downloadAsZip": "Letöltés ZIP-ként",

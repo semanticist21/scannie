@@ -63,6 +63,7 @@
     "preparingPdf": "PDF պատրաստվում է...",
     "noPagesTitle": "Էջեր չկան",
     "noPagesSubtitle": "Այս փաստաթուղթը դատարկ է։\nՍկաններ ավելացնելու համար խմբագրեք։",
+    "noPagesAction": "Խմբագրել փաստաթուղթը",
     "downloadPdf": "PDF ներբեռնել",
     "sharePdf": "PDF կիսվել",
     "downloadAsZip": "ZIP ներբեռնել",

@@ -471,6 +471,8 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
       icon: LucideIcons.sparkles,
       title: 'viewer.noPagesTitle'.tr(),
       subtitle: 'viewer.noPagesSubtitle'.tr(),
+      actionText: 'viewer.noPagesAction'.tr(),
+      onActionTap: _editScan,
     );
   }
 

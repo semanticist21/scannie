@@ -63,6 +63,7 @@
     "preparingPdf": "Inaandaa PDF...",
     "noPagesTitle": "Hakuna kurasa",
     "noPagesSubtitle": "Hati hii ni tupu.\nJaribu kuhariri ili kuongeza skani.",
+    "noPagesAction": "Hariri hati",
     "downloadPdf": "Pakua PDF",
     "sharePdf": "Shiriki PDF",
     "downloadAsZip": "Pakua kama ZIP",

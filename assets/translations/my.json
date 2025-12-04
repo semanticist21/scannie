@@ -63,6 +63,7 @@
     "preparingPdf": "PDF ပြင်ဆင်နေသည်...",
     "noPagesTitle": "စာမျက်နှာ မရှိပါ",
     "noPagesSubtitle": "ဤစာရွက်စာတမ်း ဗလာဖြစ်နေသည်။\nစကင်န်များ ထည့်ရန် တည်းဖြတ်ပါ။",
+    "noPagesAction": "စာရွက်စာတမ်းကို တည်းဖြတ်မည်",
     "downloadPdf": "PDF ဒေါင်းလုဒ်",
     "sharePdf": "PDF မျှဝေ",
     "downloadAsZip": "ZIP အဖြစ် ဒေါင်းလုဒ်",

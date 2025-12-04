@@ -63,6 +63,7 @@
     "preparingPdf": "PDF በማዘጋጀት ላይ...",
     "noPagesTitle": "ገጾች የሉም",
     "noPagesSubtitle": "ይህ ሰነድ ባዶ ነው።\nስካኖችን ለማከል ለማርትዕ ይሞክሩ።",
+    "noPagesAction": "ሰነዱን አርትዕ",
     "downloadPdf": "PDF አውርድ",
     "sharePdf": "PDF አጋራ",
     "downloadAsZip": "እንደ ZIP አውርድ",

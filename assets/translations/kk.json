@@ -63,6 +63,7 @@
     "preparingPdf": "PDF дайындалуда...",
     "noPagesTitle": "Беттер жоқ",
     "noPagesSubtitle": "Бұл құжат бос.\nСканерлерді қосу үшін өңдеңіз.",
+    "noPagesAction": "Құжатты өңдеу",
     "downloadPdf": "PDF жүктеу",
     "sharePdf": "PDF бөлісу",
     "downloadAsZip": "ZIP ретінде жүктеу",

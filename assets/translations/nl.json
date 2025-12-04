@@ -63,6 +63,7 @@
     "preparingPdf": "PDF voorbereiden...",
     "noPagesTitle": "Geen pagina's",
     "noPagesSubtitle": "Dit document is leeg.\nProbeer te bewerken om nieuwe scans toe te voegen.",
+    "noPagesAction": "Document bewerken",
     "downloadPdf": "PDF downloaden",
     "sharePdf": "PDF delen",
     "downloadAsZip": "Downloaden als ZIP",

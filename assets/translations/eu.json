@@ -63,6 +63,7 @@
     "preparingPdf": "PDF prestatzen...",
     "noPagesTitle": "Ez dago orrialderik",
     "noPagesSubtitle": "Dokumentu hau hutsik dago.\nEditatu eskaneatzeak gehitzeko.",
+    "noPagesAction": "Editatu dokumentua",
     "downloadPdf": "Deskargatu PDF",
     "sharePdf": "Partekatu PDF",
     "downloadAsZip": "Deskargatu ZIP gisa",

@@ -63,6 +63,7 @@
     "preparingPdf": "Падрыхтоўка PDF...",
     "noPagesTitle": "Няма старонак",
     "noPagesSubtitle": "Гэты дакумент пусты.\nРэдагуйце, каб дадаць сканы.",
+    "noPagesAction": "Рэдагаваць дакумент",
     "downloadPdf": "Спампаваць PDF",
     "sharePdf": "Падзяліцца PDF",
     "downloadAsZip": "Спампаваць як ZIP",

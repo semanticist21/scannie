@@ -63,6 +63,7 @@
     "preparingPdf": "PDF தயாரிக்கிறது...",
     "noPagesTitle": "பக்கங்கள் இல்லை",
     "noPagesSubtitle": "இந்த ஆவணம் காலியாக உள்ளது.\nஸ்கேன்கள் சேர்க்க திருத்தவும்.",
+    "noPagesAction": "ஆவணத்தைத் திருத்து",
     "downloadPdf": "PDF பதிவிறக்கு",
     "sharePdf": "PDF பகிர்",
     "downloadAsZip": "ZIP ஆக பதிவிறக்கு",

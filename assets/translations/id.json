@@ -63,6 +63,7 @@
     "preparingPdf": "Menyiapkan PDF...",
     "noPagesTitle": "Tidak ada halaman",
     "noPagesSubtitle": "Dokumen ini kosong.\nCoba edit untuk menambahkan pindaian.",
+    "noPagesAction": "Edit Dokumen",
     "downloadPdf": "Unduh PDF",
     "sharePdf": "Bagikan PDF",
     "downloadAsZip": "Unduh sebagai ZIP",

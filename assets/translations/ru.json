@@ -63,6 +63,7 @@
     "preparingPdf": "Подготовка PDF...",
     "noPagesTitle": "Нет страниц",
     "noPagesSubtitle": "Этот документ пуст.\nОтредактируйте его, чтобы добавить сканы.",
+    "noPagesAction": "Редактировать документ",
     "downloadPdf": "Скачать PDF",
     "sharePdf": "Поделиться PDF",
     "downloadAsZip": "Скачать как ZIP",

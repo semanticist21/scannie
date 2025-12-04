@@ -63,6 +63,7 @@
     "preparingPdf": "PDF tayyorlanmoqda...",
     "noPagesTitle": "Sahifalar yo'q",
     "noPagesSubtitle": "Bu hujjat bo'sh.\nSkanerlar qo'shish uchun tahrirlang.",
+    "noPagesAction": "Hujjatni tahrirlash",
     "downloadPdf": "PDF yuklab olish",
     "sharePdf": "PDF ulashish",
     "downloadAsZip": "ZIP sifatida yuklab olish",

@@ -63,6 +63,7 @@
     "preparingPdf": "Preparando PDF...",
     "noPagesTitle": "Non hai páxinas",
     "noPagesSubtitle": "Este documento está baleiro.\nEdita para engadir escaneos.",
+    "noPagesAction": "Editar documento",
     "downloadPdf": "Descargar PDF",
     "sharePdf": "Compartir PDF",
     "downloadAsZip": "Descargar como ZIP",

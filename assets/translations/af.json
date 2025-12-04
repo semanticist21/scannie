@@ -63,6 +63,7 @@
     "preparingPdf": "Berei PDF voor...",
     "noPagesTitle": "Geen bladsye nie",
     "noPagesSubtitle": "Hierdie dokument is leeg.\nProbeer wysig om skanderings by te voeg.",
+    "noPagesAction": "Redigeer Dokument",
     "downloadPdf": "Laai PDF af",
     "sharePdf": "Deel PDF",
     "downloadAsZip": "Laai as ZIP af",

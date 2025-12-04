@@ -63,6 +63,7 @@
     "preparingPdf": "Undirbý PDF...",
     "noPagesTitle": "Engar síður",
     "noPagesSubtitle": "Þetta skjal er tómt.\nBreyttu til að bæta við skönnunum.",
+    "noPagesAction": "Breyta skjali",
     "downloadPdf": "Sækja PDF",
     "sharePdf": "Deila PDF",
     "downloadAsZip": "Sækja sem ZIP",

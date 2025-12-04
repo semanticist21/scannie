@@ -63,6 +63,7 @@
     "preparingPdf": "កំពុងរៀបចំ PDF...",
     "noPagesTitle": "គ្មានទំព័រ",
     "noPagesSubtitle": "ឯកសារនេះទទេ។\nកែប្រែដើម្បីបន្ថែមការស្កេន។",
+    "noPagesAction": "កែប្រែឯកសារ",
     "downloadPdf": "ទាញយក PDF",
     "sharePdf": "ចែករំលែក PDF",
     "downloadAsZip": "ទាញយកជា ZIP",

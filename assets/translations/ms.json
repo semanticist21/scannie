@@ -63,6 +63,7 @@
     "preparingPdf": "Menyediakan PDF...",
     "noPagesTitle": "Tiada halaman",
     "noPagesSubtitle": "Dokumen ini kosong.\nCuba edit untuk menambah imbasan.",
+    "noPagesAction": "Edit Dokumen",
     "downloadPdf": "Muat turun PDF",
     "sharePdf": "Kongsi PDF",
     "downloadAsZip": "Muat turun sebagai ZIP",

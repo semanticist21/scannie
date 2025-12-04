@@ -63,6 +63,7 @@
     "preparingPdf": "Yn paratoi PDF...",
     "noPagesTitle": "Dim tudalennau",
     "noPagesSubtitle": "Mae'r ddogfen hon yn wag.\nGolygwch i ychwanegu sganiau.",
+    "noPagesAction": "Golygu dogfen",
     "downloadPdf": "Lawrlwytho PDF",
     "sharePdf": "Rhannu PDF",
     "downloadAsZip": "Lawrlwytho fel ZIP",

@@ -63,6 +63,7 @@
     "preparingPdf": "PDF á ullmhú...",
     "noPagesTitle": "Níl aon leathanaigh ann",
     "noPagesSubtitle": "Tá an doiciméad seo folamh.\nCuir in eagar chun scanta a chur leis.",
+    "noPagesAction": "Cuir an doiciméad in eagar",
     "downloadPdf": "Íoslódáil PDF",
     "sharePdf": "Comhroinn PDF",
     "downloadAsZip": "Íoslódáil mar ZIP",

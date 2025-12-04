@@ -63,6 +63,7 @@
     "preparingPdf": "PDF প্রস্তুত হচ্ছে...",
     "noPagesTitle": "কোনো পৃষ্ঠা নেই",
     "noPagesSubtitle": "এই ডকুমেন্টটি খালি।\nস্ক্যান যোগ করতে সম্পাদনা করুন।",
+    "noPagesAction": "ডকুমেন্ট সম্পাদনা",
     "downloadPdf": "PDF ডাউনলোড",
     "sharePdf": "PDF শেয়ার",
     "downloadAsZip": "ZIP হিসেবে ডাউনলোড",

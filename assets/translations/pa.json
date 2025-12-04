@@ -63,6 +63,7 @@
     "preparingPdf": "PDF ਤਿਆਰ ਹੋ ਰਹੀ ਹੈ...",
     "noPagesTitle": "ਕੋਈ ਪੰਨੇ ਨਹੀਂ",
     "noPagesSubtitle": "ਇਹ ਦਸਤਾਵੇਜ਼ ਖਾਲੀ ਹੈ।\nਸਕੈਨ ਜੋੜਨ ਲਈ ਸੋਧ ਕਰੋ।",
+    "noPagesAction": "ਦਸਤਾਵੇਜ਼ ਸੰਪਾਦਿਤ ਕਰੋ",
     "downloadPdf": "PDF ਡਾਊਨਲੋਡ",
     "sharePdf": "PDF ਸਾਂਝੀ ਕਰੋ",
     "downloadAsZip": "ZIP ਵਜੋਂ ਡਾਊਨਲੋਡ",

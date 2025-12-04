@@ -63,6 +63,7 @@
     "preparingPdf": "ກຳລັງກຽມ PDF...",
     "noPagesTitle": "ບໍ່ມີໜ້າ",
     "noPagesSubtitle": "ເອກະສານນີ້ຫວ່າງເປົ່າ.\nແກ້ໄຂເພື່ອເພີ່ມການສະແກນ.",
+    "noPagesAction": "ແກ້ໄຂເອກະສານ",
     "downloadPdf": "ດາວໂຫລດ PDF",
     "sharePdf": "ແບ່ງປັນ PDF",
     "downloadAsZip": "ດາວໂຫລດເປັນ ZIP",

@@ -63,6 +63,7 @@
     "preparingPdf": "Przygotowywanie PDF...",
     "noPagesTitle": "Brak stron",
     "noPagesSubtitle": "Ten dokument jest pusty.\nSpróbuj edytować, aby dodać nowe skany.",
+    "noPagesAction": "Edytuj dokument",
     "downloadPdf": "Pobierz PDF",
     "sharePdf": "Udostępnij PDF",
     "downloadAsZip": "Pobierz jako ZIP",

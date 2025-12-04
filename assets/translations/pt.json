@@ -63,6 +63,7 @@
     "preparingPdf": "Preparando PDF...",
     "noPagesTitle": "Nenhuma página",
     "noPagesSubtitle": "Este documento está vazio.\nTente editar para adicionar escaneamentos.",
+    "noPagesAction": "Editar documento",
     "downloadPdf": "Baixar PDF",
     "sharePdf": "Compartilhar PDF",
     "downloadAsZip": "Baixar como ZIP",

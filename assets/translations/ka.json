@@ -63,6 +63,7 @@
     "preparingPdf": "PDF მზადდება...",
     "noPagesTitle": "გვერდები არ არის",
     "noPagesSubtitle": "ეს დოკუმენტი ცარიელია.\nსკანების დასამატებლად დაარედაქტირეთ.",
+    "noPagesAction": "დოკუმენტის რედაქტირება",
     "downloadPdf": "PDF ჩამოტვირთვა",
     "sharePdf": "PDF გაზიარება",
     "downloadAsZip": "ZIP-ად ჩამოტვირთვა",

@@ -63,6 +63,7 @@
     "preparingPdf": "PDF hazırlanır...",
     "noPagesTitle": "Səhifə yoxdur",
     "noPagesSubtitle": "Bu sənəd boşdur.\nSkan əlavə etmək üçün redaktə edin.",
+    "noPagesAction": "Sənədi redaktə et",
     "downloadPdf": "PDF yüklə",
     "sharePdf": "PDF paylaş",
     "downloadAsZip": "ZIP olaraq yüklə",

@@ -63,6 +63,7 @@
     "preparingPdf": "Préparation du PDF...",
     "noPagesTitle": "Aucune page",
     "noPagesSubtitle": "Ce document est vide.\nModifiez-le pour ajouter des scans.",
+    "noPagesAction": "Modifier le document",
     "downloadPdf": "Télécharger le PDF",
     "sharePdf": "Partager le PDF",
     "downloadAsZip": "Télécharger en ZIP",

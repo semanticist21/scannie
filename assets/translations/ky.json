@@ -63,6 +63,7 @@
     "preparingPdf": "PDF даярдалууда...",
     "noPagesTitle": "Барактар жок",
     "noPagesSubtitle": "Бул документ бош.\nСкандарды кошуу үчүн түзөтүңүз.",
+    "noPagesAction": "Документти түзөтүү",
     "downloadPdf": "PDF жүктөп алуу",
     "sharePdf": "PDF бөлүшүү",
     "downloadAsZip": "ZIP катары жүктөп алуу",

@@ -63,6 +63,7 @@
     "preparingPdf": "Припрема PDF-а...",
     "noPagesTitle": "Нема страница",
     "noPagesSubtitle": "Овај документ је празан.\nПокушајте да уредите да додате нова скенирања.",
+    "noPagesAction": "Уреди документ",
     "downloadPdf": "Преузми PDF",
     "sharePdf": "Подели PDF",
     "downloadAsZip": "Преузми као ZIP",

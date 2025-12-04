@@ -63,6 +63,7 @@
     "preparingPdf": "Ruošiamas PDF...",
     "noPagesTitle": "Nėra puslapių",
     "noPagesSubtitle": "Šis dokumentas yra tuščias.\nPabandykite redaguoti, kad pridėtumėte naujų skenavų.",
+    "noPagesAction": "Redaguoti dokumentą",
     "downloadPdf": "Atsisiųsti PDF",
     "sharePdf": "Dalintis PDF",
     "downloadAsZip": "Atsisiųsti kaip ZIP",

@@ -63,6 +63,7 @@
     "preparingPdf": "Đang chuẩn bị PDF...",
     "noPagesTitle": "Không có trang",
     "noPagesSubtitle": "Tài liệu này trống.\nThử chỉnh sửa để thêm bản quét.",
+    "noPagesAction": "Chỉnh sửa tài liệu",
     "downloadPdf": "Tải PDF",
     "sharePdf": "Chia sẻ PDF",
     "downloadAsZip": "Tải dưới dạng ZIP",

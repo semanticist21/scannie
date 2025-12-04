@@ -63,6 +63,7 @@
     "preparingPdf": "מכין PDF...",
     "noPagesTitle": "אין עמודים",
     "noPagesSubtitle": "מסמך זה ריק.\nנסה לערוך כדי להוסיף סריקות.",
+    "noPagesAction": "עריכת מסמך",
     "downloadPdf": "הורד PDF",
     "sharePdf": "שתף PDF",
     "downloadAsZip": "הורד כ-ZIP",

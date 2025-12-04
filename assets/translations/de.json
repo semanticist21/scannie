@@ -63,6 +63,7 @@
     "preparingPdf": "PDF wird vorbereitet...",
     "noPagesTitle": "Keine Seiten",
     "noPagesSubtitle": "Dieses Dokument ist leer.\nBearbeite es, um Scans hinzuzufügen.",
+    "noPagesAction": "Dokument bearbeiten",
     "downloadPdf": "PDF herunterladen",
     "sharePdf": "PDF teilen",
     "downloadAsZip": "Als ZIP herunterladen",

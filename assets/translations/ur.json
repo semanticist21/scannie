@@ -63,6 +63,7 @@
     "preparingPdf": "PDF تیار ہو رہی ہے...",
     "noPagesTitle": "کوئی صفحات نہیں",
     "noPagesSubtitle": "یہ دستاویز خالی ہے۔\nنئی اسکینز شامل کرنے کے لیے ترمیم کی کوشش کریں۔",
+    "noPagesAction": "دستاویز میں ترمیم کریں",
     "downloadPdf": "PDF ڈاؤن لوڈ",
     "sharePdf": "PDF شیئر کریں",
     "downloadAsZip": "ZIP کے طور پر ڈاؤن لوڈ",

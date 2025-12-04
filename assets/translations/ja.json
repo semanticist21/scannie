@@ -63,6 +63,7 @@
     "preparingPdf": "PDFを準備中...",
     "noPagesTitle": "ページがありません",
     "noPagesSubtitle": "このドキュメントは空です。\n編集からスキャンを追加してください。",
+    "noPagesAction": "ドキュメントを編集",
     "downloadPdf": "PDFをダウンロード",
     "sharePdf": "PDFを共有",
     "downloadAsZip": "ZIPでダウンロード",

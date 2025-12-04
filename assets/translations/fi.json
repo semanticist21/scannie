@@ -63,6 +63,7 @@
     "preparingPdf": "Valmistellaan PDF...",
     "noPagesTitle": "Ei sivuja",
     "noPagesSubtitle": "Tämä dokumentti on tyhjä.\nKokeile muokata lisätäksesi uusia skannauksia.",
+    "noPagesAction": "Muokkaa asiakirjaa",
     "downloadPdf": "Lataa PDF",
     "sharePdf": "Jaa PDF",
     "downloadAsZip": "Lataa ZIP-tiedostona",

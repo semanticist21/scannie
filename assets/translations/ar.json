@@ -63,6 +63,7 @@
     "preparingPdf": "جارٍ تحضير PDF...",
     "noPagesTitle": "لا توجد صفحات",
     "noPagesSubtitle": "هذا المستند فارغ.\nحاول التحرير لإضافة عمليات مسح.",
+    "noPagesAction": "تحرير المستند",
     "downloadPdf": "تنزيل PDF",
     "sharePdf": "مشاركة PDF",
     "downloadAsZip": "تنزيل كملف ZIP",

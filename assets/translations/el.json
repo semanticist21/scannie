@@ -63,6 +63,7 @@
     "preparingPdf": "Προετοιμασία PDF...",
     "noPagesTitle": "Καμία σελίδα",
     "noPagesSubtitle": "Αυτό το έγγραφο είναι κενό.\nΔοκιμάστε να επεξεργαστείτε για να προσθέσετε σαρώσεις.",
+    "noPagesAction": "Επεξεργασία εγγράφου",
     "downloadPdf": "Λήψη PDF",
     "sharePdf": "Κοινοποίηση PDF",
     "downloadAsZip": "Λήψη ως ZIP",

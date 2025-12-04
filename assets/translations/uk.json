@@ -63,6 +63,7 @@
     "preparingPdf": "Підготовка PDF...",
     "noPagesTitle": "Немає сторінок",
     "noPagesSubtitle": "Цей документ порожній.\nВідредагуйте його, щоб додати скани.",
+    "noPagesAction": "Редагувати документ",
     "downloadPdf": "Завантажити PDF",
     "sharePdf": "Поділитися PDF",
     "downloadAsZip": "Завантажити як ZIP",

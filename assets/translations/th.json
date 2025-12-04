@@ -63,6 +63,7 @@
     "preparingPdf": "กำลังเตรียม PDF...",
     "noPagesTitle": "ไม่มีหน้า",
     "noPagesSubtitle": "เอกสารนี้ว่างเปล่า\nลองแก้ไขเพื่อเพิ่มการสแกน",
+    "noPagesAction": "แก้ไขเอกสาร",
     "downloadPdf": "ดาวน์โหลด PDF",
     "sharePdf": "แชร์ PDF",
     "downloadAsZip": "ดาวน์โหลดเป็น ZIP",

@@ -63,6 +63,7 @@
     "preparingPdf": "PDF ತಯಾರಿಸಲಾಗುತ್ತಿದೆ...",
     "noPagesTitle": "ಪುಟಗಳಿಲ್ಲ",
     "noPagesSubtitle": "ಈ ದಾಖಲೆ ಖಾಲಿಯಾಗಿದೆ.\nಸ್ಕ್ಯಾನ್‌ಗಳನ್ನು ಸೇರಿಸಲು ಎಡಿಟ್ ಮಾಡಲು ಪ್ರಯತ್ನಿಸಿ.",
+    "noPagesAction": "ಡಾಕ್ಯುಮೆಂಟ್ ಸಂಪಾದಿಸಿ",
     "downloadPdf": "PDF ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ",
     "sharePdf": "PDF ಹಂಚಿಕೊಳ್ಳಿ",
     "downloadAsZip": "ZIP ಆಗಿ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ",

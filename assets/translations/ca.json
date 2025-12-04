@@ -63,6 +63,7 @@
     "preparingPdf": "Preparant PDF...",
     "noPagesTitle": "No hi ha pàgines",
     "noPagesSubtitle": "Aquest document és buit.\nProva d'editar-lo per afegir escaneigs.",
+    "noPagesAction": "Editar document",
     "downloadPdf": "Baixa el PDF",
     "sharePdf": "Comparteix el PDF",
     "downloadAsZip": "Baixa com a ZIP",

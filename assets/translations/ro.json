@@ -63,6 +63,7 @@
     "preparingPdf": "Se pregătește PDF...",
     "noPagesTitle": "Nicio pagină",
     "noPagesSubtitle": "Acest document este gol.\nÎncearcă să editezi pentru a adăuga scanări noi.",
+    "noPagesAction": "Editează documentul",
     "downloadPdf": "Descarcă PDF",
     "sharePdf": "Distribuie PDF",
     "downloadAsZip": "Descarcă ca ZIP",

@@ -63,6 +63,7 @@
     "preparingPdf": "正在准备PDF...",
     "noPagesTitle": "暂无页面",
     "noPagesSubtitle": "此文档为空。\n请在编辑中添加扫描。",
+    "noPagesAction": "编辑文档",
     "downloadPdf": "下载PDF",
     "sharePdf": "分享PDF",
     "downloadAsZip": "下载为ZIP",

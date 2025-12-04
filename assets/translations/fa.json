@@ -63,6 +63,7 @@
     "preparingPdf": "در حال آماده‌سازی PDF...",
     "noPagesTitle": "صفحه‌ای وجود ندارد",
     "noPagesSubtitle": "این سند خالی است.\nسعی کنید ویرایش کنید تا اسکن اضافه شود.",
+    "noPagesAction": "ویرایش سند",
     "downloadPdf": "دانلود PDF",
     "sharePdf": "اشتراک‌گذاری PDF",
     "downloadAsZip": "دانلود به صورت ZIP",

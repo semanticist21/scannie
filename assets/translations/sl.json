@@ -63,6 +63,7 @@
     "preparingPdf": "Priprava PDF...",
     "noPagesTitle": "Ni strani",
     "noPagesSubtitle": "Ta dokument je prazen.\nPoskusite urediti za dodajanje novih skenov.",
+    "noPagesAction": "Uredi dokument",
     "downloadPdf": "Prenesi PDF",
     "sharePdf": "Deli PDF",
     "downloadAsZip": "Prenesi kot ZIP",

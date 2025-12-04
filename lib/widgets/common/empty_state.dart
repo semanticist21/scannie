@@ -10,6 +10,8 @@ class EmptyState extends StatelessWidget {
   final String subtitle;
   final double iconSize;
   final double verticalOffset;
+  final String? actionText;
+  final VoidCallback? onActionTap;
 
   const EmptyState({
     super.key,
@@ -18,6 +20,8 @@ class EmptyState extends StatelessWidget {
     required this.subtitle,
     this.iconSize = 60,
     this.verticalOffset = 0,
+    this.actionText,
+    this.onActionTap,
   });
 
   @override
@@ -61,6 +65,19 @@ class EmptyState extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
+            if (actionText != null && onActionTap != null) ...[
+              const SizedBox(height: AppSpacing.lg),
+              TextButton(
+                onPressed: onActionTap,
+                child: Text(
+                  actionText!,
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    color: AppColors.primary,
+                    fontWeight: AppFontWeight.semiBold,
+                  ),
+                ),
+              ),
+            ],
             ],
           ),
         ),

@@ -63,6 +63,7 @@
     "preparingPdf": "PDF തയ്യാറാക്കുന്നു...",
     "noPagesTitle": "പേജുകൾ ഇല്ല",
     "noPagesSubtitle": "ഈ ഡോക്യുമെന്റ് ശൂന്യമാണ്.\nസ്കാനുകൾ ചേർക്കാൻ എഡിറ്റ് ചെയ്യാൻ ശ്രമിക്കുക.",
+    "noPagesAction": "ഡോക്യുമെന്റ് എഡിറ്റ് ചെയ്യുക",
     "downloadPdf": "PDF ഡൗൺലോഡ് ചെയ്യുക",
     "sharePdf": "PDF പങ്കിടുക",
     "downloadAsZip": "ZIP ആയി ഡൗൺലോഡ് ചെയ്യുക",

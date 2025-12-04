@@ -63,6 +63,7 @@
     "preparingPdf": "Förbereder PDF...",
     "noPagesTitle": "Inga sidor",
     "noPagesSubtitle": "Detta dokument är tomt.\nPrövt att redigera för att lägga till skanningar.",
+    "noPagesAction": "Redigera dokument",
     "downloadPdf": "Ladda ner PDF",
     "sharePdf": "Dela PDF",
     "downloadAsZip": "Ladda ner som ZIP",

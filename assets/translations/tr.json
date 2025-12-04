@@ -63,6 +63,7 @@
     "preparingPdf": "PDF hazırlanıyor...",
     "noPagesTitle": "Sayfa yok",
     "noPagesSubtitle": "Bu belge boş.\nTarama eklemek için düzenleyin.",
+    "noPagesAction": "Belgeyi düzenle",
     "downloadPdf": "PDF İndir",
     "sharePdf": "PDF Paylaş",
     "downloadAsZip": "ZIP Olarak İndir",

@@ -63,6 +63,7 @@
     "preparingPdf": "PDF සකස් කරමින්...",
     "noPagesTitle": "පිටු නැත",
     "noPagesSubtitle": "මෙම ලේඛනය හිස් ය.\nස්කෑන් එකතු කිරීමට සංස්කරණය කරන්න.",
+    "noPagesAction": "ලේඛනය සංස්කරණය කරන්න",
     "downloadPdf": "PDF බාගන්න",
     "sharePdf": "PDF බෙදාගන්න",
     "downloadAsZip": "ZIP ලෙස බාගන්න",

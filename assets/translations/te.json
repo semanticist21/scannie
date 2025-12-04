@@ -63,6 +63,7 @@
     "preparingPdf": "PDF సిద్ధం చేస్తోంది...",
     "noPagesTitle": "పేజీలు లేవు",
     "noPagesSubtitle": "ఈ డాక్యుమెంట్ ఖాళీగా ఉంది.\nస్కాన్‌లు జోడించడానికి మార్చడానికి ప్రయత్నించండి.",
+    "noPagesAction": "డాక్యుమెంట్ ఎడిట్ చేయండి",
     "downloadPdf": "PDF డౌన్‌లోడ్",
     "sharePdf": "PDF షేర్ చేయి",
     "downloadAsZip": "ZIP గా డౌన్‌లోడ్",

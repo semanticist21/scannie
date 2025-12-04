@@ -63,6 +63,7 @@
     "preparingPdf": "Pripravuje sa PDF...",
     "noPagesTitle": "Žiadne strany",
     "noPagesSubtitle": "Tento dokument je prázdny.\nSkúste upraviť a pridať nové skeny.",
+    "noPagesAction": "Upraviť dokument",
     "downloadPdf": "Stiahnuť PDF",
     "sharePdf": "Zdieľať PDF",
     "downloadAsZip": "Stiahnuť ako ZIP",

@@ -63,6 +63,7 @@
     "preparingPdf": "Po përgatitet PDF...",
     "noPagesTitle": "Nuk ka faqe",
     "noPagesSubtitle": "Ky dokument është bosh.\nNdryshoni për të shtuar skanime.",
+    "noPagesAction": "Ndrysho dokumentin",
     "downloadPdf": "Shkarko PDF",
     "sharePdf": "Ndaj PDF",
     "downloadAsZip": "Shkarko si ZIP",

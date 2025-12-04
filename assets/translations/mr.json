@@ -63,6 +63,7 @@
     "preparingPdf": "PDF तयार होत आहे...",
     "noPagesTitle": "पृष्ठे नाहीत",
     "noPagesSubtitle": "हे डॉक्युमेंट रिकामे आहे.\nस्कॅन्स जोडण्यासाठी संपादन करून पहा.",
+    "noPagesAction": "डॉक्युमेंट संपादित करा",
     "downloadPdf": "PDF डाउनलोड",
     "sharePdf": "PDF शेअर",
     "downloadAsZip": "ZIP म्हणून डाउनलोड",

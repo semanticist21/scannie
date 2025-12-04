@@ -63,6 +63,7 @@
     "preparingPdf": "Inihahanda ang PDF...",
     "noPagesTitle": "Walang pahina",
     "noPagesSubtitle": "Walang laman ang dokumentong ito.\nSubukan mag-edit para magdagdag ng mga scan.",
+    "noPagesAction": "I-edit ang dokumento",
     "downloadPdf": "I-download ang PDF",
     "sharePdf": "Ibahagi ang PDF",
     "downloadAsZip": "I-download bilang ZIP",

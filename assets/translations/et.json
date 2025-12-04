@@ -63,6 +63,7 @@
     "preparingPdf": "PDF-i ettevalmistamine...",
     "noPagesTitle": "Lehekülgi pole",
     "noPagesSubtitle": "See dokument on tühi.\nProovige muuta, et lisada uusi skaneeringuid.",
+    "noPagesAction": "Muuda dokumenti",
     "downloadPdf": "Laadi PDF alla",
     "sharePdf": "Jaga PDF-i",
     "downloadAsZip": "Laadi alla ZIP-ina",

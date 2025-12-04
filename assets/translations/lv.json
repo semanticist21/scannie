@@ -63,6 +63,7 @@
     "preparingPdf": "Sagatavo PDF...",
     "noPagesTitle": "Nav lapu",
     "noPagesSubtitle": "Šis dokuments ir tukšs.\nMēģiniet rediģēt, lai pievienotu jaunus skenējumus.",
+    "noPagesAction": "Rediģēt dokumentu",
     "downloadPdf": "Lejupielādēt PDF",
     "sharePdf": "Dalīties ar PDF",
     "downloadAsZip": "Lejupielādēt kā ZIP",

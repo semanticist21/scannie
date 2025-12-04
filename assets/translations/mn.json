@@ -63,6 +63,7 @@
     "preparingPdf": "PDF бэлтгэж байна...",
     "noPagesTitle": "Хуудас байхгүй",
     "noPagesSubtitle": "Энэ баримт хоосон байна.\nСкан нэмэхийн тулд засна уу.",
+    "noPagesAction": "Баримт засах",
     "downloadPdf": "PDF татах",
     "sharePdf": "PDF хуваалцах",
     "downloadAsZip": "ZIP татах",
