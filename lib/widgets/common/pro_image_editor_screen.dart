@@ -26,11 +26,12 @@ class _ProImageEditorScreenState extends State<ProImageEditorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        // Prevent back button from popping during editing
-        debugPrint('🚫 ProImageEditor: Back button pressed, ignoring');
-        return false;
+    return PopScope(
+      canPop: false, // Prevent back button from popping during editing
+      onPopInvokedWithResult: (bool didPop, dynamic result) {
+        if (!didPop) {
+          debugPrint('🚫 ProImageEditor: Back button pressed, ignoring');
+        }
       },
       child: ProImageEditor.file(
         File(widget.imagePath),
@@ -58,6 +59,8 @@ class _ProImageEditorScreenState extends State<ProImageEditorScreen> {
             }
             _hasPopped = true;
 
+            // Capture navigator BEFORE any async operations
+            final navigator = Navigator.of(context);
             String resultPath;
 
             if (widget.saveToTemp) {
@@ -81,7 +84,7 @@ class _ProImageEditorScreenState extends State<ProImageEditorScreen> {
             // Return result path to caller
             debugPrint('📤 Returning to previous screen with result');
             if (mounted) {
-              Navigator.of(context).pop(resultPath);
+              navigator.pop(resultPath);
             }
           },
           onCloseEditor: (EditorMode editorMode) {
@@ -93,8 +96,10 @@ class _ProImageEditorScreenState extends State<ProImageEditorScreen> {
 
             // User cancelled - return null
             debugPrint('❌ Editing cancelled, returning to previous screen');
+            // Capture navigator before async gap
+            final navigator = Navigator.of(context);
             if (mounted) {
-              Navigator.of(context).pop();
+              navigator.pop();
             }
           },
         ),

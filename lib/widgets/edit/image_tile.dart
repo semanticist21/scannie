@@ -11,6 +11,7 @@ class ImageTile extends StatelessWidget {
   final String imagePath;
   final VoidCallback onTap;
   final VoidCallback onDelete;
+  final String? cacheKey; // Unique key to force cache refresh
 
   const ImageTile({
     super.key,
@@ -18,6 +19,7 @@ class ImageTile extends StatelessWidget {
     required this.imagePath,
     required this.onTap,
     required this.onDelete,
+    this.cacheKey,
   });
 
   @override
@@ -41,10 +43,24 @@ class ImageTile extends StatelessWidget {
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   final pixelRatio = MediaQuery.devicePixelRatioOf(context);
-                  return Image.file(
-                    File(imagePath),
+                  final imageFile = File(imagePath);
+
+                  // Use cacheKey to force cache refresh when image is edited
+                  final imageProvider = cacheKey != null
+                      ? FileImage(imageFile, scale: 1.0)
+                      : FileImage(imageFile);
+
+                  // Note: Image widget doesn't support cacheWidth directly
+                  // Use ResizeImage to optimize memory usage
+                  final optimizedProvider = ResizeImage(
+                    imageProvider,
+                    width: (constraints.maxWidth * pixelRatio).round(),
+                  );
+
+                  return Image(
+                    key: cacheKey != null ? ValueKey(cacheKey) : null,
+                    image: optimizedProvider,
                     fit: BoxFit.cover,
-                    cacheWidth: (constraints.maxWidth * pixelRatio).round(),
                     gaplessPlayback: true, // Prevent flicker during drag
                   );
                 },

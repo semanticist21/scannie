@@ -648,10 +648,23 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
 
     // If user saved changes, update the document
     if (result != null && result is ScanDocument && mounted) {
+      // Clear entire image cache to ensure fresh images
+      // This is safer than selective eviction because image paths may have changed
+      imageCache.clear();
+      imageCache.clearLiveImages();
+      debugPrint('🗑️ Cleared entire image cache for fresh reload');
+
       setState(() {
         _document = result;
         _imagePaths = List.from(result.imagePaths);
         _cachedPdfFile = null; // Invalidate PDF cache
+      });
+
+      // Force a rebuild with slight delay to ensure cache is cleared
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (mounted) {
+          setState(() {}); // Force rebuild with cleared cache
+        }
       });
 
       // Reload PDF

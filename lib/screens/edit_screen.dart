@@ -40,6 +40,7 @@ class EditScreen extends StatefulWidget {
 class _EditScreenState extends State<EditScreen> {
   List<String> _imagePaths = [];
   List<String> _imageIds = []; // Unique ID for each image (prevents duplicate key errors)
+  final Map<String, String> _cacheKeys = {}; // Cache keys for forcing image refresh (path -> cacheKey)
   final Set<String> _tempFilePaths = {}; // Track temp files for cleanup
   String? _existingDocumentId; // null = new scan, non-null = editing existing
   String? _existingDocumentName; // Preserve name when editing
@@ -259,14 +260,29 @@ class _EditScreenState extends State<EditScreen> {
 
     // If image was modified, result contains the new temp file path
     if (result != null && result.isNotEmpty && mounted) {
+      // Clear image cache for the old image
+      final oldImageFile = File(imagePath);
+      if (await oldImageFile.exists()) {
+        imageCache.evict(FileImage(oldImageFile));
+        debugPrint('🗑️ Evicted old image from cache: $imagePath');
+      }
+
+      // Clear cache for the new image (in case it exists)
+      final newImageFile = File(result);
+      imageCache.evict(FileImage(newImageFile));
+      debugPrint('🗑️ Pre-evicted new image from cache: $result');
+
       setState(() {
         // Track the temp file for cleanup on discard
         _tempFilePaths.add(result);
         // Update the image path to use the temp file
         _imagePaths[index] = result;
+        // Generate new cache key to force image refresh
+        _cacheKeys[result] = const Uuid().v4();
         _hasInteracted = true;
       });
       debugPrint('🔄 Image modified, using temp file: $result');
+      debugPrint('🔑 Generated new cache key: ${_cacheKeys[result]}');
     }
   }
 
@@ -667,10 +683,12 @@ class _EditScreenState extends State<EditScreen> {
     final generatedChildren = _imagePaths.asMap().entries.map((entry) {
       final index = entry.key;
       final imagePath = entry.value;
+      final imageId = _imageIds[index]; // Use unique ID as widget key
       return ImageTile(
-        key: ValueKey(imagePath), // Use imagePath as key to force rebuild on change
+        key: ValueKey(imageId), // Use imageId to prevent duplicate key errors
         index: index,
         imagePath: imagePath,
+        cacheKey: _cacheKeys[imagePath], // Pass cache key for forcing refresh when edited
         onTap: () => _viewImage(imagePath, index),
         onDelete: () => _deleteImage(index),
       );

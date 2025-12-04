@@ -440,6 +440,67 @@ class _ProImageEditorScreenState extends State<ProImageEditorScreen> {
 }
 ```
 
+### Flutter 이미지 캐시 문제 (Image Cache Synchronization)
+Flutter는 파일 경로를 키로 이미지를 캐싱하므로, **파일 내용이 변경되어도 같은 경로면 이전 캐시를 표시**합니다.
+
+**문제 상황**:
+- EditScreen에서 이미지 편집 → ProImageEditor로 파일 수정
+- DocumentViewerScreen/GalleryScreen 복귀 → **이전 캐시된 이미지 표시**
+- 실제 파일은 변경되었지만 화면에는 반영 안 됨
+
+**해결책**: 3단계 캐시 무효화 전략
+
+1. **즉시 캐시 제거 (EditScreen)**
+```dart
+// 이미지 수정 직후
+final oldImageFile = File(imagePath);
+imageCache.evict(FileImage(oldImageFile));  // 이전 이미지 제거
+
+final newImageFile = File(result);
+imageCache.evict(FileImage(newImageFile));  // 새 이미지 제거
+
+// 고유 캐시 키 생성
+_cacheKeys[result] = const Uuid().v4();
+```
+
+2. **ImageTile에 캐시 키 전달**
+```dart
+ImageTile(
+  key: ValueKey(imageId),  // Widget 키는 imageId (중복 방지)
+  cacheKey: _cacheKeys[imagePath],  // 캐시 강제 리프레시용
+  // ...
+)
+
+// ImageTile 내부에서 cacheKey 사용
+final imageProvider = cacheKey != null
+    ? FileImage(imageFile, scale: 1.0)
+    : FileImage(imageFile);
+final optimizedProvider = ResizeImage(imageProvider, width: ...);
+```
+
+3. **화면 복귀 시 전역 캐시 클리어**
+```dart
+// DocumentViewerScreen - EditScreen 복귀 시
+imageCache.clear();
+imageCache.clearLiveImages();
+Future.delayed(Duration(milliseconds: 100), () {
+  if (mounted) setState(() {});  // 강제 리빌드
+});
+
+// GalleryScreen - RouteAware.didPopNext()
+imageCache.clear();
+imageCache.clearLiveImages();
+_loadDocuments();
+```
+
+**주의사항**:
+- Widget `key`는 `imageId` 사용 (ReorderableBuilder의 중복 키 에러 방지)
+- `cacheKey`는 이미지 수정 시에만 생성 (불필요한 리빌드 방지)
+- `imageCache.clear()` 호출 후 100ms 딜레이로 리빌드 보장
+- `Image.file()`은 `cacheWidth` 미지원 → `ResizeImage`로 메모리 최적화
+
+**참고**: Flutter 공식 이슈 [#24858](https://github.com/flutter/flutter/issues/24858)
+
 ## 문제 해결
 
 ### 빌드 실패

@@ -119,6 +119,11 @@ class _GalleryScreenState extends State<GalleryScreen> with RouteAware {
   @override
   void didPopNext() {
     // Called when returning to this screen from another route
+    // Clear image cache to ensure fresh images after editing
+    imageCache.clear();
+    imageCache.clearLiveImages();
+    debugPrint('🗑️ GalleryScreen: Cleared image cache on route return');
+
     // Reload documents and premium status to reflect any changes
     _loadDocuments();
     _loadPremiumStatus();
