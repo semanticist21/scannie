@@ -151,6 +151,11 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
               tooltip: 'viewer.exportPdf'.tr(),
             ),
           IconButton(
+            icon: const Icon(LucideIcons.filePen300),
+            onPressed: _editScan,
+            tooltip: 'viewer.editScan'.tr(),
+          ),
+          IconButton(
             icon: const Icon(LucideIcons.ellipsisVertical),
             onPressed: _showOptions,
           ),
@@ -185,11 +190,14 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
                                   duration: const Duration(milliseconds: 300),
                                   switchInCurve: Curves.easeOutCubic,
                                   switchOutCurve: Curves.easeInCubic,
-                                  transitionBuilder: (Widget child, Animation<double> animation) {
+                                  transitionBuilder: (Widget child,
+                                      Animation<double> animation) {
                                     return FadeTransition(
                                       opacity: animation,
                                       child: ScaleTransition(
-                                        scale: Tween<double>(begin: 0.95, end: 1.0).animate(animation),
+                                        scale:
+                                            Tween<double>(begin: 0.95, end: 1.0)
+                                                .animate(animation),
                                         child: child,
                                       ),
                                     );
@@ -344,124 +352,127 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
         child: AspectRatio(
           aspectRatio: aspectRatio,
           child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppRadius.md),
-            border: Border.all(
-              color: ThemedColors.of(context).border,
-              width: 1,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(AppRadius.md),
+              border: Border.all(
+                color: ThemedColors.of(context).border,
+                width: 1,
+              ),
             ),
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(AppRadius.md),
-            child: Stack(
-              children: [
-                PDFView(
-                  filePath: _cachedPdfFile!.path,
-                  enableSwipe: true,
-                  swipeHorizontal: false,
-                  autoSpacing: false,
-                  pageFling: true,
-                  pageSnap: true,
-                  fitPolicy: FitPolicy.BOTH,
-                  onViewCreated: (controller) {
-                    _pdfController = controller;
-                  },
-                  onRender: (pages) {
-                    setState(() {
-                      _totalPdfPages = pages ?? 0;
-                    });
-                  },
-                  onPageChanged: (page, total) {
-                    setState(() {
-                      _currentPdfPage = page ?? 0;
-                      if (total != null) _totalPdfPages = total;
-                    });
-                  },
-                ),
-                // Page navigation overlay
-                if (_totalPdfPages > 1)
-                  Positioned(
-                    bottom: AppSpacing.md,
-                    left: 0,
-                    right: 0,
-                    child: Center(
-                      child: FractionallySizedBox(
-                        widthFactor: 0.75,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: AppSpacing.md,
-                            vertical: AppSpacing.sm,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.shadowDarker,
-                            borderRadius: BorderRadius.circular(AppRadius.lg),
-                          ),
-                          child: Row(
-                        children: [
-                          SizedBox(
-                            width: 32,
-                            child: Text(
-                              '${_currentPdfPage + 1}',
-                              style: AppTextStyles.bodyMedium.copyWith(
-                                color: AppColors.darkTextPrimary,
-                                fontWeight: AppFontWeight.semiBold,
-                              ),
-                              textAlign: TextAlign.center,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(AppRadius.md),
+              child: Stack(
+                children: [
+                  PDFView(
+                    filePath: _cachedPdfFile!.path,
+                    enableSwipe: true,
+                    swipeHorizontal: false,
+                    autoSpacing: false,
+                    pageFling: true,
+                    pageSnap: true,
+                    fitPolicy: FitPolicy.BOTH,
+                    onViewCreated: (controller) {
+                      _pdfController = controller;
+                    },
+                    onRender: (pages) {
+                      setState(() {
+                        _totalPdfPages = pages ?? 0;
+                      });
+                    },
+                    onPageChanged: (page, total) {
+                      setState(() {
+                        _currentPdfPage = page ?? 0;
+                        if (total != null) _totalPdfPages = total;
+                      });
+                    },
+                  ),
+                  // Page navigation overlay
+                  if (_totalPdfPages > 1)
+                    Positioned(
+                      bottom: AppSpacing.md,
+                      left: 0,
+                      right: 0,
+                      child: Center(
+                        child: FractionallySizedBox(
+                          widthFactor: 0.75,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppSpacing.md,
+                              vertical: AppSpacing.sm,
                             ),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: AppSpacing.sm,
-                              ),
-                              child: SliderTheme(
-                                data: SliderTheme.of(context).copyWith(
-                                  activeTrackColor: AppColors.darkTextPrimary,
-                                  inactiveTrackColor: AppColors.darkTextSecondary,
-                                  thumbColor: AppColors.darkTextPrimary,
-                                  overlayColor: AppColors.darkOverlay,
-                                  trackHeight: 4,
-                                  thumbShape: const RoundSliderThumbShape(
-                                    enabledThumbRadius: 6,
-                                  ),
-                                  overlayShape: const RoundSliderOverlayShape(
-                                    overlayRadius: 14,
+                            decoration: BoxDecoration(
+                              color: AppColors.shadowDarker,
+                              borderRadius: BorderRadius.circular(AppRadius.lg),
+                            ),
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  width: 32,
+                                  child: Text(
+                                    '${_currentPdfPage + 1}',
+                                    style: AppTextStyles.bodyMedium.copyWith(
+                                      color: AppColors.darkTextPrimary,
+                                      fontWeight: AppFontWeight.semiBold,
+                                    ),
+                                    textAlign: TextAlign.center,
                                   ),
                                 ),
-                                child: Slider(
-                                  value: _currentPdfPage.toDouble(),
-                                  min: 0,
-                                  max: (_totalPdfPages - 1).toDouble(),
-                                  onChanged: (value) {
-                                    final page = value.round();
-                                    _pdfController?.setPage(page);
-                                  },
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: AppSpacing.sm,
+                                    ),
+                                    child: SliderTheme(
+                                      data: SliderTheme.of(context).copyWith(
+                                        activeTrackColor:
+                                            AppColors.darkTextPrimary,
+                                        inactiveTrackColor:
+                                            AppColors.darkTextSecondary,
+                                        thumbColor: AppColors.darkTextPrimary,
+                                        overlayColor: AppColors.darkOverlay,
+                                        trackHeight: 4,
+                                        thumbShape: const RoundSliderThumbShape(
+                                          enabledThumbRadius: 6,
+                                        ),
+                                        overlayShape:
+                                            const RoundSliderOverlayShape(
+                                          overlayRadius: 14,
+                                        ),
+                                      ),
+                                      child: Slider(
+                                        value: _currentPdfPage.toDouble(),
+                                        min: 0,
+                                        max: (_totalPdfPages - 1).toDouble(),
+                                        onChanged: (value) {
+                                          final page = value.round();
+                                          _pdfController?.setPage(page);
+                                        },
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                SizedBox(
+                                  width: 32,
+                                  child: Text(
+                                    '$_totalPdfPages',
+                                    style: AppTextStyles.bodyMedium.copyWith(
+                                      color: AppColors.darkTextPrimary,
+                                      fontWeight: AppFontWeight.semiBold,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          SizedBox(
-                            width: 32,
-                            child: Text(
-                              '$_totalPdfPages',
-                              style: AppTextStyles.bodyMedium.copyWith(
-                                color: AppColors.darkTextPrimary,
-                                fontWeight: AppFontWeight.semiBold,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                          ],
                         ),
                       ),
                     ),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
-      ),
       ),
     );
   }
@@ -583,14 +594,6 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
   void _showOptions() {
     final items = <ContextMenuItem>[
       ContextMenuItem(
-        icon: LucideIcons.filePen,
-        label: 'viewer.editScan'.tr(),
-        onTap: () {
-          Navigator.pop(context);
-          _editScan();
-        },
-      ),
-      ContextMenuItem(
         icon: LucideIcons.pencil,
         label: 'common.rename'.tr(),
         onTap: () {
@@ -600,9 +603,8 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
       ),
       ContextMenuItem(
         icon: LucideIcons.tag,
-        label: _document.hasTag
-            ? 'dialogs.editTag'.tr()
-            : 'dialogs.addTag'.tr(),
+        label:
+            _document.hasTag ? 'dialogs.editTag'.tr() : 'dialogs.addTag'.tr(),
         onTap: () {
           Navigator.pop(context);
           _editTag();
@@ -695,7 +697,8 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
           if (tagText == null) {
             _document = _document.copyWith(clearTag: true);
           } else {
-            _document = _document.copyWith(tagText: tagText, tagColor: tagColor);
+            _document =
+                _document.copyWith(tagText: tagText, tagColor: tagColor);
           }
         });
 
