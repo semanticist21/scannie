@@ -594,6 +594,14 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen>
   void _showOptions() {
     final items = <ContextMenuItem>[
       ContextMenuItem(
+        icon: LucideIcons.filePen,
+        label: 'viewer.editScan'.tr(),
+        onTap: () {
+          Navigator.pop(context);
+          _editScan();
+        },
+      ),
+      ContextMenuItem(
         icon: LucideIcons.pencil,
         label: 'common.rename'.tr(),
         onTap: () {
