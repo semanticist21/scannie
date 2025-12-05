@@ -97,24 +97,32 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
         child: Stack(
           children: [
             // Image PageView with zoom
-            PageView.builder(
-              controller: _pageController,
-              itemCount: widget.imagePaths.length,
-              onPageChanged: (index) {
-                setState(() => _currentPage = index);
-              },
-              itemBuilder: (context, index) {
-                return InteractiveViewer(
-                  minScale: 0.5,
-                  maxScale: 4.0,
-                  child: Center(
-                    child: Image.file(
-                      File(widget.imagePaths[index]),
-                      fit: BoxFit.contain,
+            Padding(
+              padding: EdgeInsets.only(
+                top: MediaQuery.of(context).padding.top + kToolbarHeight,
+                bottom: widget.imagePaths.length > 1
+                    ? MediaQuery.of(context).padding.bottom + 56
+                    : MediaQuery.of(context).padding.bottom,
+              ),
+              child: PageView.builder(
+                controller: _pageController,
+                itemCount: widget.imagePaths.length,
+                onPageChanged: (index) {
+                  setState(() => _currentPage = index);
+                },
+                itemBuilder: (context, index) {
+                  return InteractiveViewer(
+                    minScale: 0.5,
+                    maxScale: 4.0,
+                    child: Center(
+                      child: Image.file(
+                        File(widget.imagePaths[index]),
+                        fit: BoxFit.contain,
+                      ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
 
             // Top bar with close button
